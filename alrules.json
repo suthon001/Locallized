@@ -1,9 +1,13 @@
 {
-    "name":"DSVC Thailand",
+    "name":"Localized Thailand",
     "description":"Rules to Ignore",
     "rules":[
         {
             "id":"AA0214",
+            "action" : "Hidden",
+            "justification":"Not right"
+        }, {
+            "id":"AA0215",
             "action" : "Hidden",
             "justification":"Not right"
         }
