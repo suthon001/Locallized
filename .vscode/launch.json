@@ -1,0 +1,49 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Sahapp17082022",
+            "request": "launch", //
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "Sahapp17082022",
+            "tenant": "890c882b-e068-4f91-92a3-f5e9bb80bf62",
+            "startupObjectId": 50018,
+            "startupObjectType": "Page",
+            "breakOnError": true,
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "ForceSync"
+        },
+        {
+            "name": "Sahapp09122022",
+            "request": "launch", //
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "Sahapp09122022",
+            "tenant": "890c882b-e068-4f91-92a3-f5e9bb80bf62",
+            "startupObjectId": 50017,
+            "startupObjectType": "Page",
+            "breakOnError": true,
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "ForceSync"
+        }, {
+            "name": "UAT",
+            "request": "launch", //
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "SahappUAT",
+            "tenant": "890c882b-e068-4f91-92a3-f5e9bb80bf62",
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "breakOnError": true,
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "ForceSync"
+        }
+    ]
+}

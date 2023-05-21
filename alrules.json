@@ -1,0 +1,11 @@
+{
+    "name":"DSVC Thailand",
+    "description":"Rules to Ignore",
+    "rules":[
+        {
+            "id":"AA0214",
+            "action" : "Hidden",
+            "justification":"Not right"
+        }
+    ]
+}
