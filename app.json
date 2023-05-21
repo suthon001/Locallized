@@ -26,6 +26,5 @@
     "allowDownloadingSource": false,
     "includeSourceInSymbolFile": false
   },
-  "runtime": "11.0",
-  "suppressWarnings": ["AL0432","AL0606"]
+  "runtime": "11.0"
 }

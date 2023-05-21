@@ -7,24 +7,25 @@ pageextension 80063 "Sales Order Card" extends "Sales Order"
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
-                Caption = 'Head Office';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
-                Caption = 'Branch Code';
-            }
-            field("VAT Registration No."; Rec."VAT Registration No.")
-            {
-                ApplicationArea = all;
-                Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Shipping No. Series"; Rec."Shipping No. Series")
             {
                 ApplicationArea = all;
-                Caption = 'Shipping No. Series';
+                ToolTip = 'Specifies value of the field.';
             }
+
         }
+        modify("VAT Registration No.")
+        {
+            Visible = true;
+        }
+        moveafter("Branch Code"; "VAT Registration No.")
         modify("No.")
         {
             Visible = true;

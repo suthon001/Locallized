@@ -28,10 +28,12 @@ page 50018 "Goods Receipt Note List"
                 field("Completely Received"; rec."Completely Received")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("Buy-from Vendor No."; Rec."Buy-from Vendor No.")
                 {
@@ -309,7 +311,7 @@ page 50018 "Goods Receipt Note List"
 
                     trigger OnAction()
                     begin
-                        Rec.ShowDocDim;
+                        Rec.ShowDocDim();
                     end;
                 }
                 action(Statistics)
@@ -325,24 +327,23 @@ page 50018 "Goods Receipt Note List"
 
                     trigger OnAction()
                     begin
-                        Rec.OpenPurchaseOrderStatistics;
+                        Rec.OpenPurchaseOrderStatistics();
                     end;
                 }
+
                 action(Approvals)
                 {
                     AccessByPermission = TableData "Approval Entry" = R;
                     ApplicationArea = Suite;
                     Caption = 'Approvals';
                     Image = Approvals;
-                    Promoted = true;
-                    PromotedCategory = Category6;
                     ToolTip = 'View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.';
 
                     trigger OnAction()
                     var
-                        WorkflowsEntriesBuffer: Record "Workflows Entries Buffer";
+                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
                     begin
-                        WorkflowsEntriesBuffer.RunWorkflowEntriesPage(Rec.RecordId, DATABASE::"Purchase Header", 1, Rec."No.");
+                        ApprovalsMgmt.OpenApprovalsPurchase(Rec);
                     end;
                 }
                 action("Co&mments")
@@ -452,13 +453,13 @@ page 50018 "Goods Receipt Note List"
                     ApplicationArea = all;
                     PromotedCategory = Category10;
                     Promoted = true;
-                    PromotedIsBig = true;
+                    ToolTip = 'Show Report';
                     trigger OnAction()
                     var
 
                         PurchaseHeader: Record "Purchase Header";
                     begin
-                        PurchaseHeader.reset;
+                        PurchaseHeader.reset();
                         PurchaseHeader.SetRange("Document Type", rec."Document Type");
                         PurchaseHeader.SetRange("No.", rec."No.");
                         REPORT.RunModal(REPORT::"PurchaseOrder", true, true, PurchaseHeader);
@@ -471,36 +472,16 @@ page 50018 "Goods Receipt Note List"
                     ApplicationArea = all;
                     PromotedCategory = Category10;
                     Promoted = true;
-                    PromotedIsBig = true;
+                    ToolTip = 'Show Report';
                     trigger OnAction()
                     var
                         PurchaseRecripet: Record "Purch. Rcpt. Header";
                     begin
 
-                        PurchaseRecripet.reset;
+                        PurchaseRecripet.reset();
                         PurchaseRecripet.SetRange("Order No.", rec."No.");
                         if PurchaseRecripet.FindLast() then
                             REPORT.RunModal(REPORT::"Good Receipt Note", true, true, PurchaseRecripet);
-                    end;
-                }
-                action(Print)
-                {
-                    ApplicationArea = Suite;
-                    Caption = '&Print';
-                    Ellipsis = true;
-                    Image = Print;
-                    Promoted = true;
-                    PromotedCategory = Category5;
-                    Visible = false;
-                    ToolTip = 'Prepare to print the document. The report request window for the document opens where you can specify what to include on the print-out.';
-
-                    trigger OnAction()
-                    var
-                        PurchaseHeader: Record "Purchase Header";
-                    begin
-                        PurchaseHeader := Rec;
-                        CurrPage.SetSelectionFilter(PurchaseHeader);
-                        PurchaseHeader.PrintRecords(true);
                     end;
                 }
                 action(Send)
@@ -520,7 +501,7 @@ page 50018 "Goods Receipt Note List"
                     begin
                         PurchaseHeader := Rec;
                         CurrPage.SetSelectionFilter(PurchaseHeader);
-                        PurchaseHeader.SendRecords;
+                        PurchaseHeader.SendRecords();
                     end;
                 }
             }
@@ -611,7 +592,7 @@ page 50018 "Goods Receipt Note List"
                         GetSourceDocInbound.CreateFromPurchOrder(Rec);
 
                         if not Rec.Find('=><') then
-                            Rec.Init;
+                            Rec.Init();
                     end;
                 }
                 action("Create Inventor&y Put-away/Pick")
@@ -625,10 +606,10 @@ page 50018 "Goods Receipt Note List"
 
                     trigger OnAction()
                     begin
-                        Rec.CreateInvtPutAwayPick;
+                        Rec.CreateInvtPutAwayPick();
 
                         if not Rec.Find('=><') then
-                            Rec.Init;
+                            Rec.Init();
                     end;
                 }
             }
@@ -646,7 +627,7 @@ page 50018 "Goods Receipt Note List"
 
                     trigger OnAction()
                     begin
-                        ReportPrint.PrintPurchHeader(Rec);
+                        TestReportPrint.PrintPurchHeader(Rec);
                     end;
                 }
                 action(Post)
@@ -664,11 +645,11 @@ page 50018 "Goods Receipt Note List"
 
                     trigger OnAction()
                     var
-                        PurchaseHeader: Record "Purchase Header";
+
                         ApplicationAreaMgmtFacade: Codeunit "Application Area Mgmt. Facade";
                         LinesInstructionMgt: Codeunit "Lines Instruction Mgt.";
                     begin
-                        if ApplicationAreaMgmtFacade.IsFoundationEnabled then
+                        if ApplicationAreaMgmtFacade.IsFoundationEnabled() then
                             LinesInstructionMgt.PurchaseCheckAllLinesHaveQuantityAssigned(Rec);
                         Rec.SendToPosting(CODEUNIT::"Purch.-Post (Yes/No)");
                     end;
@@ -700,7 +681,7 @@ page 50018 "Goods Receipt Note List"
 
                     trigger OnAction()
                     begin
-                        Rec.CancelBackgroundPosting;
+                        Rec.CancelBackgroundPosting();
                     end;
                 }
             }
@@ -709,7 +690,7 @@ page 50018 "Goods Receipt Note List"
 
     trigger OnAfterGetCurrRecord()
     begin
-        SetControlAppearance;
+        SetControlAppearance();
         CurrPage.IncomingDocAttachFactBox.PAGE.LoadDataFromRecord(Rec);
     end;
 
@@ -720,12 +701,12 @@ page 50018 "Goods Receipt Note List"
         if not Rec.Find(Which) then
             exit(false);
 
-        if ShowHeader then
+        if ShowHeader() then
             exit(true);
 
         repeat
-            NextRecNotFound := Rec.Next <= 0;
-            if ShowHeader then
+            NextRecNotFound := Rec.Next() <= 0;
+            if ShowHeader() then
                 exit(true);
         until NextRecNotFound;
 
@@ -738,7 +719,7 @@ page 50018 "Goods Receipt Note List"
     begin
         repeat
             NewStepCount := Rec.Next(Steps);
-        until (NewStepCount = 0) or ShowHeader;
+        until (NewStepCount = 0) or ShowHeader();
 
         exit(NewStepCount);
     end;
@@ -748,25 +729,25 @@ page 50018 "Goods Receipt Note List"
         PurchasesPayablesSetup: Record "Purchases & Payables Setup";
     begin
         if Rec.GetFilter(Receive) <> '' then
-            Rec.FilterPartialReceived;
+            Rec.FilterPartialReceived();
         if Rec.GetFilter(Invoice) <> '' then
-            Rec.FilterPartialInvoiced;
+            Rec.FilterPartialInvoiced();
 
-        Rec.SetSecurityFilterOnRespCenter;
+        Rec.SetSecurityFilterOnRespCenter();
 
-        JobQueueActive := PurchasesPayablesSetup.JobQueueActive;
+        JobQueueActive := PurchasesPayablesSetup.JobQueueActive();
 
-        Rec.CopyBuyFromVendorFilter;
+        Rec.CopyBuyFromVendorFilter();
     end;
 
     var
-        ReportPrint: Codeunit "Test Report-Print";
+        TestReportPrint: Codeunit "Test Report-Print";
         [InDataSet]
         JobQueueActive: Boolean;
         OpenApprovalEntriesExist: Boolean;
         CanCancelApprovalForRecord: Boolean;
         SkipLinesWithoutVAT: Boolean;
-        ReadyToPostQst: Label '%1 out of %2 selected orders are ready for post. \Do you want to continue and post them?', Comment = '%1 - selected count, %2 - total count';
+
         CanRequestApprovalForFlow: Boolean;
         CanCancelApprovalForFlow: Boolean;
 

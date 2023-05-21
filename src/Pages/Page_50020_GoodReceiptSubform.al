@@ -1072,7 +1072,7 @@ page 50020 "Goods Receipt Note Subform"
 
                         trigger OnAction()
                         begin
-                            OpenSpecOrderSalesOrderForm;
+                            OpenSpecOrderSalesOrderForm();
                         end;
                     }
                 }
@@ -1093,7 +1093,7 @@ page 50020 "Goods Receipt Note Subform"
                         if not PurchaseHeader.IsEmpty then begin
                             BlanketPurchaseOrder.SetTableView(PurchaseHeader);
                             BlanketPurchaseOrder.Editable := false;
-                            BlanketPurchaseOrder.Run;
+                            BlanketPurchaseOrder.Run();
                         end;
                     end;
                 }
@@ -1105,10 +1105,6 @@ page 50020 "Goods Receipt Note Subform"
                     ApplicationArea = Basic, Suite;
                     Caption = 'Edit in Excel';
                     Image = Excel;
-                    Promoted = true;
-                    PromotedCategory = Category8;
-                    PromotedIsBig = true;
-                    PromotedOnly = true;
                     ToolTip = 'Send the data in the sub page to an Excel file for analysis or editing';
                     Visible = IsSaasExcelAddinEnabled;
 

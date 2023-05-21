@@ -14,81 +14,81 @@ pageextension 80089 "Posted Purch. Invoice Subpage" extends "Posted Purch. Invoi
             field("Location Code"; rec."Location Code")
             {
                 ApplicationArea = all;
-                Caption = 'Location Code';
+                ToolTip = 'Specifies value of the field.';
             }
-
-            field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
-            {
-                ApplicationArea = all;
-                Caption = 'Gen. Bus. Posting Group';
-            }
-            field("Gen. Prod. Posting Group"; Rec."Gen. Prod. Posting Group")
-            {
-                ApplicationArea = all;
-                Caption = 'Gen. Prod. Posting Group';
-            }
-            field("VAT Bus. Posting Group"; Rec."VAT Bus. Posting Group")
-            {
-                ApplicationArea = all;
-                Caption = 'VAT Bus. Posting Group';
-            }
-            field("VAT Prod. Posting Group"; rec."VAT Prod. Posting Group")
-            {
-                ApplicationArea = all;
-            }
+        }
+        modify("Gen. Bus. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("VAT Bus. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("Gen. Prod. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("VAT Prod. Posting Group")
+        {
+            Visible = true;
+        }
+        moveafter("Location Code"; "Gen. Bus. Posting Group", "Gen. Prod. Posting Group", "VAT Bus. Posting Group", "VAT Prod. Posting Group")
+        addafter("VAT Prod. Posting Group")
+        {
             field("WHT Business Posting Group"; Rec."WHT Business Posting Group")
             {
-                Caption = 'WHT Business Posting Group';
                 ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
             }
             field("WHT Product Posting Group"; rec."WHT Product Posting Group")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
             }
-
         }
         addlast(Control1)
         {
             field("Tax Invoice Date"; Rec."Tax Invoice Date")
             {
                 ApplicationArea = all;
-                Caption = 'Tax Invoice Date';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Tax Invoice No."; Rec."Tax Invoice No.")
             {
                 ApplicationArea = all;
-                Caption = 'Tax Invoice No.';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Tax Vendor No."; Rec."Tax Vendor No.")
             {
                 ApplicationArea = all;
-                Caption = 'Tax Vendor No.';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Tax Invoice Name"; Rec."Tax Invoice Name")
             {
                 ApplicationArea = all;
-                Caption = 'Tax Invoice Name';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Tax Invoice Base"; Rec."Tax Invoice Base")
             {
                 ApplicationArea = all;
-                Caption = 'Tax Invoice Base';
+                ToolTip = 'Specifies value of the field.';
             }
 
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
-                Caption = 'Head Office';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
-                Caption = 'Branch Code';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Vat Registration No."; Rec."Vat Registration No.")
             {
                 ApplicationArea = all;
-                Caption = 'Vat Registration No.';
+                ToolTip = 'Specifies value of the field.';
             }
         }
 

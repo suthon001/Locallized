@@ -7,20 +7,30 @@ pageextension 80015 "GLEntry" extends "General Ledger Entries"
             field("Journal Description"; Rec."Journal Description")
             {
                 ApplicationArea = All;
-                Caption = 'Journal Description';
+                ToolTip = 'Specifies value of the field.';
             }
-            field("VAT Bus. Posting Group"; rec."VAT Bus. Posting Group")
-            {
-                ApplicationArea = all;
-            }
-            field("VAT Prod. Posting Group"; rec."VAT Prod. Posting Group")
-            {
-                ApplicationArea = all;
-            }
+
         }
         modify("External Document No.")
         {
             Visible = true;
         }
+        modify("Gen. Bus. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("VAT Bus. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("Gen. Prod. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("VAT Prod. Posting Group")
+        {
+            Visible = true;
+        }
+        moveafter("Journal Description"; "Gen. Bus. Posting Group", "Gen. Prod. Posting Group", "VAT Bus. Posting Group", "VAT Prod. Posting Group")
     }
 }

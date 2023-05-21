@@ -5,6 +5,7 @@ page 50019 "Goods Receipt Note Card"
     PromotedActionCategories = 'New,Process,Report,Approve,Release,Posting,Prepare,Order,Request Approval,Print/Send,Navigate';
     RefreshOnActivate = true;
     SourceTable = "Purchase Header";
+    UsageCategory = None;
     InsertAllowed = false;
     DeleteAllowed = false;
     SourceTableView = WHERE("Document Type" = FILTER(Order), Status = const(Released));
@@ -37,7 +38,7 @@ page 50019 "Goods Receipt Note Card"
                     trigger OnValidate()
                     begin
                         Rec.OnAfterValidateBuyFromVendorNo(Rec, xRec);
-                        CurrPage.Update;
+                        CurrPage.Update();
                     end;
                 }
                 field("Buy-from Vendor Name"; Rec."Buy-from Vendor Name")
@@ -51,7 +52,7 @@ page 50019 "Goods Receipt Note Card"
                     trigger OnValidate()
                     begin
                         Rec.OnAfterValidateBuyFromVendorNo(Rec, xRec);
-                        CurrPage.Update;
+                        CurrPage.Update();
                     end;
                 }
                 field("Posting Description"; Rec."Posting Description")
@@ -118,10 +119,7 @@ page 50019 "Goods Receipt Note Card"
                     QuickEntry = false;
                     ToolTip = 'Specifies the country or region of the address.';
 
-                    trigger OnValidate()
-                    begin
-                        IsBuyFromCountyVisible := FormatAddress.UseCounty(Rec."Buy-from Country/Region Code");
-                    end;
+
                 }
                 field("Buy-from Contact No."; Rec."Buy-from Contact No.")
                 {
@@ -155,7 +153,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnValidate()
                     begin
-                        SaveInvoiceDiscountAmount;
+                        SaveInvoiceDiscountAmount();
                     end;
                 }
                 field("Due Date"; Rec."Due Date")
@@ -181,7 +179,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnValidate()
                     begin
-                        PurchaserCodeOnAfterValidate;
+                        PurchaserCodeOnAfterValidate();
                     end;
                 }
                 field("Location Code"; Rec."Location Code")
@@ -193,6 +191,7 @@ page 50019 "Goods Receipt Note Card"
                 field("Expected Receipt Date"; rec."Expected Receipt Date")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("No. of Archived Versions"; Rec."No. of Archived Versions")
                 {
@@ -251,6 +250,7 @@ page 50019 "Goods Receipt Note Card"
                 field("Receiving No. Series"; Rec."Receiving No. Series")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field(Status; Rec.Status)
                 {
@@ -258,13 +258,7 @@ page 50019 "Goods Receipt Note Card"
                     Importance = Additional;
                     ToolTip = 'Specifies whether the record is open, waiting to be approved, invoiced for prepayment, or released to the next stage of processing.';
                 }
-                field("Job Queue Status"; Rec."Job Queue Status")
-                {
-                    ApplicationArea = All;
-                    Importance = Additional;
-                    ToolTip = 'Specifies the status of a job queue entry that handles the posting of purchase orders.';
-                    Visible = JobQueueUsed;
-                }
+
             }
             part(PurchLines; "Goods Receipt Note Subform")
             {
@@ -290,17 +284,17 @@ page 50019 "Goods Receipt Note Card"
                         if Rec."Posting Date" <> 0D then
                             ChangeExchangeRate.SetParameter(Rec."Currency Code", Rec."Currency Factor", Rec."Posting Date")
                         else
-                            ChangeExchangeRate.SetParameter(Rec."Currency Code", Rec."Currency Factor", WorkDate);
-                        if ChangeExchangeRate.RunModal = ACTION::OK then begin
-                            Rec.Validate("Currency Factor", ChangeExchangeRate.GetParameter);
-                            SaveInvoiceDiscountAmount;
+                            ChangeExchangeRate.SetParameter(Rec."Currency Code", Rec."Currency Factor", WorkDate());
+                        if ChangeExchangeRate.RunModal() = ACTION::OK then begin
+                            Rec.Validate("Currency Factor", ChangeExchangeRate.GetParameter());
+                            SaveInvoiceDiscountAmount();
                         end;
                         Clear(ChangeExchangeRate);
                     end;
 
                     trigger OnValidate()
                     begin
-                        CurrPage.SaveRecord;
+                        CurrPage.SaveRecord();
                         PurchCalcDiscByType.ApplyDefaultInvoiceDiscount(0, Rec);
                     end;
                 }
@@ -313,7 +307,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnValidate()
                     begin
-                        PricesIncludingVATOnAfterValid;
+                        PricesIncludingVATOnAfterValid();
                     end;
                 }
                 field("VAT Bus. Posting Group"; Rec."VAT Bus. Posting Group")
@@ -344,7 +338,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnValidate()
                     begin
-                        ShortcutDimension1CodeOnAfterV;
+                        ShortcutDimension1CodeOnAfterV();
                     end;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
@@ -355,7 +349,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnValidate()
                     begin
-                        ShortcutDimension2CodeOnAfterV;
+                        ShortcutDimension2CodeOnAfterV();
                     end;
                 }
 
@@ -387,7 +381,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnValidate()
                     begin
-                        CurrPage.PurchLines.PAGE.RedistributeTotalsOnAfterValidate;
+                        CurrPage.PurchLines.PAGE.RedistributeTotalsOnAfterValidate();
                     end;
                 }
                 field("Shipment Method Code"; Rec."Shipment Method Code")
@@ -461,7 +455,7 @@ page 50019 "Goods Receipt Note Card"
 
                             trigger OnValidate()
                             begin
-                                ValidateShippingOption;
+                                ValidateShippingOption();
                             end;
                         }
                         group(Control99)
@@ -729,7 +723,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnValidate()
                     begin
-                        Prepayment37OnAfterValidate;
+                        Prepayment37OnAfterValidate();
                     end;
                 }
                 field("Compress Prepayment"; Rec."Compress Prepayment")
@@ -874,8 +868,8 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnAction()
                     begin
-                        Rec.ShowDocDim;
-                        CurrPage.SaveRecord;
+                        Rec.ShowDocDim();
+                        CurrPage.SaveRecord();
                     end;
                 }
                 action(Statistics)
@@ -891,7 +885,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnAction()
                     begin
-                        Rec.OpenPurchaseOrderStatistics;
+                        Rec.OpenPurchaseOrderStatistics();
                         PurchCalcDiscByType.ResetRecalculateInvoiceDisc(Rec);
                     end;
                 }
@@ -899,12 +893,11 @@ page 50019 "Goods Receipt Note Card"
                 {
                     ApplicationArea = Suite;
                     Caption = 'Vendor';
-                    Enabled = Rec."Buy-from Vendor No." <> '';
+                    Enabled = rec."Buy-from Vendor No." <> '';
                     Image = Vendor;
-                    Promoted = true;
-                    PromotedCategory = Category11;
                     RunObject = Page "Vendor Card";
-                    RunPageLink = "No." = FIELD("Buy-from Vendor No.");
+                    RunPageLink = "No." = FIELD("Buy-from Vendor No."),
+                                  "Date Filter" = FIELD("Date Filter");
                     ShortCutKey = 'Shift+F7';
                     ToolTip = 'View or edit detailed information about the vendor on the purchase document.';
                 }
@@ -914,15 +907,13 @@ page 50019 "Goods Receipt Note Card"
                     ApplicationArea = Suite;
                     Caption = 'Approvals';
                     Image = Approvals;
-                    Promoted = true;
-                    PromotedCategory = Category8;
                     ToolTip = 'View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.';
 
                     trigger OnAction()
                     var
-                        WorkflowsEntriesBuffer: Record "Workflows Entries Buffer";
+                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
                     begin
-                        WorkflowsEntriesBuffer.RunWorkflowEntriesPage(Rec.RecordId, DATABASE::"Purchase Header", 1, Rec."No.");
+                        ApprovalsMgmt.OpenApprovalsPurchase(Rec);
                     end;
                 }
                 action("Co&mments")
@@ -954,7 +945,7 @@ page 50019 "Goods Receipt Note Card"
                     begin
                         RecRef.GetTable(Rec);
                         DocumentAttachmentDetails.OpenForRecRef(RecRef);
-                        DocumentAttachmentDetails.RunModal;
+                        DocumentAttachmentDetails.RunModal();
                     end;
                 }
             }
@@ -1168,7 +1159,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnAction()
                     begin
-                        ApproveCalcInvDisc;
+                        ApproveCalcInvDisc();
                         PurchCalcDiscByType.ResetRecalculateInvoiceDisc(Rec);
                     end;
                 }
@@ -1201,7 +1192,7 @@ page 50019 "Goods Receipt Note Card"
                     trigger OnAction()
                     begin
                         CopyPurchDoc.SetPurchHeader(Rec);
-                        CopyPurchDoc.RunModal;
+                        CopyPurchDoc.RunModal();
                         Clear(CopyPurchDoc);
                         if Rec.Get(Rec."Document Type", Rec."No.") then;
                     end;
@@ -1218,8 +1209,8 @@ page 50019 "Goods Receipt Note Card"
                     begin
                         Clear(MoveNegPurchLines);
                         MoveNegPurchLines.SetPurchHeader(Rec);
-                        MoveNegPurchLines.RunModal;
-                        MoveNegPurchLines.ShowDocument;
+                        MoveNegPurchLines.RunModal();
+                        MoveNegPurchLines.ShowDocument();
                     end;
                 }
                 group(Action225)
@@ -1351,7 +1342,7 @@ page 50019 "Goods Receipt Note Card"
                             IncomingDocument: Record "Incoming Document";
                         begin
                             if IncomingDocument.Get(Rec."Incoming Document Entry No.") then
-                                IncomingDocument.RemoveLinkToRelatedRecord;
+                                IncomingDocument.RemoveLinkToRelatedRecord();
                             Rec."Incoming Document Entry No." := 0;
                             Rec.Modify(true);
                         end;
@@ -1378,7 +1369,7 @@ page 50019 "Goods Receipt Note Card"
                         GetSourceDocInbound.CreateFromPurchOrder(Rec);
 
                         if not Rec.Find('=><') then
-                            Rec.Init;
+                            Rec.Init();
                     end;
                 }
                 action("Create Inventor&y Put-away/Pick")
@@ -1394,10 +1385,10 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnAction()
                     begin
-                        Rec.CreateInvtPutAwayPick;
+                        Rec.CreateInvtPutAwayPick();
 
                         if not Rec.Find('=><') then
-                            Rec.Init;
+                            Rec.Init();
                     end;
                 }
             }
@@ -1433,7 +1424,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnAction()
                     begin
-                        ShowPreview;
+                        ShowPreview();
                     end;
                 }
                 action("Test Report")
@@ -1460,7 +1451,7 @@ page 50019 "Goods Receipt Note Card"
 
                     trigger OnAction()
                     begin
-                        Rec.CancelBackgroundPosting;
+                        Rec.CancelBackgroundPosting();
                     end;
                 }
                 group("Prepa&yment")
@@ -1523,7 +1514,7 @@ page 50019 "Goods Receipt Note Card"
 
                         trigger OnAction()
                         begin
-                            ShowPrepmtInvoicePreview;
+                            ShowPrepmtInvoicePreview();
                         end;
                     }
                     action(PostPrepaymentCreditMemo)
@@ -1569,7 +1560,7 @@ page 50019 "Goods Receipt Note Card"
 
                         trigger OnAction()
                         begin
-                            ShowPrepmtCrMemoPreview;
+                            ShowPrepmtCrMemoPreview();
                         end;
                     }
                 }
@@ -1586,12 +1577,13 @@ page 50019 "Goods Receipt Note Card"
                     PromotedCategory = Category10;
                     Promoted = true;
                     PromotedIsBig = true;
+                    ToolTip = 'Show Report';
                     trigger OnAction()
                     var
 
                         PurchaseHeader: Record "Purchase Header";
                     begin
-                        PurchaseHeader.reset;
+                        PurchaseHeader.reset();
                         PurchaseHeader.SetRange("Document Type", rec."Document Type");
                         PurchaseHeader.SetRange("No.", rec."No.");
                         REPORT.RunModal(REPORT::"PurchaseOrder", true, true, PurchaseHeader);
@@ -1605,12 +1597,13 @@ page 50019 "Goods Receipt Note Card"
                     PromotedCategory = Category10;
                     Promoted = true;
                     PromotedIsBig = true;
+                    ToolTip = 'Show Report';
                     trigger OnAction()
                     var
                         PurchaseRecripet: Record "Purch. Rcpt. Header";
                     begin
 
-                        PurchaseRecripet.reset;
+                        PurchaseRecripet.reset();
                         PurchaseRecripet.SetRange("Order No.", rec."No.");
                         if PurchaseRecripet.FindLast() then
                             REPORT.RunModal(REPORT::"Good Receipt Note", true, true, PurchaseRecripet);
@@ -1653,7 +1646,7 @@ page 50019 "Goods Receipt Note Card"
                     begin
                         PurchaseHeader := Rec;
                         CurrPage.SetSelectionFilter(PurchaseHeader);
-                        PurchaseHeader.SendRecords;
+                        PurchaseHeader.SendRecords();
                     end;
                 }
             }
@@ -1662,7 +1655,7 @@ page 50019 "Goods Receipt Note Card"
 
     trigger OnAfterGetCurrRecord()
     begin
-        SetControlAppearance;
+        SetControlAppearance();
         CurrPage.IncomingDocAttachFactBox.PAGE.LoadDataFromRecord(Rec);
         CurrPage.ApprovalFactBox.PAGE.UpdateApprovalEntriesFromSourceRecord(Rec.RecordId);
         ShowWorkflowStatus := CurrPage.WorkflowStatus.PAGE.SetFilterOnWorkflowRecord(Rec.RecordId);
@@ -1670,62 +1663,59 @@ page 50019 "Goods Receipt Note Card"
 
     trigger OnAfterGetRecord()
     begin
-        CalculateCurrentShippingAndPayToOption;
+        CalculateCurrentShippingAndPayToOption();
     end;
 
     trigger OnDeleteRecord(): Boolean
     begin
-        CurrPage.SaveRecord;
-        exit(Rec.ConfirmDeletion);
+        CurrPage.SaveRecord();
+        exit(Rec.ConfirmDeletion());
     end;
 
     trigger OnInit()
     var
-        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
         ApplicationAreaMgmtFacade: Codeunit "Application Area Mgmt. Facade";
     begin
-        JobQueueUsed := PurchasesPayablesSetup.JobQueueActive;
-        SetExtDocNoMandatoryCondition;
-        ShowShippingOptionsWithLocation := ApplicationAreaMgmtFacade.IsLocationEnabled or ApplicationAreaMgmtFacade.IsAllDisabled;
+
+        SetExtDocNoMandatoryCondition();
+        ShowShippingOptionsWithLocation := ApplicationAreaMgmtFacade.IsLocationEnabled() or ApplicationAreaMgmtFacade.IsAllDisabled();
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        Rec."Responsibility Center" := UserMgt.GetPurchasesFilter;
+        Rec."Responsibility Center" := UserMgt.GetPurchasesFilter();
 
         if (not DocNoVisible) and (Rec."No." = '') then
-            Rec.SetBuyFromVendorFromFilter;
+            Rec.SetBuyFromVendorFromFilter();
 
-        CalculateCurrentShippingAndPayToOption;
+        CalculateCurrentShippingAndPayToOption();
     end;
 
     trigger OnOpenPage()
-    var
-        EnvironmentInfo: Codeunit "Environment Information";
     begin
-        SetDocNoVisible;
-        IsSaaS := EnvironmentInfo.IsSaaS;
+        SetDocNoVisible();
 
-        if UserMgt.GetPurchasesFilter <> '' then begin
+
+        if UserMgt.GetPurchasesFilter() <> '' then begin
             Rec.FilterGroup(2);
-            Rec.SetRange("Responsibility Center", UserMgt.GetPurchasesFilter);
+            Rec.SetRange("Responsibility Center", UserMgt.GetPurchasesFilter());
             Rec.FilterGroup(0);
         end;
         if (Rec."No." <> '') and (Rec."Buy-from Vendor No." = '') then
             DocumentIsPosted := (not Rec.Get(Rec."Document Type", Rec."No."));
 
-        ActivateFields;
+        ActivateFields();
     end;
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     var
         InstructionMgt: Codeunit "Instruction Mgt.";
     begin
-        if ShowReleaseNotification then
-            if not InstructionMgt.ShowConfirmUnreleased then
+        if ShowReleaseNotification() then
+            if not InstructionMgt.ShowConfirmUnreleased() then
                 exit(false);
         if not DocumentIsPosted then
-            exit(Rec.ConfirmCloseUnposted);
+            exit(Rec.ConfirmCloseUnposted());
     end;
 
     var
@@ -1743,27 +1733,26 @@ page 50019 "Goods Receipt Note Card"
 
         JobQueueVisible: Boolean;
         [InDataSet]
-        JobQueueUsed: Boolean;
         HasIncomingDocument: Boolean;
         DocNoVisible: Boolean;
         VendorInvoiceNoMandatory: Boolean;
         OpenApprovalEntriesExistForCurrUser: Boolean;
-        OpenApprovalEntriesExist: Boolean;
+
         ShowWorkflowStatus: Boolean;
-        CanCancelApprovalForRecord: Boolean;
+
         DocumentIsPosted: Boolean;
         OpenPostedPurchaseOrderQst: Label 'The order is posted as number %1 and moved to the Posted Purchase Invoices window.\\Do you want to open the posted invoice?', Comment = '%1 = posted document number';
         CanRequestApprovalForFlow: Boolean;
         CanCancelApprovalForFlow: Boolean;
         ShowShippingOptionsWithLocation: Boolean;
-        IsSaaS: Boolean;
-        IsBuyFromCountyVisible: Boolean;
+
+
         IsPayToCountyVisible: Boolean;
         IsShipToCountyVisible: Boolean;
 
     local procedure ActivateFields()
     begin
-        IsBuyFromCountyVisible := FormatAddress.UseCounty(Rec."Buy-from Country/Region Code");
+
         IsPayToCountyVisible := FormatAddress.UseCounty(Rec."Pay-to Country/Region Code");
         IsShipToCountyVisible := FormatAddress.UseCounty(Rec."Ship-to Country/Region Code");
     end;
@@ -1776,7 +1765,7 @@ page 50019 "Goods Receipt Note Card"
         LinesInstructionMgt: Codeunit "Lines Instruction Mgt.";
         IsScheduledPosting: Boolean;
     begin
-        if ApplicationAreaMgmtFacade.IsFoundationEnabled then
+        if ApplicationAreaMgmtFacade.IsFoundationEnabled() then
             LinesInstructionMgt.PurchaseCheckAllLinesHaveQuantityAssigned(Rec);
 
         Rec.SendToPosting(PostingCodeunitID);
@@ -1785,26 +1774,26 @@ page 50019 "Goods Receipt Note Card"
         DocumentIsPosted := (not PurchaseHeader.Get(Rec."Document Type", Rec."No.")) or IsScheduledPosting;
 
         if IsScheduledPosting then
-            CurrPage.Close;
+            CurrPage.Close();
         CurrPage.Update(false);
 
         if PostingCodeunitID <> CODEUNIT::"Purch.-Post (Yes/No)" then
             exit;
 
-        if InstructionMgt.IsEnabled(InstructionMgt.ShowPostedConfirmationMessageCode) then
-            ShowPostedConfirmationMessage;
+        if InstructionMgt.IsEnabled(InstructionMgt.ShowPostedConfirmationMessageCode()) then
+            ShowPostedConfirmationMessage();
     end;
 
     local procedure ApproveCalcInvDisc()
     begin
-        CurrPage.PurchLines.PAGE.ApproveCalcInvDisc;
+        CurrPage.PurchLines.PAGE.ApproveCalcInvDisc();
     end;
 
     local procedure SaveInvoiceDiscountAmount()
     var
         DocumentTotals: Codeunit "Document Totals";
     begin
-        CurrPage.SaveRecord;
+        CurrPage.SaveRecord();
         DocumentTotals.PurchaseRedistributeInvoiceDiscountAmountsOnDocument(Rec);
         CurrPage.Update(false);
     end;
@@ -1816,22 +1805,22 @@ page 50019 "Goods Receipt Note Card"
 
     local procedure ShortcutDimension1CodeOnAfterV()
     begin
-        CurrPage.Update;
+        CurrPage.Update();
     end;
 
     local procedure ShortcutDimension2CodeOnAfterV()
     begin
-        CurrPage.Update;
+        CurrPage.Update();
     end;
 
     local procedure PricesIncludingVATOnAfterValid()
     begin
-        CurrPage.Update;
+        CurrPage.Update();
     end;
 
     local procedure Prepayment37OnAfterValidate()
     begin
-        CurrPage.Update;
+        CurrPage.Update();
     end;
 
     local procedure ShowPreview()
@@ -1867,24 +1856,22 @@ page 50019 "Goods Receipt Note Card"
     var
         PurchasesPayablesSetup: Record "Purchases & Payables Setup";
     begin
-        PurchasesPayablesSetup.Get;
+        PurchasesPayablesSetup.Get();
         VendorInvoiceNoMandatory := PurchasesPayablesSetup."Ext. Doc. No. Mandatory"
     end;
 
     local procedure SetControlAppearance()
     var
         ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-        WorkflowWebhookMgt: Codeunit "Workflow Webhook Management";
+        WorkflowWebhookManagement: Codeunit "Workflow Webhook Management";
     begin
         JobQueueVisible := Rec."Job Queue Status" = Rec."Job Queue Status"::"Scheduled for Posting";
         HasIncomingDocument := Rec."Incoming Document Entry No." <> 0;
-        SetExtDocNoMandatoryCondition;
+        SetExtDocNoMandatoryCondition();
 
         OpenApprovalEntriesExistForCurrUser := ApprovalsMgmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId);
-        OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(Rec.RecordId);
-        CanCancelApprovalForRecord := ApprovalsMgmt.CanCancelApprovalForRecord(Rec.RecordId);
 
-        WorkflowWebhookMgt.GetCanRequestAndCanCancel(Rec.RecordId, CanRequestApprovalForFlow, CanCancelApprovalForFlow);
+        WorkflowWebhookManagement.GetCanRequestAndCanCancel(Rec.RecordId, CanRequestApprovalForFlow, CanCancelApprovalForFlow);
     end;
 
     local procedure ShowPostedConfirmationMessage()
@@ -1895,9 +1882,9 @@ page 50019 "Goods Receipt Note Card"
     begin
         if not OrderPurchaseHeader.Get(Rec."Document Type", Rec."No.") then begin
             PurchInvHeader.SetRange("No.", Rec."Last Posting No.");
-            if PurchInvHeader.FindFirst then
+            if PurchInvHeader.FindFirst() then
                 if InstructionMgt.ShowConfirm(StrSubstNo(OpenPostedPurchaseOrderQst, PurchInvHeader."No."),
-                     InstructionMgt.ShowPostedConfirmationMessageCode)
+                     InstructionMgt.ShowPostedConfirmationMessageCode())
                 then
                     PAGE.Run(PAGE::"Posted Purchase Invoice", PurchInvHeader);
         end;
@@ -1932,14 +1919,14 @@ page 50019 "Goods Receipt Note Card"
         if Rec.Status <> Rec.Status::Released then begin
             LocationsQuery.SetRange(Document_No, Rec."No.");
             LocationsQuery.SetRange(Require_Receive, true);
-            LocationsQuery.Open;
-            if LocationsQuery.Read then
+            LocationsQuery.Open();
+            if LocationsQuery.Read() then
                 exit(true);
             LocationsQuery.SetRange(Document_No, Rec."No.");
             LocationsQuery.SetRange(Require_Receive);
             LocationsQuery.SetRange(Require_Put_away, true);
-            LocationsQuery.Open;
-            exit(LocationsQuery.Read);
+            LocationsQuery.Open();
+            exit(LocationsQuery.Read());
         end;
         exit(false);
     end;
@@ -1952,16 +1939,16 @@ page 50019 "Goods Receipt Note Card"
             Rec."Location Code" <> '':
                 ShipToOptions := ShipToOptions::Location;
             else
-                if Rec.ShipToAddressEqualsCompanyShipToAddress then
+                if Rec.ShipToAddressEqualsCompanyShipToAddress() then
                     ShipToOptions := ShipToOptions::"Default (Company Address)"
                 else
                     ShipToOptions := ShipToOptions::"Custom Address";
         end;
 
         case true of
-            (Rec."Pay-to Vendor No." = Rec."Buy-from Vendor No.") and Rec.BuyFromAddressEqualsPayToAddress:
+            (Rec."Pay-to Vendor No." = Rec."Buy-from Vendor No.") and Rec.BuyFromAddressEqualsPayToAddress():
                 PayToOptions := PayToOptions::"Default (Vendor)";
-            (Rec."Pay-to Vendor No." = Rec."Buy-from Vendor No.") and (not Rec.BuyFromAddressEqualsPayToAddress):
+            (Rec."Pay-to Vendor No." = Rec."Buy-from Vendor No.") and (not Rec.BuyFromAddressEqualsPayToAddress()):
                 PayToOptions := PayToOptions::"Custom Address";
             Rec."Pay-to Vendor No." <> Rec."Buy-from Vendor No.":
                 PayToOptions := PayToOptions::"Another Vendor";

@@ -3,24 +3,25 @@ pageextension 80078 "Sales Credit Memo Card" extends "Sales Credit Memo"
     PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Credit Memo,Request Approval,Navigate';
     layout
     {
-        addafter(Status)
+        addbefore(Status)
         {
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
-                Caption = 'Head Office';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
-                Caption = 'Branch Code';
+                ToolTip = 'Specifies value of the field.';
             }
-            field("VAT Registration No."; Rec."VAT Registration No.")
-            {
-                ApplicationArea = all;
-                Caption = 'VAT Registration No.';
-            }
+
         }
+        modify("VAT Registration No.")
+        {
+            Visible = true;
+        }
+        moveafter("Branch Code"; "VAT Registration No.")
         modify("No.")
         {
             Visible = true;
@@ -44,12 +45,13 @@ pageextension 80078 "Sales Credit Memo Card" extends "Sales Credit Memo"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Show Report';
                 trigger OnAction()
                 var
                     ARCNVoucher: Report "AR CN Voucher";
                     SalesHeader: Record "Sales Header";
                 begin
-                    SalesHeader.reset;
+                    SalesHeader.RESET();
                     SalesHeader.Copy(Rec);
                     ARCNVoucher."SetGLEntry"(SalesHeader);
                     ARCNVoucher.RunModal();
@@ -63,11 +65,12 @@ pageextension 80078 "Sales Credit Memo Card" extends "Sales Credit Memo"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Show Report';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Report Sales Credit Memo", TRUE, TRUE, RecSalesHeader);

@@ -47,34 +47,30 @@ pageextension 80062 "Sales Order Lists" extends "Sales Order List"
         {
             Visible = false;
         }
-
-
-        moveafter("No."; Status, "Posting Date", "Sell-to Customer No.", "Bill-to Customer No.",
-        "Sell-to Customer Name", "External Document No.", "Document Date", "Due Date", "Quote No.", Amount, "Amount Including VAT")
-        addafter("Quote No.")
+        modify("Your Reference")
         {
-            field("Your Reference"; Rec."Your Reference")
-            {
-                ApplicationArea = all;
-                Caption = 'Your Reference';
-            }
+            Visible = true;
         }
+        moveafter("No."; Status, "Posting Date", "Sell-to Customer No.", "Bill-to Customer No.",
+        "Sell-to Customer Name", "External Document No.", "Document Date", "Due Date", "Quote No.", "Your Reference", Amount, "Amount Including VAT")
+
+
         addafter("Amount Including VAT")
         {
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
-                Caption = 'Head Office';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
-                Caption = 'Branch Code';
+                ToolTip = 'Specifies value of the field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
-                Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies value of the field.';
             }
         }
 
@@ -94,11 +90,12 @@ pageextension 80062 "Sales Order Lists" extends "Sales Order List"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Show Report';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Report Sales Order", TRUE, TRUE, RecSalesHeader);
@@ -112,11 +109,12 @@ pageextension 80062 "Sales Order Lists" extends "Sales Order List"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Show Report';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Shipment Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetCurrentKey("Order No.");
                     RecSalesHeader.SetRange("Order No.", rec."No.");
                     if RecSalesHeader.FindLast() then

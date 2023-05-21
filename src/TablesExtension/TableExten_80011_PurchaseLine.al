@@ -115,7 +115,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
             begin
                 if not Vend.GET("Tax Vendor No.") then
                     Vend.init;
-                "Tax Invoice Name" := Vend.Name + ' ' + Vend."Name 2";
+                "Tax Invoice Name" := Vend.Name;
                 "Vat Registration No." := Vend."VAT Registration No.";
                 "Head Office" := Vend."Head Office";
                 "Branch Code" := Vend."Branch Code";
@@ -123,7 +123,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
                     "Head Office" := true;
             end;
         }
-        field(80012; "Tax Invoice Name"; Text[150])
+        field(80012; "Tax Invoice Name"; Text[100])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;

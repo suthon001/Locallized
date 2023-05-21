@@ -36,20 +36,16 @@ table 50011 "VAT Transections"
             Editable = false;
             DataClassification = SystemMetadata;
         }
-        field(6; "Document Type"; Option)
+        field(6; "Document Type"; Enum "Gen. Journal Document Type")
         {
             Caption = 'Document Type';
             Editable = false;
-            OptionCaption = ' ,Payment,Invoice,Credit Memo,Finance Charge Memo,Reminder,Refund';
-            OptionMembers = " ",Payment,Invoice,"Credit Memo","Finance Charge Memo",Reminder,Refund;
             DataClassification = SystemMetadata;
         }
-        field(7; "Type"; Option)
+        field(7; "Type"; Enum "General Posting Type")
         {
             Caption = 'Type';
             Editable = false;
-            OptionCaption = ' ,Purchase,Sale,Settlement';
-            OptionMembers = " ",Purchase,Sale,Settlement;
             DataClassification = SystemMetadata;
 
         }
@@ -67,12 +63,10 @@ table 50011 "VAT Transections"
             Editable = false;
             DataClassification = SystemMetadata;
         }
-        field(10; "VAT Calculation Type"; Option)
+        field(10; "VAT Calculation Type"; Enum "Tax Calculation Type")
         {
             Caption = 'VAT Calculation Type';
             Editable = false;
-            OptionCaption = 'Normal VAT,Reverse Charge VAT,Full VAT,Sales Tax';
-            OptionMembers = "Normal VAT","Reverse Charge VAT","Full VAT","Sales Tax";
             DataClassification = SystemMetadata;
         }
         field(12; "Bill-to/Pay-to No."; Code[20])
@@ -271,7 +265,7 @@ table 50011 "VAT Transections"
         field(43; "Additional-Currency Amount"; Decimal)
         {
             AccessByPermission = TableData 4 = R;
-            AutoFormatExpression = "GetCurrencyCode";
+            AutoFormatExpression = GetCurrencyCode();
             AutoFormatType = 1;
             Caption = 'Additional-Currency Amount';
             Editable = false;
@@ -280,7 +274,7 @@ table 50011 "VAT Transections"
         field(44; "Additional-Currency Base"; Decimal)
         {
             AccessByPermission = TableData 4 = R;
-            AutoFormatExpression = "GetCurrencyCode";
+            AutoFormatExpression = GetCurrencyCode();
             AutoFormatType = 1;
             Caption = 'Additional-Currency Base';
             Editable = false;
@@ -288,7 +282,7 @@ table 50011 "VAT Transections"
         }
         field(45; "Add.-Curr. Unrealized Amt."; Decimal)
         {
-            AutoFormatExpression = "GetCurrencyCode";
+            AutoFormatExpression = GetCurrencyCode();
             AutoFormatType = 1;
             Caption = 'Add.-Currency Unrealized Amt.';
             Editable = false;
@@ -296,7 +290,7 @@ table 50011 "VAT Transections"
         }
         field(46; "Add.-Curr. Unrealized Base"; Decimal)
         {
-            AutoFormatExpression = "GetCurrencyCode";
+            AutoFormatExpression = GetCurrencyCode();
             AutoFormatType = 1;
             Caption = 'Add.-Currency Unrealized Base';
             Editable = false;
@@ -313,7 +307,7 @@ table 50011 "VAT Transections"
         }
         field(49; "Add.Curr. Rem. Unreal. Amt"; Decimal)
         {
-            AutoFormatExpression = "GetCurrencyCode";
+            AutoFormatExpression = GetCurrencyCode();
             AutoFormatType = 1;
             Caption = 'Add.-Curr. Rem. Unreal. Amount';
             Editable = false;
@@ -321,7 +315,7 @@ table 50011 "VAT Transections"
         }
         field(50; "Add.Curr. Rem. Unreal.Base"; Decimal)
         {
-            AutoFormatExpression = "GetCurrencyCode";
+            AutoFormatExpression = GetCurrencyCode();
             AutoFormatType = 1;
             Caption = 'Add.-Curr. Rem. Unreal. Base';
             Editable = false;
@@ -337,7 +331,7 @@ table 50011 "VAT Transections"
         field(52; "Add.-Curr. VAT Difference"; Decimal)
         {
             AccessByPermission = TableData 4 = R;
-            AutoFormatExpression = "GetCurrencyCode";
+            AutoFormatExpression = GetCurrencyCode();
             AutoFormatType = 1;
             Caption = 'Add.-Curr. VAT Difference';
             Editable = false;
@@ -581,10 +575,8 @@ table 50011 "VAT Transections"
 
 
     var
-        Text000: Label 'You cannot change the contents of this field when %1 is %2.';
-        Cust: Record Customer;
-        Vend: Record Vendor;
-        GLSetup: Record "General Ledger Setup";
+
+        GeneralLedgerSetup: Record "General Ledger Setup";
         GLSetupRead: Boolean;
 
     /// <summary> 
@@ -594,10 +586,10 @@ table 50011 "VAT Transections"
     local procedure "GetCurrencyCode"(): Code[10]
     begin
         IF NOT GLSetupRead THEN BEGIN
-            GLSetup.GET;
+            GeneralLedgerSetup.GET();
             GLSetupRead := TRUE;
         END;
-        EXIT(GLSetup."Additional Reporting Currency");
+        EXIT(GeneralLedgerSetup."Additional Reporting Currency");
     end;
 
 

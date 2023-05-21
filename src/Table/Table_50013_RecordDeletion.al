@@ -13,7 +13,7 @@ table 50013 "Record Deletion Table"
                 ALLObject: Record AllObj;
             begin
                 if not ALLObject.GET(ALLObject."Object Type"::Table, "Table ID") then
-                    ALLObject.init;
+                    ALLObject.init();
                 "Table Name" := ALLObject."Object Name";
             end;
 

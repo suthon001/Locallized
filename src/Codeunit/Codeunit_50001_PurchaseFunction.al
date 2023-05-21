@@ -140,6 +140,12 @@ codeunit 50001 "Purchase Function"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterPreparePurchase', '', false, false)]
+    local procedure OnAfterPreparePurchase(var PurchaseLine: Record "Purchase Line"; var InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary)
+    begin
+
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterInvPostBufferPreparePurchase', '', true, true)]
     local procedure "InvoiceBufferPurchase"(var InvoicePostBuffer: Record "Invoice Post. Buffer"; var PurchaseLine: Record "Purchase Line")
     var
@@ -216,7 +222,7 @@ codeunit 50001 "Purchase Function"
         PurchaseLine: Record "Purchase Line";
         Item: Record Item;
     begin
-        PurchaseLine.reset;
+        PurchaseLine.reset();
         PurchaseLine.SetRange("Document Type", PurchaseHeader."Document Type");
         PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
         PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);

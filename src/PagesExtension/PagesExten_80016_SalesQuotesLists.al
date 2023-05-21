@@ -30,39 +30,40 @@ pageextension 80016 "Sales Quotes Lists" extends "Sales Quotes"
 
         moveafter("No."; Status, "Sell-to Customer No.", "Bill-to Customer No.", "Sell-to Customer Name", "External Document No.", "Posting Date", "Document Date", "Due Date",
         "Quote Valid Until Date", Amount)
-        addafter("Quote Valid Until Date")
+        modify("Your Reference")
         {
-            field("Your Reference"; Rec."Your Reference")
-            {
-                ApplicationArea = all;
-            }
-
-
+            Visible = true;
         }
+        moveafter("Quote Valid Until Date"; "Your Reference")
+
         addafter(Amount)
         {
             field("Amount Including VAT"; Rec."Amount Including VAT")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
             }
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
-                Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies value of the field.';
+
             }
             field("Sales Order No."; rec."Sales Order No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
             }
-
         }
 
     }
@@ -83,11 +84,12 @@ pageextension 80016 "Sales Quotes Lists" extends "Sales Quotes"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Category6;
+                ToolTip = 'Show Report';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Report Sales Quotes", TRUE, TRUE, RecSalesHeader);

@@ -2,30 +2,32 @@ pageextension 80051 "ApplyCustEntries" extends "Apply Customer Entries"
 {
     layout
     {
-        addafter("Document No.")
+        modify("External Document No.")
         {
-            field("External Document No."; Rec."External Document No.")
-            {
-                ApplicationArea = All;
-            }
+            Visible = true;
+        }
+        moveafter("Document No."; "External Document No.")
+        addafter("External Document No.")
+        {
             field("LS Sales Billing No."; SalesBillingDocNo)
             {
                 ApplicationArea = All;
                 Editable = false;
+                ToolTip = 'Specifies value of the field.';
+                Caption = 'Sales Billing No.';
             }
         }
     }
     trigger OnAfterGetRecord()
     var
-        SalesBillingLine: Record "Billing Receipt Line";
+        BillingReceiptLine: Record "Billing Receipt Line";
     begin
         SalesBillingDocNo := '';
-        SalesBillingLine.reset;
-        SalesBillingLine.SetRange("Document Type", SalesBillingLine."Document Type"::"Sales Billing");
-        SalesBillingLine.SetRange("Source Ledger Entry No.", Rec."Entry No.");
-        if SalesBillingLine.FindFirst() then begin
-            SalesBillingDocNo := SalesBillingLine."Document No.";
-        end;
+        BillingReceiptLine.reset();
+        BillingReceiptLine.SetRange("Document Type", BillingReceiptLine."Document Type"::"Sales Billing");
+        BillingReceiptLine.SetRange("Source Ledger Entry No.", Rec."Entry No.");
+        if BillingReceiptLine.FindFirst() then
+            SalesBillingDocNo := BillingReceiptLine."Document No.";
     end;
 
     var

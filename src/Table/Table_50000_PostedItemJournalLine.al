@@ -23,13 +23,10 @@ table 50000 "Posted ItemJournal Lines"
             Caption = 'Posting Date';
             DataClassification = SystemMetadata;
         }
-        field(5; "Entry Type"; Option)
+        field(5; "Entry Type"; Enum "Item Journal Entry Type")
         {
             Caption = 'Entry Type';
             DataClassification = SystemMetadata;
-            OptionCaption = 'Purchase, Sale, "Positive Adjmt.", "Negative Adjmt.", Transfer, Consumption, Output, " ", "Assembly Consumption", "Assembly Output"';
-            OptionMembers = Purchase,Sale,"Positive Adjmt.","Negative Adjmt.",Transfer,Consumption,Output," ","Assembly Consumption","Assembly Output";
-
         }
         field(6; "Source No."; Code[20])
         {
@@ -126,12 +123,11 @@ table 50000 "Posted ItemJournal Lines"
             Caption = 'Indirect Cost %"';
             DataClassification = SystemMetadata;
         }
-        field(39; "Source Type"; Option)
+        field(39; "Source Type"; Enum "Analysis Source Type")
         {
             Caption = 'Source Type';
             DataClassification = SystemMetadata;
-            OptionCaption = '" ", Customer, Vendor, Item';
-            OptionMembers = " ",Customer,Vendor,Item;
+
         }
         field(40; "Shpt. Method Code"; Code[10])
         {
@@ -153,8 +149,8 @@ table 50000 "Posted ItemJournal Lines"
         {
             Caption = 'Recurring Method';
             DataClassification = SystemMetadata;
-            OptionCaption = ' , "Fixed", Variable';
-            OptionMembers = " ","Fixed",Variable;
+            OptionCaption = ',Fixed,Variable';
+            OptionMembers = ,"Fixed",Variable;
         }
         field(44; "Expiration Date"; Date)
         {
@@ -276,24 +272,26 @@ table 50000 "Posted ItemJournal Lines"
             Caption = 'Source Currency Code';
             DataClassification = SystemMetadata;
         }
-        field(79; "Document Type"; Option)
+        field(79; "Document Type"; Enum "Item Ledger Document Type")
         {
             Caption = 'Document Type';
             DataClassification = SystemMetadata;
-            OptionCaption = '" ", "Sales Shipment", "Sales Invoice", "Sales Return Receipt", "Sales Credit Memo", "Purchase Receipt", "Purchase Invoice", "Purchase Return Shipment", "Purchase Credit Memo", "Transfer Shipment", "Transfer Receipt", "Service Shipment", "Service Invoice", "Service Credit Memo", "Posted Assembly"';
-            OptionMembers = " ","Sales Shipment","Sales Invoice","Sales Return Receipt","Sales Credit Memo","Purchase Receipt","Purchase Invoice","Purchase Return Shipment","Purchase Credit Memo","Transfer Shipment","Transfer Receipt","Service Shipment","Service Invoice","Service Credit Memo","Posted Assembly";
         }
         field(80; "Document Line No."; Integer)
         {
             Caption = 'Document Line No.';
             DataClassification = SystemMetadata;
         }
-        field(90; "Order Type"; Option)
+        field(86; "VAT Reporting Date"; Date)
+        {
+            Caption = 'VAT Date';
+            DataClassification = SystemMetadata;
+        }
+        field(90; "Order Type"; Enum "Inventory Order Type")
         {
             Caption = 'Order Type';
             DataClassification = SystemMetadata;
-            OptionCaption = '" ", Production, Transfer, Service, Assembly';
-            OptionMembers = " ",Production,Transfer,Service,Assembly;
+
         }
         field(91; "Order No."; Code[20])
         {
@@ -390,12 +388,11 @@ table 50000 "Posted ItemJournal Lines"
             Caption = 'Level';
             DataClassification = SystemMetadata;
         }
-        field(5561; "Flushing Method"; Option)
+        field(5561; "Flushing Method"; Enum "Flushing Method")
         {
             Caption = 'Flushing Method';
             DataClassification = SystemMetadata;
-            OptionCaption = 'Manual, Forward, Backward, "Pick + Forward", "Pick + Backward"';
-            OptionMembers = Manual,Forward,Backward,"Pick + Forward","Pick + Backward";
+
         }
         field(5562; "Changed by User"; Boolean)
         {
@@ -452,12 +449,11 @@ table 50000 "Posted ItemJournal Lines"
             Caption = 'Order Date';
             DataClassification = SystemMetadata;
         }
-        field(5800; "Value Entry Type"; Option)
+        field(5800; "Value Entry Type"; Enum "Cost Entry Type")
         {
             Caption = 'Value Entry Type';
             DataClassification = SystemMetadata;
-            OptionCaption = '"Direct Cost", Revaluation, Rounding, "Indirect Cost", Variance';
-            OptionMembers = "Direct Cost",Revaluation,Rounding,"Indirect Cost",Variance;
+
         }
         field(5801; "Item Charge No."; Code[20])
         {
@@ -474,18 +470,17 @@ table 50000 "Posted ItemJournal Lines"
             Caption = 'Inventory Value (Revalued)';
             DataClassification = SystemMetadata;
         }
-        field(5804; "Variance Type"; Option)
+        field(5804; "Variance Type"; Enum "Cost Variance Type")
         {
             Caption = 'Variance Type';
             DataClassification = SystemMetadata;
-            OptionCaption = '" ", Purchase, Material, Capacity, "Capacity Overhead", "Manufacturing Overhead"';
-            OptionMembers = " ",Purchase,Material,Capacity,"Capacity Overhead","Manufacturing Overhead";
+
         }
         field(5805; "Inventory Value Per"; Option)
         {
             Caption = 'Inventory Value Per"';
             DataClassification = SystemMetadata;
-            OptionCaption = '" ", Item, Location, Variant, "Location and Variant"';
+            OptionCaption = ' ,Item,Location,Variant,Location and Variant';
             OptionMembers = " ",Item,Location,Variant,"Location and Variant";
         }
         field(5806; "Partial Revaluation"; Boolean)
@@ -548,12 +543,11 @@ table 50000 "Posted ItemJournal Lines"
             Caption = 'Invoice-to Source No.';
             DataClassification = SystemMetadata;
         }
-        field(5830; "Type"; Option)
+        field(5830; "Type"; Enum "Capacity Type Journal")
         {
             Caption = 'Type';
             DataClassification = SystemMetadata;
-            OptionCaption = '"Work Center", "Machine Center", " ", Resource';
-            OptionMembers = "Work Center","Machine Center"," ",Resource;
+
         }
         field(5831; "No."; Code[20])
         {
@@ -669,7 +663,7 @@ table 50000 "Posted ItemJournal Lines"
         {
             Caption = 'Unit Cost Calculation';
             DataClassification = SystemMetadata;
-            OptionCaption = 'Time, Units';
+            OptionCaption = 'Time,Units';
             OptionMembers = Time,Units;
         }
         field(5888; "Subcontracting"; Boolean)
@@ -756,7 +750,7 @@ table 50000 "Posted ItemJournal Lines"
         {
             Caption = 'Phys Invt Counting Period Type';
             DataClassification = SystemMetadata;
-            OptionCaption = '" ", Item, SKU';
+            OptionCaption = ' ,Item,SKU';
             OptionMembers = " ",Item,SKU;
         }
         field(99000755; "Overhead Rate"; Decimal)

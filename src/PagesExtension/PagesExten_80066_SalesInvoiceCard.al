@@ -3,31 +3,29 @@ pageextension 80066 "Sales Invoice Card" extends "Sales Invoice"
     PromotedActionCategories = 'New,Process,Print,Approve,Posting,Prepare,Invoice,Release,Request Approval,View,Navigate';
     layout
     {
-        addafter(Status)
+        addbefore(Status)
         {
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
-                Caption = 'Head Office';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
-                Caption = 'Branch Code';
+                ToolTip = 'Specifies value of the field.';
             }
-            field("VAT Registration No."; Rec."VAT Registration No.")
-            {
-                ApplicationArea = all;
-                Caption = 'VAT Registration No.';
-            }
-
 
         }
         modify("Posting Description")
         {
             Visible = true;
         }
-        moveafter("VAT Registration No."; "Posting Description")
+        modify("VAT Registration No.")
+        {
+            Visible = true;
+        }
+        moveafter("Branch Code"; "VAT Registration No.", "Posting Description")
         modify("No.")
         {
             Visible = true;
