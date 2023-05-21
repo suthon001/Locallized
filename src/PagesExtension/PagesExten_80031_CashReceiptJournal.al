@@ -1,0 +1,233 @@
+pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
+{
+    PromotedActionCategories = 'New,Process,Print,Approve,Page,Post/Print,Line,Account';
+    layout
+    {
+        modify("Document No.")
+        {
+            trigger OnAssistEdit()
+            begin
+                if Rec."AssistEdit"(xRec) then begin
+                    CurrPage.Update();
+                end;
+            end;
+        }
+        addafter("VAT Amount")
+        {
+            field("Require Screen Detail"; Rec."Require Screen Detail")
+            {
+                ApplicationArea = all;
+            }
+
+        }
+        addafter(Description)
+        {
+            field("Journal Description"; Rec."Journal Description")
+            {
+                ApplicationArea = all;
+                Caption = 'Journal Description';
+            }
+
+            field("Pay Name"; Rec."Pay Name")
+            {
+                ApplicationArea = all;
+                Caption = 'Pay Name';
+            }
+        }
+
+
+        modify("Gen. Bus. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("Gen. Prod. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("Gen. Posting Type")
+        {
+            Visible = true;
+        }
+        modify("VAT Bus. Posting Group")
+        {
+            Visible = true;
+        }
+        modify("VAT Prod. Posting Group")
+        {
+            Visible = true;
+        }
+
+        movebefore(Amount; "Currency Code")
+        moveafter(Description; Amount)
+    }
+    actions
+    {
+        addlast("F&unctions")
+        {
+
+            action("SetNetBalance")
+            {
+                ApplicationArea = All;
+                Caption = 'Set Net Balance';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                Image = NewSum;
+                ShortcutKey = 'Shift+Ctrl+S';
+                trigger OnAction()
+                var
+                    GenJnlLine: Record "Gen. Journal Line";
+                    SummaryAmount: Decimal;
+                begin
+                    GenJnlLine.reset;
+                    GenJnlLine.SetRange("Journal Template Name", rec."Journal Template Name");
+                    GenJnlLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                    GenJnlLine.SetRange("Document No.", rec."Document No.");
+                    GenJnlLine.SetFilter("Line No.", '<>%1', rec."Line No.");
+                    if GenJnlLine.findset then begin
+                        GenJnlLine.CalcSums("Amount (LCY)");
+                        SummaryAmount := GenJnlLine."Amount (LCY)";
+                    end;
+                    if SummaryAmount <> 0 then begin
+                        rec.Validate("Amount (LCY)", SummaryAmount * -1);
+                    end else
+                        rec.Validate("Amount (LCY)", 0);
+                    rec.Modify();
+                end;
+            }
+        }
+        addlast(Reporting)
+        {
+            action("Receipt Voucher")
+            {
+                Caption = 'Receipt Voucher';
+                Image = PrintVoucher;
+                ApplicationArea = all;
+                PromotedCategory = Report;
+                Promoted = true;
+                PromotedIsBig = true;
+                trigger OnAction()
+                var
+                    ReceiptVourcher: Report "Receive Voucher";
+                    GenJournalLIne: Record "Gen. Journal Line";
+                begin
+                    GenJournalLIne.reset;
+                    GenJournalLIne.copy(rec);
+                    ReceiptVourcher."SetGLEntry"(GenJournalLIne);
+                    ReceiptVourcher.RunModal();
+                end;
+            }
+            action("Print_Receipt_Tax")
+            {
+                ApplicationArea = All;
+                Caption = 'Receipt Invoice (Apply)';
+                Image = PrintReport;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedCategory = Report;
+                trigger OnAction()
+                var
+                    RecCustLedgEntry: Record "Cust. Ledger Entry";
+                begin
+                    RecCustLedgEntry.RESET;
+                    RecCustLedgEntry.SETFILTER("Applies-to ID", rec."Document No.");
+                    REPORT.RUN(REPORT::"Receipt Tax Invoice", TRUE, TRUE, RecCustLedgEntry);
+                end;
+            }
+            action("Print_Receipt")
+            {
+                ApplicationArea = All;
+                Caption = 'Receipt Invoice';
+                Image = PrintReport;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedCategory = Report;
+                trigger OnAction()
+                var
+                    GenJournalLine: Record "Gen. Journal Line";
+                begin
+                    GenJournalLine.RESET;
+                    GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
+                    GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                    GenJournalLine.SetRange("Document No.", rec."Document No.");
+                    REPORT.RUN(REPORT::"Receipt Ducument", TRUE, TRUE, GenJournalLine);
+                end;
+            }
+        }
+
+
+        addbefore(Reconcile)
+        {
+            action("Show Detail")
+            {
+                Caption = 'Show Detail Vat & Cheque & WHT';
+                Image = LineDescription;
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                trigger OnAction()
+                var
+                    ShowDetailCheque: Page "ShowDetail Cheque";
+                    ShowDetailVAT: Page "ShowDetail Vat";
+                    GenLineDetail: Record "Gen. Journal Line";
+                    GenLine2: Record "Gen. Journal Line";
+                    ShowDetailWHT: Page "ShowDetailWHT";
+                    Cust: Record Customer;
+                begin
+                    Rec.TestField("Require Screen Detail");
+                    Rec.TestField("Document No.");
+                    CLEAR(ShowDetailVAT);
+                    CLEAR(ShowDetailCheque);
+                    if Rec."Require Screen Detail" IN [Rec."Require Screen Detail"::VAT, Rec."Require Screen Detail"::CHEQUE, Rec."Require Screen Detail"::WHT] then begin
+                        GenLineDetail.reset;
+                        GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
+                        GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+                        GenLineDetail.SetRange("Line No.", Rec."Line No.");
+                        if Rec."Require Screen Detail" = Rec."Require Screen Detail"::CHEQUE then begin
+                            ShowDetailCheque.SetTableView(GenLineDetail);
+                            ShowDetailCheque.RunModal();
+                            CLEAR(ShowDetailCheque);
+                        end else
+                            if Rec."Require Screen Detail" = Rec."Require Screen Detail"::VAT then begin
+                                ShowDetailVAT.SetTableView(GenLineDetail);
+                                ShowDetailVAT.RunModal();
+                                CLEAR(ShowDetailVAT);
+                            end else
+                                if Rec."Require Screen Detail" = Rec."Require Screen Detail"::WHT then begin
+                                    if Rec."WHT Cust/Vend No." = '' then begin
+                                        GenLine2.reset;
+                                        GenLine2.SetRange("Journal Template Name", Rec."Journal Template Name");
+                                        GenLine2.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+                                        GenLine2.SetRange("Document No.", Rec."Document No.");
+                                        GenLine2.SetRange("Account Type", GenLine2."Account Type"::Customer);
+                                        if GenLine2.FindFirst() then begin
+                                            if Cust.get(GenLine2."Account No.") then begin
+                                                Rec."WHT Cust/Vend No." := Cust."No.";
+                                                Rec."WHT Name" := Cust.Name;
+                                                Rec."WHT Name 2" := Cust."Name 2";
+                                                Rec."WHT Address" := Cust.Address;
+                                                Rec."WHT Address 2" := Cust."Address 2";
+                                                Rec."WHT Registration No." := Cust."VAT Registration No.";
+                                                Rec."WHT Post Code" := Cust."Post Code";
+                                                Rec."WHT City" := Cust.City;
+                                                Rec."WHT County" := Cust.County;
+                                                Rec.Modify();
+                                                Commit();
+                                            end;
+                                        end;
+                                    end;
+                                    ShowDetailWHT.SetTableView(GenLineDetail);
+                                    ShowDetailWHT.RunModal();
+                                    Clear(ShowDetailWHT);
+                                end;
+                    end else
+                        MESSAGE('Nothing to Show Detail');
+                end;
+            }
+        }
+    }
+    var
+        ShowTax: Boolean;
+        showPDC: Boolean;
+}
