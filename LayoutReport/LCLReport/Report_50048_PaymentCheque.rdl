@@ -1,0 +1,898 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>5feac4d5-2c39-428e-b4fa-80260f47ddd8</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Textbox Name="var_ChequeAmount">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value EvaluationMode="Constant">===</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontWeight>Normal</FontWeight>
+                      <Format>#,0.00;(#,0.00)</Format>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=First(Fields!var_ChequeAmount.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>#,0.00;(#,0.00)</Format>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value EvaluationMode="Constant">===</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontWeight>Normal</FontWeight>
+                      <Format>#,0.00;(#,0.00)</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_ChequeAmount</rd:DefaultName>
+            <Top>1.4325in</Top>
+            <Left>5.29261in</Left>
+            <Height>0.29167in</Height>
+            <Width>2.47875in</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_ChequeAmountTextENG">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=First(Fields!var_ChequeAmountTextENG.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_ChequeAmountTextENG</rd:DefaultName>
+            <Top>1.06583in</Top>
+            <Left>1.91761in</Left>
+            <Height>0.62361in</Height>
+            <Width>5.33334in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Top</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="DocumentNo_GenJournalLine">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!DocumentNo_GenJournalLine.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>12pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>DocumentNo_GenJournalLine</rd:DefaultName>
+            <Top>0.20889in</Top>
+            <Left>3.73143in</Left>
+            <Height>0.25in</Height>
+            <Width>1in</Width>
+            <ZIndex>2</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="CQChequeNo_GenJournalLine">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!CQChequeNo_GenJournalLine.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>12pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>CQChequeNo_GenJournalLine</rd:DefaultName>
+            <Top>0.20889in</Top>
+            <Left>4.75921in</Left>
+            <Height>0.25in</Height>
+            <Width>1in</Width>
+            <ZIndex>3</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!var_DateInCheque.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>3.06931in</Top>
+            <Left>4.36431in</Left>
+            <Height>0.25in</Height>
+            <Width>1.375in</Width>
+            <ZIndex>4</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_ChequeAmountTextENG2">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!var_Payto.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_ChequeAmountTextENG</rd:DefaultName>
+            <Top>0.74083in</Top>
+            <Left>1.66761in</Left>
+            <Height>0.325in</Height>
+            <Width>4.98958in</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="DocumentNo_GenJournalLine2">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!DocumentNo_GenJournalLine.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>12pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>DocumentNo_GenJournalLine</rd:DefaultName>
+            <Top>0.20889in</Top>
+            <Left>1.15851in</Left>
+            <Height>0.25in</Height>
+            <Width>1in</Width>
+            <ZIndex>6</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="CQChequeNo_GenJournalLine2">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!CQChequeNo_GenJournalLine.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>12pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>CQChequeNo_GenJournalLine</rd:DefaultName>
+            <Top>0.20889in</Top>
+            <Left>2.15851in</Left>
+            <Height>0.25in</Height>
+            <Width>1in</Width>
+            <ZIndex>7</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>/////</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>20pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox1</rd:DefaultName>
+            <Top>0.82386in</Top>
+            <Left>6.35848in</Left>
+            <Height>0.29639in</Height>
+            <Width>1.08996in</Width>
+            <ZIndex>8</ZIndex>
+            <Visibility>
+              <Hidden>=Iif(Fields!ChequeFormatOfBank.Value = "BBL",FALSE,TRUE)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="CQChequeNo_GenJournalLine3">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!var_Payto.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>12pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>CQChequeNo_GenJournalLine</rd:DefaultName>
+            <Top>0.35195in</Top>
+            <Left>1.49052in</Left>
+            <Height>0.25in</Height>
+            <Width>4.26869in</Width>
+            <ZIndex>9</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_ChequeAmountTextENG3">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>A/C PAYEE ONLY</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>20pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_ChequeAmountTextENG</rd:DefaultName>
+            <Top>0.16098in</Top>
+            <Left>2.08948in</Left>
+            <Height>0.40833in</Height>
+            <Width>1.74612in</Width>
+            <ZIndex>10</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(Fields!var_ACPayee.Value = TRUE ,FALSE,TRUE)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <TopBorder>
+                <Style>Double</Style>
+              </TopBorder>
+              <BottomBorder>
+                <Style>Double</Style>
+              </BottomBorder>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque2">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!D1.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>0.10195in</Top>
+            <Left>4.80071in</Left>
+            <Height>0.25in</Height>
+            <Width>0.24745in</Width>
+            <ZIndex>11</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque3">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!D2.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>0.10195in</Top>
+            <Left>5.05512in</Left>
+            <Height>0.25in</Height>
+            <Width>0.24745in</Width>
+            <ZIndex>12</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque4">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!M1.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>0.10195in</Top>
+            <Left>5.30258in</Left>
+            <Height>0.25in</Height>
+            <Width>0.24745in</Width>
+            <ZIndex>13</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque5">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!M2.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>0.10195in</Top>
+            <Left>5.55003in</Left>
+            <Height>0.25in</Height>
+            <Width>0.24745in</Width>
+            <ZIndex>14</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque6">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!Y1.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>0.10195in</Top>
+            <Left>5.79749in</Left>
+            <Height>0.25in</Height>
+            <Width>0.24745in</Width>
+            <ZIndex>15</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque7">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!Y2.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>0.10195in</Top>
+            <Left>6.04494in</Left>
+            <Height>0.25in</Height>
+            <Width>0.24745in</Width>
+            <ZIndex>16</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque8">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!Y3.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>0.10195in</Top>
+            <Left>6.29239in</Left>
+            <Height>0.25in</Height>
+            <Width>0.24745in</Width>
+            <ZIndex>17</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_DateInCheque9">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!Y4.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <Format>dd MM yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_DateInCheque</rd:DefaultName>
+            <Top>0.10195in</Top>
+            <Left>6.53985in</Left>
+            <Height>0.25in</Height>
+            <Width>0.24745in</Width>
+            <ZIndex>18</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>/////</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>20pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox1</rd:DefaultName>
+            <Top>0.65833in</Top>
+            <Left>6.31682in</Left>
+            <Height>0.29639in</Height>
+            <Width>1.16287in</Width>
+            <ZIndex>19</ZIndex>
+            <Visibility>
+              <Hidden>=Iif(Fields!ChequeFormatOfBank.Value = "KB",FALSE,TRUE)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="var_ChequeAmountTextENG4">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>&amp; CO.</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>20pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>var_ChequeAmountTextENG</rd:DefaultName>
+            <Top>0.16098in</Top>
+            <Left>2.08948in</Left>
+            <Height>0.40833in</Height>
+            <Width>1.74612in</Width>
+            <ZIndex>20</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(Fields!Var_CO.Value = True, False, True)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <TopBorder>
+                <Style>Double</Style>
+              </TopBorder>
+              <BottomBorder>
+                <Style>Double</Style>
+              </BottomBorder>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <Height>4.79167in</Height>
+        <Style />
+      </Body>
+      <Width>8.27in</Width>
+      <Page>
+        <PageHeight>11.69in</PageHeight>
+        <PageWidth>8.27in</PageWidth>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <EmbeddedImages>
+    <EmbeddedImage Name="ACPAYEE">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>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</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="var_ChequeAmount">
+          <DataField>var_ChequeAmount</DataField>
+        </Field>
+        <Field Name="var_ChequeAmountFormat">
+          <DataField>var_ChequeAmountFormat</DataField>
+        </Field>
+        <Field Name="var_ChequeAmountTextENG">
+          <DataField>var_ChequeAmountTextENG</DataField>
+        </Field>
+        <Field Name="CQChequeNo_GenJournalLine">
+          <DataField>CQChequeNo_GenJournalLine</DataField>
+        </Field>
+        <Field Name="DocumentNo_GenJournalLine">
+          <DataField>DocumentNo_GenJournalLine</DataField>
+        </Field>
+        <Field Name="var_DateInCheque">
+          <DataField>var_DateInCheque</DataField>
+        </Field>
+        <Field Name="var_Payto">
+          <DataField>var_Payto</DataField>
+        </Field>
+        <Field Name="var_ShowPayee">
+          <DataField>var_ShowPayee</DataField>
+        </Field>
+        <Field Name="D1">
+          <DataField>D1</DataField>
+        </Field>
+        <Field Name="D2">
+          <DataField>D2</DataField>
+        </Field>
+        <Field Name="M1">
+          <DataField>M1</DataField>
+        </Field>
+        <Field Name="M2">
+          <DataField>M2</DataField>
+        </Field>
+        <Field Name="Y1">
+          <DataField>Y1</DataField>
+        </Field>
+        <Field Name="Y2">
+          <DataField>Y2</DataField>
+        </Field>
+        <Field Name="Y3">
+          <DataField>Y3</DataField>
+        </Field>
+        <Field Name="Y4">
+          <DataField>Y4</DataField>
+        </Field>
+        <Field Name="ChequeFormatOfBank">
+          <DataField>ChequeFormatOfBank</DataField>
+        </Field>
+        <Field Name="var_ACPayee">
+          <DataField>var_ACPayee</DataField>
+        </Field>
+        <Field Name="Var_CO">
+          <DataField>Var_CO</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>
