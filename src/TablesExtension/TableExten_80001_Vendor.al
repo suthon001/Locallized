@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenVendor (ID 80001) extends Record Vendor.
+/// </summary>
 tableextension 80001 "ExtenVendor" extends Vendor
 {
     fields
@@ -7,13 +10,10 @@ tableextension 80001 "ExtenVendor" extends Vendor
             Caption = 'Head Office';
             DataClassification = CustomerContent;
             trigger OnValidate()
-            var
-                TempSendtoUpdate: Text[50];
             begin
-                if "Head Office" then begin
+                if "Head Office" then
                     "Branch Code" := '';
 
-                end;
             end;
 
         }
@@ -25,10 +25,10 @@ tableextension 80001 "ExtenVendor" extends Vendor
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
-                TempSendtoUpdate: Text[50];
+
                 CustVendBarch: Record "Customer & Vendor Branch";
             begin
-                CustVendBarch.reset;
+                CustVendBarch.reset();
                 CustVendBarch.SetRange("Source Type", CustVendBarch."Source Type"::Vendor);
                 CustVendBarch.SetRange("Source No.", "No.");
                 CustVendBarch.SetRange("Branch Code", "Branch Code");
@@ -58,7 +58,7 @@ tableextension 80001 "ExtenVendor" extends Vendor
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(5, Name + ' ' + "Name 2", false);
+                UpdateVendorCustBranch(5, Name + ' ' + "Name 2", false);
 
             end;
         }
@@ -66,7 +66,7 @@ tableextension 80001 "ExtenVendor" extends Vendor
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(5, Name + ' ' + "Name 2", false);
+                UpdateVendorCustBranch(5, Name + ' ' + "Name 2", false);
 
             end;
         }
@@ -74,28 +74,28 @@ tableextension 80001 "ExtenVendor" extends Vendor
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(6, Address + ' ' + "Address 2", false);
+                UpdateVendorCustBranch(6, Address + ' ' + "Address 2", false);
             end;
         }
         modify("Address 2")
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(6, Address + ' ' + "Address 2", false);
+                UpdateVendorCustBranch(6, Address + ' ' + "Address 2", false);
             end;
         }
         modify(City)
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(16, City, false);
+                UpdateVendorCustBranch(16, City, false);
             end;
         }
         modify("Post Code")
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(17, "Post Code", false);
+                UpdateVendorCustBranch(17, "Post Code", false);
             end;
         }
 
@@ -103,33 +103,33 @@ tableextension 80001 "ExtenVendor" extends Vendor
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(19, "VAT Registration No.", false);
+                UpdateVendorCustBranch(19, "VAT Registration No.", false);
             end;
         }
         modify("No.")
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(3, '00000', TRUE);
+                UpdateVendorCustBranch(3, '00000', TRUE);
             end;
         }
         modify("Phone No.")
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(21, '00000', TRUE);
+                UpdateVendorCustBranch(21, '00000', TRUE);
             end;
         }
         modify("Fax No.")
         {
             trigger OnAfterValidate()
             begin
-                "UpdateVendorCustBranch"(22, '00000', TRUE);
+                UpdateVendorCustBranch(22, '00000', TRUE);
             end;
         }
 
     }
-    local procedure "UpdateVendorCustBranch"(FiledsNo: Integer; WHTResult: Text[250]; FieldsBranch: Boolean)
+    local procedure UpdateVendorCustBranch(FiledsNo: Integer; WHTResult: Text[250]; FieldsBranch: Boolean)
     var
         VendorCustBranch: Record "Customer & Vendor Branch";
         VenCust: RecordRef;
@@ -143,17 +143,17 @@ tableextension 80001 "ExtenVendor" extends Vendor
             tempHeadOffice := WHTResult = '00000';
 
         if (xRec."No." <> '') AND (xRec."No." <> "No.") then begin
-            VendorCustBranch.reset;
+            VendorCustBranch.reset();
             VendorCustBranch.SetRange("Source Type", VendorCustBranch."Source Type"::Vendor);
             VendorCustBranch.SetRange("Source No.", xrec."No.");
             VendorCustBranch.DeleteAll();
 
-            VendorCustBranch.init;
+            VendorCustBranch.init();
             VendorCustBranch."Source Type" := VendorCustBranch."Source Type"::Vendor;
             VendorCustBranch."Source No." := "No.";
             VendorCustBranch."Head Office" := TRUE;
 
-            VendorCustBranch.insert;
+            VendorCustBranch.insert();
             VenCust.Get(VendorCustBranch.RecordId);
             MyFieldRef := VenCust.Field(FiledsNo);
             if FiledsNo = 3 then
@@ -162,7 +162,7 @@ tableextension 80001 "ExtenVendor" extends Vendor
                 MyFieldRef.Value := WHTResult;
             VenCust.Modify();
         end else begin
-            VendorCustBranch.reset;
+            VendorCustBranch.reset();
             VendorCustBranch.SetRange("Source Type", VendorCustBranch."Source Type"::Vendor);
             VendorCustBranch.SetRange("Source No.", "No.");
             VendorCustBranch.SetRange("Head Office", TRUE);
@@ -175,12 +175,12 @@ tableextension 80001 "ExtenVendor" extends Vendor
                     MyFieldRef.Value := WHTResult;
                 VenCust.Modify();
             end else begin
-                VendorCustBranch.init;
+                VendorCustBranch.init();
                 VendorCustBranch."Source Type" := VendorCustBranch."Source Type"::Vendor;
                 VendorCustBranch."Source No." := "No.";
                 VendorCustBranch."Head Office" := TRUE;
 
-                VendorCustBranch.insert;
+                VendorCustBranch.insert();
                 VenCust.Get(VendorCustBranch.RecordId);
                 MyFieldRef := VenCust.Field(FiledsNo);
                 if FiledsNo = 3 then
@@ -201,7 +201,7 @@ tableextension 80001 "ExtenVendor" extends Vendor
     var
         VendorCustBranch: Record "Customer & Vendor Branch";
     begin
-        VendorCustBranch.reset;
+        VendorCustBranch.reset();
         VendorCustBranch.SetRange("Source Type", VendorCustBranch."Source Type"::Vendor);
         VendorCustBranch.SetRange("Source No.", "No.");
         VendorCustBranch.DeleteAll();

@@ -1,3 +1,6 @@
+/// <summary>
+/// Table Posted ItemJournal Lines (ID 50000).
+/// </summary>
 table 50000 "Posted ItemJournal Lines"
 {
     Caption = 'Posted Item Journal Lines';

@@ -1,3 +1,6 @@
+/// <summary>
+/// Table WHT Business Posting Group (ID 50006).
+/// </summary>
 table 50006 "WHT Business Posting Group"
 {
     Caption = 'WHT Business Posting Group';

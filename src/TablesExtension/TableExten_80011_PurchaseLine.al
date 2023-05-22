@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenPurchase Line (ID 80011) extends Record Purchase Line.
+/// </summary>
 tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
 {
     fields
@@ -20,7 +23,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
                         VALIDATE("Qty. to Cancel", Quantity - "Quantity Received");
 
                     "Qty. to Cancel (Base)" := UOMMgt.CalcBaseQty("Qty. to Cancel", "Qty. per Unit of Measure");
-                    InitOutstanding;
+                    InitOutstanding();
 
                     VALIDATE("Qty. to Receive", "Outstanding Quantity");
                 END ELSE begin
@@ -30,12 +33,12 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
                             VALIDATE("Qty. to Cancel", Quantity);
 
                         "Qty. to Cancel (Base)" := UOMMgt.CalcBaseQty("Qty. to Cancel", "Qty. per Unit of Measure");
-                        InitOutstanding;
+                        InitOutstanding();
                     END;
                     IF ("Document Type" = "Document Type"::Quote) THEN BEGIN
 
                         "Qty. to Cancel (Base)" := UOMMgt.CalcBaseQty("Qty. to Cancel", "Qty. per Unit of Measure");
-                        InitOutstanding;
+                        InitOutstanding();
                     END;
 
                 end;
@@ -114,7 +117,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
                 Vend: Record Vendor;
             begin
                 if not Vend.GET("Tax Vendor No.") then
-                    Vend.init;
+                    Vend.init();
                 "Tax Invoice Name" := Vend.Name;
                 "Vat Registration No." := Vend."VAT Registration No.";
                 "Head Office" := Vend."Head Office";
@@ -134,13 +137,9 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "Head Office" then begin
+                if "Head Office" then
                     "Branch Code" := '';
-                end;
-
             end;
-
-
         }
         field(80014; "Branch Code"; Code[5])
         {
@@ -293,15 +292,14 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
         POLine: Record "Purchase Line";
         PRLine: Record "Purchase Line";
         TempQty, TempQtyBase : Decimal;
-        ReceiptQty: Decimal;
-        ReceiptQtyBase: Decimal;
+
     begin
         TempQty := 0;
         TempQtyBase := 0;
         if ("Document Type" = "Document Type"::Order) AND
             ("Ref. PQ No." <> '') then begin
 
-            POLine.reset;
+            POLine.reset();
             POLine.SetRange("Document Type", "Document Type");
             POLine.SetFilter("Document No.", '<>%1', "Document No.");
             POLine.SetRange("Ref. PQ No.", "Ref. PQ No.");
@@ -311,7 +309,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
                 TempQty := POLine.Quantity;
                 TempQtyBase := POLine."Quantity (Base)";
             end;
-            POLine.reset;
+            POLine.reset();
             POLine.SetRange("Document Type", "Document Type");
             POLine.SetFilter("Document No.", '%1', "Document No.");
             POLine.SetFilter("Line No.", '<>%1', "Line No.");
@@ -324,21 +322,28 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
             end;
             PRLine.GET(PRLine."Document Type"::Quote, "Ref. PQ No.", "Ref. PQ Line No.");
             if (TempQty + Quantity) > PRLine.Quantity then
-                FieldError(Quantity, StrSubstNo('PR No. %1 ,Remaining Quantity is %2', "Ref. PQ No.", PRLine.Quantity - TempQty));
+                FieldError(Quantity, StrSubstNo(PrRemainingErr, "Ref. PQ No.", PRLine.Quantity - TempQty));
             PRLine."Outstanding Quantity" := PRLine.Quantity - (TempQty + Quantity);
             PRLine."Outstanding Qty. (Base)" := PRLine."Quantity (Base)" - (TempQtyBase + "Quantity (Base)");
             PRLine."Completely Received" := PRLine."Outstanding Quantity" = 0;
             Validate("Make to PO Qty.", PRLine."Outstanding Quantity");
             PRLine.Modify();
         end;
-        if ("Document Type" = "Document Type"::Quote) AND ("No." <> '') then begin
+        if ("Document Type" = "Document Type"::Quote) AND ("No." <> '') then
             Validate("Make to PO Qty.", PRLine.Quantity);
-        end;
+
 
     end;
 
+    /// <summary>
+    /// OnAfterValidateSelectBy.
+    /// </summary>
+    /// <param name="UserName">VAR Code[30].</param>
     [IntegrationEvent(false, false)]
     procedure OnAfterValidateSelectBy(var UserName: Code[30])
     begin
     end;
+
+    var
+        PrRemainingErr: Label 'PR No. %1 ,Remaining Quantity is %2', Locked = true;
 }

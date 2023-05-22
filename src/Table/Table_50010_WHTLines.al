@@ -57,7 +57,7 @@ table 50010 "WHT Lines"
             Caption = 'WHT Name 2';
             DataClassification = SystemMetadata;
         }
-        field(10; "WHT Address"; Text[50])
+        field(10; "WHT Address"; Text[100])
         {
             Caption = 'WHT Address';
             DataClassification = SystemMetadata;
@@ -144,13 +144,12 @@ table 50010 "WHT Lines"
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
-                WHTProd: Record "Dimension Value";
                 WHTSetup: Record "WHT Posting Setup";
             begin
-                "GetWhtHeader"();
-                "TransferFromHeader"();
+                GetWhtHeader();
+                TransferFromHeader();
                 IF NOT WHTSetup.GET("WHT Business Posting Group", "WHT Product Posting Group") THEN
-                    WHTSetup.init;
+                    WHTSetup.init();
                 "WHT %" := WHTSetup."WHT %";
             end;
         }
@@ -242,7 +241,7 @@ table 50010 "WHT Lines"
         WhtHeader: Record "WHT Header";
     begin
         if not WhtHeader.get("WHT No.") then
-            WhtHeader.init;
+            WhtHeader.init();
         WhtHeader.TestField("WHT Certificate No.");
     end;
 

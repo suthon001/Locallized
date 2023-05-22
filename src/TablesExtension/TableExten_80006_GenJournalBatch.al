@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenGen.Journal Batch (ID 80006) extends Record Gen. Journal Batch.
+/// </summary>
 tableextension 80006 "ExtenGen.Journal Batch" extends "Gen. Journal Batch"
 {
     fields

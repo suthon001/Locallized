@@ -1,4 +1,7 @@
-table 50013 "Record Deletion Table"
+/// <summary>
+/// Table Record Deletion Table (ID 50012).
+/// </summary>
+table 50012 "Record Deletion Table"
 {
 
     fields

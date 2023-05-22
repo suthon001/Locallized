@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenPurchaPayablesSetup (ID 80005) extends Record Purchases Payables Setup.
+/// </summary>
 tableextension 80005 "ExtenPurcha&PayablesSetup" extends "Purchases & Payables Setup"
 {
     fields

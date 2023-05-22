@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenItem Ledger Entry (ID 80007) extends Record Item Ledger Entry.
+/// </summary>
 tableextension 80007 "ExtenItem Ledger Entry" extends "Item Ledger Entry"
 {
     fields

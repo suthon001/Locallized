@@ -1,3 +1,6 @@
+/// <summary>
+/// Unknown LCLPermission (ID 50000).
+/// </summary>
 permissionset 50000 LCLPermission
 {
     Assignable = true;
@@ -23,8 +26,6 @@ permissionset 50000 LCLPermission
         tabledata "WHT Lines" = RMID,
         table "VAT Transections" = X,
         tabledata "VAT Transections" = RMID,
-        table "Image Storage" = X,
-        tabledata "Image Storage" = RMID,
         table "Record Deletion Table" = X,
         tabledata "Record Deletion Table" = RMID,
         table "Billing Receipt Line" = X,

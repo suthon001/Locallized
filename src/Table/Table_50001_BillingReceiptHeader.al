@@ -1,13 +1,14 @@
+/// <summary>
+/// Table Billing Receipt Header (ID 50001).
+/// </summary>
 Table 50001 "Billing Receipt Header"
 {
     Caption = 'Billing & Receipt Header';
     fields
     {
-        field(1; "Document Type"; Option)
+        field(1; "Document Type"; Enum "Billing Document Type")
         {
             Caption = 'Document Type';
-            OptionMembers = "Sales Billing","Sales Receipt","Purchase Billing";
-            OptionCaption = 'Sales Billing,Sales Receipt,Purchase Billing';
             DataClassification = SystemMetadata;
             Editable = false;
         }

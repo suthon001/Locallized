@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenPurchase Header (ID 80010) extends Record Purchase Header.
+/// </summary>
 tableextension 80010 "ExtenPurchase Header" extends "Purchase Header"
 {
     fields
@@ -14,9 +17,9 @@ tableextension 80010 "ExtenPurchase Header" extends "Purchase Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "Head Office" then begin
+                if "Head Office" then
                     "Branch Code" := '';
-                end;
+
             end;
 
 
@@ -48,7 +51,7 @@ tableextension 80010 "ExtenPurchase Header" extends "Purchase Header"
                 VendCustPage: Page "Cust. & Vendor BranchLists";
             begin
                 clear(VendCustPage);
-                VendCustBranch.reset;
+                VendCustBranch.reset();
                 VendCustBranch.SetRange("Source Type", VendCustBranch."Source Type"::Vendor);
                 VendCustBranch.SetRange("Source No.", "Buy-from Vendor No.");
                 VendCustPage.Editable := false;
@@ -60,20 +63,19 @@ tableextension 80010 "ExtenPurchase Header" extends "Purchase Header"
                         "Head Office" := true;
                         "Branch Code" := '';
                         "VAT Registration No." := VendCustBranch."Vat Registration No.";
-                    end else begin
+                    end else
                         if VendCustBranch."Branch Code" <> '' then begin
                             "Branch Code" := VendCustBranch."Branch Code";
                             "Head Office" := false;
                             "VAT Registration No." := VendCustBranch."Vat Registration No.";
                         end;
-                    end;
                 end;
                 clear(VendCustPage);
             end;
 
         }
 
-        field(80003; "Create By"; Code[30])
+        field(80003; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
@@ -98,14 +100,14 @@ tableextension 80010 "ExtenPurchase Header" extends "Purchase Header"
             DataClassification = CustomerContent;
             trigger OnLookup()
             var
-                Noseries: Record "No. Series";
+
                 PayableSetup: Record "Purchases & Payables Setup";
                 NoseriesMgt: Codeunit NoSeriesManagement;
-                OldNoseries, newNoseries : Code[30];
+                newNoseries: code[20];
 
 
             begin
-                PayableSetup.GET;
+                PayableSetup.GET();
                 PayableSetup.TestField("Order Nos.");
                 if NoseriesMgt.SelectSeries(PayableSetup."Order Nos.", "No. Series", newNoseries) then
                     "Make PO No.Series No." := newNoseries;
@@ -121,7 +123,7 @@ tableextension 80010 "ExtenPurchase Header" extends "Purchase Header"
                 Vend: Record Vendor;
             begin
                 if not Vend.get("Buy-from Vendor No.") then
-                    Vend.init;
+                    Vend.init();
 
                 "Head Office" := Vend."Head Office";
                 "Branch Code" := Vend."Branch Code";
@@ -133,7 +135,7 @@ tableextension 80010 "ExtenPurchase Header" extends "Purchase Header"
     trigger OnInsert()
     begin
         TestField("No.");
-        "Create By" := UserId;
+        "Create By" := COPYSTR(UserId(), 1, 50);
         "Create DateTime" := CurrentDateTime;
         if "Document Type" IN ["Document Type"::Invoice, "Document Type"::"Credit Memo"] then
             "Posting No." := "No.";

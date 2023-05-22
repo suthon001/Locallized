@@ -1,23 +1,26 @@
+/// <summary>
+/// TableExtension CompanyInformation (ID 80009) extends Record Company Information.
+/// </summary>
 tableextension 80009 CompanyInformation extends "Company Information"
 {
     fields
     {
-        field(80000; "Name (Eng)"; Text[50])
+        field(80000; "Name (Eng)"; Text[100])
         {
             Caption = 'Name (Eng)';
             DataClassification = CustomerContent;
         }
-        field(80001; "Name 2 (Eng)"; Text[100])
+        field(80001; "Name 2 (Eng)"; Text[50])
         {
             Caption = 'Name 2 (Eng)';
             DataClassification = CustomerContent;
         }
-        field(80002; "Address (Eng)"; Text[50])
+        field(80002; "Address (Eng)"; Text[100])
         {
             Caption = 'Address (Eng)';
             DataClassification = CustomerContent;
         }
-        field(80003; "Address 2 (Eng)"; Text[100])
+        field(80003; "Address 2 (Eng)"; Text[50])
         {
             Caption = 'Address 2 (Eng)';
             DataClassification = CustomerContent;

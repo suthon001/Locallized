@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenItems (ID 80002) extends Record Item.
+/// </summary>
 tableextension 80002 "ExtenItems" extends Item
 {
     fields

@@ -52,7 +52,7 @@ table 50003 "Customer & Vendor Branch"
                 end;
             end;
         }
-        field(5; "Name"; Text[160])
+        field(5; "Name"; Text[100])
         {
             Caption = 'Name';
             DataClassification = CustomerContent;
@@ -63,7 +63,7 @@ table 50003 "Customer & Vendor Branch"
             Caption = 'Address';
             DataClassification = CustomerContent;
         }
-        field(7; "Title Name"; Text[50])
+        field(7; "Title Name"; Enum "Title Document Name")
         {
             Caption = 'Title Name';
             DataClassification = CustomerContent;

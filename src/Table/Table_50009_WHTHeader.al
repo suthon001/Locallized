@@ -1,3 +1,6 @@
+/// <summary>
+/// Table WHT Header (ID 50009).
+/// </summary>
 table 50009 "WHT Header"
 {
     Caption = 'WHT Header';
@@ -236,7 +239,7 @@ table 50009 "WHT Header"
     /// Description for AssistEditCertificate.
     /// </summary>
     /// <returns>Return variable "Boolean".</returns>
-    procedure "AssistEditCertificate"(): Boolean
+    procedure AssistEditCertificate(): Boolean
     var
 
         WHTBus: Record "WHT Business Posting Group";

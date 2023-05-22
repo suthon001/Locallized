@@ -1,3 +1,6 @@
+/// <summary>
+/// Table VAT Transections (ID 50011).
+/// </summary>
 table 50011 "VAT Transections"
 {
     Caption = 'VAT Transections';

@@ -1,3 +1,6 @@
+/// <summary>
+/// Table WHT Product Posting Group (ID 50008).
+/// </summary>
 table 50008 "WHT Product Posting Group"
 {
     DrillDownPageID = "WHT Product Posting Group";
@@ -20,6 +23,7 @@ table 50008 "WHT Product Posting Group"
         {
             Caption = 'Sequence';
             DataClassification = CustomerContent;
+            MinValue = 0;
         }
     }
 

@@ -102,13 +102,13 @@ table 50004 "Tax Report Header"
             Caption = 'No. Series';
             DataClassification = SystemMetadata;
         }
-        field(15; "Vat Bus. Post. Filter"; Code[30])
+        field(15; "Vat Bus. Post. Filter"; Code[100])
         {
             Caption = 'Vat Bus. PostingGroup Filter';
             TableRelation = "VAT Business Posting Group".Code;
             FieldClass = FlowFilter;
         }
-        field(16; "WHT Bus. Post. Filter"; Code[30])
+        field(16; "WHT Bus. Post. Filter"; Code[100])
         {
             Caption = 'Vat Bus. PostingGroup Filter';
             TableRelation = "WHT Business Posting Group";

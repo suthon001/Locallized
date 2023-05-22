@@ -500,15 +500,13 @@ table 50005 "Tax Report Line"
                 WHTHeader."Get to WHT" := true;
                 WHTHeader.Modify();
             until WHTHeader.next() = 0;
-
-
     end;
 
     /// <summary> 
     /// Description for GetLastLineNo.
     /// </summary>
     /// <returns>Return variable "Integer".</returns>
-    procedure "GetLastLineNo"(): Integer
+    procedure GetLastLineNo(): Integer
     var
         TaxReportLine: Record "Tax Report Line";
     begin

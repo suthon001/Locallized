@@ -1,3 +1,6 @@
+/// <summary>
+/// Table WHT Posting Setup (ID 50007).
+/// </summary>
 table 50007 "WHT Posting Setup"
 {
     Caption = 'WHT Posting Setup';

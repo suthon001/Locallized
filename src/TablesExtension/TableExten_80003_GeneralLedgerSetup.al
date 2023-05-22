@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenGeneral Ledger Setup (ID 80003) extends Record General Ledger Setup.
+/// </summary>
 tableextension 80003 "ExtenGeneral Ledger Setup" extends "General Ledger Setup"
 {
     fields

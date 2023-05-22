@@ -1,14 +1,15 @@
+/// <summary>
+/// Table Billing Receipt Line (ID 50002).
+/// </summary>
 table 50002 "Billing Receipt Line"
 {
     Caption = 'Billing & Receipt Line';
     Permissions = TableData 21 = rm, TableData 25 = rm;
     fields
     {
-        field(1; "Document Type"; Option)
+        field(1; "Document Type"; Enum "Billing Document Type")
         {
             Caption = 'Document Type';
-            OptionMembers = "Sales Billing","Sales Receipt","Purchase Billing";
-            OptionCaption = 'Sales Billing,Sales Receipt,Purchase Billing';
             DataClassification = SystemMetadata;
             Editable = false;
         }

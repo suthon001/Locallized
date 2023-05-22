@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenItem Journal Batch (ID 80008) extends Record Item Journal Batch.
+/// </summary>
 tableextension 80008 "ExtenItem Journal Batch" extends "Item Journal Batch"
 {
     fields

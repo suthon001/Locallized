@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenSalesReceivableSetup (ID 80004) extends Record Sales  Receivables Setup.
+/// </summary>
 tableextension 80004 "ExtenSales&ReceivableSetup" extends "Sales & Receivables Setup"
 {
     fields
