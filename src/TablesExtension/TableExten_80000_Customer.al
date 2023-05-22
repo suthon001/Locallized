@@ -7,12 +7,10 @@ tableextension 80000 "ExtenCustomer" extends Customer
             Caption = 'Head Office';
             DataClassification = CustomerContent;
             trigger OnValidate()
-            var
-                TempSendtoUpdate: Text[50];
             begin
-                if "Head Office" then begin
+                if "Head Office" then
                     "Branch Code" := '';
-                end;
+
             end;
 
         }

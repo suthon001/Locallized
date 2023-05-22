@@ -9,14 +9,12 @@ codeunit 50000 "Journal Function"
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     local procedure "OnBeforePostGenJnlLine"(var GenJournalLine: Record "Gen. Journal Line")
     var
-
-        GenLine: Record "Gen. Journal Line";
         WHTHeader: Record "WHT Header";
         BillingHeader: Record "Billing Receipt Header";
 
     begin
 
-        WHTHeader.reset;
+        WHTHeader.reset();
         WHTHeader.setrange("Gen. Journal Template Code", GenJournalLine."Journal Template Name");
         WHTHeader.setrange("Gen. Journal Batch Code", GenJournalLine."Journal Batch Name");
         WHTHeader.setrange("Gen. Journal Line No.", GenJournalLine."Line No.");
@@ -25,7 +23,7 @@ codeunit 50000 "Journal Function"
             WHTHeader.Modify();
         end;
 
-        BillingHeader.reset;
+        BillingHeader.reset();
         BillingHeader.SetRange("Template Name", GenJournalLine."Journal Template Name");
         BillingHeader.SetRange("Batch Name", GenJournalLine."Journal Batch Name");
         BillingHeader.SetRange("Journal Document No.", GenJournalLine."Document No.");
@@ -87,7 +85,6 @@ codeunit 50000 "Journal Function"
     /// <param name="VATEntry">Parameter of type Record "VAT Entry".</param>
     local procedure "CopyVatFromGenLine"(GenJournalLine: Record "Gen. Journal Line"; var VATEntry: Record "VAT Entry")
     var
-        VATSetup: Record "VAT Posting Setup";
         VATProPostingGroup: Record "VAT Product Posting Group";
     begin
         // with VATEntry do begin
@@ -110,10 +107,10 @@ codeunit 50000 "Journal Function"
             else
                 VATEntry."Document Line No." := GenJournalLine."Line No.";
             if NOT VATProPostingGroup.get(VATEntry."VAT Prod. Posting Group") then
-                VATProPostingGroup.init;
-            IF VATProPostingGroup."Direct VAT" then begin
-                VATEntry."Tax Invoice Amount" := GenJournalLine.Amount;
-            END ELSE BEGIN
+                VATProPostingGroup.init();
+            IF VATProPostingGroup."Direct VAT" then
+                VATEntry."Tax Invoice Amount" := GenJournalLine.Amount
+            ELSE BEGIN
                 IF VATEntry."Tax Invoice Base" = 0 THEN
                     VATEntry."Tax Invoice Base" := VATEntry.Base;
                 IF VATEntry."Tax Invoice Amount" = 0 THEN

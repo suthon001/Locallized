@@ -1,12 +1,15 @@
+/// <summary>
+/// Table Tax Report Header (ID 50004).
+/// </summary>
 table 50004 "Tax Report Header"
 {
     Caption = 'Tax Report Header';
     fields
     {
-        field(1; "Tax Type"; Option)
+        field(1; "Tax Type"; Enum "Tax Type")
         {
-            OptionCaption = 'Purchase,Sale,WHT01,WHT02,WHT03,WHT53,WHT54';
-            OptionMembers = Purchase,Sale,WHT01,WHT02,WHT03,WHT53,WHT54;
+            Editable = false;
+            Caption = 'Tax Type';
             DataClassification = SystemMetadata;
         }
         field(2; "Document No."; Code[20])
@@ -42,7 +45,7 @@ table 50004 "Tax Report Header"
             Editable = false;
             DataClassification = SystemMetadata;
         }
-        field(6; "Month Name"; Text[30])
+        field(6; "Month Name"; Text[50])
         {
             Editable = false;
             Caption = 'Month Name';
@@ -75,7 +78,7 @@ table 50004 "Tax Report Header"
             FieldClass = FlowField;
             Caption = 'Total VAT Amount';
         }
-        field(11; "Create By"; Code[30])
+        field(11; "Create By"; Code[50])
         {
             Editable = false;
             Caption = 'Create By';
@@ -119,10 +122,12 @@ table 50004 "Tax Report Header"
             var
                 ApplicationManagement: Codeunit "Filter Tokens";
                 GLAcc: Record "G/L Account";
+                ltDateFilter: Text;
             begin
-                ApplicationManagement.MakeDateFilter("Date Filter");
-                GLAcc.SETFILTER("Date Filter", "Date Filter");
-                "Date Filter" := GLAcc.GETFILTER("Date Filter");
+                ltDateFilter := rec."Date Filter";
+                ApplicationManagement.MakeDateFilter(ltDateFilter);
+                GLAcc.SETFILTER("Date Filter", ltDateFilter);
+                "Date Filter" := COPYSTR(GLAcc.GETFILTER("Date Filter"), 1, 100);
             end;
         }
     }
@@ -153,7 +158,7 @@ table 50004 "Tax Report Header"
     trigger OnDelete()
     begin
 
-        TaxReportLine.RESET;
+        TaxReportLine.RESET();
         TaxReportLine.SETRANGE("Tax Type", "Tax Type");
         TaxReportLine.SETRANGE("Document No.", "Document No.");
         IF TaxReportLine.FindSet() THEN
@@ -163,7 +168,7 @@ table 50004 "Tax Report Header"
     trigger OnRename()
     begin
 
-        TaxReportLine.RESET;
+        TaxReportLine.RESET();
         TaxReportLine.SETRANGE("Tax Type", xRec."Tax Type");
         TaxReportLine.SETRANGE("Document No.", xRec."Document No.");
         IF TaxReportLine.FindFirst() THEN
@@ -173,14 +178,14 @@ table 50004 "Tax Report Header"
     trigger OnInsert()
     begin
         TestField("Document No.");
-        "Create By" := UserId;
+        "Create By" := COPYSTR(UserId(), 1, 50);
         "Create DateTime" := CurrentDateTime;
 
     end;
 
     var
         TaxReportLine: Record "Tax Report Line";
-        TaxReportHeader: Record "Tax Report Header";
+
 
     /// <summary> 
     /// Description for AssistEdit.
@@ -197,7 +202,7 @@ table 50004 "Tax Report Header"
         // WITH VatHeader DO BEGIN
         VatHeader.COPY(Rec);
         if VatHeader."Tax Type" = VatHeader."Tax Type"::Purchase then begin
-            purchaseSetup.GET;
+            purchaseSetup.GET();
             purchaseSetup.TESTFIELD("Purchase VAT Nos.");
             IF NoSeriesMgt.SelectSeries(purchaseSetup."Purchase VAT Nos.", OldVatHeader."No. Series",
               VatHeader."No. Series") THEN BEGIN
@@ -207,7 +212,7 @@ table 50004 "Tax Report Header"
             END;
         end;
         if VatHeader."Tax Type" = VatHeader."Tax Type"::Sale then begin
-            SalesSetup.GET;
+            SalesSetup.GET();
             SalesSetup.TESTFIELD("Sales VAT Nos.");
             IF NoSeriesMgt.SelectSeries(SalesSetup."Sales VAT Nos.", OldVatHeader."No. Series",
               VatHeader."No. Series") THEN BEGIN
@@ -216,8 +221,8 @@ table 50004 "Tax Report Header"
                 EXIT(TRUE);
             END;
         end;
-        if VatHeader."Tax Type" > 1 then begin
-            purchaseSetup.GET;
+        if VatHeader."Tax Type".AsInteger() > 1 then begin
+            purchaseSetup.GET();
             if "Tax Type" = "Tax Type"::WHT03 then begin
                 purchaseSetup.TESTFIELD("WHT03 Nos.");
                 IF NoSeriesMgt.SelectSeries(purchaseSetup."WHT03 Nos.", OldVatHeader."No. Series",

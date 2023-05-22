@@ -1,3 +1,6 @@
+/// <summary>
+/// Table Customer Vendor Branch (ID 50003).
+/// </summary>
 table 50003 "Customer & Vendor Branch"
 {
     Caption = 'Customer & Vendor Branch';

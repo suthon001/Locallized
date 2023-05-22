@@ -63,8 +63,6 @@ codeunit 50005 EventFunction
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Page Management", 'OnAfterGetPageID', '', false, false)]
     local procedure "OnAfterGetPageID"(RecordRef: RecordRef; var PageID: Integer)
-    var
-        PurchaseHeader: Record "Purchase Header";
     begin
 
         if (PageID = 0) and (RecordRef.Number = Database::"Item Journal Line") then

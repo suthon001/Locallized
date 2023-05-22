@@ -890,7 +890,7 @@ table 50000 "Posted ItemJournal Lines"
     var
         postedItemLine: Record "Posted ItemJournal Lines";
     begin
-        postedItemLine.reset;
+        postedItemLine.reset();
         if postedItemLine.FindLast() then
             EXIT(postedItemLine."Entry No." + 1);
         EXIT(1);

@@ -416,12 +416,12 @@ table 50011 "VAT Transections"
             DataClassification = CustomerContent;
             //TableRelation = Vendor."No.";
         }
-        field(80006; "Tax Invoice Name"; Text[150])
+        field(80006; "Tax Invoice Name"; Text[100])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;
         }
-        field(80007; "Description Line"; Text[250])
+        field(80007; "Description Line"; Text[100])
         {
             Caption = 'Description Line';
             DataClassification = CustomerContent;
@@ -468,11 +468,14 @@ table 50011 "VAT Transections"
             Caption = 'Document Line No.';
             DataClassification = SystemMetadata;
         }
-        field(99993; "Ref. Tax Type"; Option)
+        field(80015; "Tax Invoice Name 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Name 2';
+            DataClassification = CustomerContent;
+        }
+        field(99993; "Ref. Tax Type"; Enum "Tax Type")
         {
             Editable = false;
-            OptionCaption = 'Purchase,Sale,WHT01,WHT02,WHT03,WHT53,WHT54';
-            OptionMembers = Purchase,Sale,WHT01,WHT02,WHT03,WHT53,WHT54;
             DataClassification = SystemMetadata;
             Caption = 'Tax Type';
         }

@@ -44,7 +44,7 @@ table 50009 "WHT Header"
             var
                 Vendor: Record Vendor;
                 Customer: Record Customer;
-                WHTBusiness: Record "WHT Business Posting Group";
+
             begin
                 IF "WHT Source Type" = "WHT Source Type"::Vendor THEN BEGIN
                     IF Vendor.GET("WHT Source No.") THEN BEGIN
@@ -61,7 +61,7 @@ table 50009 "WHT Header"
                         "WHT City" := Vendor.City;
                         "WHT Post Code" := Vendor."Post Code";
                     END;
-                END ELSE BEGIN
+                END ELSE
                     IF Customer.GET("WHT Source No.") THEN BEGIN
                         "WHT Source No." := Customer."No.";
                         "WHT Name" := Customer.Name;
@@ -76,7 +76,7 @@ table 50009 "WHT Header"
                         "WHT City" := Customer.City;
                         "WHT Post Code" := Customer."Post Code";
                     END;
-                END;
+
             end;
         }
         field(7; "WHT Name"; Text[100])
@@ -212,7 +212,7 @@ table 50009 "WHT Header"
             // Editable = false;
             DataClassification = SystemMetadata;
         }
-        field(26; "Wht Post Code"; Text[30])
+        field(26; "Wht Post Code"; Text[20])
         {
             Caption = 'Wht Post Code';
             DataClassification = CustomerContent;
@@ -238,18 +238,17 @@ table 50009 "WHT Header"
     /// <returns>Return variable "Boolean".</returns>
     procedure "AssistEditCertificate"(): Boolean
     var
-        WHTEntry: Record "WHT Header";
+
         WHTBus: Record "WHT Business Posting Group";
         NoSeriesMgt: Codeunit NoSeriesManagement;
-        NewSeries: Code[30];
+        NewSeries: Code[20];
     begin
 
         WHTBus.GET("WHT Business Posting Group");
         WHTBus.TESTFIELD("WHT Certificate No. Series");
-        IF NoSeriesMgt.SelectSeries(WHTBus."WHT Certificate No. Series", "No. Series",
-          NewSeries) THEN BEGIN
+        IF NoSeriesMgt.SelectSeries(WHTBus."WHT Certificate No. Series", "No. Series", NewSeries) THEN
             "WHT Certificate No." := NoSeriesMgt.GetNextNo(NewSeries, Today, TRUE);
-        END;
+
     end;
 
 
@@ -259,7 +258,7 @@ table 50009 "WHT Header"
     /// <param name="GenLine">Parameter of type Record "Gen. Journal Line".</param>
     procedure "SetWHT"(GenLine: Record "Gen. Journal Line")
     begin
-        Genlines.reset;
+        Genlines.reset();
         Genlines.copy(GenLine);
         Genlines.FindFirst();
     end;
@@ -269,7 +268,7 @@ table 50009 "WHT Header"
         WHTLine: Record "WHT Lines";
     begin
 
-        WHTLine.RESET;
+        WHTLine.RESET();
         WHTLine.SETRANGE("WHT No.", "WHT No.");
         IF WHTLine.FindSet() THEN
             WHTLine.DELETEALL(TRUE);

@@ -121,12 +121,12 @@ table 50002 "Billing Receipt Line"
                 SumBillAmt: Decimal;
                 CurrencyFactor: Decimal;
             begin
-                "TestOpenStatus";
+                TestOpenStatus();
                 CurrencyFactor := "Source Amount" / "Source Amount (LCY)";
                 "Amount (LCY)" := "Amount" * CurrencyFactor;
 
                 CLEAR(SumBillAmt);
-                BillingReceiptLine.RESET;
+                BillingReceiptLine.RESET();
                 BillingReceiptLine.SETRANGE("Document Type", "Document Type");
                 BillingReceiptLine.SETRANGE("Source Ledger Entry No.", "Source Ledger Entry No.");
                 BillingReceiptLine.SETFILTER("Document No.", '<>%1', "Document No.");
@@ -137,19 +137,16 @@ table 50002 "Billing Receipt Line"
 
                 CASE "Document Type" OF
                     "Document Type"::"Sales Billing", "Document Type"::"Sales Receipt":
-                        BEGIN
-                            IF ((SumBillAmt + "Amount") > "Source Amount") OR ("Amount" <= 0) THEN
-                                ERROR(Text001, "Source Amount" - SumBillAmt, "Source Document No.", "Source Posting Date", "Source Amount", SumBillAmt);
-                        END;
+                        IF ((SumBillAmt + "Amount") > "Source Amount") OR ("Amount" <= 0) THEN
+                            ERROR(Text001Txt, "Source Amount" - SumBillAmt, "Source Document No.", "Source Posting Date", "Source Amount", SumBillAmt);
                     "Document Type"::"Purchase Billing":
-                        BEGIN
-                            IF ((SumBillAmt + "Amount") > "Source Amount") OR ("Amount" <= 0) THEN
-                                ERROR(Text001, "Source Amount" - SumBillAmt, "Source Document No.", "Source Posting Date", "Source Amount", SumBillAmt);
-                        END;
+                        IF ((SumBillAmt + "Amount") > "Source Amount") OR ("Amount" <= 0) THEN
+                            ERROR(Text001Txt, "Source Amount" - SumBillAmt, "Source Document No.", "Source Posting Date", "Source Amount", SumBillAmt);
+
                 END;
                 SumBillAmt += "Amount";
 
-                "UpdateCustVendLedgStatus"(SumBillAmt);
+                UpdateCustVendLedgStatus(SumBillAmt);
             end;
         }
         field(20; "Amount (LCY)"; Decimal)
@@ -182,30 +179,26 @@ table 50002 "Billing Receipt Line"
     /// Description for UpdateCustVendLedgStatus.
     /// </summary>
     /// <param name="SumAmount">Parameter of type Decimal.</param>
-    local procedure "UpdateCustVendLedgStatus"(SumAmount: Decimal)
+    local procedure UpdateCustVendLedgStatus(SumAmount: Decimal)
 
     begin
         CASE "Document Type" OF
             "Document Type"::"Sales Billing", "Document Type"::"Sales Receipt":
-                BEGIN
-                    IF CustLedgEntry.GET("Source Ledger Entry No.") THEN BEGIN
-                        CustLedgEntry.CALCFIELDS("Original Amount", "Original Amt. (LCY)", "Billing Amount", "Billing Amount (LCY)", "Receipt Amount", "Receipt Amount (LCY)");
-                        IF "Document Type" = "Document Type"::"Sales Billing" THEN BEGIN
-                            CustLedgEntry."Completed Billing" := (CustLedgEntry."Original Amount" - SumAmount) = 0;
-                            CustLedgEntry.MODIFY;
-                        END ELSE BEGIN
-                            CustLedgEntry."Completed Receipt" := (CustLedgEntry."Original Amount" - SumAmount) = 0;
-                            CustLedgEntry.MODIFY;
-                        END;
+                IF CustLedgEntry.GET("Source Ledger Entry No.") THEN BEGIN
+                    CustLedgEntry.CALCFIELDS("Original Amount", "Original Amt. (LCY)", "Billing Amount", "Billing Amount (LCY)", "Receipt Amount", "Receipt Amount (LCY)");
+                    IF "Document Type" = "Document Type"::"Sales Billing" THEN BEGIN
+                        CustLedgEntry."Completed Billing" := (CustLedgEntry."Original Amount" - SumAmount) = 0;
+                        CustLedgEntry.MODIFY();
+                    END ELSE BEGIN
+                        CustLedgEntry."Completed Receipt" := (CustLedgEntry."Original Amount" - SumAmount) = 0;
+                        CustLedgEntry.MODIFY();
                     END;
                 END;
             "Document Type"::"Purchase Billing":
-                BEGIN
-                    IF VendLedgEntry.GET("Source Ledger Entry No.") THEN BEGIN
-                        VendLedgEntry.CALCFIELDS("Original Amount", "Original Amt. (LCY)");
-                        VendLedgEntry."Completed Billing" := (VendLedgEntry."Original Amount" - SumAmount) = 0;
-                        VendLedgEntry.MODIFY;
-                    END;
+                IF VendLedgEntry.GET("Source Ledger Entry No.") THEN BEGIN
+                    VendLedgEntry.CALCFIELDS("Original Amount", "Original Amt. (LCY)");
+                    VendLedgEntry."Completed Billing" := (VendLedgEntry."Original Amount" - SumAmount) = 0;
+                    VendLedgEntry.MODIFY();
                 END;
         END;
     end;
@@ -215,28 +208,24 @@ table 50002 "Billing Receipt Line"
         "TestOpenStatus"();
         CASE "Document Type" OF
             "Document Type"::"Sales Billing":
-                BEGIN
-                    if CustLedgEntry.GET("Source Ledger Entry No.") then begin
-                        CustLedgEntry."Completed Billing" := FALSE;
-                        CustLedgEntry."Aging Due Date" := CustLedgEntry."Due Date";
-                        CustLedgEntry.MODIFY;
-                    end;
-                END;
+
+                if CustLedgEntry.GET("Source Ledger Entry No.") then begin
+                    CustLedgEntry."Completed Billing" := FALSE;
+                    CustLedgEntry."Aging Due Date" := CustLedgEntry."Due Date";
+                    CustLedgEntry.MODIFY();
+                end;
             "Document Type"::"Sales Receipt":
-                BEGIN
-                    if CustLedgEntry.GET("Source Ledger Entry No.") then begin
-                        CustLedgEntry."Completed Receipt" := FALSE;
-                        CustLedgEntry.MODIFY;
-                    end;
-                END;
+                if CustLedgEntry.GET("Source Ledger Entry No.") then begin
+                    CustLedgEntry."Completed Receipt" := FALSE;
+                    CustLedgEntry.MODIFY();
+                end;
             "Document Type"::"Purchase Billing":
-                BEGIN
-                    if VendLedgEntry.GET("Source Ledger Entry No.") then begin
-                        VendLedgEntry."Completed Billing" := FALSE;
-                        VendLedgEntry."Aging Due Date" := VendLedgEntry."Due Date";
-                        VendLedgEntry.MODIFY;
-                    end;
-                END;
+                if VendLedgEntry.GET("Source Ledger Entry No.") then begin
+                    VendLedgEntry."Completed Billing" := FALSE;
+                    VendLedgEntry."Aging Due Date" := VendLedgEntry."Due Date";
+                    VendLedgEntry.MODIFY();
+                end;
+
         END;
     end;
 
@@ -265,7 +254,7 @@ table 50002 "Billing Receipt Line"
     var
         BillingLines: Record "Billing Receipt Line";
     begin
-        BillingLines.reset;
+        BillingLines.reset();
         BillingLines.SetCurrentKey("Document Type", "Document No.", "Line No.");
         BillingLines.SetRange("Document Type", "Document Type");
         BillingLines.SetRange("Document No.", "Document No.");
@@ -278,5 +267,5 @@ table 50002 "Billing Receipt Line"
     var
         CustLedgEntry: Record "Cust. Ledger Entry";
         VendLedgEntry: Record "Vendor Ledger Entry";
-        Text001: Label 'You cannot issue more than %1.\Source Document No. %2 (%3)   \Amount %4   \Issued Amount %5.';
+        Text001Txt: Label 'You cannot issue more than %1.\Source Document No. %2 (%3)   \Amount %4   \Issued Amount %5.', Locked = true;
 }

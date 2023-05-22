@@ -48,57 +48,57 @@ Table 50001 "Billing Receipt Header"
             begin
                 TESTFIELD("Status", "Status"::Open);
                 "Posting Description" := FORMAT("Document Type") + ' ' + "No.";
-                "TestBillingLine";
+                TestBillingLine();
                 CASE "Document Type" OF
                     "Document Type"::"Sales Billing", "Document Type"::"Sales Receipt":
                         BEGIN
                             IF NOT Cust.GET("Bill/Pay-to Cust/Vend No.") THEN
-                                Cust.INIT;
-                            "Bill/Pay-to Cust/Vend Name" := Cust.Name;
-                            "Bill/Pay-to Cus/Vend Name2" := Cust."Name 2";
-                            "Bill/Pay-to Address" := Cust.Address;
-                            "Bill/Pay-to Address 2" := Cust."Address 2";
-                            "Bill/Pay-to Post Code" := Cust."Post Code";
-                            "Bill/Pay-to City" := Cust.City;
-                            "Bill/Pay-to County" := Cust.County;
-                            "Bill/Pay-to Country/Region" := Cust."Country/Region Code";
-                            "Bill/Pay-to Contact" := Cust.Contact;
-                            "VAT Bus. Posting Group" := Cust."VAT Bus. Posting Group";
-                            "Vat Registration No." := cust."VAT Registration No.";
-                            "Head Office" := cust."Head Office";
-                            "Branch Code" := Cust."Branch Code";
-                            if (NOT "Head Office") AND ("Branch Code" = '') then
-                                "Head Office" := true;
-                            if "Document Date" = 0D then
-                                "Document Date" := TODAY;
-                            VALIDATE("Payment Terms Code", Cust."Payment Terms Code");
-                            VALIDATE("Payment Method Code", Cust."Payment Method Code");
-                            VALIDATE("Currency Code", Cust."Currency Code");
+                                Cust.INIT();
+                            rec."Bill/Pay-to Cust/Vend Name" := Cust.Name;
+                            rec."Bill/Pay-to Cus/Vend Name 2" := Cust."Name 2";
+                            rec."Bill/Pay-to Address" := Cust.Address;
+                            rec."Bill/Pay-to Address 2" := Cust."Address 2";
+                            rec."Bill/Pay-to Post Code" := Cust."Post Code";
+                            rec."Bill/Pay-to City" := Cust.City;
+                            rec."Bill/Pay-to County" := Cust.County;
+                            rec."Bill/Pay-to Country/Region" := Cust."Country/Region Code";
+                            rec."Bill/Pay-to Contact" := Cust.Contact;
+                            rec."VAT Bus. Posting Group" := Cust."VAT Bus. Posting Group";
+                            rec."Vat Registration No." := cust."VAT Registration No.";
+                            rec."Head Office" := cust."Head Office";
+                            rec."Branch Code" := Cust."Branch Code";
+                            if (NOT rec."Head Office") AND (rec."Branch Code" = '') then
+                                rec."Head Office" := true;
+                            if rec."Document Date" = 0D then
+                                rec."Document Date" := TODAY;
+                            rec.VALIDATE("Payment Terms Code", Cust."Payment Terms Code");
+                            rec.VALIDATE("Payment Method Code", Cust."Payment Method Code");
+                            rec.VALIDATE("Currency Code", Cust."Currency Code");
                         END;
                     "Document Type"::"Purchase Billing":
                         BEGIN
                             IF NOT Vend.GET("Bill/Pay-to Cust/Vend No.") THEN
-                                Vend.INIT;
-                            "Bill/Pay-to Cust/Vend Name" := Vend.Name;
-                            "Bill/Pay-to Cus/Vend Name2" := Vend."Name 2";
-                            "Bill/Pay-to Address" := Vend.Address;
-                            "Bill/Pay-to Address 2" := Vend."Address 2";
-                            "Bill/Pay-to Post Code" := Vend."Post Code";
-                            "Bill/Pay-to City" := Vend.City;
-                            "Bill/Pay-to County" := Vend.County;
-                            "Bill/Pay-to Country/Region" := Vend."Country/Region Code";
-                            "Bill/Pay-to Contact" := Vend.Contact;
-                            "VAT Bus. Posting Group" := Vend."VAT Bus. Posting Group";
-                            "Vat Registration No." := Vend."VAT Registration No.";
-                            "Head Office" := Vend."Head Office";
-                            "Branch Code" := Vend."Branch Code";
-                            if (NOT "Head Office") AND ("Branch Code" = '') then
-                                "Head Office" := true;
-                            if "Document Date" = 0D then
-                                "Document Date" := TODAY;
-                            VALIDATE("Payment Terms Code", Vend."Payment Terms Code");
-                            VALIDATE("Payment Method Code", Vend."Payment Method Code");
-                            VALIDATE("Currency Code", Vend."Currency Code");
+                                Vend.INIT();
+                            rec."Bill/Pay-to Cust/Vend Name" := Vend.Name;
+                            rec."Bill/Pay-to Cus/Vend Name 2" := Vend."Name 2";
+                            rec."Bill/Pay-to Address" := Vend.Address;
+                            rec."Bill/Pay-to Address 2" := Vend."Address 2";
+                            rec."Bill/Pay-to Post Code" := Vend."Post Code";
+                            rec."Bill/Pay-to City" := Vend.City;
+                            rec."Bill/Pay-to County" := Vend.County;
+                            rec."Bill/Pay-to Country/Region" := Vend."Country/Region Code";
+                            rec."Bill/Pay-to Contact" := Vend.Contact;
+                            rec."VAT Bus. Posting Group" := Vend."VAT Bus. Posting Group";
+                            rec."Vat Registration No." := Vend."VAT Registration No.";
+                            rec."Head Office" := Vend."Head Office";
+                            rec."Branch Code" := Vend."Branch Code";
+                            if (NOT rec."Head Office") AND (rec."Branch Code" = '') then
+                                rec."Head Office" := true;
+                            if rec."Document Date" = 0D then
+                                rec."Document Date" := TODAY;
+                            rec.VALIDATE("Payment Terms Code", Vend."Payment Terms Code");
+                            rec.VALIDATE("Payment Method Code", Vend."Payment Method Code");
+                            rec.VALIDATE("Currency Code", Vend."Currency Code");
                         END;
                 END;
             end;
@@ -108,7 +108,7 @@ Table 50001 "Billing Receipt Header"
             Caption = 'Bill/Pay-to Cust/Vend Name';
             DataClassification = CustomerContent;
         }
-        field(7; "Bill/Pay-to Cus/Vend Name2"; Text[50])
+        field(7; "Bill/Pay-to Cus/Vend Name 2"; Text[50])
         {
             Caption = 'Bill/Pay-to Cust/Vend Name 2';
             DataClassification = CustomerContent;
@@ -159,7 +159,7 @@ Table 50001 "Billing Receipt Header"
             begin
                 TESTFIELD("Status", "Status"::Open);
                 if not Payment.GET("Payment Terms Code") then
-                    Payment.init;
+                    Payment.init();
 
                 if "Payment Terms Code" <> '' then
                     "Due Date" := CalcDate(Payment."Due Date Calculation", "Document Date")
@@ -174,7 +174,7 @@ Table 50001 "Billing Receipt Header"
             trigger OnValidate()
             begin
                 TESTFIELD("Status", "Status"::Open);
-                "UpdateBillingLine"(FIELDNO("Due Date"));
+                UpdateBillingLine(FIELDNO("Due Date"));
             end;
         }
         field(17; "Payment Method Code"; Code[10])
@@ -218,7 +218,7 @@ Table 50001 "Billing Receipt Header"
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(22; "No. Series"; Code[10])
+        field(22; "No. Series"; Code[20])
         {
             Caption = 'No. Series';
             DataClassification = CustomerContent;
@@ -236,13 +236,13 @@ Table 50001 "Billing Receipt Header"
             Caption = 'External Document No.';
             DataClassification = CustomerContent;
         }
-        field(25; "VAT Bus. Posting Group"; Code[10])
+        field(25; "VAT Bus. Posting Group"; Code[20])
         {
             Caption = 'VAT Bus. Posting Group';
             DataClassification = CustomerContent;
             TableRelation = "VAT Business Posting Group".Code;
         }
-        field(26; "Create By User"; Code[30])
+        field(26; "Create By User"; Code[50])
         {
             Caption = 'Create By User';
             DataClassification = SystemMetadata;
@@ -392,7 +392,7 @@ Table 50001 "Billing Receipt Header"
             var
                 GenJnlLine: Record "Gen. Journal Line";
             begin
-                GenJnlLine.RESET;
+                GenJnlLine.RESET();
                 GenJnlLine.FILTERGROUP := 2;
                 GenJnlLine.SETRANGE("Journal Template Name", "Template Name");
                 GenJnlLine.FILTERGROUP := 0;
@@ -417,7 +417,7 @@ Table 50001 "Billing Receipt Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                TestStatusOpen;
+                TestStatusOpen();
             end;
         }
         field(48; "Receive Account No."; Code[20])
@@ -428,7 +428,7 @@ Table 50001 "Billing Receipt Header"
             IF ("Receive Type" = CONST("G/L Account")) "G/L Account";
             trigger OnValidate()
             begin
-                TestStatusOpen;
+                TestStatusOpen();
             end;
         }
         field(49; "Receive Date"; Date)
@@ -437,7 +437,7 @@ Table 50001 "Billing Receipt Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                TestStatusOpen;
+                TestStatusOpen();
             end;
         }
         field(50; "Cheque No."; Code[20])
@@ -451,7 +451,7 @@ Table 50001 "Billing Receipt Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                TestStatusOpen;
+                TestStatusOpen();
             end;
         }
 
@@ -471,7 +471,7 @@ Table 50001 "Billing Receipt Header"
     }
     trigger OnInsert()
     begin
-        "Create By User" := UserId;
+        "Create By User" := COPYSTR(UserId(), 1, 50);
         "Create DateTime" := CurrentDateTime;
         "Posting Date" := Today;
         "Document Date" := Today;
@@ -491,7 +491,7 @@ Table 50001 "Billing Receipt Header"
 
     trigger OnRename()
     begin
-        ERROR(Text003, TABLECAPTION);
+        ERROR(Text003Txt, TABLECAPTION);
     end;
 
 
@@ -506,10 +506,10 @@ Table 50001 "Billing Receipt Header"
     begin
         // WITH BillingReceiptHeader DO BEGIN
         BillingReceiptHeader.COPY(Rec);
-        IF NoSeriesMgt.SelectSeries("GetNoSeriesCode", OldBillingHeader."No. Series", BillingReceiptHeader."No. Series") THEN BEGIN
+        IF NoSeriesMgt.SelectSeries(GetNoSeriesCode(), OldBillingHeader."No. Series", BillingReceiptHeader."No. Series") THEN BEGIN
             NoSeriesMgt.SetSeries(BillingReceiptHeader."No.");
             IF BillingHeader2.GET(BillingReceiptHeader."Document Type", BillingReceiptHeader."No.") THEN
-                ERROR(Text051, LOWERCASE(FORMAT(BillingReceiptHeader."Document Type")), BillingReceiptHeader."No.");
+                ERROR(text051Txt, LOWERCASE(FORMAT(BillingReceiptHeader."Document Type")), BillingReceiptHeader."No.");
             Rec := BillingReceiptHeader;
             EXIT(TRUE);
         END;
@@ -519,14 +519,14 @@ Table 50001 "Billing Receipt Header"
     /// <summary> 
     /// Description for GetNoSeriesCode.
     /// </summary>
-    /// <returns>Return variable "Code[10]".</returns>
-    local procedure "GetNoSeriesCode"(): Code[10]
+    /// <returns>Return variable "Code[20]".</returns>
+    local procedure "GetNoSeriesCode"(): Code[20]
     var
         SalesSetup: Record "Sales & Receivables Setup";
         PurchSetup: Record "Purchases & Payables Setup";
     begin
-        PurchSetup.get;
-        SalesSetup.get;
+        PurchSetup.get();
+        SalesSetup.get();
         CASE "Document Type" OF
             "Document Type"::"Sales Billing":
                 begin
@@ -549,27 +549,27 @@ Table 50001 "Billing Receipt Header"
     /// <summary> 
     /// Description for TestBillingLine.
     /// </summary>
-    local procedure "TestBillingLine"()
+    local procedure TestBillingLine()
     var
         BillingReceiptLine: Record "Billing Receipt Line";
     begin
-        BillingReceiptLine.RESET;
+        BillingReceiptLine.RESET();
         BillingReceiptLine.SETRANGE("Document Type", "Document Type");
         BillingReceiptLine.SETRANGE("Document No.", "No.");
-        IF BillingReceiptLine.FindFirst() THEN
-            ERROR(Text001, BillingReceiptLine.TABLECAPTION, "No.");
+        IF not BillingReceiptLine.IsEmpty THEN
+            ERROR(Text001Err);
     end;
 
     /// <summary> 
     /// Description for UpdateBillingLine.
     /// </summary>
     /// <param name="ChangeFieldNo">Parameter of type Integer.</param>
-    local procedure "UpdateBillingLine"(ChangeFieldNo: Integer)
+    local procedure UpdateBillingLine(ChangeFieldNo: Integer)
     var
         BillingReceiptLine: Record "Billing Receipt Line";
     begin
 
-        BillingReceiptLine.RESET;
+        BillingReceiptLine.RESET();
         BillingReceiptLine.SETRANGE("Document Type", "Document Type");
         BillingReceiptLine.SETRANGE("Document No.", "No.");
         CASE ChangeFieldNo OF
@@ -606,8 +606,8 @@ Table 50001 "Billing Receipt Header"
     var
         NoSeriesMgt: Codeunit NoSeriesManagement;
         BillingReceiptHeader: Record "Billing Receipt Header";
-        text051: Label 'The document %1 %2 already exists.';
-        Text001: Label 'Do you want to change %1?';
-        Text003: Label 'You cannot rename a %1.';
+        text051Txt: Label 'The document %1 %2 already exists.', Locked = true;
+        Text001Err: Label 'Cannot Change';
+        Text003Txt: Label 'You cannot rename a %1.', Locked = true;
 
 }

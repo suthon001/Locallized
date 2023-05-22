@@ -1,16 +1,17 @@
+/// <summary>
+/// Table Tax Report Line (ID 50005).
+/// </summary>
 table 50005 "Tax Report Line"
 {
     Caption = 'Tax Report Line';
 
     fields
     {
-        field(1; "Tax Type"; Option)
+        field(1; "Tax Type"; Enum "Tax Type")
         {
             Editable = false;
-            OptionCaption = 'Purchase,Sale,WHT01,WHT02,WHT03,WHT53,WHT54';
-            OptionMembers = Purchase,Sale,WHT01,WHT02,WHT03,WHT53,WHT54;
-            DataClassification = SystemMetadata;
             Caption = 'Tax Type';
+            DataClassification = SystemMetadata;
         }
         field(2; "Document No."; Code[20])
         {
@@ -42,7 +43,7 @@ table 50005 "Tax Report Line"
             TableRelation = Vendor."No.";
             DataClassification = SystemMetadata;
         }
-        field(7; "Tax Invoice No."; Code[30])
+        field(7; "Tax Invoice No."; Code[35])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = SystemMetadata;
@@ -52,7 +53,7 @@ table 50005 "Tax Report Line"
             Caption = 'Tax Invoice Date';
             DataClassification = SystemMetadata;
         }
-        field(9; "Tax Invoice Name"; Text[150])
+        field(9; "Tax Invoice Name"; Text[100])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = SystemMetadata;
@@ -72,7 +73,7 @@ table 50005 "Tax Report Line"
             Caption = 'VAT Registration No.';
             DataClassification = SystemMetadata;
         }
-        field(13; "Description"; Text[150])
+        field(13; "Description"; Text[100])
         {
             Caption = 'Description';
             DataClassification = SystemMetadata;
@@ -98,6 +99,11 @@ table 50005 "Tax Report Line"
         field(17; "VAT Product Posting Group"; Code[20])
         {
             Caption = 'VAT Product Posting Group';
+            DataClassification = SystemMetadata;
+        }
+        field(18; "Tax Invoice Name 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Name 2';
             DataClassification = SystemMetadata;
         }
         field(1000; "WHT Business Posting Group"; Code[20])
@@ -261,18 +267,7 @@ table 50005 "Tax Report Line"
         Vattransection: Record "VAT Transections";
     begin
 
-        // IF "Tax Type" > 1 THEN BEGIN
-
-        // END else begin
-        //     Vattransection.reset;
-        //     Vattransection.SetRange("Type", "Tax Type" + 1);
-        //     Vattransection.SetRange("Entry No.", "Ref. Entry No.");
-        //     if Vattransection.FindFirst() then begin
-        //         Vattransection."Get to Tax" := false;
-        //         Vattransection.Modify();
-        //     end;
-        // end;
-        Vattransection.reset;
+        Vattransection.reset();
         Vattransection.SetRange("Ref. Tax Type", "Tax Type");
         Vattransection.SetRange("Ref. Tax No.", "Document No.");
         Vattransection.SetRange("Ref. Tax Line No.", "Entry No.");
@@ -284,7 +279,6 @@ table 50005 "Tax Report Line"
     end;
 
     var
-        VATEntry: Record 254;
         WHTHeader: Record "WHT Header";
 
     /// <summary> 
@@ -295,7 +289,7 @@ table 50005 "Tax Report Line"
         NavigateForm: Page 344;
     begin
         NavigateForm.SetDoc("Posting Date", "Voucher No.");
-        NavigateForm.RUN;
+        NavigateForm.RUN();
     end;
 
     /// <summary> 
@@ -306,29 +300,20 @@ table 50005 "Tax Report Line"
         VatTransection: Record "VAT Transections";
         TaxReportHeader: Record "Tax Report Header";
         TaxReportLine: Record "Tax Report Line";
-        TaxReportLineFind: Record "Tax Report Line";
         VATProdPostingGroup: Record "VAT Product Posting Group";
         var_Skip: Boolean;
-        PurchaseCN: Record "Purch. Cr. Memo Hdr.";
-        PurchaseINvoice: Record "Purch. Inv. Header";
-        PurchaseInvoiceLine: Record "Purch. Inv. Line";
-        SalesCN: Record "Sales Cr.Memo Header";
-        SalesInvoice: Record "Sales Invoice Header";
-        VarPostingGroup: Record "VAT Product Posting Group";
         varPostingSsetup: Record "VAT Posting Setup";
-        vatEntry: Record "VAT Entry";
-        checkrevers: Boolean;
         VendorLedger: Record "Vendor Ledger Entry";
         VendorDetail: Record "Detailed Vendor Ledg. Entry";
         VatAmt, VatBase : Decimal;
-        TaxInvoiceNo: Code[30];
+        TaxInvoiceNo: Code[35];
         TaxINvoiceLine: Integer;
     begin
 
         TaxReportHeader.get("Tax Type", "Document No.");
         TaxReportHeader.TestField("End date of Month");
-        VatTransection.reset;
-        VatTransection.SetRange("Type", "Tax Type" + 1);
+        VatTransection.reset();
+        VatTransection.SetRange("Type", "Tax Type".AsInteger() + 1);
         VatTransection.SetFilter("Posting Date", '%1..%2', DMY2Date(01, TaxReportHeader."Month No.", TaxReportHeader."Year No."), CalcDate('<CM>', TaxReportHeader."End date of Month"));
         if "Tax Type" = "Tax Type"::Purchase then
             VatTransection.SetRange("Allow Generate to Purch. Vat", true)
@@ -339,7 +324,7 @@ table 50005 "Tax Report Line"
             repeat
                 var_Skip := false;
                 if not VATProdPostingGroup.Get(VatTransection."VAT Prod. Posting Group") then
-                    VATProdPostingGroup.init;
+                    VATProdPostingGroup.init();
                 VatTransection.CalcFields("Unrealized VAT Type");
                 VatAmt := ABS(VatTransection."Amount");
                 VatBase := ABS(VatTransection.Base);
@@ -347,21 +332,20 @@ table 50005 "Tax Report Line"
                     VatAmt := ABS(VatTransection."Amount") * -1;
                     VatBase := ABS(VatTransection.Base) * -1;
                 end;
-                if VatTransection."Document Type" <> VatTransection."Document Type"::Payment then begin
-                    if VatTransection."Type" = VatTransection."Type"::Purchase then begin
+                if VatTransection."Document Type" <> VatTransection."Document Type"::Payment then
+                    if VatTransection."Type" = VatTransection."Type"::Purchase then
                         if varPostingSsetup."Unrealized VAT Type" = varPostingSsetup."Unrealized VAT Type"::Percentage then begin
-                            VendorLedger.reset;
+                            VendorLedger.reset();
                             VendorLedger.SetRange("Document No.", VatTransection."Document No.");
                             if VendorLedger.FindFirst() then begin
-                                VendorDetail.reset;
+                                VendorDetail.reset();
                                 VendorDetail.SetRange("Vendor Ledger Entry No.", VendorLedger."Entry No.");
                                 VendorDetail.SetRange("Document Type", VendorDetail."Document Type"::Payment);
-                                if VendorDetail.FindFirst() then
+                                if not VendorDetail.IsEmpty then
                                     var_Skip := true;
                             end;
                         end;
-                    end;
-                end;
+
                 IF VATProdPostingGroup."Direct VAT" THEN
                     IF (VatTransection."Tax Invoice Base" = 0) THEN
                         var_Skip := TRUE;
@@ -371,23 +355,23 @@ table 50005 "Tax Report Line"
                 TaxInvoiceNo := '';
                 if VatTransection.Type = VatTransection.Type::Sale then
                     TaxInvoiceNo := VatTransection."Document No."
-                else begin
+                else
                     if VatTransection."Tax Invoice No." <> '' then
                         TaxInvoiceNo := VatTransection."Tax Invoice No."
                     else
                         TaxInvoiceNo := VatTransection."External Document No.";
-                end;
+
 
                 if not var_Skip then begin
-                    TaxReportLine.RESET;
+                    TaxReportLine.RESET();
                     TaxReportLine.SetRange("Tax Type", "Tax Type");
                     TaxReportLine.SetRange("Voucher No.", VatTransection."Document No.");
                     TaxReportLine.SetRange("Tax Invoice No.", TaxInvoiceNo);
                     if not TaxReportLine.FindFirst() then begin
-                        TaxReportLine.INIT;
+                        TaxReportLine.INIT();
                         TaxReportLine."Tax Type" := "Tax Type";
                         TaxReportLine."Document No." := "Document No.";
-                        TaxReportLine."Entry No." := "GetLastLineNo";
+                        TaxReportLine."Entry No." := GetLastLineNo();
                         TaxReportLine."Posting Date" := VatTransection."Posting Date";
                         TaxReportLine."Voucher No." := VatTransection."Document No.";
                         TaxReportLine."VAT Business Posting Group" := VatTransection."VAT Bus. Posting Group";
@@ -397,12 +381,13 @@ table 50005 "Tax Report Line"
                         TaxReportLine."VAT Registration No." := VatTransection."VAT Registration No.";
                         TaxReportLine."Description" := VatTransection."Description Line";
                         TaxReportLine."Tax Invoice Name" := VatTransection."Tax Invoice Name";
+                        TaxReportLine."Tax Invoice Name 2" := VatTransection."Tax Invoice Name 2";
                         TaxReportLine."Tax Invoice Date" := VatTransection."Tax Invoice Date";
                         TaxReportLine."Tax Invoice No." := TaxInvoiceNo;
                         if VatTransection."Unrealized VAT Type" = VatTransection."Unrealized VAT Type"::Percentage then begin
                             TaxReportLine."Base Amount" := ABS(VatTransection."Remaining Unrealized Base");
                             TaxReportLine."VAT Amount" := ABS(VatTransection."Remaining Unrealized Amt.");
-                        end else begin
+                        end else
                             if VatTransection."Tax Invoice No." <> '' then begin
                                 TaxReportLine."Tax Invoice No." := VatTransection."Tax Invoice No.";
                                 TaxReportLine."Base Amount" := ABS(VatTransection."Tax Invoice Base");
@@ -411,7 +396,7 @@ table 50005 "Tax Report Line"
                                 TaxReportLine."Base Amount" := VatBase;
                                 TaxReportLine."VAT Amount" := VatAmt;
                             end;
-                        end;
+
                         if VatTransection.Type = VatTransection.Type::Sale then
                             TaxReportLine."Customer No." := VatTransection."Bill-to/Pay-to No."
                         else
@@ -426,7 +411,7 @@ table 50005 "Tax Report Line"
                         if VatTransection."Unrealized VAT Type" = VatTransection."Unrealized VAT Type"::Percentage then begin
                             TaxReportLine."Base Amount" += ABS(VatTransection."Remaining Unrealized Base");
                             TaxReportLine."VAT Amount" += ABS(VatTransection."Remaining Unrealized Amt.");
-                        end else begin
+                        end else
                             if VatTransection."Tax Invoice No." <> '' then begin
                                 TaxReportLine."Tax Invoice No." += VatTransection."Tax Invoice No.";
                                 TaxReportLine."Base Amount" += ABS(VatTransection."Tax Invoice Base");
@@ -436,7 +421,6 @@ table 50005 "Tax Report Line"
                                 TaxReportLine."Base Amount" += VatBase;
                                 TaxReportLine."VAT Amount" += VatAmt;
                             end;
-                        end;
                     end;
                     VatTransection."Ref. Tax Type" := "Tax Type";
                     VatTransection."Ref. Tax No." := "Document No.";
@@ -445,203 +429,7 @@ table 50005 "Tax Report Line"
                     VatTransection.Modify();
                 end;
 
-            //         var_Skip := false;
-            //         checkrevers := false;
-            //         if VatTransection."Document Type" <> VatTransection."Document Type"::Payment then begin
-            //             if VatTransection."Type" = VatTransection."Type"::Purchase then begin
-            //                 if varPostingSsetup."Unrealized VAT Type" = varPostingSsetup."Unrealized VAT Type"::Percentage then begin
-
-            //                     VendorLedger.reset;
-            //                     VendorLedger.SetRange("Document No.", VatTransection."Document No.");
-            //                     if VendorLedger.FindFirst() then begin
-            //                         VendorDetail.reset;
-            //                         VendorDetail.SetRange("Vendor Ledger Entry No.", VendorLedger."Entry No.");
-            //                         VendorDetail.SetRange("Document Type", VendorDetail."Document Type"::Payment);
-            //                         if VendorDetail.FindFirst() then
-            //                             checkrevers := true;
-            //                     end;
-            //                 end;
-            //             end;
-            //         end;
-            //         var_Skip := checkrevers;
-            //         if not checkrevers then begin
-
-            //             if VatTransection."Type" = VatTransection."Type"::Purchase then begin
-            //                 if varPostingSsetup."Generate Purch. Vat Report" then
-            //                     var_Skip := false;
-            //                 if not VATProdPostingGroup.Get(VatTransection."VAT Prod. Posting Group") then
-            //                     VATProdPostingGroup.init;
-
-            //                 IF VATProdPostingGroup."Direct VAT" THEN BEGIN
-            //                     IF (VatTransection."Tax Invoice Base" = 0) THEN
-            //                         var_Skip := TRUE;
-            //                 END
-            //                 ELSE BEGIN
-
-            //                     IF (VatTransection."Base" = 0) OR (VatTransection."Amount" = 0) THEN
-            //                         var_Skip := TRUE;
-            //                 END;
-            //                 if NOT varPostingSsetup."Generate Purch. Vat Report" then
-            //                     var_Skip := true;
-            //             end;
-            //             if VatTransection."Type" = VatTransection."Type"::Sale then begin
-            //                 if NOT varPostingSsetup."Generate Sales Vat Report" then
-            //                     var_Skip := true;
-            //             end;
-            //         end;
-            //         if not var_Skip then begin
-            //             TaxReportLineFind.RESET;
-            //             TaxReportLineFind.SETFILTER("Tax Type", '%1', "Tax Type");
-            //             TaxReportLineFind.SETFILTER("Voucher No.", '%1', VatTransection."Document No.");
-            //             TaxReportLineFind.SETFILTER("Tax Invoice No.", '%1', VatTransection."Tax Invoice No.");
-            //             IF TaxReportLineFind.FindFirst() THEN BEGIN
-            //                 VarPostingGroup.GET(VatTransection."VAT Prod. Posting Group");
-            //                 if VatTransection."Document Type" = VatTransection."Document Type"::Invoice then begin
-            //                     if varPostingSsetup."Unrealized VAT Type" <> varPostingSsetup."Unrealized VAT Type"::Percentage then begin
-            //                         TaxReportLineFind."Base Amount" += ABS(VatTransection."Base");
-            //                         TaxReportLineFind."VAT Amount" += ABS(VatTransection."Amount");
-            //                     end else begin
-            //                         TaxReportLineFind."Base Amount" += ABS(VatTransection."Remaining Unrealized Base");
-            //                         TaxReportLineFind."VAT Amount" += ABS(VatTransection."Remaining Unrealized Amt.");
-            //                     end;
-            //                 end else begin
-            //                     if VatTransection."Document Type" = VatTransection."Document Type"::"Credit Memo" then begin
-
-            //                         TaxReportLineFind."Base Amount" += ABS(VatTransection."Base") * -1;
-            //                         TaxReportLineFind."VAT Amount" += ABS(VatTransection."Amount") * -1;
-
-            //                     end else begin
-            //                         TaxReportLineFind."Base Amount" += ABS(VatTransection."Base");
-            //                         TaxReportLineFind."VAT Amount" += ABS(VatTransection."Amount");
-            //                     end;
-            //                 end;
-            //                 IF VatTransection."Amount" = 0 THEN
-            //                     TaxReportLineFind."Base Amount VAT0" += TaxReportLineFind."Base Amount"
-            //                 ELSE
-            //                     TaxReportLineFind."Base Amount VAT7" += TaxReportLineFind."VAT Amount";
-            //                 TaxReportLineFind.Modify();
-            //             end else begin
-            //                 TaxReportLine.INIT;
-            //                 TaxReportLine."Tax Type" := "Tax Type";
-            //                 TaxReportLine."Document No." := "Document No.";
-            //                 TaxReportLine."Entry No." := "GetLastLineNo";
-            //                 TaxReportLine."Posting Date" := VatTransection."Posting Date";
-            //                 TaxReportLine."Voucher No." := VatTransection."Document No.";
-            //                 TaxReportLine."VAT Business Posting Group" := VatTransection."VAT Bus. Posting Group";
-            //                 TaxReportLine."VAT Product Posting Group" := VatTransection."VAT Prod. Posting Group";
-            //                 TaxReportLine."Tax Invoice Date" := VatTransection."Tax Invoice Date";
-            //                 if VatTransection."Document Type" = VatTransection."Document Type"::Invoice then begin
-            //                     TaxReportLine."Base Amount" := ABS(VatTransection."Base");
-            //                     TaxReportLine."VAT Amount" := ABS(VatTransection."Amount");
-            //                 end else begin
-            //                     if VatTransection."Document Type" = VatTransection."Document Type"::"Credit Memo" then begin
-
-            //                         TaxReportLine."Base Amount" := ABS(VatTransection."Base") * -1;
-            //                         TaxReportLine."VAT Amount" := ABS(VatTransection."Amount") * -1;
-
-            //                     end else begin
-            //                         TaxReportLine."Base Amount" := ABS(VatTransection."Base");
-            //                         TaxReportLine."VAT Amount" := ABS(VatTransection."Amount");
-            //                     end;
-            //                 end;
-            //                 "OnBeforeInsertVatLine"(TaxReportLine, VatTransection);
-            //                 if (VatTransection."Tax Invoice No." <> '') then begin
-            //                     TaxReportLine."Tax Invoice No." := VatTransection."Tax Invoice No.";
-            //                     TaxReportLine."Tax Invoice Name" := VatTransection."Tax Invoice Name";
-            //                     TaxReportLine."Vendor No." := VatTransection."Tax Vendor No.";
-            //                     if VatTransection."Type" = VatTransection."Type"::Sale then
-            //                         TaxReportLine."Customer No." := VatTransection."Bill-to/Pay-to No.";
-            //                     IF (VatTransection.Type <> VatTransection.Type::Sale) then begin
-            //                         if VatTransection."Document Type" = VatTransection."Document Type"::Invoice then begin
-            //                             PurchaseInvoiceLine.GET(VatTransection."Document No.", VatTransection."Document Line No.");
-            //                             if PurchaseInvoiceLine."Tax Invoice No." <> '' then begin
-            //                                 if varPostingSsetup."Unrealized VAT Type" <> varPostingSsetup."Unrealized VAT Type"::Percentage then begin
-            //                                     TaxReportLine."Base Amount" := ABS(VatTransection."Tax Invoice Base");
-            //                                     TaxReportLine."VAT Amount" := ABS(VatTransection."Tax Invoice Amount");
-            //                                 end else begin
-            //                                     TaxReportLine."Base Amount" := ABS(VatTransection."Remaining Unrealized Base");
-            //                                     TaxReportLine."VAT Amount" := ABS(VatTransection."Remaining Unrealized Amt.");
-            //                                 end;
-            //                             end else begin
-            //                                 if varPostingSsetup."Unrealized VAT Type" <> varPostingSsetup."Unrealized VAT Type"::Percentage then begin
-            //                                     if VatTransection."Base" = 0 then
-            //                                         TaxReportLine."Base Amount" := ABS(VatTransection."Tax Invoice Base")
-            //                                     else
-            //                                         TaxReportLine."Base Amount" := ABS(VatTransection."Base");
-            //                                     if ABS(VatTransection."Amount") = 0 then
-            //                                         TaxReportLine."VAT Amount" := ABS(VatTransection."Tax Invoice Amount")
-            //                                     else
-            //                                         TaxReportLine."VAT Amount" := ABS(VatTransection."Amount");
-            //                                 end else begin
-            //                                     TaxReportLine."Base Amount" := ABS(VatTransection."Remaining Unrealized Base");
-            //                                     TaxReportLine."VAT Amount" := ABS(VatTransection."Remaining Unrealized Amt.");
-            //                                 end;
-            //                             end;
-
-            //                         end else begin
-            //                             if VatTransection."Document Type" = VatTransection."Document Type"::"Credit Memo" then begin
-            //                                 TaxReportLine."Base Amount" := ABS(VatTransection."Tax Invoice Base") * -1;
-            //                                 TaxReportLine."VAT Amount" := ABS(VatTransection."Tax Invoice Amount") * -1;
-            //                             end;
-            //                             // end else begin
-            //                             //     TaxReportLine."Base Amount" := ABS(VatTransection."Tax Invoice Base");
-            //                             //     TaxReportLine."VAT Amount" := ABS(VatTransection."Tax Invoice Amount");
-            //                             // end;
-            //                         end;
-            //                     end;
-            //                 end else begin
-            //                     TaxReportLine."Tax Invoice No." := VatTransection."External Document No.";
-            //                     IF VatTransection."Type" = VatTransection."Type"::Purchase THEN begin
-            //                         TaxReportLine."Vendor No." := VatTransection."Bill-to/Pay-to No.";
-            //                         if VatTransection."Document Type" = VatTransection."Document Type"::"Credit Memo" then begin
-            //                             if not PurchaseCN.GET(VatTransection."Document No.") then
-            //                                 PurchaseCN.init;
-            //                             TaxReportLine."Tax Invoice Name" := PurchaseCN."Buy-from Vendor Name" + ' ' + PurchaseCN."Buy-from Vendor Name 2";
-            //                         end else begin
-            //                             if not PurchaseINvoice.GET(VatTransection."Document No.") then
-            //                                 PurchaseINvoice.init;
-            //                             TaxReportLine."Tax Invoice Name" := PurchaseINvoice."Buy-from Vendor Name" + ' ' + PurchaseINvoice."Buy-from Vendor Name 2";
-            //                         end;
-            //                     end ELSE begin
-            //                         TaxReportLine."Customer No." := VatTransection."Bill-to/Pay-to No.";
-            //                         if VatTransection."Document Type" = VatTransection."Document Type"::"Credit Memo" then begin
-            //                             if not SalesCN.GET(VatTransection."Document No.") then
-            //                                 SalesCN.init;
-            //                             TaxReportLine."Tax Invoice Name" := SalesCN."Sell-to Customer Name" + ' ' + SalesCN."Sell-to Customer Name 2";
-            //                         end else begin
-            //                             if not SalesInvoice.GET(VatTransection."Document No.") then
-            //                                 SalesInvoice.init;
-            //                             TaxReportLine."Tax Invoice Name" := SalesInvoice."Sell-to Customer Name" + ' ' + SalesInvoice."Sell-to Customer Name 2";
-            //                         end;
-            //                     end;
-
-            //                 end;
-            //                 if (VatTransection."Type" = VatTransection."Type"::Purchase) AND (VatTransection."Document Type" = VatTransection."Document Type"::Payment) then begin
-            //                     VendorLedger.reset;
-            //                     VendorLedger.SetRange("Document No.", VatTransection."Document No.");
-            //                     if VendorLedger.FindFirst() then
-            //                         TaxReportLine."Tax Invoice No." := VendorLedger."External Document No.";
-            //                 end;
-
-            //                 TaxReportLine."Head Office" := VatTransection."Head Office";
-            //                 TaxReportLine."Branch Code" := VatTransection."Branch Code";
-            //                 TaxReportLine."VAT Registration No." := VatTransection."VAT Registration No.";
-            //                 TaxReportLine."Description" := VatTransection."Description Line";
-
-
-            //                 TaxReportLine."Send to Report" := true;
-            //                 TaxReportLine."Ref. Entry No." := VatTransection."Entry No.";
-            //                 IF VatTransection."Amount" = 0 THEN
-            //                     TaxReportLine."Base Amount VAT0" := TaxReportLine."Base Amount"
-            //                 ELSE
-            //                     TaxReportLine."Base Amount VAT7" := TaxReportLine."VAT Amount";
-            //                 TaxReportLine.INSERT;
-
-            //                 VatTransection."Get to Tax" := true;
-            //                 VatTransection.Modify();
-            //             end;
-            //         end;
-            until VatTransection.next = 0;
+            until VatTransection.next() = 0;
     end;
 
     /// <summary> 
@@ -649,32 +437,30 @@ table 50005 "Tax Report Line"
     /// </summary>
     procedure "Get WHTData"()
     var
-        VatTransection: Record "VAT Transections";
         TaxReportHeader: Record "Tax Report Header";
-        TaxReportLine: Record "Tax Report Line";
         TaxReportLineFind: Record "Tax Report Line";
         WHTLine: Record "WHT Lines";
     begin
 
         TaxReportHeader.get("Tax Type", "Document No.");
         TaxReportHeader.TestField("End date of Month");
-        WHTHeader.RESET;
+        WHTHeader.RESET();
         WHTHeader.SETFILTER("WHT Date", '%1..%2', DMY2Date(01, TaxReportHeader."Month No.", TaxReportHeader."Year No."), CalcDate('<CM>', TaxReportHeader."End date of Month"));
         WHTHeader.SETFILTER("WHT No.", '<>%1', '');
-        WHTHeader.SetRange("WHT Business Posting Group", format("Tax Type"));
+        WHTHeader.SetFilter("WHT Business Posting Group", TaxReportHeader."WHT Bus. Post. Filter");
         WHTHeader.SetRange("Posted", true);
         WHTHeader.SETRANGE("Get to WHT", false);
-        IF WHTHeader.FindFirst() THEN BEGIN
+        IF WHTHeader.FindFirst() THEN
             repeat
-                WHTLine.reset;
+                WHTLine.reset();
                 WHTLine.SetRange("WHT No.", WHTHeader."WHT No.");
                 WHTLine.SetRange("Get to WHT", false);
-                if WHTLine.FindFirst() then begin
+                if WHTLine.FindFirst() then
                     repeat
-                        TaxReportLineFind.INIT;
+                        TaxReportLineFind.INIT();
                         TaxReportLineFind."Tax Type" := "Tax Type";
                         TaxReportLineFind."Document No." := "Document No.";
-                        TaxReportLineFind."Entry No." := "GetLastLineNo";
+                        TaxReportLineFind."Entry No." := GetLastLineNo();
                         TaxReportLineFind."Posting Date" := WHTHeader."WHT Date";
                         //  TaxReportLineFind."WHT Date" := WHTHeader.
 
@@ -703,18 +489,18 @@ table 50005 "Tax Report Line"
                         TaxReportLineFind."WHT Certificate No." := WHTHeader."WHT Certificate No.";
                         if (NOT TaxReportLineFind."Head Office") AND (TaxReportLineFind."Branch Code" = '') then
                             TaxReportLineFind."Head Office" := true;
-                        TaxReportLineFind.INSERT;
+                        TaxReportLineFind.INSERT();
 
                         // PostedGenJournalLine."Get to WHT" := true;
                         // PostedGenJournalLine.MODIFY;
                         WHTLine."Get to WHT" := true;
                         WHTLine.Modify();
-                    UNTIL WHTLine.NEXT = 0;
-                END;
+                    UNTIL WHTLine.NEXT() = 0;
+
                 WHTHeader."Get to WHT" := true;
                 WHTHeader.Modify();
-            until WHTHeader.next = 0;
-        END;
+            until WHTHeader.next() = 0;
+
 
     end;
 
@@ -726,7 +512,7 @@ table 50005 "Tax Report Line"
     var
         TaxReportLine: Record "Tax Report Line";
     begin
-        TaxReportLine.reset;
+        TaxReportLine.reset();
         TaxReportLine.SetCurrentKey("Tax Type", "Document No.", "Entry No.");
         TaxReportLine.SetRange("Tax Type", "Tax Type");
         TaxReportLine.SetRange("Document No.", "Document No.");

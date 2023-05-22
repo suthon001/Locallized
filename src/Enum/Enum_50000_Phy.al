@@ -1,3 +1,6 @@
+/// <summary>
+/// Enum Phys. Count Status (ID 50000).
+/// </summary>
 enum 50000 "Phys. Count Status"
 {
     value(0; " ")
