@@ -4,6 +4,7 @@ report 50025 "Report Sales Invoice"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50025_SalesInvoice.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(SalesHeader; "Sales Header")
@@ -105,7 +106,6 @@ report 50025 "Report Sales Invoice"
 
             trigger OnAfterGetRecord()
             var
-                countComment: Integer;
                 NewDate: Date;
             begin
                 FunctionCenter.SalesStatistic("Document Type", "No.", TotalAmt, VatText);
@@ -116,7 +116,7 @@ report 50025 "Report Sales Invoice"
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();
                 IF NOT ShipMethod.Get("Shipment Method Code") then
-                    ShipMethod.Init;
+                    ShipMethod.Init();
                 NewDate := DT2Date("Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
@@ -139,6 +139,7 @@ report 50025 "Report Sales Invoice"
                     {
                         ApplicationArea = all;
                         Caption = 'Caption';
+                        ToolTip = 'Specifies the value of the Caption field.';
                         trigger OnValidate()
                         begin
                             CaptionOptionEng := CaptionOptionThai;

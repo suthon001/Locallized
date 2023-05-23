@@ -9,16 +9,19 @@ pageextension 80065 "Sales Invoice Lists" extends "Sales Invoice List"
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
+                ToolTip = 'Specifies value of the field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
+                ToolTip = 'Specifies value of the field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the customer''s VAT registration number for customers.';
             }
         }
         modify(Status)
@@ -40,12 +43,13 @@ pageextension 80065 "Sales Invoice Lists" extends "Sales Invoice List"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the AR Voucher action.';
                 trigger OnAction()
                 var
                     ARVoucher: Report "AR Voucher";
                     SalesHeader: Record "Sales Header";
                 begin
-                    SalesHeader.reset;
+                    SalesHeader.reset();
                     SalesHeader.Copy(Rec);
                     ARVoucher."SetGLEntry"(SalesHeader);
                     ARVoucher.RunModal();
@@ -59,11 +63,12 @@ pageextension 80065 "Sales Invoice Lists" extends "Sales Invoice List"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Sales Invoice action.';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Report Sales Invoice", TRUE, TRUE, RecSalesHeader);
@@ -77,11 +82,12 @@ pageextension 80065 "Sales Invoice Lists" extends "Sales Invoice List"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Debit Note action.';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Debit Note", TRUE, TRUE, RecSalesHeader);

@@ -5,13 +5,14 @@ report 50070 "Inventory VendorPurchases"
     //  ApplicationArea = Basic, Suite;
     Caption = 'Inventory - Vendor Purchases';
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
         dataitem(ReportHeader; "Integer")
         {
             DataItemTableView = SORTING(Number) WHERE(Number = CONST(0));
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PeriodText; PeriodText)
@@ -78,9 +79,9 @@ report 50070 "Inventory VendorPurchases"
                     TempValueEntry.SetRange("Source No.");
 
                     if Number = 1 then
-                        TempValueEntry.FindSet
+                        TempValueEntry.FindSet()
                     else
-                        if TempValueEntry.Next = 0 then
+                        if TempValueEntry.Next() = 0 then
                             CurrReport.Break();
 
                     if not Vend.Get(TempValueEntry."Source No.") then
@@ -139,18 +140,16 @@ report 50070 "Inventory VendorPurchases"
 
     local procedure FillTempValueEntry(ValueEntry: Record "Value Entry")
     begin
-        with ValueEntry do begin
-            TempValueEntry.SetRange("Source No.", "Source No.");
-            if not TempValueEntry.FindSet then begin
-                TempValueEntry.Init();
-                TempValueEntry := "Value Entry";
-                TempValueEntry.Insert();
-            end else begin
-                TempValueEntry."Cost Amount (Actual)" := TempValueEntry."Cost Amount (Actual)" + "Cost Amount (Actual)";
-                TempValueEntry."Invoiced Quantity" := TempValueEntry."Invoiced Quantity" + "Invoiced Quantity";
-                TempValueEntry."Discount Amount" := TempValueEntry."Discount Amount" + "Discount Amount";
-                TempValueEntry.Modify();
-            end;
+        TempValueEntry.SetRange("Source No.", ValueEntry."Source No.");
+        if not TempValueEntry.FindSet() then begin
+            TempValueEntry.Init();
+            TempValueEntry := "Value Entry";
+            TempValueEntry.Insert();
+        end else begin
+            TempValueEntry."Cost Amount (Actual)" := TempValueEntry."Cost Amount (Actual)" + ValueEntry."Cost Amount (Actual)";
+            TempValueEntry."Invoiced Quantity" := TempValueEntry."Invoiced Quantity" + ValueEntry."Invoiced Quantity";
+            TempValueEntry."Discount Amount" := TempValueEntry."Discount Amount" + ValueEntry."Discount Amount";
+            TempValueEntry.Modify();
         end;
     end;
 

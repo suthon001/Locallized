@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension GLEntry (ID 80027) extends Record G/L Entry.
+/// </summary>
 tableextension 80027 GLEntry extends "G/L Entry"
 {
     fields
@@ -12,12 +15,12 @@ tableextension 80027 GLEntry extends "G/L Entry"
             Caption = 'Document Line No.';
             DataClassification = SystemMetadata;
         }
-        field(80002; "Template Name"; Text[50])
+        field(80002; "Template Name"; Text[10])
         {
             Caption = 'Template Name';
             DataClassification = SystemMetadata;
         }
-        field(80003; "Batch Name"; Text[50])
+        field(80003; "Batch Name"; Text[10])
         {
             Caption = 'Batch Name';
             DataClassification = SystemMetadata;

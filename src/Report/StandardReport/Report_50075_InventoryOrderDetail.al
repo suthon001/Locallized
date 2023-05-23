@@ -5,6 +5,7 @@ report 50075 "Inventory Order Details (new)"
     //  ApplicationArea = Basic, Suite;
     Caption = 'Inventory Order Details';
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
@@ -12,7 +13,7 @@ report 50075 "Inventory Order Details (new)"
         {
             PrintOnlyIfDetail = true;
             RequestFilterFields = "No.", "Search Description", "Assembly BOM", "Inventory Posting Group", "Statistics Group", "Bin Filter";
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(ItemTableCaptItemFilter; TableCaption + ': ' + ItemFilter)
@@ -130,9 +131,9 @@ report 50075 "Inventory Order Details (new)"
                         "Outstanding Amount" :=
                           Round(
                             CurrExchRate.ExchangeAmtFCYToLCY(
-                              WorkDate, SalesHeader."Currency Code", "Outstanding Amount",
+                              WorkDate(), SalesHeader."Currency Code", "Outstanding Amount",
                               SalesHeader."Currency Factor"));
-                    if "Shipment Date" < WorkDate then
+                    if "Shipment Date" < WorkDate() then
                         BackOrderQty := "Outstanding Quantity"
                     else
                         BackOrderQty := 0;

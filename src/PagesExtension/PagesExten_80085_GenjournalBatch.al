@@ -7,10 +7,12 @@ pageextension 80085 GenjournalBatch extends "General Journal Batches"
             field("Description TH Voucher"; rec."Description TH Voucher")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Description TH Voucher field.';
             }
             field("Description EN Voucher"; rec."Description EN Voucher")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Description EN Voucher field.';
             }
 
         }
@@ -19,6 +21,7 @@ pageextension 80085 GenjournalBatch extends "General Journal Batches"
             field("Document No. Series"; rec."Document No. Series")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Document No. Series field.';
             }
         }
         modify("No. Series")

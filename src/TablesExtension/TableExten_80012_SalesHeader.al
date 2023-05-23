@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenSales Header (ID 80012) extends Record Sales Header.
+/// </summary>
 tableextension 80012 "ExtenSales Header" extends "Sales Header"
 {
     fields
@@ -15,10 +18,8 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "Head Office" then begin
+                if "Head Office" then
                     "Branch Code" := '';
-                end;
-
             end;
 
 
@@ -50,7 +51,7 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
                 VendCustPage: Page "Cust. & Vendor BranchLists";
             begin
                 clear(VendCustPage);
-                VendCustBranch.reset;
+                VendCustBranch.reset();
                 VendCustBranch.SetRange("Source Type", VendCustBranch."Source Type"::Customer);
                 VendCustBranch.SetRange("Source No.", "Sell-to Customer No.");
                 VendCustPage.Editable := false;
@@ -62,13 +63,12 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
                         "Head Office" := true;
                         "Branch Code" := '';
                         "VAT Registration No." := VendCustBranch."Vat Registration No.";
-                    end else begin
+                    end else
                         if VendCustBranch."Branch Code" <> '' then begin
                             "Branch Code" := VendCustBranch."Branch Code";
                             "Head Office" := false;
                             "VAT Registration No." := VendCustBranch."Vat Registration No.";
                         end;
-                    end;
                 end;
                 clear(VendCustPage);
 
@@ -91,7 +91,7 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
             DataClassification = CustomerContent;
         }
 
-        field(80006; "Create By"; Code[30])
+        field(80006; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
@@ -123,7 +123,7 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
                 Cust: Record Customer;
             begin
                 if not Cust.get("Sell-to Customer No.") then
-                    Cust.init;
+                    Cust.init();
 
                 "Head Office" := Cust."Head Office";
                 "Branch Code" := Cust."Branch Code";
@@ -137,7 +137,7 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
     trigger OnInsert()
     begin
         TestField("No.");
-        "Create By" := UserId;
+        "Create By" := COPYSTR(UserId, 1, 50);
         "Create DateTime" := CurrentDateTime;
         if "Document Type" IN ["Document Type"::Invoice, "Document Type"::"Credit Memo"] then
             "Posting No." := "No.";

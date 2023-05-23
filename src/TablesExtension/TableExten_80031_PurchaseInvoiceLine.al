@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenPurchase Inv. Line (ID 80031) extends Record Purch. Inv. Line.
+/// </summary>
 tableextension 80031 "ExtenPurchase Inv. Line" extends "Purch. Inv. Line"
 {
     fields
@@ -124,7 +127,11 @@ tableextension 80031 "ExtenPurchase Inv. Line" extends "Purch. Inv. Line"
             DataClassification = CustomerContent;
 
         }
-
+        field(80023; "Tax Invoice Name 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Name 2';
+            DataClassification = CustomerContent;
+        }
     }
 
 }

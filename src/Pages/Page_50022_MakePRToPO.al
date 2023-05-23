@@ -1,3 +1,6 @@
+/// <summary>
+/// Page Make PR to PO (ID 50022).
+/// </summary>
 page 50022 "Make PR to PO"
 {
     Caption = 'Make Pr to PO';
@@ -18,92 +21,110 @@ page 50022 "Make PR to PO"
                 field(Select; rec.Select)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Select field.';
                 }
                 field("Select By"; rec."Select By")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Select By field.';
                 }
                 field("Select Vendor No."; rec."Select Vendor No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Select Vendor No. field.';
                 }
                 field(PostingDate; PurchaseHeader."Posting Date")
                 {
                     ApplicationArea = all;
                     Caption = 'Posting Date';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Posting Date field.';
                 }
                 field("Document No."; rec."Document No.")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the document number.';
                 }
                 field(CustomerNO; PurchaseHeader."Buy-from Vendor No.")
                 {
                     ApplicationArea = all;
                     Caption = 'Vendor No.';
                     Editable = false;
+                    ToolTip = 'Specifies the name of the vendor who delivered the items.';
                 }
                 field(CustomerName; PurchaseHeader."Buy-from Vendor Name")
                 {
                     ApplicationArea = all;
                     Caption = 'Vendor Name';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Vendor Name field.';
                 }
                 field(Type; rec.Type)
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the line type.';
                 }
                 field("No."; rec."No.")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the number of a general ledger account, item, additional cost, or fixed asset, depending on what you selected in the Type field.';
                 }
                 field("Location Code"; rec."Location Code")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies a code for the location where you want the items to be placed when they are received.';
                 }
                 field("Make to PO Qty."; rec."Make to PO Qty.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Make to PO Qty. field.';
                 }
                 field("Outstanding Quantity"; rec."Outstanding Quantity")
                 {
                     ApplicationArea = all;
                     Caption = 'Remaining Qty.';
                     Editable = false;
+                    ToolTip = 'Specifies how many units on the order line have not yet been received.';
                 }
                 field("Unit of Measure Code"; rec."Unit of Measure Code")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies how each unit of the item or resource is measured, such as in pieces or hours. By default, the value in the Base Unit of Measure field on the item or resource card is inserted.';
                 }
                 field("Direct Unit Cost"; rec."Direct Unit Cost")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the cost of one unit of the selected item or resource.';
                 }
                 field("Line Discount %"; rec."Line Discount %")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the discount percentage that is granted for the item on the line.';
                 }
                 field("Line Amount"; rec."Line Amount")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the net amount, excluding any invoice discount amount, that must be paid for products on the line.';
                 }
                 field("Shortcut Dimension 1 Code"; rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                 }
                 field("Shortcut Dimension 2 Code"; rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                 }
 
             }
@@ -122,9 +143,10 @@ page 50022 "Make PR to PO"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Make to PO action.';
                 trigger OnAction()
                 begin
-                    MakePRtoPO;
+                    MakePRtoPO();
                 end;
             }
             action(Card)
@@ -135,6 +157,7 @@ page 50022 "Make PR to PO"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Card action.';
                 trigger OnAction()
                 var
                     PurchaseQuotes: Page "Purchase Quote";
@@ -156,14 +179,15 @@ page 50022 "Make PR to PO"
         PurchaseHeader.GET(rec."Document Type", rec."Document No.");
     end;
 
-    procedure MakePRtoPO()
+    local procedure MakePRtoPO()
     var
         NoSeriesMGT: Codeunit NoSeriesManagement;
         PurchaseSetup: Record "Purchases & Payables Setup";
-        TempDocNo, NewNoseries : Code[30];
+        TempDocNo: Code[20];
+        NewNoseries: code[20];
         PurchaseLine, PurchaseOrderLine : Record "Purchase Line";
-        UserName: Code[30];
-        PurchaseHeader: Record "Purchase Header";
+        UserName: Code[50];
+        ltPurchaseHeader: Record "Purchase Header";
         GroupPurchaseQuotes: Query GroupPurchaseQuotes;
         CopyCommentDescription: Page "Get Purchase Lines";
         PurchCommentLine: Record "Purch. Comment Line";
@@ -172,11 +196,11 @@ page 50022 "Make PR to PO"
         if not confirm('Do you want make pr to po ?') then
             exit;
 
-        PurchaseSetup.get;
+        PurchaseSetup.get();
         PurchaseSetup.TestField("Order Nos.");
         if NoSeriesMGT.SelectSeries(PurchaseSetup."Order Nos.", '', NewNoseries) then begin
             CLEAR(GroupPurchaseQuotes);
-            UserName := UserId;
+            UserName := COPYSTR(UserId, 1, 50);
             OnsetFilterSelectBy(UserName);
             GroupPurchaseQuotes.SetRange(DOcument_Type, GroupPurchaseQuotes.Document_Type::Quote);
             GroupPurchaseQuotes.SetRange(status, GroupPurchaseQuotes.Status::Released);
@@ -184,22 +208,22 @@ page 50022 "Make PR to PO"
             GroupPurchaseQuotes.Open();
             while GroupPurchaseQuotes.Read() do begin
                 TempDocNo := NoSeriesMGT.GetNextNo(PurchaseSetup."Order Nos.", WorkDate(), true);
-                PurchaseLine.reset;
+                PurchaseLine.reset();
                 PurchaseLine.SetRange("Document Type", rec."Document Type"::Quote);
                 PurchaseLine.SetRange(Status, GroupPurchaseQuotes.Status);
                 PurchaseLine.SetRange("Select Vendor No.", GroupPurchaseQuotes.Select_Vendor_No_);
                 PurchaseLine.SetRange("Select By", UserName);
                 if PurchaseLine.FindFirst() then begin
-                    PurchaseHeader.init;
-                    PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Order;
-                    PurchaseHeader."No." := TempDocNo;
-                    PurchaseHeader.Validate("Buy-from Vendor No.", PurchaseLine."Select By");
-                    PurchaseHeader.Validate("Location Code", PurchaseLine."Location Code");
-                    PurchaseHeader.Validate("Shortcut Dimension 1 Code", PurchaseLine."Shortcut Dimension 1 Code");
-                    PurchaseHeader.Validate("Shortcut Dimension 2 Code", PurchaseLine."Shortcut Dimension 2 Code");
-                    OnbeforInsertPurchaseOrderHeader(PurchaseHeader);
-                    PurchaseHeader.Insert();
-                    PurchCommentLine.CopyLineComments(0, 1, PurchaseLine."Document No.", PurchaseHeader."No.", 0, 0);
+                    ltPurchaseHeader.init();
+                    ltPurchaseHeader."Document Type" := ltPurchaseHeader."Document Type"::Order;
+                    ltPurchaseHeader."No." := TempDocNo;
+                    ltPurchaseHeader.Validate("Buy-from Vendor No.", PurchaseLine."Select By");
+                    ltPurchaseHeader.Validate("Location Code", PurchaseLine."Location Code");
+                    ltPurchaseHeader.Validate("Shortcut Dimension 1 Code", PurchaseLine."Shortcut Dimension 1 Code");
+                    ltPurchaseHeader.Validate("Shortcut Dimension 2 Code", PurchaseLine."Shortcut Dimension 2 Code");
+                    OnbeforInsertPurchaseOrderHeader(ltPurchaseHeader);
+                    ltPurchaseHeader.Insert();
+                    PurchCommentLine.CopyLineComments(0, 1, PurchaseLine."Document No.", ltPurchaseHeader."No.", 0, 0);
                     repeat
 
                         PurchaseOrderLine.Init();
@@ -231,7 +255,7 @@ page 50022 "Make PR to PO"
                         CopyCommentDescription.CopyCommentDescription(PurchaseLine."Document Type", PurchaseOrderLine."Document Type", PurchaseLine."Document No.", PurchaseOrderLine."Document No.",
                         PurchaseLine."Line No.");
 
-                    until PurchaseLine.next = 0;
+                    until PurchaseLine.next() = 0;
                     MESSAGE('Create to Document No. ' + TempDocNo);
                 end;
             end;
@@ -240,16 +264,29 @@ page 50022 "Make PR to PO"
         CurrPage.Update();
     end;
 
+    /// <summary>
+    /// OnsetFilterSelectBy.
+    /// </summary>
+    /// <param name="pUserName">VAR Code[50].</param>
     [IntegrationEvent(false, false)]
-    procedure OnsetFilterSelectBy(var pUserName: Code[30])
+    procedure OnsetFilterSelectBy(var pUserName: Code[50])
     begin
     end;
 
+    /// <summary>
+    /// OnbeforInsertPurchaseOrderHeader.
+    /// </summary>
+    /// <param name="pPurchaseOrderHeader">VAR Record "Purchase Header".</param>
     [IntegrationEvent(false, false)]
     procedure OnbeforInsertPurchaseOrderHeader(var pPurchaseOrderHeader: Record "Purchase Header")
     begin
     end;
 
+    /// <summary>
+    /// OnbeforInsertPurchaseOrderLine.
+    /// </summary>
+    /// <param name="pPurchaseOrderLine">VAR Record "Purchase Line".</param>
+    /// <param name="pPurchaseQuotesLine">VAR Record "Purchase Line".</param>
     [IntegrationEvent(false, false)]
     procedure OnbeforInsertPurchaseOrderLine(var pPurchaseOrderLine: Record "Purchase Line"; var pPurchaseQuotesLine: Record "Purchase Line")
     begin
@@ -257,4 +294,5 @@ page 50022 "Make PR to PO"
 
     var
         PurchaseHeader: Record "Purchase Header";
+
 }

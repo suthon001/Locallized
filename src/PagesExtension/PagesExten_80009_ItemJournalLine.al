@@ -7,9 +7,8 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
         {
             trigger OnAssistEdit()
             begin
-                if Rec."AssistEdit"(xRec) then begin
+                if Rec."AssistEdit"(xRec) then
                     CurrPage.Update();
-                end;
             end;
         }
         addafter(Description)
@@ -17,6 +16,7 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
             field("Description 2"; Rec."Description 2")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Description 2 field.';
             }
         }
         addbefore("Document No.")
@@ -25,6 +25,7 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
             {
                 ApplicationArea = all;
                 Editable = false;
+                ToolTip = 'Specifies the value of the Status field.';
             }
         }
         modify("Gen. Bus. Posting Group")
@@ -54,12 +55,13 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Item Journal action.';
                 trigger OnAction()
                 var
 
                     ItemJournalLine: Record "Item Journal Line";
                 begin
-                    ItemJournalLine.reset;
+                    ItemJournalLine.reset();
                     ItemJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     ItemJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     ItemJournalLine.SetRange("Document No.", rec."Document No.");
@@ -82,6 +84,7 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
                     PromotedCategory = Category9;
                     PromotedOnly = true;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Approve action.';
                     trigger OnAction()
                     begin
                         ApprovalsMgmt.ApproveRecordApprovalRequest(Rec.RecordId);
@@ -100,6 +103,7 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
                     PromotedOnly = true;
                     ApplicationArea = all;
                     Caption = 'Send A&pproval Requst';
+                    ToolTip = 'Executes the Send A&pproval Requst action.';
                     trigger OnAction()
                     begin
                         if Rec.CheckWorkflowItemJournalEnabled(Rec) then
@@ -117,6 +121,7 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
                     ApplicationArea = all;
                     PromotedOnly = true;
                     Caption = 'Cancel Approval Request';
+                    ToolTip = 'Executes the Cancel Approval Request action.';
                     trigger OnAction()
                     begin
 

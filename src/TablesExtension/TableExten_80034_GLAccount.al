@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension GLAccount (ID 80034) extends Record G/L Account.
+/// </summary>
 tableextension 80034 "GLAccount" extends "G/L Account"
 {
     fields

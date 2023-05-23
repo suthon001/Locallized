@@ -6,9 +6,8 @@ pageextension 80025 "PurchaseJournal" extends "Purchase Journal"
         {
             trigger OnAssistEdit()
             begin
-                if Rec."AssistEdit"(xRec) then begin
+                if Rec."AssistEdit"(xRec) then
                     CurrPage.Update();
-                end;
             end;
         }
         addafter(Description)
@@ -16,6 +15,7 @@ pageextension 80025 "PurchaseJournal" extends "Purchase Journal"
             field("Journal Description"; Rec."Journal Description")
             {
                 ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Journal Description field.';
             }
         }
     }

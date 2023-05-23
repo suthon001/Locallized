@@ -4,6 +4,7 @@ report 50027 "Report Sales Credit Memo"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50027_SalesCreditMemo.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(SalesHeader; "Sales Header")
@@ -108,7 +109,6 @@ report 50027 "Report Sales Credit Memo"
 
             trigger OnAfterGetRecord()
             var
-                countComment: Integer;
                 NewDate: Date;
                 RecCustLedgEntry: Record "Cust. Ledger Entry";
                 RecReturnReason: Record "Return Reason";
@@ -123,7 +123,7 @@ report 50027 "Report Sales Credit Memo"
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();
                 IF NOT ShipMethod.Get("Shipment Method Code") then
-                    ShipMethod.Init;
+                    ShipMethod.Init();
                 NewDate := DT2Date("Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
@@ -131,14 +131,14 @@ report 50027 "Report Sales Credit Memo"
                 AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')';
 
 
-                RecCustLedgEntry.RESET;
+                RecCustLedgEntry.RESET();
                 RecCustLedgEntry.SetRange("Document Type", RecCustLedgEntry."Document Type"::Invoice);
                 IF "Applies-to Doc. No." <> '' THEN
                     RecCustLedgEntry.SetRange("Document No.", "Applies-to Doc. No.")
                 ELSE
                     RecCustLedgEntry.SetRange("Document No.", "Applies-to ID");
 
-                IF RecCustLedgEntry.FindFirst THEN BEGIN
+                IF RecCustLedgEntry.FindFirst() THEN BEGIN
                     RecCustLedgEntry.CALCFIELDS("Original Amt. (LCY)");
 
                     TotalAmt[100] := RecCustLedgEntry."Sales (LCY)";
@@ -152,10 +152,10 @@ report 50027 "Report Sales Credit Memo"
                 IF "Applies-to ID" <> '' THEN
                     RefDocumentNo := "Applies-to ID";
 
-                RecCustLedgEntry.RESET;
+                RecCustLedgEntry.RESET();
                 RecCustLedgEntry.SetRange("Document No.", RefDocumentNo);
                 RecCustLedgEntry.SetRange("Document Type", "Document Type"::Invoice);
-                IF RecCustLedgEntry.FindFirst THEN BEGIN
+                IF RecCustLedgEntry.FindFirst() THEN BEGIN
                     var_RefDocumentNo := RecCustLedgEntry."Document No.";
                     var_RefDocumentDate := RecCustLedgEntry."Document Date";
                 END;
@@ -170,10 +170,10 @@ report 50027 "Report Sales Credit Memo"
                 RecSaleLine.SetRange("Document Type", SalesHeader."Document Type");
                 RecSaleLine.SetRange("Document No.", SalesHeader."No.");
                 RecSaleLine.SetFilter("Return Reason Code", '<>%1', '');
-                if RecSaleLine.FindFirst then begin
+                if RecSaleLine.FindFirst() then begin
 
                     if NOT RecReturnReason.Get(RecSaleLine."Return Reason Code") then
-                        RecReturnReason.init;
+                        RecReturnReason.init();
                     ReturnReasonDescFirstLine := RecReturnReason.Description;
 
                 end;
@@ -193,6 +193,7 @@ report 50027 "Report Sales Credit Memo"
                     {
                         ApplicationArea = all;
                         Caption = 'Caption';
+                        ToolTip = 'Specifies the value of the Caption field.';
                         trigger OnValidate()
                         begin
                             CaptionOptionEng := CaptionOptionThai;

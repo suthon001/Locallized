@@ -8,23 +8,28 @@ pageextension 80012 "Purchase Quote Card" extends "Purchase Quote"
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Tax Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
             field("Purchase Order No."; rec."Purchase Order No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Purchase Order No. field.';
             }
             field("Make PO No.Series No."; rec."Make PO No.Series No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Make PO No.Series No. field.';
             }
         }
         modify("No.")
@@ -50,6 +55,7 @@ pageextension 80012 "Purchase Quote Card" extends "Purchase Quote"
             field("Pay-to Vendor No."; rec."Pay-to Vendor No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the number of the vendor that you received the invoice from.';
             }
         }
         moveafter("Purchaser Code"; "Currency Code")
@@ -68,12 +74,13 @@ pageextension 80012 "Purchase Quote Card" extends "Purchase Quote"
                 PromotedCategory = Category6;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Purchase Quote action.';
                 trigger OnAction()
                 var
 
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
                     REPORT.RunModal(REPORT::"PurchaseQuotes", true, true, PurchaseHeader);

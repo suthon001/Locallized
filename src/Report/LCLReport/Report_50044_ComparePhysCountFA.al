@@ -4,6 +4,7 @@ report 50044 "Compare Phys. Count FA"
     RDLCLayout = './LayoutReport/LCLReport/Report_50044_ComparePhysCountFA.rdl';
     PreviewMode = PrintLayout;
     Caption = 'Compare Phys. Count FA';
+    ApplicationArea = All;
     dataset
     {
         dataitem("FA Journal Line"; "FA Journal Line")
@@ -69,7 +70,7 @@ report 50044 "Compare Phys. Count FA"
                     ELSE
                         CLEAR(ImageStorage);
 
-                    vgFADepreciationBookRec.RESET;
+                    vgFADepreciationBookRec.RESET();
                     vgFADepreciationBookRec.SETFILTER("FA No.", '%1', "No.");
                     vgFADepreciationBookRec.SETFILTER("Depreciation Book Code", '%1', 'COMPANY');
                     IF vgFADepreciationBookRec.FIND('-') THEN BEGIN
@@ -82,7 +83,7 @@ report 50044 "Compare Phys. Count FA"
             trigger OnAfterGetRecord()
             begin
                 IF "FA Location Code" = "FA Phys. Location Code" THEN
-                    CurrReport.SKIP;
+                    CurrReport.SKIP();
 
                 IF "FA Journal Line"."Qty. Phys. Inventory" = 0 THEN
                     vgTextWriteoff := '** ค้นหาไม่เจอ รอตัดจำหน่าย **';
@@ -108,7 +109,7 @@ report 50044 "Compare Phys. Count FA"
 
     trigger OnPreReport()
     begin
-        CompanyInformation.GET;
+        CompanyInformation.GET();
 
         vgUserIDText := USERID;
         vgUserIDText := CodeUnitFunction."GetName"(vgUserIDText);

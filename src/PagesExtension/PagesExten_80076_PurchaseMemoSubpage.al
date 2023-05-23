@@ -36,6 +36,7 @@ pageextension 80076 "Purch. Credit Memo Subpage" extends "Purch. Cr. Memo Subfor
             {
                 ApplicationArea = All;
                 Caption = 'WHT Product Posting Group';
+                ToolTip = 'Specifies value of the field.';
             }
         }
     }

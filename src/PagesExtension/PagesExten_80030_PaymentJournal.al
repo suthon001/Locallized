@@ -7,9 +7,8 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
         {
             trigger OnAssistEdit()
             begin
-                if Rec."AssistEdit"(xRec) then begin
+                if Rec."AssistEdit"(xRec) then
                     CurrPage.Update();
-                end;
             end;
         }
         addafter("VAT Amount")
@@ -18,6 +17,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
             {
                 ApplicationArea = all;
                 Caption = 'Require Screen Detail';
+                ToolTip = 'Specifies the value of the Require Screen Detail field.';
             }
 
 
@@ -29,11 +29,13 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
             {
                 ApplicationArea = all;
                 Caption = 'Pay Name';
+                ToolTip = 'Specifies the value of the Pay Name field.';
             }
             field("Journal Description"; Rec."Journal Description")
             {
                 ApplicationArea = all;
                 Caption = 'Journal Description';
+                ToolTip = 'Specifies the value of the Journal Description field.';
             }
         }
 
@@ -73,6 +75,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 Caption = 'WHT Certificate';
+                ToolTip = 'Executes the WHT Certificate action.';
                 trigger OnAction()
                 begin
                     // TestField("Require Screen Detail", "Require Screen Detail"::WHT);
@@ -87,6 +90,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Show Detail Vat & Cheque action.';
                 trigger OnAction()
                 var
                     ShowDetailCheque: Page "ShowDetail Cheque";
@@ -99,7 +103,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                     CLEAR(ShowDetailVAT);
                     CLEAR(ShowDetailCheque);
                     if Rec."Require Screen Detail" IN [Rec."Require Screen Detail"::VAT, Rec."Require Screen Detail"::CHEQUE] then begin
-                        GenLineDetail.reset;
+                        GenLineDetail.reset();
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
@@ -127,12 +131,13 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Payment Voucher action.';
                 trigger OnAction()
                 var
                     PaymentVourcher: Report "Payment Voucher";
                     GenJournalLIne: Record "Gen. Journal Line";
                 begin
-                    GenJournalLIne.reset;
+                    GenJournalLIne.reset();
                     GenJournalLIne.Copy(Rec);
                     PaymentVourcher."SetGLEntry"(GenJournalLIne);
                     PaymentVourcher.RunModal();
@@ -146,12 +151,13 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Cheque action.';
                 trigger OnAction()
                 var
                     GenLines: Record "Gen. Journal Line";
                 begin
                     rec.TestField("Require Screen Detail", rec."Require Screen Detail"::CHEQUE);
-                    GenLines.reset;
+                    GenLines.reset();
                     GenLines.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenLines.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenLines.SetRange("Document No.", rec."Document No.");
@@ -172,23 +178,24 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 Visible = false;
                 Image = NewSum;
                 ShortcutKey = 'Shift+Ctrl+S';
+                ToolTip = 'Executes the Set Net Balance action.';
                 trigger OnAction()
                 var
                     GenJnlLine: Record "Gen. Journal Line";
                     SummaryAmount: Decimal;
                 begin
-                    GenJnlLine.reset;
+                    GenJnlLine.reset();
                     GenJnlLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJnlLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJnlLine.SetRange("Document No.", rec."Document No.");
                     GenJnlLine.SetFilter("Line No.", '<>%1', rec."Line No.");
-                    if GenJnlLine.findset then begin
+                    if GenJnlLine.findset() then begin
                         GenJnlLine.CalcSums("Amount (LCY)");
                         SummaryAmount := GenJnlLine."Amount (LCY)";
                     end;
-                    if SummaryAmount <> 0 then begin
-                        rec.Validate("Amount (LCY)", SummaryAmount * -1);
-                    end else
+                    if SummaryAmount <> 0 then
+                        rec.Validate("Amount (LCY)", SummaryAmount * -1)
+                    else
                         rec.Validate("Amount (LCY)", 0);
                     rec.Modify();
                 end;
@@ -203,6 +210,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 PromotedIsBig = true;
                 Image = Add;
                 Visible = false;
+                ToolTip = 'Executes the Get WHT Invoice action.';
                 trigger OnAction()
                 var
                     vlVendorLedgerEntryRec: Record "Vendor Ledger Entry";
@@ -221,21 +229,21 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                     Customer: Record Customer;
                     whtBusPostingGroup: Record "WHT Business Posting Group";
                 begin
-                    GeneralSetup.GET;
+                    GeneralSetup.GET();
                     GeneralSetup.TESTFIELD("WHT Document Nos.");
 
-                    vlVendorLedgerEntryRec.RESET;
+                    vlVendorLedgerEntryRec.RESET();
                     vlVendorLedgerEntryRec.SETFILTER("Applies-to ID", '%1', Rec."Document No.");
                     IF vlVendorLedgerEntryRec.FIND('-') THEN BEGIN
                         vlLineNo := CodeUnitFunction."GetLastLineNoFromGenJnlLine"(Rec."Journal Template Name", Rec."Journal Batch Name");
                         REPEAT
-                            vlPurchInvLineRec.RESET;
+                            vlPurchInvLineRec.RESET();
                             vlPurchInvLineRec.SETFILTER("Document No.", '%1', vlVendorLedgerEntryRec."Document No.");
                             vlPurchInvLineRec.SETFILTER("WHT Product Posting Group", '<>%1', '');
-                            IF vlPurchInvLineRec.FIND('-') THEN BEGIN
+                            IF vlPurchInvLineRec.FIND('-') THEN
                                 REPEAT
                                     vlLineNo += 10000;
-                                    vlGenJnLineRec.INIT;
+                                    vlGenJnLineRec.INIT();
                                     vlGenJnLineRec."Journal Template Name" := Rec."Journal Template Name";
                                     vlGenJnLineRec."Journal Batch Name" := Rec."Journal Batch Name";
                                     vlGenJnLineRec."Posting Date" := Rec."Posting Date";
@@ -248,7 +256,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                                             vlWHTBusinessRec.TESTFIELD("G/L Account No.");
 
                                     vlGenJnLineRec.VALIDATE("Account No.", vlWHTBusinessRec."G/L Account No.");
-                                    vlGenJnLineRec.INSERT;
+                                    vlGenJnLineRec.INSERT();
                                     vlGenJnLineRec."WHT Date" := Rec."Posting Date";
                                     vlGenJnLineRec.VALIDATE("WHT Vendor No.", Rec."Account No.");
                                     vlGenJnLineRec.Validate("WHT Business Posting Group", vlPurchInvLineRec."WHT Business Posting Group");
@@ -256,10 +264,10 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                                     vlGenJnLineRec."WHT Option" := vlGenJnLineRec."WHT Option"::"(1) หักภาษี ณ ที่จ่าย";
                                     vlGenJnLineRec."Require Screen Detail" := vlGenJnLineRec."Require Screen Detail"::WHT;
 
-                                    WHTHeader.INIT;
+                                    WHTHeader.INIT();
                                     WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."WHT Document Nos.", Rec."Posting Date", TRUE);
                                     WHTDocNo := WHTHeader."WHT No.";
-                                    GenJnlLine.RESET;
+                                    GenJnlLine.RESET();
                                     GenJnlLine.SETRANGE("Journal Template Name", Rec."Journal Template Name");
                                     GenJnlLine.SETRANGE("Journal Batch Name", Rec."Journal Batch Name");
                                     GenJnlLine.SETFILTER("Document No.", '%1', Rec."Document No.");
@@ -274,7 +282,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                                         IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor THEN BEGIN
                                             IF Vendor.GET(GenJnlLine."Account No.") THEN BEGIN
                                                 if NOT whtBusPostingGroup.GET(Vendor."WHT Business Posting Group") then
-                                                    whtBusPostingGroup.init;
+                                                    whtBusPostingGroup.init();
                                                 WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Vendor;
                                                 WHTHeader."WHT Source No." := Vendor."No.";
                                                 WHTHeader."WHT Name" := Vendor.Name;
@@ -290,10 +298,10 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                                                 WHTHeader."WHT Post Code" := Vendor."Post Code";
                                             END;
                                         END ELSE
-                                            IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN BEGIN
+                                            IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN
                                                 IF Customer.GET(GenJnlLine."Account No.") THEN BEGIN
                                                     if NOT whtBusPostingGroup.GET(Customer."WHT Business Posting Group") then
-                                                        whtBusPostingGroup.init;
+                                                        whtBusPostingGroup.init();
                                                     WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Customer;
                                                     WHTHeader."WHT Source No." := Customer."No.";
                                                     WHTHeader."WHT Name" := Customer.Name;
@@ -308,20 +316,18 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                                                     WHTHeader."WHT City" := Customer.City;
                                                     WHTHeader."WHT Post Code" := Customer."Post Code";
                                                 END;
-                                            END;
                                     END;
                                     WHTHeader.Insert();
                                     vlGenJnLineRec."WHT Document No." := WHTHeader."WHT No.";
                                     vlGenJnLineRec.Modify();
-                                UNTIL vlPurchInvLineRec.NEXT = 0;
-                            END;
-                        UNTIL vlVendorLedgerEntryRec.NEXT = 0;
+                                UNTIL vlPurchInvLineRec.NEXT() = 0;
+                        UNTIL vlVendorLedgerEntryRec.NEXT() = 0;
                     END;
                 END;
             }
 
         }
-         //ct <<<
+        //ct <<<
 
     }
     /// <summary> 
@@ -336,10 +342,6 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
         Vendor: Record Vendor;
         Customer: Record Customer;
         WHTDocNo: Code[20];
-        CurrLine: Integer;
-        LastLine: Integer;
-        GenJnlLine2: Record "Gen. Journal Line";
-        WHTBusiness: Record "Dimension Value";
         PageWHTCer: Page "WHT Certificate";
         whtBusPostingGroup: Record "WHT Business Posting Group";
         GenJnlLine3: Record "Gen. Journal Line";
@@ -350,20 +352,19 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
             GenJnlLine3.SetRange("Journal Batch Name", Rec."Journal Batch Name");
             GenJnlLine3.SetRange("Document No.", Rec."Document No.");
             GenJnlLine3.SetFilter("WHT Document No.", '<>%1', '');
-            if GenJnlLine3.FindFirst() then begin
+            if GenJnlLine3.FindFirst() then
                 if not Confirm('This document already have wht certificate do you want to create more wht certificate ?') then
                     exit;
-            end;
         end;
-        GeneralSetup.GET;
+        GeneralSetup.GET();
         GeneralSetup.TESTFIELD("WHT Document Nos.");
         IF Rec."WHT Document No." = '' THEN BEGIN
             IF NOT CONFIRM('Do you want to create wht certificated') THEN
                 EXIT;
-            WHTHeader.INIT;
+            WHTHeader.INIT();
             WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."WHT Document Nos.", Rec."Posting Date", TRUE);
             WHTDocNo := WHTHeader."WHT No.";
-            GenJnlLine.RESET;
+            GenJnlLine.RESET();
             GenJnlLine.SETRANGE("Journal Template Name", Rec."Journal Template Name");
             GenJnlLine.SETRANGE("Journal Batch Name", Rec."Journal Batch Name");
             GenJnlLine.SETFILTER("Document No.", '%1', Rec."Document No.");
@@ -379,7 +380,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor THEN BEGIN
                     IF Vendor.GET(GenJnlLine."Account No.") THEN BEGIN
                         if NOT whtBusPostingGroup.GET(Vendor."WHT Business Posting Group") then
-                            whtBusPostingGroup.init;
+                            whtBusPostingGroup.init();
                         WHTHeader."WHT Business Posting Group" := Vendor."WHT Business Posting Group";
                         WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Vendor;
                         WHTHeader."WHT Source No." := Vendor."No.";
@@ -396,10 +397,10 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                         WHTHeader."WHT Post Code" := Vendor."Post Code";
                     END;
                 END ELSE
-                    IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN BEGIN
+                    IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN
                         IF Customer.GET(GenJnlLine."Account No.") THEN BEGIN
                             if NOT whtBusPostingGroup.GET(Customer."WHT Business Posting Group") then
-                                whtBusPostingGroup.init;
+                                whtBusPostingGroup.init();
                             WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Customer;
                             WHTHeader."WHT Source No." := Customer."No.";
                             WHTHeader."WHT Name" := Customer.Name;
@@ -414,17 +415,15 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                             WHTHeader."WHT City" := Customer.City;
                             WHTHeader."WHT Post Code" := Customer."Post Code";
                         END;
-                    END;
             END;
-            WHTHeader.INSERT;
+            WHTHeader.INSERT();
             Rec.Modify();
-        END ELSE begin
+        END ELSE
             WHTDocNo := Rec."WHT Document No.";
-        end;
 
-        commit;
+        commit();
         CLEAR(PageWHTCer);
-        WHTHeader.reset;
+        WHTHeader.reset();
         WHTHeader.SetFilter("WHT No.", '%1', WHTDocNo);
         PageWHTCer.SetTableView(WHTHeader);
         PageWHTCer."SetGenJnlLine"(Rec."Journal Template Name", Rec."Journal Batch Name", Rec."Document No.", rec."Line No.");
@@ -437,7 +436,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
     var
         WHTEader: Record "WHT Header";
     begin
-        WHTEader.reset;
+        WHTEader.reset();
         WHTEader.SetRange("Gen. Journal Template Code", Rec."Journal Template Name");
         WHTEader.SetRange("Gen. Journal Batch Code", Rec."Journal Batch Name");
         WHTEader.SetRange("Gen. Journal Line No.", Rec."Line No.");

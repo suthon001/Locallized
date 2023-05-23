@@ -7,6 +7,7 @@ pageextension 80003 "ExtenItem Journal Batches" extends "Item Journal Batches"
             field("Document No. Series"; rec."Document No. Series")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Document No. Series field.';
             }
 
         }
@@ -19,10 +20,12 @@ pageextension 80003 "ExtenItem Journal Batches" extends "Item Journal Batches"
             field("Default Entry Type"; rec."Default Entry Type")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Default Entry Type field.';
             }
             field("Shortcut Dimension 1 Code"; rec."Shortcut Dimension 1 Code")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Shortcut Dimension 1 Code field.';
             }
         }
     }

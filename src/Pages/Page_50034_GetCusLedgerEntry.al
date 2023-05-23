@@ -1,6 +1,8 @@
+/// <summary>
+/// Page Get Cus. Ledger Entry (ID 50034).
+/// </summary>
 page 50034 "Get Cus. Ledger Entry"
 {
-
     PageType = List;
     SourceTable = "Cust. Ledger Entry";
     Caption = 'Get Cus. Ledger Entry';
@@ -8,6 +10,7 @@ page 50034 "Get Cus. Ledger Entry"
     InsertAllowed = false;
     DeleteAllowed = false;
     ModifyAllowed = false;
+    UsageCategory = None;
     layout
     {
         area(content)
@@ -17,42 +20,52 @@ page 50034 "Get Cus. Ledger Entry"
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the customer entry''s posting date.';
                 }
                 field("Document Type"; Rec."Document Type")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the document type that the customer entry belongs to.';
                 }
                 field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the entry''s document number.';
                 }
                 field("External Document No."; Rec."External Document No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies a document number that refers to the customer''s or vendor''s numbering system.';
                 }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies a description of the customer entry.';
                 }
                 field("Due Date"; Rec."Due Date")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the due date on the entry.';
                 }
                 field(Amount; Rec.Amount)
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the amount of the entry.';
                 }
                 field("Remaining Amount"; Rec."Remaining Amount")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the amount that remains to be applied to before the entry has been completely applied.';
                 }
                 field("Salesperson Code"; Rec."Salesperson Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the code for the salesperson whom the entry is linked to.';
                 }
                 field("Currency Code"; Rec."Currency Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the currency code for the amount on the line.';
                 }
             }
         }
@@ -60,18 +73,23 @@ page 50034 "Get Cus. Ledger Entry"
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
         IF CloseAction IN [ACTION::OK, ACTION::LookupOK] THEN
-            "CreateLines"();
+            CreateLines();
 
     end;
 
-    procedure "SetDocument"(NewDocumentType: Option "Sales Billing","Sales Receipt","Purchase Billing"; NewDocumentNo: Code[20])
+    /// <summary>
+    /// SetDocument.
+    /// </summary>
+    /// <param name="NewDocumentType">Option "Sales Billing","Sales Receipt","Purchase Billing".</param>
+    /// <param name="NewDocumentNo">Code[20].</param>
+    procedure SetDocument(NewDocumentType: Option "Sales Billing","Sales Receipt","Purchase Billing"; NewDocumentNo: Code[20])
     begin
         DocumentType := NewDocumentType;
         DocumentNo := NewDocumentNo;
         BillingHeader.GET(DocumentType, DocumentNo);
     end;
 
-    local procedure "CreateLines"()
+    local procedure CreateLines()
     var
         GetBillingLine: Codeunit "Get Cust/Vend Ledger Entry";
     begin

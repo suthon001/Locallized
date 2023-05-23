@@ -7,15 +7,18 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
             field("Quantity"; rec."Quantity")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Quantity field.';
             }
             field("Price per Unit"; rec."Price per Unit")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Price per Unit field.';
             }
             field("Remark Real Location"; rec."Remark Real Location")
             {
                 ApplicationArea = all;
                 Caption = 'Location Detail';
+                ToolTip = 'Specifies the value of the Location Detail field.';
             }
         }
         addafter("Search Description")
@@ -23,6 +26,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
             field("Acq. Date"; rec."Acq. Date")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Acq. Date field.';
             }
         }
     }
@@ -53,14 +57,14 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Fixed Assed  action.';
                 trigger OnAction()
                 var
                     fixsset: Record "Fixed Asset";
-                    GenQRCode: Codeunit "Function Center";
                 begin
                     //  GenQRCode.GenerateQrBarcode(Database::"Fixed Asset", "No.", 0, Description, 200, 200, TRUE, 1);
                     Commit();
-                    fixsset.RESET;
+                    fixsset.RESET();
                     fixsset.SetRange("No.", rec."No.");
                     Report.Run(Report::"Fixed Asset Card", TRUE, TRUE, fixsset);
                 end;
@@ -74,6 +78,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedCategory = Report;
                 Image = PrintReport;
                 RunObject = Report "Fixed Asset - Book Value 01";
+                ToolTip = 'Executes the Fixed Asset - Book Value 01 action.';
             }
             action("Fixed Asset - Book Value 02")
             {
@@ -84,6 +89,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedIsBig = true;
                 Image = PrintReport;
                 RunObject = Report "Fixed Asset - Book Value 02";
+                ToolTip = 'Executes the Fixed Asset - Book Value 02 action.';
             }
             action("Fixed Asset Document Nos.")
             {
@@ -94,6 +100,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedIsBig = true;
                 Image = PrintReport;
                 RunObject = Report "Fixed Asset Document Nos.";
+                ToolTip = 'Executes the Fixed Asset Document Nos. action.';
             }
             action("FA Posting Group - Net Change")
             {
@@ -104,6 +111,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedIsBig = true;
                 Image = PrintReport;
                 RunObject = Report "FA Posting Group - Net Change";
+                ToolTip = 'Executes the FA Posting Group - Net Change action.';
             }
             action("Fixed Asset Journal - Test")
             {
@@ -114,6 +122,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedIsBig = true;
                 Image = PrintReport;
                 RunObject = Report "Fixed Asset Journal - Test";
+                ToolTip = 'Executes the Fixed Asset Journal - Test action.';
             }
             action("Fixed Asset Purchase")
             {
@@ -124,6 +133,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedIsBig = true;
                 Image = PrintReport;
                 RunObject = Report "Fixed Asset Purchase";
+                ToolTip = 'Executes the Fixed Asset Purchase action.';
             }
             action("Fixed Asset Write off")
             {
@@ -134,6 +144,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedIsBig = true;
                 Image = PrintReport;
                 RunObject = Report "Fixed Asset Write off";
+                ToolTip = 'Executes the Fixed Asset Write off action.';
             }
             action("Fixed Asset Sales")
             {
@@ -144,6 +155,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedIsBig = true;
                 Image = PrintReport;
                 RunObject = Report "Fixed Asset Sales";
+                ToolTip = 'Executes the Fixed Asset Sales action.';
             }
 
         }

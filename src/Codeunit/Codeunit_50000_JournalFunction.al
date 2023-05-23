@@ -55,8 +55,6 @@ codeunit 50000 "Journal Function"
     /// <param name="InvoicePostBuffer">Parameter of type Record "Invoice Post. Buffer".</param>
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     local procedure "CopyHeaderFromInvoiceBuff"(InvoicePostBuffer: Record "Invoice Post. Buffer"; var GenJournalLine: Record "Gen. Journal Line")
-    var
-        GLAccount: Record "G/L Account";
     begin
         // with GenJournalLine do begin
         GenJournalLine."Tax Invoice No." := InvoicePostBuffer."Tax Invoice No.";
@@ -128,19 +126,16 @@ codeunit 50000 "Journal Function"
     /// <param name="RunTrigger">Parameter of type Boolean.</param>
     local procedure "SetVatLocalize"(var Rec: Record "VAT Entry"; RunTrigger: Boolean)
     var
-        VATEntryReport: Record "VAT Transections";
         vatPostingGroup: Record "VAT Product Posting Group";
     begin
-        if RunTrigger then begin
+        if RunTrigger then
             // with Rec do begin
-            IF vatPostingGroup.GET(Rec."VAT Prod. Posting Group") then begin
+            IF vatPostingGroup.GET(Rec."VAT Prod. Posting Group") then
                 IF NOT vatPostingGroup."Direct VAT" THEN BEGIN
                     Rec."Tax Invoice Base" := Rec.Base;
                     Rec."Tax Invoice Amount" := Rec.Amount;
                 END;
-            end;
-            // end;
-        END;
+        // end;
     end;
 
 
@@ -179,11 +174,9 @@ codeunit 50000 "Journal Function"
     local procedure "OnAfterInsertVat"(var Rec: Record "VAT Entry"; RunTrigger: Boolean)
     var
         VATEntryReport: Record "VAT Transections";
-        VATSetup: Record "VAT Posting Setup";
-        VATPostingSetup: Record "VAT Posting Setup";
     begin
         if RunTrigger then begin
-            VATEntryReport.INIT;
+            VATEntryReport.INIT();
             VATEntryReport.TRANSFERFIELDS(Rec);
             VATEntryReport.Insert();
         END;
@@ -274,7 +267,7 @@ codeunit 50000 "Journal Function"
         // with VendorLedgerEntry do begin
 
 
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -305,7 +298,7 @@ codeunit 50000 "Journal Function"
 
         CustLedgerEntry."Billing Due Date" := GenJournalLine."Due Date";
 
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -360,15 +353,15 @@ codeunit 50000 "Journal Function"
         ItemJnlLine2: Record "Item Journal Line";
     begin
         ItemJnlLine2.COPYFILTERS(ItemJournalLine);
-        ItemJnlLine2.FINDSET;
+        ItemJnlLine2.FINDSET();
         REPEAT
-            PostedItemJournalLines.INIT;
+            PostedItemJournalLines.INIT();
             PostedItemJournalLines.TRANSFERFIELDS(ItemJnlLine2);
             PostedItemJournalLines."Entry No." := PostedItemJournalLines."LastPostedEntryNo"();
             PostedItemJournalLines."Posted By" := USERID;
             PostedItemJournalLines."Posted DateTime" := CurrentDateTime();
             PostedItemJournalLines.INSERT(true);
-        until ItemJnlLine2.next = 0;
+        until ItemJnlLine2.next() = 0;
     end;
 
 
@@ -387,10 +380,10 @@ codeunit 50000 "Journal Function"
     begin
 
         if not Item.get(Rec."Item No.") then
-            Item.init;
+            Item.init();
         Rec."Description 2" := Item."Description 2";
         if not ItemJournalBatch.GET(rec."Journal Template Name", Rec."Journal Batch Name") then
-            ItemJournalBatch.init;
+            ItemJournalBatch.init();
         ItemTemplateName.GET(rec."Journal Template Name");
         if ItemTemplateName.Type = ItemTemplateName.Type::Item then
             rec."Entry Type" := ItemJournalBatch."Default Entry Type";

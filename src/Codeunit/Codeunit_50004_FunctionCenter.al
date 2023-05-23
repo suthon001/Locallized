@@ -45,7 +45,7 @@ codeunit 50004 "Function Center"
     var
         vlGenJnLineRec: Record "Gen. Journal Line";
     begin
-        vlGenJnLineRec.RESET;
+        vlGenJnLineRec.RESET();
         vlGenJnLineRec.SETFILTER("Journal Template Name", '%1', pTemplateName);
         vlGenJnLineRec.SETFILTER("Journal Batch Name", '%1', pBatchName);
         IF vlGenJnLineRec.FIND('+') THEN BEGIN
@@ -76,7 +76,7 @@ codeunit 50004 "Function Center"
     var
         CompanyInfo: Record "Company Information";
     begin
-        CompanyInfo.GET;
+        CompanyInfo.GET();
         if NOT EngName then begin
             Text[1] := CompanyInfo.Name + ' ' + CompanyInfo."Name 2";
             Text[2] := CompanyInfo.Address + ' ';
@@ -119,7 +119,7 @@ codeunit 50004 "Function Center"
         VATBusinessPostingGroup: Record "VAT Business Posting Group";
     begin
         IF NOT VATBusinessPostingGroup.GET(VatBus) THEN
-            VATBusinessPostingGroup.init;
+            VATBusinessPostingGroup.init();
 
         IF EngName THEN begin
             Text[1] := VATBusinessPostingGroup."Company Name (Eng)" + ' ';
@@ -182,7 +182,7 @@ codeunit 50004 "Function Center"
                 BEGIN
                     // if (PurchHeader."Head Office") then begin
                     IF NOT Vend.GET(PurchHeader."Buy-from Vendor No.") THEN
-                        Vend.INIT;
+                        Vend.INIT();
                     Text[1] := PurchHeader."Buy-from Vendor Name" + ' ' + PurchHeader."Buy-from Vendor Name 2";
                     Text[2] := PurchHeader."Buy-from Address" + ' ';
                     Text[3] := PurchHeader."Buy-from Address 2" + ' ';
@@ -193,12 +193,10 @@ codeunit 50004 "Function Center"
                         IF Vend."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                    end else begin
+                    end else
 
                         IF Vend."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                    end;
                     Text[5] := PurchHeader."Buy-from Contact";
                     // END else begin
                     if (PurchHeader."Branch Code" <> '') AND (NOT PurchHeader."Head Office") then begin
@@ -211,10 +209,9 @@ codeunit 50004 "Function Center"
                         if PurchHeader."Currency Code" = '' then begin
                             IF VandorBranch."Fax No." <> '' THEN
                                 Text[4] += STRSUBSTNO('แฟกซ์ : %1', VandorBranch."Fax No.");
-                        end else begin
+                        end else
                             IF VandorBranch."Fax No." <> '' THEN
                                 Text[4] += STRSUBSTNO('Fax. : %1', VandorBranch."Fax No.");
-                        end;
 
                     end;
 
@@ -224,7 +221,7 @@ codeunit 50004 "Function Center"
             Tab::Invoicing:
                 BEGIN
                     IF NOT Vend.GET(PurchHeader."Pay-to Vendor No.") THEN
-                        Vend.INIT;
+                        Vend.INIT();
                     Text[1] := PurchHeader."Pay-to Name" + ' ' + PurchHeader."Pay-to Name 2";
                     Text[2] := PurchHeader."Pay-to Address" + ' ';
                     Text[3] := PurchHeader."Pay-to Address 2" + ' ';
@@ -235,12 +232,10 @@ codeunit 50004 "Function Center"
                         IF Vend."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                    end else begin
+                    end else
 
                         IF Vend."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                    end;
                     Text[5] := PurchHeader."Pay-to Contact";
                     if (PurchHeader."Branch Code" <> '') AND (NOT PurchHeader."Head Office") then begin
                         if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."Head Office", PurchHeader."Branch Code") then
@@ -252,10 +247,9 @@ codeunit 50004 "Function Center"
                         if PurchHeader."Currency Code" = '' then begin
                             IF VandorBranch."Fax No." <> '' THEN
                                 Text[4] += STRSUBSTNO('แฟกซ์ : %1', VandorBranch."Fax No.");
-                        end else begin
+                        end else
                             IF VandorBranch."Fax No." <> '' THEN
                                 Text[4] += STRSUBSTNO('Fax. : %1', VandorBranch."Fax No.");
-                        end;
 
                     end;
                     Text[9] := PurchHeader."Pay-to Vendor No.";
@@ -263,7 +257,7 @@ codeunit 50004 "Function Center"
             Tab::Shipping:
                 BEGIN
                     IF NOT Cust.GET(PurchHeader."Sell-to Customer No.") THEN
-                        Cust.init;
+                        Cust.init();
                     Text[1] := PurchHeader."Ship-to Name" + ' ' + PurchHeader."Ship-to Name 2";
                     Text[2] := PurchHeader."Ship-to Address" + ' ';
                     Text[3] := PurchHeader."Ship-to Address 2" + ' ';
@@ -274,12 +268,10 @@ codeunit 50004 "Function Center"
                         IF Vend."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                    end else begin
+                    end else
 
                         IF Vend."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                    end;
                     Text[5] := PurchHeader."Ship-to Contact";
 
                 END;
@@ -298,12 +290,11 @@ codeunit 50004 "Function Center"
                 Text[10] += ' (สำนักงานใหญ่)'
             else
                 Text[10] += ' (' + PurchHeader."Branch Code" + ')';
-        end else begin
+        end else
             if PurchHeader."Head Office" then
                 Text[10] += ' (Head Office)'
             else
                 Text[10] += ' (' + PurchHeader."Branch Code" + ')';
-        end;
     end;
 
     /// <summary> 
@@ -316,7 +307,7 @@ codeunit 50004 "Function Center"
     var
         GLSetup: Record "General Ledger Setup";
     begin
-        GLSetup.GET;
+        GLSetup.GET();
         Text := '';
         IF CurrencyCode = '' THEN
             Text := 'THB'
@@ -334,12 +325,11 @@ codeunit 50004 "Function Center"
     /// <param name="CurrencyCode">Parameter of type Code[30].</param>
     procedure "NumberEngToText"(TDecimal: Decimal; CurrencyCode: Code[30]) TText: Text
     var
-        THigh: Decimal;
         TLow: Decimal;
         TText1: array[2] of Text[1024];
     begin
         TDecimal := ROUND(TDecimal, 0.01);
-        "InitTextVariable";
+        "InitTextVariable"();
         "EngInterger"(TText1, TDecimal, CurrencyCode);
         TLow := (TDecimal - ROUND(TDecimal, 1, '<')) * 100;
         IF TLow < 1 THEN
@@ -415,22 +405,20 @@ codeunit 50004 "Function Center"
     begin
         CASE adigit OF
             '1':
-                BEGIN
-                    IF (pos IN [1, 9, 17]) AND dflag THEN
-                        fdigit := 'เอ็ด'
-                    ELSE
-                        IF pos IN [2, 10, 18] THEN
-                            fdigit := ''
-                        ELSE
-                            fdigit := 'หนึ่ง';
-                END;
-            '2':
-                BEGIN
+
+                IF (pos IN [1, 9, 17]) AND dflag THEN
+                    fdigit := 'เอ็ด'
+                ELSE
                     IF pos IN [2, 10, 18] THEN
-                        fdigit := 'ยี่'
+                        fdigit := ''
                     ELSE
-                        fdigit := 'สอง';
-                END;
+                        fdigit := 'หนึ่ง';
+            '2':
+
+                IF pos IN [2, 10, 18] THEN
+                    fdigit := 'ยี่'
+                ELSE
+                    fdigit := 'สอง';
             '3':
                 fdigit := 'สาม';
             '4':
@@ -446,14 +434,13 @@ codeunit 50004 "Function Center"
             '9':
                 fdigit := 'เก้า';
             '0':
-                BEGIN
-                    IF pos IN [9, 17, 25] THEN
-                        fdigit := 'ล้าน';
-                END;
+
+                IF pos IN [9, 17, 25] THEN
+                    fdigit := 'ล้าน';
             '-':
                 fdigit := 'ลบ';
         END;
-        IF (adigit <> '0') AND (adigit <> '-') THEN BEGIN
+        IF (adigit <> '0') AND (adigit <> '-') THEN
             CASE pos OF
                 2, 10, 18:
                     fcount := 'สิบ';
@@ -468,7 +455,6 @@ codeunit 50004 "Function Center"
                 9, 17, 25:
                     fcount := 'ล้าน';
             END;
-        END;
         EXIT(fdigit + fcount);
     end;
 
@@ -505,45 +491,6 @@ codeunit 50004 "Function Center"
         Text059: Label 'THOUSAND';
         Text060: Label 'MILLION';
         Text061: Label 'BILLION';
-        Text062: Label 'G/L Account,Customer,Vendor,Bank Account';
-        Text063: Label 'Net Amount %1';
-        Text064: Label '%1 must not be %2 for %3 %4.';
-        Text126: Label 'SOON';
-        Text127: Label 'ROI';
-        Text128: Label '&';
-        Text129: Label '%1 results in a written number that is too long.';
-        Text130: Label 'is already applied to %1 %2 for customer %3.';
-        Text131: Label 'is already applied to %1 %2 for vendor %3.';
-        Text132: Label 'NUENG';
-        Text133: Label 'SAWNG';
-        Text134: Label 'SARM';
-        Text135: Label 'SI';
-        Text136: Label 'HA';
-        Text137: Label 'HOK';
-        Text138: Label 'CHED';
-        Text139: Label 'PAED';
-        Text140: Label 'KOW';
-        Text141: Label 'SIB';
-        Text142: Label 'SIB-ED';
-        Text143: Label 'SIB-SAWNG';
-        Text144: Label 'SIB-SARM';
-        Text145: Label 'SIB-SI';
-        Text146: Label 'SIB-HA';
-        Text147: Label 'SIB-HOK';
-        Text148: Label 'SIB-CHED';
-        Text149: Label 'SIB-PAED';
-        Text150: Label 'SIB-KOW';
-        Text151: Label 'YI-SIB';
-        Text152: Label 'SARM-SIB';
-        Text153: Label 'SI-SIB';
-        Text154: Label 'HA-SIB';
-        Text155: Label 'HOK-SIB';
-        Text156: Label 'CHED-SIB';
-        Text157: Label 'PAED-SIB';
-        Text158: Label 'KOW-SIB';
-        Text159: Label 'PHAN';
-        Text160: Label 'LAAN?';
-        Text161: Label 'PHAN-LAAN?';
     begin
         OnesText[1] := Text032;
         OnesText[2] := Text033;
@@ -600,7 +547,7 @@ codeunit 50004 "Function Center"
 
         IF No < 1 THEN
             "AddToNoText"(NoText, NoTextIndex, PrintExponent, Text026)
-        ELSE BEGIN
+        ELSE
             FOR Exponent := 4 DOWNTO 1 DO BEGIN
                 PrintExponent := FALSE;
                 Ones := No DIV POWER(1000, Exponent - 1);
@@ -622,7 +569,6 @@ codeunit 50004 "Function Center"
                     "AddToNoText"(NoText, NoTextIndex, PrintExponent, ExponentText[Exponent]);
                 No := No - (Hundreds * 100 + Tens * 10 + Ones) * POWER(1000, Exponent - 1);
             END;
-        END;
 
         IF CurrencyCode = '' THEN BEGIN
             IF No = 0 THEN BEGIN
@@ -658,10 +604,10 @@ codeunit 50004 "Function Center"
 
                 end;
             END;
-        END ELSE BEGIN
-            IF No = 0 THEN BEGIN
-                "AddToNoText"(NoText, NoTextIndex, PrintExponent, 'ONLY ');
-            END ELSE BEGIN
+        END ELSE
+            IF No = 0 THEN
+                "AddToNoText"(NoText, NoTextIndex, PrintExponent, 'ONLY ')
+            ELSE BEGIN
                 "AddToNoText"(NoText, NoTextIndex, PrintExponent, 'POINT');
                 //...Customize
                 varzero := '';
@@ -683,8 +629,6 @@ codeunit 50004 "Function Center"
 
                 end;
             END;
-
-        END
     end;
 
     /// <summary> 
@@ -733,7 +677,7 @@ codeunit 50004 "Function Center"
                 BEGIN
                     //  if SalesHeader."Head Office" then begin
                     IF NOT Cust.GET(SalesHeader."Sell-to Customer No.") THEN
-                        Cust.INIT;
+                        Cust.INIT();
                     Text[1] := SalesHeader."Sell-to Customer Name" + ' ' + SalesHeader."Sell-to Customer Name 2";
                     Text[2] := SalesHeader."Sell-to Address" + ' ';
                     Text[3] := SalesHeader."Sell-to Address 2" + ' ';
@@ -744,12 +688,10 @@ codeunit 50004 "Function Center"
                         IF Cust."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                    end else begin
+                    end else
 
                         IF Cust."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                    end;
                     Text[5] := SalesHeader."Sell-to Contact";
                     // end else begin
                     if (SalesHeader."Branch Code" <> '') AND (NOT SalesHeader."Head Office") then begin
@@ -762,17 +704,16 @@ codeunit 50004 "Function Center"
                         if SalesHeader."Currency Code" = '' then begin
                             IF CustBranch."Fax No." <> '' THEN
                                 Text[4] += STRSUBSTNO('แฟกซ์ : %1', CustBranch."Fax No.");
-                        end else begin
+                        end else
                             IF CustBranch."Fax No." <> '' THEN
                                 Text[4] += STRSUBSTNO('Fax. : %1', CustBranch."Fax No.");
-                        end;
                     end;
                     Text[9] := SalesHeader."Sell-to Customer No.";
                 END;
             Tab::Invoicing:
                 BEGIN
                     IF NOT Cust.GET(SalesHeader."Bill-to Customer No.") THEN
-                        Cust.INIT;
+                        Cust.INIT();
                     Text[1] := SalesHeader."Bill-to Name" + ' ' + SalesHeader."Bill-to Name 2";
                     Text[2] := SalesHeader."Bill-to Address" + ' ';
                     Text[3] := SalesHeader."Bill-to Address 2" + ' ';
@@ -783,12 +724,10 @@ codeunit 50004 "Function Center"
                         IF Cust."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                    end else begin
+                    end else
 
                         IF Cust."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                    end;
                     Text[5] := SalesHeader."Bill-to Contact";
                     if (SalesHeader."Branch Code" <> '') AND (NOT SalesHeader."Head Office") then begin
                         if not CustBranch.GET(CustBranch."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."Head Office", SalesHeader."Branch Code") then
@@ -800,17 +739,16 @@ codeunit 50004 "Function Center"
                         if SalesHeader."Currency Code" = '' then begin
                             IF CustBranch."Fax No." <> '' THEN
                                 Text[4] += STRSUBSTNO('แฟกซ์ : %1', CustBranch."Fax No.");
-                        end else begin
+                        end else
                             IF CustBranch."Fax No." <> '' THEN
                                 Text[4] += STRSUBSTNO('Fax. : %1', CustBranch."Fax No.");
-                        end;
                     end;
                     Text[9] := SalesHeader."Bill-to Customer No.";
                 END;
             Tab::Shipping:
                 BEGIN
                     IF NOT Shipto.GET(SalesHeader."Sell-to Customer No.", SalesHeader."Ship-to Code") THEN
-                        Shipto.INIT;
+                        Shipto.INIT();
 
                     Text[1] := SalesHeader."Ship-to Name" + ' ' + SalesHeader."Ship-to Name 2";
                     Text[2] := SalesHeader."Ship-to Address" + ' ';
@@ -822,12 +760,10 @@ codeunit 50004 "Function Center"
                         IF Cust."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('แฟกซ์ : %1', Shipto."Fax No.");
 
-                    end else begin
+                    end else
 
                         IF Cust."Fax No." <> '' THEN
                             Text[4] += STRSUBSTNO('Fax. : %1', Shipto."Fax No.");
-
-                    end;
                     Text[5] := SalesHeader."Ship-to Contact";
 
                 END;
@@ -847,13 +783,12 @@ codeunit 50004 "Function Center"
                 Text[10] += ' (สำนักงานใหญ่)'
             else
                 Text[10] += ' (' + SalesHeader."Branch Code" + ')';
-        end else begin
+        end else
 
             if SalesHeader."Head Office" then
                 Text[10] += ' (Head Office)'
             else
                 Text[10] += ' (' + SalesHeader."Branch Code" + ')';
-        end;
 
     end;
 
@@ -867,7 +802,7 @@ codeunit 50004 "Function Center"
         Vendor: Record Vendor;
     begin
         IF NOT Vendor.GET(VendorNo) THEN
-            Vendor.INIT;
+            Vendor.INIT();
         Text[1] := Vendor.Name + ' ' + Vendor."Name 2";
         Text[2] := Vendor.Address + ' ';
         Text[3] := Vendor."Address 2" + ' ' + Vendor.City + ' ' + Vendor."Post Code";
@@ -890,7 +825,7 @@ codeunit 50004 "Function Center"
         Cust: Record Customer;
     begin
         IF NOT Cust.GET(CustNo) THEN
-            Cust.INIT;
+            Cust.INIT();
         Text[1] := Cust.Name + ' ' + Cust."Name 2";
         Text[2] := Cust.Address + ' ';
         Text[3] := Cust."Address 2" + ' ' + Cust.City + ' ' + Cust."Post Code";
@@ -919,13 +854,13 @@ codeunit 50004 "Function Center"
         CustLedgEntry: Record "Cust. Ledger Entry";
         CvNo: Code[30];
     begin
-        GenJnlLine.RESET;
+        GenJnlLine.RESET();
         GenJnlLine.SETCURRENTKEY("Journal Template Name", "Journal Batch Name", "Document No.", "Posting Date");
         GenJnlLine.SETRANGE("Journal Template Name", JnlTemplateName);
         GenJnlLine.SETRANGE("Journal Batch Name", JnlBatchName);
         GenJnlLine.SETRANGE("Document No.", DocumentNo);
         GenJnlLine.SETRANGE("Posting Date", PostingDate);
-        IF GenJnlLine.FINDFIRST THEN
+        IF GenJnlLine.FINDFIRST() THEN
             REPEAT
                 IF (GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor) OR
                    (GenJnlLine."Bal. Account Type" = GenJnlLine."Bal. Account Type"::Vendor) THEN BEGIN
@@ -933,35 +868,35 @@ codeunit 50004 "Function Center"
                     IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor THEN
                         CVNo := GenJnlLine."Account No.";
                     IF GenJnlLine."Applies-to ID" <> '' THEN BEGIN
-                        VendLedgEntry.RESET;
+                        VendLedgEntry.RESET();
                         VendLedgEntry.SETCURRENTKEY("Vendor No.", "Applies-to ID", Open, Positive, "Due Date");
                         VendLedgEntry.SETRANGE("Vendor No.", CVNo);
                         VendLedgEntry.SETRANGE("Applies-to ID", GenJnlLine."Applies-to ID");
                         //VendLedgEntry.SETRANGE(Open,TRUE);
-                        IF VendLedgEntry.FINDFIRST THEN
+                        IF VendLedgEntry.FINDFIRST() THEN
                             REPEAT
                                 VendLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
                                     "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
                                 CVLedgEntryBuf.CopyFromVendLedgEntry(VendLedgEntry);
                                 //GenPostLine.TransferVendLedgEntry(CVLedgEntryBuf,VendLedgEntry,TRUE);
-                                if not CVLedgEntryBuf.INSERT then
+                                if not CVLedgEntryBuf.INSERT() then
                                     CVLedgEntryBuf.Modify();
-                            UNTIL VendLedgEntry.NEXT = 0;
+                            UNTIL VendLedgEntry.NEXT() = 0;
                     END ELSE
                         IF GenJnlLine."Applies-to Doc. No." <> '' THEN BEGIN
-                            VendLedgEntry.RESET;
+                            VendLedgEntry.RESET();
                             VendLedgEntry.SETCURRENTKEY("Vendor No.", "Document Type", "Document No.", Open);
                             VendLedgEntry.SETRANGE("Vendor No.", CVNo);
                             VendLedgEntry.SETRANGE("Document Type", GenJnlLine."Applies-to Doc. Type");
                             VendLedgEntry.SETRANGE("Document No.", GenJnlLine."Applies-to Doc. No.");
                             //VendLedgEntry.SETRANGE(Open,TRUE);
-                            IF VendLedgEntry.FINDFIRST THEN BEGIN
+                            IF VendLedgEntry.FINDFIRST() THEN BEGIN
                                 VendLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
                                     "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
                                 CVLedgEntryBuf.CopyFromVendLedgEntry(VendLedgEntry);
                                 //TmpGenPostLine.TransferVendLedgEntry(CVLedgEntryBuf,VendLedgEntry,TRUE);
                                 //CVLedgEntryBuf."Amount to Apply" := VendLedgEntry."Remaining Amount";
-                                if not CVLedgEntryBuf.INSERT then
+                                if not CVLedgEntryBuf.INSERT() then
                                     CVLedgEntryBuf.Modify();
                             END;
                         END;
@@ -972,41 +907,41 @@ codeunit 50004 "Function Center"
                     IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN
                         CVNo := GenJnlLine."Account No.";
                     IF GenJnlLine."Applies-to ID" <> '' THEN BEGIN
-                        CustLedgEntry.RESET;
+                        CustLedgEntry.RESET();
                         CustLedgEntry.SETCURRENTKEY("Customer No.", "Applies-to ID", Open, Positive, "Due Date");
                         CustLedgEntry.SETRANGE("Customer No.", CVNo);
                         CustLedgEntry.SETRANGE("Applies-to ID", GenJnlLine."Applies-to ID");
                         //CustLedgEntry.SETRANGE(Open,TRUE);
-                        IF CustLedgEntry.FINDFIRST THEN
+                        IF CustLedgEntry.FINDFIRST() THEN
                             REPEAT
                                 CustLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
                                     "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
                                 //TmpGenPostLine.TransferCustLedgEntry(CVLedgEntryBuf,CustLedgEntry,TRUE);
                                 CVLedgEntryBuf.CopyFromCustLedgEntry(CustLedgEntry);
-                                if not CVLedgEntryBuf.INSERT then
+                                if not CVLedgEntryBuf.INSERT() then
                                     CVLedgEntryBuf.Modify();
-                            UNTIL CustLedgEntry.NEXT = 0;
+                            UNTIL CustLedgEntry.NEXT() = 0;
                     END ELSE
                         IF GenJnlLine."Applies-to Doc. No." <> '' THEN BEGIN
-                            CustLedgEntry.RESET;
+                            CustLedgEntry.RESET();
                             CustLedgEntry.SETCURRENTKEY("Customer No.", "Document Type", "Document No.", Open);
                             CustLedgEntry.SETRANGE("Customer No.", CVNo);
                             CustLedgEntry.SETRANGE("Document Type", GenJnlLine."Applies-to Doc. Type");
                             CustLedgEntry.SETRANGE("Document No.", GenJnlLine."Applies-to Doc. No.");
                             //CustLedgEntry.SETRANGE(Open,TRUE);
-                            IF CustLedgEntry.FINDFIRST THEN BEGIN
+                            IF CustLedgEntry.FINDFIRST() THEN BEGIN
                                 CustLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
                                     "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
                                 //TmpGenPostLine.TransferCustLedgEntry(CVLedgEntryBuf,CustLedgEntry,TRUE);
                                 CVLedgEntryBuf.CopyFromCustLedgEntry(CustLedgEntry);
                                 //CVLedgEntryBuf."Amount to Apply" := CustLedgEntry."Remaining Amount";
-                                if not CVLedgEntryBuf.INSERT then
+                                if not CVLedgEntryBuf.INSERT() then
                                     CVLedgEntryBuf.Modify();
                             END;
                         END;
                 END;
 
-            UNTIL GenJnlLine.NEXT = 0;
+            UNTIL GenJnlLine.NEXT() = 0;
     end;
 
     procedure "SalesInvoiceStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR TempVATAmountLine: Record "VAT Amount Line" TEMPORARY)
@@ -1042,7 +977,7 @@ codeunit 50004 "Function Center"
         IF SalesInvHeader.FindFirst() THEN BEGIN
 
             IF SalesInvHeader."Currency Code" = '' THEN
-                Currency.InitRoundingPrecision
+                Currency.InitRoundingPrecision()
             ELSE
                 Currency.GET(SalesInvHeader."Currency Code");
 
@@ -1068,7 +1003,7 @@ codeunit 50004 "Function Center"
                             VATPercentage := SalesInvLine."VAT %"
                         ELSE
                             VATPercentage := -1;
-                UNTIL SalesInvLine.NEXT = 0;
+                UNTIL SalesInvLine.NEXT() = 0;
 
 
             VATAmount := AmountInclVAT - CustAmount;
@@ -1083,7 +1018,7 @@ codeunit 50004 "Function Center"
                 AmountLCY := CustAmount
             ELSE
                 AmountLCY := CurrExchRate.ExchangeAmtFCYToLCY(
-                    WORKDATE, SalesInvHeader."Currency Code", CustAmount, SalesInvHeader."Currency Factor");
+                    WORKDATE(), SalesInvHeader."Currency Code", CustAmount, SalesInvHeader."Currency Factor");
 
 
             ProfitLCY := AmountLCY - CostLCY;
@@ -1096,16 +1031,14 @@ codeunit 50004 "Function Center"
 
             IF Cust."Credit Limit (LCY)" = 0 THEN
                 CreditLimitLCYExpendedPct := 0
-            ELSE BEGIN
+            ELSE
                 IF Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" < 0 THEN
                     CreditLimitLCYExpendedPct := 0
-                ELSE BEGIN
+                ELSE
                     IF Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" > 1 THEN
                         CreditLimitLCYExpendedPct := 10000
                     ELSE
                         CreditLimitLCYExpendedPct := ROUND(Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" * 10000, 1);
-                END;
-            END;
         END;
 
         SalesInvLine.CalcVATAmountLines(SalesInvHeader, TempVATAmountLine);
@@ -1179,7 +1112,7 @@ codeunit 50004 "Function Center"
         SalesCrMemoHeader.SETRANGE("No.", DocumentNo);
         IF SalesCrMemoHeader.FindFirst() THEN BEGIN
             IF SalesCrMemoHeader."Currency Code" = '' THEN
-                Currency.InitRoundingPrecision
+                Currency.InitRoundingPrecision()
             ELSE
                 Currency.GET(SalesCrMemoHeader."Currency Code");
 
@@ -1205,7 +1138,7 @@ codeunit 50004 "Function Center"
                             VATpercentage := SalesCrMemoLine."VAT %"
                         ELSE
                             VATpercentage := -1;
-                UNTIL SalesCrMemoLine.NEXT = 0;
+                UNTIL SalesCrMemoLine.NEXT() = 0;
             VATAmount := AmountInclVAT - CustAmount;
             InvDiscAmount := ROUND(InvDiscAmount, Currency."Amount Rounding Precision");
 
@@ -1219,7 +1152,7 @@ codeunit 50004 "Function Center"
             ELSE
                 AmountLCY :=
                 CurrExchRate.ExchangeAmtFCYToLCY(
-                    WORKDATE, SalesCrMemoHeader."Currency Code", CustAmount, SalesCrMemoHeader."Currency Factor");
+                    WORKDATE(), SalesCrMemoHeader."Currency Code", CustAmount, SalesCrMemoHeader."Currency Factor");
             ProfitLCY := AmountLCY - CostLCY;
             IF AmountLCY <> 0 THEN
                 ProfitPct := ROUND(100 * ProfitLCY / AmountLCY, 0.1);
@@ -1314,7 +1247,7 @@ codeunit 50004 "Function Center"
         IF NOT SalesHeader.GET(DocumentType, DocumentNo) THEN
             EXIT;
 
-        SalesSetup.GET;
+        SalesSetup.GET();
         AllowInvDisc :=
         NOT (SalesSetup."Calc. Inv. Discount" AND "CustInvDiscRecExists"(SalesHeader."Invoice Disc. Code"));
         AllowVATDifference :=
@@ -1413,7 +1346,6 @@ codeunit 50004 "Function Center"
         Cust: Record Customer;
         vendor: Record Vendor;
         Tel: Text[250];
-        fax: Text[250];
         VatRegis: Text[250];
 
     begin
@@ -1494,7 +1426,7 @@ codeunit 50004 "Function Center"
         IF NOT PurchHeader.GET(DocumentType, DocumentNo) THEN
             EXIT;
 
-        PurchSetup.GET;
+        PurchSetup.GET();
         AllowInvDisc :=
         NOT (PurchSetup."Calc. Inv. Discount" AND "VendInvDiscRecExists"(PurchHeader."Invoice Disc. Code"));
         AllowVATDifference :=
@@ -1570,16 +1502,16 @@ codeunit 50004 "Function Center"
 
     begin
         i := 0;
-        SalesCommentLine.RESET;
+        SalesCommentLine.RESET();
         SalesCommentLine.SETRANGE("Document Type", DocumentType);
         SalesCommentLine.SETRANGE("No.", DocumentNo);
         SalesCommentLine.SetRange("Document Line No.", LineNo);
         SalesCommentLine.SETFILTER(Comment, '<>%1', '');
-        IF SalesCommentLine.FINDSET THEN
+        IF SalesCommentLine.FINDSET() THEN
             REPEAT
                 i += 1;
                 SalesComment[i] := SalesCommentLine.Comment;
-            UNTIL SalesCommentLine.NEXT = 0;
+            UNTIL SalesCommentLine.NEXT() = 0;
 
 
     end;
@@ -1590,16 +1522,16 @@ codeunit 50004 "Function Center"
         i: Integer;
     begin
         i := 0;
-        PurchaseCommentLine.RESET;
+        PurchaseCommentLine.RESET();
         PurchaseCommentLine.SETRANGE("Document Type", DocumentType);
         PurchaseCommentLine.SETRANGE("No.", DocumentNo);
         PurchaseCommentLine.SetRange("Document Line No.", LineNo);
         PurchaseCommentLine.SETFILTER(Comment, '<>%1', '');
-        IF PurchaseCommentLine.FINDSET THEN
+        IF PurchaseCommentLine.FINDSET() THEN
             REPEAT
                 i += 1;
                 PurchCommentLine[i] := PurchaseCommentLine.Comment;
-            UNTIL PurchaseCommentLine.NEXT = 0;
+            UNTIL PurchaseCommentLine.NEXT() = 0;
 
     end;
 
@@ -1622,7 +1554,7 @@ codeunit 50004 "Function Center"
                             BEGIN
                                 // if PurchRcptHeader."Head Office" then begin
                                 IF NOT Vend.GET(PurchRcptHeader."Buy-from Vendor No.") THEN
-                                    Vend.INIT;
+                                    Vend.INIT();
                                 Text[1] := PurchRcptHeader."Buy-from Vendor Name" + ' ' + PurchRcptHeader."Buy-from Vendor Name 2";
                                 Text[2] := PurchRcptHeader."Buy-from Address" + ' ';
                                 Text[3] := PurchRcptHeader."Buy-from Address 2" + ' ';
@@ -1633,12 +1565,10 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                                end;
                                 Text[5] := PurchRcptHeader."Buy-from Contact";
 
                                 //end else begin
@@ -1652,10 +1582,9 @@ codeunit 50004 "Function Center"
                                     if PurchRcptHeader."Currency Code" = '' then begin
                                         IF VendBranch."Fax No." <> '' THEN
                                             Text[4] += STRSUBSTNO('แฟกซ์ : %1', VendBranch."Fax No.");
-                                    end else begin
+                                    end else
                                         IF VendBranch."Fax No." <> '' THEN
                                             Text[4] += STRSUBSTNO('Fax. : %1', VendBranch."Fax No.");
-                                    end;
 
                                 end;
                                 Text[9] := PurchRcptHeader."Buy-from Vendor No.";
@@ -1663,7 +1592,7 @@ codeunit 50004 "Function Center"
                         Tab::Invoicing:
                             BEGIN
                                 IF NOT Vend.GET(PurchRcptHeader."Pay-to Vendor No.") THEN
-                                    Vend.INIT;
+                                    Vend.INIT();
                                 Text[1] := PurchRcptHeader."Pay-to Name" + ' ' + PurchRcptHeader."Pay-to Name 2";
                                 Text[2] := PurchRcptHeader."Pay-to Address" + ' ';
                                 Text[3] := PurchRcptHeader."Pay-to Address 2" + ' ';
@@ -1674,19 +1603,17 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                                end;
                                 Text[5] := PurchRcptHeader."Pay-to Contact";
                                 Text[9] := PurchRcptHeader."Pay-to Vendor No.";
                             END;
                         Tab::Shipping:
                             BEGIN
                                 IF NOT Cust.GET(PurchRcptHeader."Sell-to Customer No.") THEN
-                                    Cust.init;
+                                    Cust.init();
                                 Text[1] := PurchRcptHeader."Ship-to Name" + ' ' + PurchRcptHeader."Ship-to Name 2";
                                 Text[2] := PurchRcptHeader."Ship-to Address" + ' ';
                                 Text[3] := PurchRcptHeader."Ship-to Address 2" + ' ';
@@ -1697,12 +1624,10 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := PurchRcptHeader."Ship-to Contact";
 
                             END;
@@ -1720,12 +1645,11 @@ codeunit 50004 "Function Center"
                             Text[10] += ' (สำนักงานใหญ่)'
                         else
                             Text[10] += ' (' + PurchRcptHeader."Branch Code" + ')';
-                    end else begin
+                    end else
                         if PurchRcptHeader."Head Office" then
                             Text[10] += ' (Head Office)'
                         else
                             Text[10] += ' (' + PurchRcptHeader."Branch Code" + ')';
-                    END;
                 END;
             DocumentType::"Return Shipment":
                 BEGIN
@@ -1734,7 +1658,7 @@ codeunit 50004 "Function Center"
                         Tab::General:
                             BEGIN
                                 IF NOT Vend.GET(ReturnShptHeader."Buy-from Vendor No.") THEN
-                                    Vend.INIT;
+                                    Vend.INIT();
                                 Text[1] := ReturnShptHeader."Buy-from Vendor Name" + ' ' + ReturnShptHeader."Buy-from Vendor Name 2";
                                 Text[2] := ReturnShptHeader."Buy-from Address" + ' ';
                                 Text[3] := ReturnShptHeader."Buy-from Address 2" + ' ';
@@ -1745,19 +1669,17 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                                end;
                                 Text[5] := ReturnShptHeader."Buy-from Contact";
                                 Text[9] := ReturnShptHeader."Buy-from Vendor No.";
                             END;
                         Tab::Invoicing:
                             BEGIN
                                 IF NOT Vend.GET(ReturnShptHeader."Pay-to Vendor No.") THEN
-                                    Vend.INIT;
+                                    Vend.INIT();
                                 Text[1] := ReturnShptHeader."Pay-to Name" + ' ' + ReturnShptHeader."Pay-to Name 2";
                                 Text[2] := ReturnShptHeader."Pay-to Address" + ' ';
                                 Text[3] := ReturnShptHeader."Pay-to Address 2" + ' ';
@@ -1768,19 +1690,17 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                                end;
                                 Text[5] := ReturnShptHeader."Pay-to Contact";
                                 Text[9] := ReturnShptHeader."Pay-to Vendor No.";
                             END;
                         Tab::Shipping:
                             BEGIN
                                 IF NOT Cust.GET(ReturnShptHeader."Sell-to Customer No.") THEN
-                                    Cust.init;
+                                    Cust.init();
                                 Text[1] := ReturnShptHeader."Ship-to Name" + ' ' + ReturnShptHeader."Ship-to Name 2";
                                 Text[2] := ReturnShptHeader."Ship-to Address" + ' ';
                                 Text[3] := ReturnShptHeader."Ship-to Address 2" + ' ';
@@ -1791,12 +1711,10 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := ReturnShptHeader."Ship-to Contact";
 
                             END;
@@ -1809,7 +1727,7 @@ codeunit 50004 "Function Center"
                         Tab::General:
                             BEGIN
                                 IF NOT Vend.GET(PurchInvHeader."Buy-from Vendor No.") THEN
-                                    Vend.INIT;
+                                    Vend.INIT();
                                 Text[1] := PurchInvHeader."Buy-from Vendor Name" + ' ' + PurchInvHeader."Buy-from Vendor Name 2";
                                 Text[2] := PurchInvHeader."Buy-from Address" + ' ';
                                 Text[3] := PurchInvHeader."Buy-from Address 2" + ' ';
@@ -1820,19 +1738,17 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                                end;
                                 Text[5] := PurchInvHeader."Buy-from Contact";
                                 Text[9] := PurchInvHeader."Buy-from Vendor No.";
                             END;
                         Tab::Invoicing:
                             BEGIN
                                 IF NOT Vend.GET(PurchInvHeader."Pay-to Vendor No.") THEN
-                                    Vend.INIT;
+                                    Vend.INIT();
                                 Text[1] := PurchInvHeader."Pay-to Name" + ' ' + PurchInvHeader."Pay-to Name 2";
                                 Text[2] := PurchInvHeader."Pay-to Address" + ' ';
                                 Text[3] := PurchInvHeader."Pay-to Address 2" + ' ';
@@ -1843,19 +1759,17 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                                end;
                                 Text[5] := PurchInvHeader."Pay-to Contact";
                                 Text[9] := PurchInvHeader."Pay-to Vendor No.";
                             END;
                         Tab::Shipping:
                             BEGIN
                                 IF NOT Cust.GET(PurchInvHeader."Sell-to Customer No.") THEN
-                                    Cust.init;
+                                    Cust.init();
                                 Text[1] := PurchInvHeader."Ship-to Name" + ' ' + PurchInvHeader."Ship-to Name 2";
                                 Text[2] := PurchInvHeader."Ship-to Address" + ' ';
                                 Text[3] := PurchInvHeader."Ship-to Address 2" + ' ';
@@ -1866,12 +1780,10 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := PurchInvHeader."Ship-to Contact";
 
                             END;
@@ -1884,7 +1796,7 @@ codeunit 50004 "Function Center"
                         Tab::General:
                             BEGIN
                                 IF NOT Vend.GET(PurchCrMemoHeader."Buy-from Vendor No.") THEN
-                                    Vend.INIT;
+                                    Vend.INIT();
                                 Text[1] := PurchCrMemoHeader."Buy-from Vendor Name" + ' ' + PurchCrMemoHeader."Buy-from Vendor Name 2";
                                 Text[2] := PurchCrMemoHeader."Buy-from Address" + ' ';
                                 Text[3] := PurchCrMemoHeader."Buy-from Address 2" + ' ';
@@ -1895,19 +1807,17 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                                end;
                                 Text[5] := PurchCrMemoHeader."Buy-from Contact";
                                 Text[9] := PurchCrMemoHeader."Buy-from Vendor No.";
                             END;
                         Tab::Invoicing:
                             BEGIN
                                 IF NOT Vend.GET(PurchCrMemoHeader."Pay-to Vendor No.") THEN
-                                    Vend.INIT;
+                                    Vend.INIT();
                                 Text[1] := PurchCrMemoHeader."Pay-to Name" + ' ' + PurchCrMemoHeader."Pay-to Name 2";
                                 Text[2] := PurchCrMemoHeader."Pay-to Address" + ' ';
                                 Text[3] := PurchCrMemoHeader."Pay-to Address 2" + ' ';
@@ -1918,19 +1828,17 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
-
-                                end;
                                 Text[5] := PurchCrMemoHeader."Pay-to Contact";
                                 Text[9] := PurchCrMemoHeader."Pay-to Vendor No.";
                             END;
                         Tab::Shipping:
                             BEGIN
                                 IF NOT Cust.GET(PurchCrMemoHeader."Sell-to Customer No.") THEN
-                                    Cust.init;
+                                    Cust.init();
                                 Text[1] := PurchCrMemoHeader."Ship-to Name" + ' ' + PurchCrMemoHeader."Ship-to Name 2";
                                 Text[2] := PurchCrMemoHeader."Ship-to Address" + ' ';
                                 Text[3] := PurchCrMemoHeader."Ship-to Address 2" + ' ';
@@ -1941,12 +1849,10 @@ codeunit 50004 "Function Center"
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Vend."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := PurchCrMemoHeader."Ship-to Contact";
 
                             END;
@@ -1980,7 +1886,7 @@ codeunit 50004 "Function Center"
                             BEGIN
                                 //  if SalesShptHeader."Head Office" then begin
                                 IF NOT Cust.GET(SalesShptHeader."Sell-to Customer No.") THEN
-                                    Cust.INIT;
+                                    Cust.INIT();
                                 Text[1] := SalesShptHeader."Sell-to Customer Name" + ' ' + SalesShptHeader."Sell-to Customer Name 2";
                                 Text[2] := SalesShptHeader."Sell-to Address" + ' ';
                                 Text[3] := SalesShptHeader."Sell-to Address 2" + ' ';
@@ -1991,12 +1897,10 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := SalesShptHeader."Sell-to Contact";
 
                                 if (SalesShptHeader."Branch Code" <> '') AND (NOT SalesShptHeader."Head Office") then begin
@@ -2009,10 +1913,9 @@ codeunit 50004 "Function Center"
                                     if SalesShptHeader."Currency Code" = '' then begin
                                         IF CustBranch."Fax No." <> '' THEN
                                             Text[4] += STRSUBSTNO('แฟกซ์ : %1', CustBranch."Fax No.");
-                                    end else begin
+                                    end else
                                         IF CustBranch."Fax No." <> '' THEN
                                             Text[4] += STRSUBSTNO('Fax. : %1', CustBranch."Fax No.");
-                                    end;
 
                                 end;
 
@@ -2021,7 +1924,7 @@ codeunit 50004 "Function Center"
                         Tab::Invoicing:
                             BEGIN
                                 IF NOT Cust.GET(SalesShptHeader."Bill-to Customer No.") THEN
-                                    Cust.INIT;
+                                    Cust.INIT();
                                 Text[1] := SalesShptHeader."Bill-to Name" + ' ' + SalesShptHeader."Bill-to Name 2";
                                 Text[2] := SalesShptHeader."Bill-to Address" + ' ';
                                 Text[3] := SalesShptHeader."Bill-to Address 2" + ' ';
@@ -2032,19 +1935,17 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := SalesShptHeader."Bill-to Contact";
                                 Text[9] := SalesShptHeader."Bill-to Customer No.";
                             END;
                         Tab::Shipping:
                             BEGIN
                                 IF NOT Shipto.GET(SalesShptHeader."Sell-to Customer No.", SalesShptHeader."Ship-to Code") THEN
-                                    Shipto.INIT;
+                                    Shipto.INIT();
 
                                 Text[1] := SalesShptHeader."Ship-to Name" + ' ' + SalesShptHeader."Ship-to Name 2";
                                 Text[2] := SalesShptHeader."Ship-to Address" + ' ';
@@ -2056,12 +1957,10 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Shipto."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Shipto."Fax No.");
-
-                                end;
                                 Text[5] := SalesShptHeader."Ship-to Contact";
 
                             END;
@@ -2078,12 +1977,11 @@ codeunit 50004 "Function Center"
                             Text[10] += ' (สำนักงานใหญ่)'
                         else
                             Text[10] += ' (' + SalesShptHeader."Branch Code" + ')';
-                    end else begin
+                    end else
                         if SalesShptHeader."Head Office" then
                             Text[10] += ' (Head Office)'
                         else
                             Text[10] += ' (' + SalesShptHeader."Branch Code" + ')';
-                    END;
                 end;
             DocumentType::"Return Receipt":
                 BEGIN
@@ -2092,7 +1990,7 @@ codeunit 50004 "Function Center"
                         Tab::General:
                             BEGIN
                                 IF NOT Cust.GET(ReturnRcptHeader."Sell-to Customer No.") THEN
-                                    Cust.INIT;
+                                    Cust.INIT();
                                 Text[1] := ReturnRcptHeader."Sell-to Customer Name" + ' ' + ReturnRcptHeader."Sell-to Customer Name 2";
                                 Text[2] := ReturnRcptHeader."Sell-to Address" + ' ';
                                 Text[3] := ReturnRcptHeader."Sell-to Address 2" + ' ';
@@ -2103,19 +2001,17 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := ReturnRcptHeader."Sell-to Contact";
                                 Text[9] := ReturnRcptHeader."Sell-to Customer No.";
                             END;
                         Tab::Invoicing:
                             BEGIN
                                 IF NOT Cust.GET(ReturnRcptHeader."Bill-to Customer No.") THEN
-                                    Cust.INIT;
+                                    Cust.INIT();
                                 Text[1] := ReturnRcptHeader."Bill-to Name" + ' ' + ReturnRcptHeader."Bill-to Name 2";
                                 Text[2] := ReturnRcptHeader."Bill-to Address" + ' ';
                                 Text[3] := ReturnRcptHeader."Bill-to Address 2" + ' ';
@@ -2126,19 +2022,17 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := ReturnRcptHeader."Bill-to Contact";
                                 Text[9] := ReturnRcptHeader."Bill-to Customer No.";
                             END;
                         Tab::Shipping:
                             BEGIN
                                 IF NOT Shipto.GET(ReturnRcptHeader."Sell-to Customer No.", ReturnRcptHeader."Ship-to Code") THEN
-                                    Shipto.INIT;
+                                    Shipto.INIT();
 
                                 Text[1] := ReturnRcptHeader."Ship-to Name" + ' ' + ReturnRcptHeader."Ship-to Name 2";
                                 Text[2] := ReturnRcptHeader."Ship-to Address" + ' ';
@@ -2150,12 +2044,10 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Shipto."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Shipto."Fax No.");
-
-                                end;
                                 Text[5] := ReturnRcptHeader."Ship-to Contact";
 
                             END;
@@ -2168,7 +2060,7 @@ codeunit 50004 "Function Center"
                         Tab::General:
                             BEGIN
                                 IF NOT Cust.GET(SalesInvHeader."Sell-to Customer No.") THEN
-                                    Cust.INIT;
+                                    Cust.INIT();
                                 Text[1] := SalesInvHeader."Sell-to Customer Name" + ' ' + SalesInvHeader."Sell-to Customer Name 2";
                                 Text[2] := SalesInvHeader."Sell-to Address" + ' ';
                                 Text[3] := SalesInvHeader."Sell-to Address 2" + ' ';
@@ -2179,19 +2071,17 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := SalesInvHeader."Sell-to Contact";
                                 Text[9] := SalesInvHeader."Sell-to Customer No.";
                             END;
                         Tab::Invoicing:
                             BEGIN
                                 IF NOT Cust.GET(SalesInvHeader."Bill-to Customer No.") THEN
-                                    Cust.INIT;
+                                    Cust.INIT();
                                 Text[1] := SalesInvHeader."Bill-to Name" + ' ' + SalesInvHeader."Bill-to Name 2";
                                 Text[2] := SalesInvHeader."Bill-to Address" + ' ';
                                 Text[3] := SalesInvHeader."Bill-to Address 2" + ' ';
@@ -2202,19 +2092,17 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := SalesInvHeader."Bill-to Contact";
                                 Text[9] := SalesInvHeader."Bill-to Customer No.";
                             END;
                         Tab::Shipping:
                             BEGIN
                                 IF NOT Shipto.GET(SalesInvHeader."Sell-to Customer No.", SalesInvHeader."Ship-to Code") THEN
-                                    Shipto.INIT;
+                                    Shipto.INIT();
 
                                 Text[1] := SalesInvHeader."Ship-to Name" + ' ' + SalesInvHeader."Ship-to Name 2";
                                 Text[2] := SalesInvHeader."Ship-to Address" + ' ';
@@ -2226,12 +2114,10 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Shipto."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Shipto."Fax No.");
-
-                                end;
                                 Text[5] := SalesInvHeader."Ship-to Contact";
 
                             END;
@@ -2244,7 +2130,7 @@ codeunit 50004 "Function Center"
                         Tab::General:
                             BEGIN
                                 IF NOT Cust.GET(SalesCrMemoHeader."Sell-to Customer No.") THEN
-                                    Cust.INIT;
+                                    Cust.INIT();
                                 Text[1] := SalesCrMemoHeader."Sell-to Customer Name" + ' ' + SalesCrMemoHeader."Sell-to Customer Name 2";
                                 Text[2] := SalesCrMemoHeader."Sell-to Address" + ' ';
                                 Text[3] := SalesCrMemoHeader."Sell-to Address 2" + ' ';
@@ -2255,19 +2141,17 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := SalesCrMemoHeader."Sell-to Contact";
                                 Text[9] := SalesCrMemoHeader."Sell-to Customer No.";
                             END;
                         Tab::Invoicing:
                             BEGIN
                                 IF NOT Cust.GET(SalesCrMemoHeader."Bill-to Customer No.") THEN
-                                    Cust.INIT;
+                                    Cust.INIT();
                                 Text[1] := SalesCrMemoHeader."Bill-to Name" + ' ' + SalesCrMemoHeader."Bill-to Name 2";
                                 Text[2] := SalesCrMemoHeader."Bill-to Address" + ' ';
                                 Text[3] := SalesCrMemoHeader."Bill-to Address 2" + ' ';
@@ -2278,19 +2162,17 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
-
-                                end;
                                 Text[5] := SalesCrMemoHeader."Bill-to Contact";
                                 Text[9] := SalesCrMemoHeader."Bill-to Customer No.";
                             END;
                         Tab::Shipping:
                             BEGIN
                                 IF NOT Shipto.GET(SalesCrMemoHeader."Sell-to Customer No.", SalesCrMemoHeader."Ship-to Code") THEN
-                                    Shipto.INIT;
+                                    Shipto.INIT();
 
                                 Text[1] := SalesCrMemoHeader."Ship-to Name" + ' ' + SalesCrMemoHeader."Ship-to Name 2";
                                 Text[2] := SalesCrMemoHeader."Ship-to Address" + ' ';
@@ -2302,12 +2184,10 @@ codeunit 50004 "Function Center"
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('แฟกซ์ : %1', Shipto."Fax No.");
 
-                                end else begin
+                                end else
 
                                     IF Cust."Fax No." <> '' THEN
                                         Text[4] += STRSUBSTNO('Fax. : %1', Shipto."Fax No.");
-
-                                end;
                                 Text[5] := SalesCrMemoHeader."Ship-to Contact";
 
                             END;
@@ -2331,11 +2211,11 @@ codeunit 50004 "Function Center"
         LineNO: Integer;
     begin
         Clear(MyStorage);
-        ApprovalEntry.reset;
+        ApprovalEntry.reset();
         ApprovalEntry.SetRange("Document Type", DocumentType);
         ApprovalEntry.SetRange("Document No.", DocNo);
         if ApprovalEntry.FindFirst() then begin
-            UserSetup.reset;
+            UserSetup.reset();
             UserSetup.SetRange("User ID", ApprovalEntry."Sender ID");
             if UserSetup.FindFirst() then begin
                 UserSetup.CalcFields("Signature");
@@ -2351,15 +2231,15 @@ codeunit 50004 "Function Center"
             end;
         end;
         LineNO := 1;
-        ApprovalEntry.reset;
+        ApprovalEntry.reset();
         ApprovalEntry.SetCurrentKey("Entry No.");
         ApprovalEntry.SetRange("Document Type", DocumentType);
         ApprovalEntry.SetRange("Document No.", DocNo);
         ApprovalEntry.SetFilter("Pending Approvals", '<>%1', 0);
         ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-        if ApprovalEntry.FindFirst() then begin
+        if ApprovalEntry.FindFirst() then
             repeat
-                UserSetup.reset;
+                UserSetup.reset();
                 UserSetup.SetRange("User ID", ApprovalEntry."Approver ID");
                 if UserSetup.FindFirst() then begin
                     UserSetup.CalcFields("Signature");
@@ -2373,18 +2253,17 @@ codeunit 50004 "Function Center"
                         MyStorage[LineNO].Insert();
                     end;
                 end;
-            until ApprovalEntry.next = 0;
-        end;
+            until ApprovalEntry.next() = 0;
 
         LineNO := 0;
-        ApprovalEntry.reset;
+        ApprovalEntry.reset();
         ApprovalEntry.SetCurrentKey("Entry No.");
         ApprovalEntry.SetRange("Document Type", DocumentType);
         ApprovalEntry.SetRange("Document No.", DocNo);
         ApprovalEntry.SetFilter("Pending Approvals", '%1', 0);
         ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
         if ApprovalEntry.FindLast() then begin
-            UserSetup.reset;
+            UserSetup.reset();
             UserSetup.SetRange("User ID", ApprovalEntry."Approver ID");
             if UserSetup.FindFirst() then begin
                 UserSetup.CalcFields("Signature");
@@ -2474,20 +2353,19 @@ codeunit 50004 "Function Center"
     begin
         DimMgt.GetDimensionSet(DimSetEntry, DimensionSetID);
         IF NOT DimSetEntry.GET(DimensionSetID, DimCode) then begin
-            DimSetEntry.init;
+            DimSetEntry.init();
             DimSetEntry."Dimension Set ID" := DimensionSetID;
             DimSetEntry.validate("Dimension Code", DimCode);
             DimSetEntry.Insert(true);
             DimSetEntry.Validate("Dimension Value Code", Dimvalue);
             DimSetEntry.Modify();
-        end else begin
+        end else
             if DimCode <> '' then begin
                 DimSetEntry.Validate("Dimension Value Code", Dimvalue);
                 DimSetEntry.Modify();
             end else
                 DimSetEntry.Delete();
-        end;
-        DimSetEntry.reset;
+        DimSetEntry.reset();
         DimensionSetID := DimSetEntry.GetDimensionSetID(DimSetEntry);
 
     end;
@@ -2497,21 +2375,19 @@ codeunit 50004 "Function Center"
         DimensionDefault: record "Default Dimension";
     begin
         if NOT DimensionDefault.GET(TableID, MyNo, DimCode) then begin
-            DimensionDefault.init;
+            DimensionDefault.init();
             DimensionDefault.validate("Table ID", TableID);
             DimensionDefault.Validate("No.", MyNo);
             DimensionDefault.Validate("Dimension Code", DimCode);
             DimensionDefault.Insert(true);
             DimensionDefault.Validate("Dimension Value Code", DimValue);
             DimensionDefault.Modify();
-        end else begin
+        end else
             if DimValue <> '' then begin
                 DimensionDefault.Validate("Dimension Value Code", DimValue);
                 DimensionDefault.Modify();
-            end else begin
+            end else
                 DimensionDefault.Delete();
-            end;
-        end;
     end;
 
     procedure "GetMonthNameEng"(MonthNumber: Integer): Text[50];
@@ -2581,10 +2457,9 @@ codeunit 50004 "Function Center"
     procedure "GetCustBranchDate"(PCustNo: Code[20]; PCustBranch: Code[20]; var PCustInfo: array[10] of Text[250])
     var
         LRecCust: Record Customer;
-        LRecCustBranch: Record "Customer & Vendor Branch";
     begin
         Clear(LRecCust);
-        LRecCust.reset;
+        LRecCust.reset();
         if LRecCust.Get(PCustNo) then begin
             PCustInfo[1] := LRecCust."No.";
             PCustInfo[2] := LRecCust.Name + LRecCust."Name 2";
@@ -2606,14 +2481,14 @@ codeunit 50004 "Function Center"
 
         BillingHeader.TESTFIELD("Bill/Pay-to Cust/Vend No.");
 
-        BillingLine.RESET;
+        BillingLine.RESET();
         BillingLine.SETRANGE("Document Type", BillingHeader."Document Type");
         BillingLine.SETRANGE("Document No.", BillingHeader."No.");
         IF NOT BillingLine.FindFirst() THEN
             ERROR(Text001, BillingHeader."Document Type", BillingHeader."No.");
 
         BillingHeader."Status" := BillingHeader."Status"::Released;
-        BillingHeader.MODIFY;
+        BillingHeader.MODIFY();
     end;
 
     procedure "ReopenBilling"(BillingHeader: Record "Billing Receipt Header")
@@ -2622,7 +2497,7 @@ codeunit 50004 "Function Center"
         IF BillingHeader."Status" = BillingHeader."Status"::Open THEN
             EXIT;
         BillingHeader."Status" := BillingHeader."Status"::Open;
-        BillingHeader.MODIFY;
+        BillingHeader.MODIFY();
         //   END;
     end;
 
@@ -2634,7 +2509,6 @@ codeunit 50004 "Function Center"
         OnesText: array[20] of text[50];
         TensText: array[10] of Text[50];
         ExponentText: array[5] of text[50];
-        TempCurrencyPoint: array[20] of Text[20];
         TempCurrencyPointInterger: array[20] of Integer;
 
 }

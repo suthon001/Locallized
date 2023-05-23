@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenCustLedger Entry (ID 80036) extends Record Cust. Ledger Entry.
+/// </summary>
 tableextension 80036 "ExtenCustLedger Entry" extends "Cust. Ledger Entry"
 {
     fields

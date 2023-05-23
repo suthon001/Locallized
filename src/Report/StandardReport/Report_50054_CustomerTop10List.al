@@ -6,6 +6,7 @@ report 50054 "Customer - Top 10 List (new)"
     Caption = 'Customer - Top 10 List';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -56,7 +57,7 @@ report 50054 "Customer - Top 10 List (new)"
             column(SortingCustomersCustDateFilter; StrSubstNo(Text001, CustDateFilter))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(RankedAccordingShowType; StrSubstNo(Text002, SelectStr(ShowType + 1, Text004)))
@@ -118,7 +119,7 @@ report 50054 "Customer - Top 10 List (new)"
                     if not CustAmount.Find('-') then
                         CurrReport.Break();
                 end else
-                    if CustAmount.Next = 0 then
+                    if CustAmount.Next() = 0 then
                         CurrReport.Break();
                 CustAmount."Amount (LCY)" := -CustAmount."Amount (LCY)";
                 Customer.Get(CustAmount."Customer No.");
@@ -130,7 +131,7 @@ report 50054 "Customer - Top 10 List (new)"
 
             trigger OnPreDataItem()
             begin
-                Window.Close;
+                Window.Close();
             end;
         }
     }

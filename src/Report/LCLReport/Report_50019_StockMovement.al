@@ -182,7 +182,7 @@ report 50019 "Stock Movement"
     var
         POS: Integer;
     begin
-        CompanyInfo.GET;
+        CompanyInfo.GET();
         CompanyInfo.CALCFIELDS(Picture);
         var_OpeningBalance2 := 0;
 
@@ -206,7 +206,6 @@ report 50019 "Stock Movement"
     end;
 
     var
-        Item2: Record Item;
         var_Pos: Decimal;
         var_Neg: Decimal;
         var_OpeningBalance: Decimal;
@@ -215,9 +214,6 @@ report 50019 "Stock Movement"
         var_TotalPos: Decimal;
         var_TotalNeg: Decimal;
         var_ItemDateFilter: Text[60];
-        var_MinRange: Date;
-        var_MaxRange: Date;
-        var_loc: Text[30];
         LastFieldNo: Integer;
         CompanyInfo: Record "Company Information";
         var_ItemNo: Code[200];
@@ -227,9 +223,6 @@ report 50019 "Stock Movement"
         var_ItemLedLocationCode: Code[10];
         var_ItemLedEntryType: Text;
         _USERID: Text[100];
-        LotNoInfo: Record 6505;
-        ExpiredDate: Date;
         ItemFilter: Text;
-        ItemLedgEntryFilter: Text[1024];
 }
 

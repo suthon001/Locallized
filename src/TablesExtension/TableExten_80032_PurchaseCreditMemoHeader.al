@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension Purchase Cr. Memo Header (ID 80032) extends Record Purch. Cr. Memo Hdr..
+/// </summary>
 tableextension 80032 "Purchase Cr. Memo Header" extends "Purch. Cr. Memo Hdr."
 {
     fields
@@ -22,7 +25,7 @@ tableextension 80032 "Purchase Cr. Memo Header" extends "Purch. Cr. Memo Hdr."
             DataClassification = CustomerContent;
         }
 
-        field(80003; "Create By"; Code[30])
+        field(80003; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;

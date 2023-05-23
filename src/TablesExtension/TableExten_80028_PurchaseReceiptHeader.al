@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension Purchase Rcpt. Header (ID 80028) extends Record Purch. Rcpt. Header.
+/// </summary>
 tableextension 80028 "Purchase Rcpt. Header" extends "Purch. Rcpt. Header"
 {
     fields
@@ -21,7 +24,7 @@ tableextension 80028 "Purchase Rcpt. Header" extends "Purch. Rcpt. Header"
             DataClassification = CustomerContent;
         }
 
-        field(80003; "Create By"; Code[30])
+        field(80003; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;

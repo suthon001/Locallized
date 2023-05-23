@@ -66,28 +66,26 @@ report 50042 "Fixed Asset Write off"
                 vgAcqDate := 0D;
 
                 IF NOT FADeprBook.GET("No.", DeprBookCode) THEN
-                    CurrReport.SKIP
-                ELSE BEGIN
+                    CurrReport.SKIP()
+                ELSE
                     IF (FADeprBook."Disposal Date" = 0D) OR ((FADeprBook."Disposal Date" < vgStartDateFilter) OR (FADeprBook."Disposal Date" > vgEndDateFilter)) THEN
-                        CurrReport.SKIP
+                        CurrReport.SKIP()
                     ELSE
                         vgWriteOffDate := FADeprBook."Disposal Date";
-                END;
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("Document Type", '%1', FALedgerEntry."Document Type"::Invoice);
-                IF FALedgerEntry.FINDFIRST THEN BEGIN
-                    CurrReport.SKIP;
-                END;
+                IF FALedgerEntry.FINDFIRST() THEN
+                    CurrReport.SKIP();
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("FA Posting Type", '%1', FALedgerEntry."FA Posting Type"::"Acquisition Cost");
                 FALedgerEntry.SETFILTER("FA Posting Category", '%1', FALedgerEntry."FA Posting Category"::" ");
-                IF FALedgerEntry.FINDFIRST THEN BEGIN
+                IF FALedgerEntry.FINDFIRST() THEN BEGIN
                     vgAcqDate := FALedgerEntry."Posting Date";
                     FALedgerEntry.CalcSums(Amount);
                     vgAcqCost := FALedgerEntry.Amount;
@@ -95,14 +93,14 @@ report 50042 "Fixed Asset Write off"
                 END;
 
                 IF NOT FAPostingGroup.GET(FADeprBook."FA Posting Group") THEN
-                    FAPostingGroup.INIT;
+                    FAPostingGroup.INIT();
 
 
                 vgFALocationName := CodeUnitFunction."GetNameFALocation"("FA Location Code");
                 vgFAClassName := CodeUnitFunction."GetNameFAClass"("FA Class Code");
                 vgFASubClassName := CodeUnitFunction."GetNameFASubClass"("FA Subclass Code");
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("Part of Book Value", '%1', TRUE);
@@ -114,7 +112,7 @@ report 50042 "Fixed Asset Write off"
 
                 END;
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("Part of Book Value", '%1', TRUE);
@@ -154,10 +152,14 @@ report 50042 "Fixed Asset Write off"
                     field(vgStartDateFilter; vgStartDateFilter)
                     {
                         Caption = 'Start Date';
+                        ToolTip = 'Specifies the value of the Start Date field.';
+                        ApplicationArea = All;
                     }
                     field(vgEndDateFilter; vgEndDateFilter)
                     {
                         Caption = 'End Date';
+                        ToolTip = 'Specifies the value of the End Date field.';
+                        ApplicationArea = All;
                     }
                 }
             }
@@ -170,7 +172,7 @@ report 50042 "Fixed Asset Write off"
 
     trigger OnPreReport()
     begin
-        CompanyInformation.GET;
+        CompanyInformation.GET();
         vgGetFilters := "Fixed Asset".GETFILTERS;
     end;
 

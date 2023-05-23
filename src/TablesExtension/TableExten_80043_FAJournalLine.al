@@ -1,8 +1,11 @@
+/// <summary>
+/// TableExtension FAJournalLine (ID 80043) extends Record FA Journal Line.
+/// </summary>
 tableextension 80043 "FAJournalLine" extends "FA Journal Line"
 {
     fields
     {
-        field(80000; "Document No. Series"; code[10])
+        field(80000; "Document No. Series"; code[20])
         {
             Caption = 'Document No. Series';
             DataClassification = CustomerContent;

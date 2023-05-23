@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenSales Invoice Line (ID 80020) extends Record Sales Invoice Line.
+/// </summary>
 tableextension 80020 "ExtenSales Invoice Line" extends "Sales Invoice Line"
 {
     fields
@@ -32,11 +35,13 @@ tableextension 80020 "ExtenSales Invoice Line" extends "Sales Invoice Line"
         {
             Editable = false;
             Caption = 'Ref. SQ No.';
+            DataClassification = CustomerContent;
         }
         field(80005; "Ref. SQ Line No."; Integer)
         {
             Editable = false;
             Caption = 'Ref. SQ Line No.';
+            DataClassification = CustomerContent;
         }
     }
 }

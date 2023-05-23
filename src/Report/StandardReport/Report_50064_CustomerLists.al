@@ -5,13 +5,14 @@ report 50064 "Customer - List (new)"
     // ApplicationArea = Basic, Suite;
     Caption = 'Customer List';
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
         dataitem(Customer; Customer)
         {
             RequestFilterFields = "No.", "Search Name", "Customer Posting Group";
-            column(COMPANYNAME; COMPANYPROPERTY.DisplayName)
+            column(COMPANYNAME; COMPANYPROPERTY.DisplayName())
             {
             }
             column(Customer_TABLECAPTION__________CustFilter; TableCaption + ': ' + CustFilter)

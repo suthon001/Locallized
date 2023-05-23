@@ -5,6 +5,7 @@ report 50060 "Aged Accounts Payable (new)"
     //ApplicationArea = Basic, Suite;
     Caption = 'Aged Accounts Payable';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -155,14 +156,14 @@ report 50060 "Aged Accounts Payable (new)"
                     if VendorLedgEntry.FindSet(false, false) then
                         repeat
                             InsertTemp(VendorLedgEntry);
-                        until VendorLedgEntry.Next = 0;
+                        until VendorLedgEntry.Next() = 0;
 
                     if "Closed by Entry No." <> 0 then begin
                         VendorLedgEntry.SetRange("Closed by Entry No.", "Closed by Entry No.");
                         if VendorLedgEntry.FindSet(false, false) then
                             repeat
                                 InsertTemp(VendorLedgEntry);
-                            until VendorLedgEntry.Next = 0;
+                            until VendorLedgEntry.Next() = 0;
                     end;
 
                     VendorLedgEntry.Reset();
@@ -172,7 +173,7 @@ report 50060 "Aged Accounts Payable (new)"
                     if VendorLedgEntry.FindSet(false, false) then
                         repeat
                             InsertTemp(VendorLedgEntry);
-                        until VendorLedgEntry.Next = 0;
+                        until VendorLedgEntry.Next() = 0;
                     CurrReport.Skip();
                 end;
 
@@ -319,7 +320,7 @@ report 50060 "Aged Accounts Payable (new)"
                             if not TempVendorLedgEntry.FindSet(false, false) then
                                 CurrReport.Break();
                         end else
-                            if TempVendorLedgEntry.Next = 0 then
+                            if TempVendorLedgEntry.Next() = 0 then
                                 CurrReport.Break();
 
                         VendorLedgEntryEndingDate := TempVendorLedgEntry;
@@ -330,7 +331,7 @@ report 50060 "Aged Accounts Payable (new)"
                                     DetailedVendorLedgerEntry."Entry Type"::"Initial Entry") and
                                    (VendorLedgEntryEndingDate."Posting Date" > EndingDate) and
                                    (AgingBy <> AgingBy::"Posting Date")
-                                then begin
+                                then
                                     if VendorLedgEntryEndingDate."Document Date" <= EndingDate then
                                         DetailedVendorLedgerEntry."Posting Date" :=
                                           VendorLedgEntryEndingDate."Document Date"
@@ -339,8 +340,7 @@ report 50060 "Aged Accounts Payable (new)"
                                            (AgingBy = AgingBy::"Due Date")
                                         then
                                             DetailedVendorLedgerEntry."Posting Date" :=
-                                              VendorLedgEntryEndingDate."Due Date"
-                                end;
+                                              VendorLedgEntryEndingDate."Due Date";
 
                                 if (DetailedVendorLedgerEntry."Posting Date" <= EndingDate) or
                                    (TempVendorLedgEntry.Open and
@@ -375,7 +375,7 @@ report 50060 "Aged Accounts Payable (new)"
                                           VendorLedgEntryEndingDate."Remaining Amt. (LCY)" + DetailedVendorLedgerEntry."Amount (LCY)";
                                     end;
                                 end;
-                            until DetailedVendorLedgerEntry.Next = 0;
+                            until DetailedVendorLedgerEntry.Next() = 0;
 
                         if UseExternalDocNo then
                             DocumentNo := VendorLedgEntryEndingDate."External Document No."
@@ -414,7 +414,7 @@ report 50060 "Aged Accounts Payable (new)"
                     trigger OnPostDataItem()
                     begin
                         if not PrintAmountInLCY then
-                            UpdateCurrencyTotals;
+                            UpdateCurrencyTotals();
                     end;
 
                     trigger OnPreDataItem()
@@ -432,7 +432,7 @@ report 50060 "Aged Accounts Payable (new)"
                         if not TempCurrency.FindSet(false, false) then
                             CurrReport.Break();
                     end else
-                        if TempCurrency.Next = 0 then
+                        if TempCurrency.Next() = 0 then
                             CurrReport.Break();
 
                     if TempCurrency.Code <> '' then
@@ -521,7 +521,7 @@ report 50060 "Aged Accounts Payable (new)"
                     if not TempCurrency2.FindSet(false, false) then
                         CurrReport.Break();
                 end else
-                    if TempCurrency2.Next = 0 then
+                    if TempCurrency2.Next() = 0 then
                         CurrReport.Break();
 
                 Clear(AgedVendorLedgEntry);
@@ -533,7 +533,7 @@ report 50060 "Aged Accounts Payable (new)"
                               TempCurrencyAmount.Amount
                         else
                             AgedVendorLedgEntry[6]."Remaining Amount" := TempCurrencyAmount.Amount;
-                    until TempCurrencyAmount.Next = 0;
+                    until TempCurrencyAmount.Next() = 0;
             end;
 
             trigger OnPreDataItem()
@@ -615,7 +615,7 @@ report 50060 "Aged Accounts Payable (new)"
         trigger OnOpenPage()
         begin
             if EndingDate = 0D then
-                EndingDate := WorkDate;
+                EndingDate := WorkDate();
             if Format(PeriodLength) = '' then
                 Evaluate(PeriodLength, '<1M>');
         end;
@@ -633,11 +633,11 @@ report 50060 "Aged Accounts Payable (new)"
 
         GLSetup.Get();
 
-        CalcDates;
-        CreateHeadings;
+        CalcDates();
+        CreateHeadings();
 
         TodayFormatted := TypeHelper.GetFormattedCurrentDateTimeInUserTimeZone('f');
-        CompanyDisplayName := COMPANYPROPERTY.DisplayName;
+        CompanyDisplayName := COMPANYPROPERTY.DisplayName();
 
         if UseExternalDocNo then
             DocNoCaption := ExternalDocumentNoCaptionLbl
@@ -759,28 +759,26 @@ report 50060 "Aged Accounts Payable (new)"
     var
         Currency: Record Currency;
     begin
-        with TempVendorLedgEntry do begin
-            if Get(VendorLedgEntry."Entry No.") then
-                exit;
-            TempVendorLedgEntry := VendorLedgEntry;
-            Insert;
-            if PrintAmountInLCY then begin
-                Clear(TempCurrency);
-                TempCurrency."Amount Rounding Precision" := GLSetup."Amount Rounding Precision";
-                if TempCurrency.Insert() then;
-                exit;
-            end;
-            if TempCurrency.Get("Currency Code") then
-                exit;
-            if "Currency Code" <> '' then
-                Currency.Get("Currency Code")
-            else begin
-                Clear(Currency);
-                Currency."Amount Rounding Precision" := GLSetup."Amount Rounding Precision";
-            end;
-            TempCurrency := Currency;
-            TempCurrency.Insert();
+        if TempVendorLedgEntry.Get(VendorLedgEntry."Entry No.") then
+            exit;
+        TempVendorLedgEntry := VendorLedgEntry;
+        TempVendorLedgEntry.Insert();
+        if PrintAmountInLCY then begin
+            Clear(TempCurrency);
+            TempCurrency."Amount Rounding Precision" := GLSetup."Amount Rounding Precision";
+            if TempCurrency.Insert() then;
+            exit;
         end;
+        if TempCurrency.Get(TempVendorLedgEntry."Currency Code") then
+            exit;
+        if TempVendorLedgEntry."Currency Code" <> '' then
+            Currency.Get(TempVendorLedgEntry."Currency Code")
+        else begin
+            Clear(Currency);
+            Currency."Amount Rounding Precision" := GLSetup."Amount Rounding Precision";
+        end;
+        TempCurrency := Currency;
+        TempCurrency.Insert();
     end;
 
     local procedure GetPeriodIndex(Date: Date): Integer
@@ -798,31 +796,29 @@ report 50060 "Aged Accounts Payable (new)"
     begin
         TempCurrency2.Code := CurrencyCode;
         if TempCurrency2.Insert() then;
-        with TempCurrencyAmount do begin
-            for i := 1 to ArrayLen(TotalVendorLedgEntry) do begin
-                "Currency Code" := CurrencyCode;
-                Date := PeriodStartDate[i];
-                if Find then begin
-                    Amount := Amount + TotalVendorLedgEntry[i]."Remaining Amount";
-                    Modify;
-                end else begin
-                    "Currency Code" := CurrencyCode;
-                    Date := PeriodStartDate[i];
-                    Amount := TotalVendorLedgEntry[i]."Remaining Amount";
-                    Insert;
-                end;
-            end;
-            "Currency Code" := CurrencyCode;
-            Date := DMY2Date(31, 12, 9999);
-            if Find then begin
-                Amount := Amount + TotalVendorLedgEntry[1].Amount;
-                Modify;
+        for i := 1 to ArrayLen(TotalVendorLedgEntry) do begin
+            TempCurrencyAmount."Currency Code" := CurrencyCode;
+            TempCurrencyAmount.Date := PeriodStartDate[i];
+            if TempCurrencyAmount.Find() then begin
+                TempCurrencyAmount.Amount := TempCurrencyAmount.Amount + TotalVendorLedgEntry[i]."Remaining Amount";
+                TempCurrencyAmount.Modify();
             end else begin
-                "Currency Code" := CurrencyCode;
-                Date := DMY2Date(31, 12, 9999);
-                Amount := TotalVendorLedgEntry[1].Amount;
-                Insert;
+                TempCurrencyAmount."Currency Code" := CurrencyCode;
+                TempCurrencyAmount.Date := PeriodStartDate[i];
+                TempCurrencyAmount.Amount := TotalVendorLedgEntry[i]."Remaining Amount";
+                TempCurrencyAmount.Insert();
             end;
+        end;
+        TempCurrencyAmount."Currency Code" := CurrencyCode;
+        TempCurrencyAmount.Date := DMY2Date(31, 12, 9999);
+        if TempCurrencyAmount.Find() then begin
+            TempCurrencyAmount.Amount := TempCurrencyAmount.Amount + TotalVendorLedgEntry[1].Amount;
+            TempCurrencyAmount.Modify();
+        end else begin
+            TempCurrencyAmount."Currency Code" := CurrencyCode;
+            TempCurrencyAmount.Date := DMY2Date(31, 12, 9999);
+            TempCurrencyAmount.Amount := TotalVendorLedgEntry[1].Amount;
+            TempCurrencyAmount.Insert();
         end;
     end;
 

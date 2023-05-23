@@ -8,11 +8,13 @@ pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
             field("External Document No."; rec."External Document No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the External Document No. field.';
             }
             field("Require Screen Detail"; Rec."Require Screen Detail")
             {
                 ApplicationArea = all;
                 Caption = 'Require Screen Detail';
+                ToolTip = 'Specifies the value of the Require Screen Detail field.';
             }
         }
     }
@@ -29,15 +31,16 @@ pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Posted Voucher action.';
                 trigger OnAction()
                 var
                     PostedVoucher: Report "Posted Voucher";
                     PostedGenLine: Record "Posted Gen. Journal Line";
                     GLEntry: Record "G/L Entry";
                 begin
-                    PostedGenLine.reset;
+                    PostedGenLine.reset();
                     PostedGenLine.copy(rec);
-                    GLEntry.reset;
+                    GLEntry.reset();
                     GLEntry.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GLEntry.SetRange("Document No.", rec."Document No.");
                     GLEntry.SetRange("Posting Date", rec."Posting Date");
@@ -59,6 +62,7 @@ pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
                 Promoted = true;
                 PromotedCategory = Category5;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Show Details action.';
                 trigger OnAction()
                 var
                     ShowDetailCheque: Page "Posted ShowDetail Cheque";
@@ -75,7 +79,7 @@ pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
                     CLEAR(ShowDetailCheque);
                     CLEAR(WHTCertificates);
                     if Rec."Require Screen Detail" IN [Rec."Require Screen Detail"::VAT, Rec."Require Screen Detail"::CHEQUE] then begin
-                        GenLineDetail.reset;
+                        GenLineDetail.reset();
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
@@ -89,14 +93,14 @@ pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
                                 ShowDetailVAT.RunModal();
                                 CLEAR(ShowDetailVAT);
                             end;
-                    end else begin
+                    end else
                         if Rec."Require Screen Detail" = Rec."Require Screen Detail"::WHT then begin
                             if rec."Template Source Type" = rec."Template Source Type"::"Cash Receipts" then begin
                                 ShowDetailWHT.SetTableView(GenLineDetail);
                                 ShowDetailWHT.RunModal();
                                 Clear(ShowDetailWHT);
                             end else begin
-                                WHTCertificate.reset;
+                                WHTCertificate.reset();
                                 WHTCertificate.SetRange("WHT No.", Rec."WHT Document No.");
                                 WHTCertificate.SetRange("Posted", true);
                                 WHTCertificates.SetTableView(WHTCertificate);
@@ -106,7 +110,6 @@ pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
                             end;
                         end else
                             MESSAGE('Nothing to Show Detail');
-                    end;
                 end;
             }
 

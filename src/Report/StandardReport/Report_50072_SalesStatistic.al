@@ -7,13 +7,14 @@ report 50072 "Sales Statistics (new)"
     PreviewMode = PrintLayout;
     UsageCategory = ReportsAndAnalysis;
     DataAccessIntent = ReadOnly;
+    ApplicationArea = All;
 
     dataset
     {
         dataitem(Customer; Customer)
         {
             RequestFilterFields = "No.", "Search Name", "Customer Posting Group", "Currency Code";
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(CustTableCaptCustFilter; TableCaption + ': ' + CustFilter)
@@ -418,7 +419,7 @@ report 50072 "Sales Statistics (new)"
         trigger OnOpenPage()
         begin
             if PeriodStartDate[2] = 0D then
-                PeriodStartDate[2] := WorkDate;
+                PeriodStartDate[2] := WorkDate();
             if Format(PeriodLength) = '' then
                 Evaluate(PeriodLength, '<1M>');
         end;

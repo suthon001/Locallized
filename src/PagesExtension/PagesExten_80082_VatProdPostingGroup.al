@@ -8,6 +8,7 @@ pageextension 80082 "Product Posting Groups" extends "VAT Product Posting Groups
             {
                 ApplicationArea = all;
                 Caption = 'Direct VAT';
+                ToolTip = 'Specifies the value of the Direct VAT field.';
             }
 
         }

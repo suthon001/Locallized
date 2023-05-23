@@ -4,6 +4,7 @@
 table 50005 "Tax Report Line"
 {
     Caption = 'Tax Report Line';
+    DataClassification = CustomerContent;
 
     fields
     {

@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenSalesCr.MemoHeader (ID 80021) extends Record Sales Cr.Memo Header.
+/// </summary>
 tableextension 80021 "ExtenSalesCr.MemoHeader" extends "Sales Cr.Memo Header"
 {
     fields
@@ -39,7 +42,7 @@ tableextension 80021 "ExtenSalesCr.MemoHeader" extends "Sales Cr.Memo Header"
             DataClassification = CustomerContent;
         }
 
-        field(80006; "Create By"; Code[30])
+        field(80006; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
@@ -51,6 +54,13 @@ tableextension 80021 "ExtenSalesCr.MemoHeader" extends "Sales Cr.Memo Header"
             DataClassification = SystemMetadata;
             Editable = false;
         }
+        field(95666; "Applies-to ID"; code[50])
+        {
+            Caption = 'Applies-to ID';
+            DataClassification = SystemMetadata;
+            Editable = false;
+        }
+
 
     }
 }

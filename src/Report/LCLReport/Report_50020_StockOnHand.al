@@ -64,13 +64,13 @@ report 50020 "Stock On Hand"
             begin
 
 
-                ItemMo.RESET;
+                ItemMo.RESET();
                 ItemMo.SETFILTER("No.", '%1', "Item No.");
                 IF NOT ItemMo.FIND('-') THEN
                     CLEAR(ItemMo);
 
 
-                "Item Mo".RESET;
+                "Item Mo".RESET();
                 "Item Mo".SETFILTER("No.", "Item No.");
                 IF "Item Ledger Entry".GETFILTER("Location Code") <> '' THEN
                     "Item Mo".SETFILTER("Location Filter", "Item Ledger Entry".GETFILTER("Location Code"));
@@ -107,11 +107,13 @@ report 50020 "Stock On Hand"
                 {
                     Caption = 'Ending Date';
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Ending Date field.';
                 }
                 field("Print Zero Stock"; var_ZeroStock)
                 {
                     Caption = 'Print Zero Stock';
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Print Zero Stock field.';
                 }
             }
         }
@@ -130,12 +132,12 @@ report 50020 "Stock On Hand"
     trigger OnPreReport()
     begin
 
-        CompanyInformation.GET;
+        CompanyInformation.GET();
         //CompanyInformation.CALCFIELDS(Picture);
 
         ItemLedgerEntryDateFilter := "Item Ledger Entry".GETFILTERS;
 
-        Usersetup.reset;
+        Usersetup.reset();
         Usersetup.SetRange("User Name", USERID);
         _USERID := Usersetup."Full Name";
     end;
@@ -149,9 +151,7 @@ report 50020 "Stock On Hand"
         EndingDate: Date;
         var_ZeroStock: Boolean;
         ItemLedgerEntryDateFilter: Text[500];
-        ItemFilter: Text[500];
         _USERID: Text[250];
         Usersetup: Record user;
-        CodeUnitFunction: Codeunit "Function Center";
 }
 

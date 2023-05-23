@@ -1,12 +1,16 @@
+/// <summary>
+/// Page ShowDetail Cheque (ID 50005).
+/// </summary>
 page 50005 "ShowDetail Cheque"
 {
-    Caption = 'Show Detail Cheque';
+    Caption = 'Show Cheque';
     SourceTable = "Gen. Journal Line";
     SourceTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.");
     InsertAllowed = false;
     DeleteAllowed = false;
     PageType = Card;
     RefreshOnActivate = true;
+    UsageCategory = None;
     layout
     {
         area(Content)
@@ -21,11 +25,13 @@ page 50005 "ShowDetail Cheque"
                     {
                         ApplicationArea = all;
                         Editable = false;
+                        ToolTip = 'Specifies a document number for the journal line.';
                     }
                     field("Bank Code"; Rec."Bank Code")
                     {
                         ApplicationArea = all;
                         CaptionClass = Caption_PayBankCode;
+                        ToolTip = 'Specifies the value of the Bank Code field.';
                         trigger OnValidate()
                         begin
                             "SetBankBranch"();
@@ -35,16 +41,19 @@ page 50005 "ShowDetail Cheque"
                     {
                         ApplicationArea = all;
                         CaptionClass = Caption_PayBankAccount;
+                        ToolTip = 'Specifies the value of the Bank Account No. field.';
                     }
                     field("Bank Name"; Rec."Bank Name")
                     {
                         ApplicationArea = all;
                         CaptionClass = Caption_PayBankName;
+                        ToolTip = 'Specifies the value of the Bank Name field.';
                     }
                     field(BankAccBranch; BankAccBranch)
                     {
                         CaptionClass = Caption_PayBankBranch;
                         ApplicationArea = All;
+                        ToolTip = 'Specifies the value of the BankAccBranch field.';
                     }
 
 
@@ -55,29 +64,31 @@ page 50005 "ShowDetail Cheque"
                     {
                         ApplicationArea = all;
                         CaptionClass = Caption_CustVendNo;
+                        ToolTip = 'Specifies the value of the Customer/Vendor No. field.';
                     }
 
                     field("Pay Name"; Rec."Pay Name")
                     {
                         ApplicationArea = all;
                         CaptionClass = Cpation_CustVendName;
+                        ToolTip = 'Specifies the value of the Pay Name field.';
                     }
 
                     field("Bank Branch No."; Rec."Bank Branch No.")
                     {
                         ApplicationArea = all;
-
+                        ToolTip = 'Specifies the value of the Bank Branch No. field.';
                     }
 
                     field("Cheque No."; Rec."Cheque No.")
                     {
                         ApplicationArea = all;
-
+                        ToolTip = 'Specifies the value of the Cheque No. field.';
                     }
                     field("Cheque Date"; Rec."Cheque Date")
                     {
                         ApplicationArea = all;
-
+                        ToolTip = 'Specifies the value of the Cheque Date field.';
                     }
                 }
             }
@@ -86,7 +97,6 @@ page 50005 "ShowDetail Cheque"
     trigger OnAfterGetRecord();
     var
         RecGenJnlLine: Record "Gen. Journal Line";
-        RecGenJnlLine2: Record "Gen. Journal Line";
     begin
         "SetBankBranch"();
         if Rec."Account Type" = Rec."Account Type"::Customer Then begin
@@ -96,7 +106,7 @@ page 50005 "ShowDetail Cheque"
             Caption_PayBankAccount := 'Pay-in Bank Account No.';
             Caption_PayBankName := 'Pay-in Bank Name';
             Caption_PayBankBranch := 'Pay-in Bank Branch No.';
-            RecGenJnlLine.RESET;
+            RecGenJnlLine.RESET();
             RecGenJnlLine.SetRange("Journal Template Name", Rec."Journal Template Name");
             RecGenJnlLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
             RecGenJnlLine.SetRange("Document No.", Rec."Document No.");
@@ -115,7 +125,7 @@ page 50005 "ShowDetail Cheque"
                 Caption_PayBankAccount := 'Pay-from Bank Account No.';
                 Caption_PayBankName := 'Pay-from Bank Name';
                 Caption_PayBankBranch := 'Pay-from Bank Branch No.';
-                RecGenJnlLine.RESET;
+                RecGenJnlLine.RESET();
                 RecGenJnlLine.SetRange("Journal Template Name", Rec."Journal Template Name");
                 RecGenJnlLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                 RecGenJnlLine.SetRange("Document No.", Rec."Document No.");
@@ -137,7 +147,7 @@ page 50005 "ShowDetail Cheque"
         BankAcc: Record "Bank Account";
     begin
         if not BankAcc.get(Rec."Bank Code") then
-            BankAcc.init;
+            BankAcc.init();
         BankAccBranch := BankAcc."Bank Branch No.";
     end;
 

@@ -34,7 +34,7 @@ tableextension 80013 "ExtenSales Line" extends "Sales Line"
                         VALIDATE("Qty. to Cancel", Quantity - "Quantity Shipped");
 
                     "Qty. to Cancel (Base)" := UOMMgt.CalcBaseQty("Qty. to Cancel", "Qty. per Unit of Measure");
-                    InitOutstanding;
+                    InitOutstanding();
 
                     VALIDATE("Qty. to Ship", "Outstanding Quantity");
                 END ELSE
@@ -43,7 +43,7 @@ tableextension 80013 "ExtenSales Line" extends "Sales Line"
                             VALIDATE("Qty. to Cancel", Quantity);
 
                         "Qty. to Cancel (Base)" := UOMMgt.CalcBaseQty("Qty. to Cancel", "Qty. per Unit of Measure");
-                        InitOutstanding;
+                        InitOutstanding();
                     END;
             end;
         }
@@ -58,22 +58,24 @@ tableextension 80013 "ExtenSales Line" extends "Sales Line"
         {
             Editable = false;
             Caption = 'Ref. SQ No.';
+            DataClassification = CustomerContent;
         }
         field(80005; "Ref. SQ Line No."; Integer)
         {
             Editable = false;
             Caption = 'Ref. SQ Line No.';
+            DataClassification = CustomerContent;
         }
         modify("No.")
         {
             trigger OnAfterValidate()
             begin
-                if type = Type::"G/L Account" then begin
+                if type = Type::"G/L Account" then
                     if "No." <> '' then
                         Validate("Gen. Prod. Posting Group", 'GL')
                     else
                         Validate("Gen. Prod. Posting Group", '')
-                end;
+
             end;
         }
     }
@@ -82,7 +84,7 @@ tableextension 80013 "ExtenSales Line" extends "Sales Line"
     var
         salesLine: Record "Sales Line";
     begin
-        salesLine.reset;
+        salesLine.reset();
         salesLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
         salesLine.SetRange("Document Type", "Document Type");
         salesLine.SetRange("Document No.", "Document No.");

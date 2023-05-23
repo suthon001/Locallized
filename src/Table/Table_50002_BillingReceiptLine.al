@@ -5,6 +5,7 @@ table 50002 "Billing Receipt Line"
 {
     Caption = 'Billing & Receipt Line';
     Permissions = TableData 21 = rm, TableData 25 = rm;
+    DataClassification = CustomerContent;
     fields
     {
         field(1; "Document Type"; Enum "Billing Document Type")

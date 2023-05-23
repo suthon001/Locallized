@@ -165,12 +165,12 @@ report 50010 "Withholding"
                     i := 0;
                     WHTPercent[1] := "WHT %";
                     if not WHTProductPostingGroup.GET("WHT Product Posting Group") then
-                        WHTProductPostingGroup.init;
+                        WHTProductPostingGroup.init();
                     TaxType[1] := WHTProductPostingGroup."Description";
                     BaseAmount[1] := "Base Amount";
                     VATAmount[1] := "VAT Amount";
 
-                    TaxReportLineFind.RESET;
+                    TaxReportLineFind.RESET();
                     TaxReportLineFind.SETFILTER("Tax Type", '%1', "Tax Type");
                     TaxReportLineFind.SETFILTER("Document No.", '%1', "Document No.");
                     TaxReportLineFind.SETFILTER("WHT Document No.", '%1', "WHT Document No.");
@@ -180,7 +180,7 @@ report 50010 "Withholding"
                         //  i += 1;
                         WHTPercent[2] := TaxReportLineFind."WHT %";
                         if not WHTProductPostingGroup.GET(TaxReportLineFind."WHT Product Posting Group") then
-                            WHTProductPostingGroup.init;
+                            WHTProductPostingGroup.init();
                         TaxType[2] := WHTProductPostingGroup."Description";
                         BaseAmount[2] := TaxReportLineFind."Base Amount";
                         VATAmount[2] := TaxReportLineFind."VAT Amount";
@@ -218,6 +218,7 @@ report 50010 "Withholding"
                     field("Show Document No"; Show_DocumentNo)
                     {
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the value of the Show_DocumentNo field.';
                     }
                 }
             }
@@ -231,9 +232,9 @@ report 50010 "Withholding"
     trigger OnPreReport()
     begin
 
-        CompanyInformation.GET;
+        CompanyInformation.GET();
         CompanyInformation.CALCFIELDS(Picture);
-        GeneralLedgerSetup.get;
+        GeneralLedgerSetup.get();
         GeneralLedgerSetup.TestField("No. of Perpage");
     end;
 
@@ -242,7 +243,7 @@ report 50010 "Withholding"
     /// </summary>
     /// <param name="TempWHT">Parameter of type Code[30].</param>
     /// <param name="Tempdate">Parameter of type Text[100].</param>
-    procedure "SetFilter"(TempWHT: Code[30]; Tempdate: Text[100])
+    procedure "SetFilter"(TempWHT: Code[30]; Tempdate: Text)
     begin
         if Tempdate <> '' then
             "Tax Report Line".SetFilter("Posting Date", Tempdate);
@@ -255,19 +256,12 @@ report 50010 "Withholding"
         CompanyInformation: Record 79;
         LineNo: Integer;
         YesrPS: Integer;
-        StartDateFilter: Date;
-        EndDateFilter: Date;
         Rec_WHTBusinessPostingGroup: Record "WHT Business Posting Group";
         WHTProductPostingGroup: Record "WHT Product Posting Group";
-        SumBaseLCY: Decimal;
-        SumAmountLCY: Decimal;
-        TotalBaseLCY: Decimal;
-        TotalAmountLCY: Decimal;
         Show_DocumentNo: Boolean;
         WHTProduct: Code[20];
         DocumentNo: Code[20];
         WHTDocumentNo: Code[20];
-        WHTBusinessPostingGroup: Code[20];
         WHTPercent: array[2] of Decimal;
         TaxType: array[2] of Text[30];
         BaseAmount: array[2] of Decimal;
@@ -275,6 +269,6 @@ report 50010 "Withholding"
         TaxReportLineFind: Record "Tax Report Line";
         GeneralLedgerSetup: Record "General Ledger Setup";
         WHTBus: Code[100];
-        WHTDate: Text[100];
+        WHTDate: Text;
 }
 

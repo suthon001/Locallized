@@ -4,6 +4,7 @@ report 50007 "Posted Voucher"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50007_PostedVoucher.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(GLEntry; "G/L Entry")
@@ -55,7 +56,7 @@ report 50007 "Posted Voucher"
                 NewDate: Date;
             begin
 
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyInformation"(ComText, false);
                 GetVendorExchange();
@@ -70,7 +71,7 @@ report 50007 "Posted Voucher"
                 CheckLineData();
                 FindPostingDescription();
                 if not GenJournalBatchName.GET(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name") then
-                    GenJournalBatchName.init;
+                    GenJournalBatchName.init();
 
                 JournalDescriptionThai := GenJournalBatchName."Description TH Voucher";
                 JournalDescriptionEng := GenJournalBatchName."Description EN Voucher";
@@ -102,9 +103,9 @@ report 50007 "Posted Voucher"
                 IF Number = 1 THEN
                     OK := CVBufferEntry.FindFirst()
                 ELSE
-                    OK := CVBufferEntry.NEXT <> 0;
+                    OK := CVBufferEntry.NEXT() <> 0;
                 IF NOT OK THEN
-                    CurrReport.BREAK;
+                    CurrReport.BREAK();
             end;
         }
         dataitem(GenJournalLineVAT; "Posted Gen. Journal Line")
@@ -184,18 +185,18 @@ report 50007 "Posted Voucher"
             begin
                 VendorBankAccountName := '';
                 if not BankAccount.get("Account No.") then
-                    BankAccount.init;
+                    BankAccount.init();
 
                 BankName := BankAccount.Name + ' ' + BankAccount."Name 2";
                 BankBranchNo := BankAccount."Bank Branch No.";
 
-                GenJournalLineBank.RESET;
+                GenJournalLineBank.RESET();
                 GenJournalLineBank.SETFILTER("Document No.", '%1', "Document No.");
                 GenJournalLineBank.SETFILTER("Account Type", '%1', GenJournalLineBank."Account Type"::Vendor);
                 GenJournalLineBank.SETFILTER("Recipient Bank Account", '<>%1', '');
                 IF GenJournalLineBank.FIND('-') THEN BEGIN
                     IF NOT VendorBankAccount.GET(GenJournalLine."Account No.", GenJournalLine."Recipient Bank Account") THEN
-                        VendorBankAccount.init;
+                        VendorBankAccount.init();
                     VendorBankAccountName := VendorBankAccount.Name;
 
                 END;
@@ -235,7 +236,7 @@ report 50007 "Posted Voucher"
     var
         GenLine: Record "Posted Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -253,7 +254,7 @@ report 50007 "Posted Voucher"
     var
         GenLine: Record "Posted Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -312,7 +313,7 @@ report 50007 "Posted Voucher"
     var
         GenLineCheck: Record "Posted Gen. Journal Line";
     begin
-        GenLineCheck.reset;
+        GenLineCheck.reset();
         GenLineCheck.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLineCheck.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLineCheck.SetRange("Document No.", GenJournalLine."Document No.");
@@ -322,7 +323,7 @@ report 50007 "Posted Voucher"
         HaveWHT := GenLineCheck.Count <> 0;
         GenLineCheck.SetRange("Require Screen Detail", GenLineCheck."Require Screen Detail"::CHEQUE);
         haveCheque := GenLineCheck.Count <> 0;
-        GenLineCheck.reset;
+        GenLineCheck.reset();
         GenLineCheck.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLineCheck.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLineCheck.SetRange("Document No.", GenJournalLine."Document No.");
@@ -336,7 +337,7 @@ report 50007 "Posted Voucher"
     /// <param name="GenLine">Parameter of type Record "Posted Gen. Journal Line".</param>
     procedure SetDataPosting(GenLine: Record "Posted Gen. Journal Line")
     begin
-        GenJournalLine.reset;
+        GenJournalLine.reset();
         GenJournalLine.SetRange("Journal Template Name", GenLine."Journal Template Name");
         GenJournalLine.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
         GenJournalLine.SetRange("Document No.", GenLine."Document No.");
@@ -352,9 +353,6 @@ report 50007 "Posted Voucher"
         VendText: array[10] Of Text[250];
         BranchCode: Text[50];
         SplitDate: Array[3] of Text[20];
-        vgUOMFromItemCharge: Code[10];
-        vgCustNoItemCharge: Code[20];
-        vgQtyonShipItemCharge: Decimal;
         AmtText: Text[1024];
         TempAmt: Decimal;
         VendorCode: Code[20];

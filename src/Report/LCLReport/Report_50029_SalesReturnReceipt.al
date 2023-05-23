@@ -4,6 +4,7 @@ report 50029 "Sales Return Receipt"
     RDLCLayout = './LayoutReport/LCLReport/Report_50029_SalesReturnReceipt.rdl';
     Caption = 'Sales Return Receipt';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
 
     dataset
     {
@@ -96,7 +97,6 @@ report 50029 "Sales Return Receipt"
 
             trigger OnAfterGetRecord()
             var
-                countComment: Integer;
                 NewDate: Date;
             begin
 
@@ -106,7 +106,7 @@ report 50029 "Sales Return Receipt"
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();
                 IF NOT ShipMethod.Get("Shipment Method Code") then
-                    ShipMethod.Init;
+                    ShipMethod.Init();
                 NewDate := DT2Date("Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
@@ -138,9 +138,6 @@ report 50029 "Sales Return Receipt"
         CommentText: Array[99] of Text[250];
 
         FunctionCenter: Codeunit "Function Center";
-
-        TotalAmt: Array[100] of Decimal;
-        VatText: Text[30];
         AmtText: Text[250];
         ComText: Array[10] of Text[250];
         CustText, CustTextShipment : Array[10] of Text[250];

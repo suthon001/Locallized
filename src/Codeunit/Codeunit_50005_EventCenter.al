@@ -123,7 +123,7 @@ codeunit 50005 EventFunction
 
         ErrorMessageMgt.Activate(ErrorMessageHandler);
         BindSubscription(GenJnlPost);
-        GenLine.reset;
+        GenLine.reset();
         GenLine.copy(GenJournalLine);
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
@@ -147,14 +147,14 @@ codeunit 50005 EventFunction
     begin
         if NOT TempGLEntry.IsTemporary then
             Error('GL Entry must be Temporary Table!');
-        TempGLEntry.reset;
+        TempGLEntry.reset();
         TempGLEntry.DeleteAll();
         if RecRef2.FindSet() then
             repeat
                 RecRef2.SetTable(TempGLEntry);
                 TempGLEntry.Insert();
 
-            until RecRef2.next = 0;
+            until RecRef2.next() = 0;
     end;
 
 

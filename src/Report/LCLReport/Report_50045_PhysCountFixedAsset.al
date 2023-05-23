@@ -4,6 +4,7 @@ report 50045 "Phys. Count Fixed Asset"
     RDLCLayout = './LayoutReport/LCLReport/Report_50045_PhysCountFixedAsset.rdl';
     PreviewMode = PrintLayout;
     Caption = 'Phys. Count Fixed Asset';
+    ApplicationArea = All;
     dataset
     {
         dataitem("Fixed Asset"; "Fixed Asset")
@@ -50,7 +51,7 @@ report 50045 "Phys. Count Fixed Asset"
                 ELSE
                     CLEAR(ImageStorage);
 
-                vgFADepreciationBookRec.RESET;
+                vgFADepreciationBookRec.RESET();
                 vgFADepreciationBookRec.SETFILTER("FA No.", '%1', "No.");
                 vgFADepreciationBookRec.SETFILTER("Depreciation Book Code", '%1', 'COMPANY');
                 IF vgFADepreciationBookRec.FIND('-') THEN BEGIN
@@ -79,7 +80,7 @@ report 50045 "Phys. Count Fixed Asset"
 
     trigger OnPreReport()
     begin
-        CompanyInformation.GET;
+        CompanyInformation.GET();
 
         vgUserIDText := USERID;
         vgUserIDText := CodeUnitFunction."GetName"(vgUserIDText);

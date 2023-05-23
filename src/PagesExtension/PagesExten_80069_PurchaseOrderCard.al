@@ -9,16 +9,19 @@ pageextension 80069 "Purchase Order Card" extends "Purchase Order"
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
         }
         modify("No.")
@@ -63,6 +66,7 @@ pageextension 80069 "Purchase Order Card" extends "Purchase Order"
             field("Pay-to Vendor No."; rec."Pay-to Vendor No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the number of the vendor that you received the invoice from.';
             }
         }
         moveafter("Purchaser Code"; "Currency Code")
@@ -96,12 +100,13 @@ pageextension 80069 "Purchase Order Card" extends "Purchase Order"
                 PromotedCategory = Category10;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Purchase Order action.';
                 trigger OnAction()
                 var
 
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
                     REPORT.RunModal(REPORT::"PurchaseOrder", true, true, PurchaseHeader);
@@ -118,7 +123,7 @@ pageextension 80069 "Purchase Order Card" extends "Purchase Order"
         CheckbeforDelete := true;
         "OnBeforDeletePurchaseHeader"(CheckbeforDelete);
         if CheckbeforDelete then begin
-            PurchaseReceipt.reset;
+            PurchaseReceipt.reset();
             PurchaseReceipt.SetRange("Order No.", Rec."No.");
             if PurchaseReceipt.FindFirst() then
                 ERROR('Cannot Delete this document has been Posted');
@@ -133,9 +138,6 @@ pageextension 80069 "Purchase Order Card" extends "Purchase Order"
     procedure "OnBeforDeletePurchaseHeader"(var CheckDelete: Boolean)
     begin
     end;
-
-    var
-        CheckStat: Boolean;
 
 
 }

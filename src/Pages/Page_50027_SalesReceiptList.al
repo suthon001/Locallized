@@ -1,6 +1,8 @@
+/// <summary>
+/// Page Sales Receipt List (ID 50027).
+/// </summary>
 page 50027 "Sales Receipt List"
 {
-
     PageType = List;
     SourceTable = "Billing Receipt Header";
     Caption = 'Sales Receipt List';
@@ -20,92 +22,114 @@ page 50027 "Sales Receipt List"
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the No. field.';
                 }
 
                 field("Bill/Pay-to Cust/Vend No."; Rec."Bill/Pay-to Cust/Vend No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Bill/Pay-to Cust/Vend No. field.';
                 }
                 field("Bill/Pay-to Cust/Vend Name"; Rec."Bill/Pay-to Cust/Vend Name")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Bill/Pay-to Cust/Vend Name field.';
                 }
 
                 field("Bill/Pay-to Contact"; Rec."Bill/Pay-to Contact")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Bill/Pay-to Contact field.';
                 }
                 field("Bill/Pay-to Address"; Rec."Bill/Pay-to Address")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Bill/Pay-to Cust/Vend Address field.';
                 }
                 field("Bill/Pay-to Address 2"; Rec."Bill/Pay-to Address 2")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Bill/Pay-to Cust/Vend Address 2 field.';
                 }
-                field("Bill/Pay-to Cus/Vend Name 2"; Rec."Bill/Pay-to Cus/Vend Name2")
+                field("Bill/Pay-to Cus/Vend Name 2"; Rec."Bill/Pay-to Cus/Vend Name 2")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Bill/Pay-to Cus/Vend Name2 field.';
                 }
                 field("Bill/Pay-to City"; Rec."Bill/Pay-to City")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Bill/Pay-to City field.';
                 }
                 field("Bill/Pay-to Post Code"; Rec."Bill/Pay-to Post Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Bill/Pay-to Post Code field.';
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Posting Date field.';
                 }
                 field("Payment Terms Code"; Rec."Payment Terms Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Payment Terms Code field.';
                 }
                 field("Payment Method Code"; Rec."Payment Method Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Payment Method Code field.';
                 }
                 field("Posting Description"; Rec."Posting Description")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Posting Description field.';
                 }
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Document Date field.';
                 }
                 field("Status"; Rec."Status")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Status field.';
                 }
                 field("Currency Code"; Rec."Currency Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Currency Code field.';
                 }
                 field("Amount"; Rec."Amount")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Amount field.';
                 }
                 field("Amount (LCY)"; Rec."Amount (LCY)")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Amount (LCY) field.';
                 }
                 field("Head Office"; Rec."Head Office")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Head Office field.';
                 }
                 field("Branch Code"; Rec."Branch Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Branch Code field.';
                 }
                 field("Vat Registration No."; Rec."Vat Registration No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Vat Registration No. field.';
                 }
                 field("Due Date"; Rec."Due Date")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Due Date field.';
                 }
             }
         }
@@ -124,12 +148,13 @@ page 50027 "Sales Receipt List"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Sales Receipt action.';
                 trigger OnAction()
                 var
 
                     BillingReceiptHeader: Record "Billing Receipt Header";
                 begin
-                    BillingReceiptHeader.reset;
+                    BillingReceiptHeader.reset();
                     BillingReceiptHeader.SetRange("Document Type", rec."Document Type");
                     BillingReceiptHeader.SetRange("No.", rec."No.");
                     REPORT.RunModal(REPORT::"Sales Receipt", true, true, BillingReceiptHeader);

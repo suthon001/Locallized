@@ -60,14 +60,14 @@ report 50040 "Fixed Asset Purchase"
                 vgAcqDate := 0D;
 
                 IF NOT FADeprBook.GET("No.", DeprBookCode) THEN
-                    FADeprBook.init;
+                    FADeprBook.init();
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("FA Posting Type", '%1', FALedgerEntry."FA Posting Type"::"Acquisition Cost");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("FA Posting Category", '%1', FALedgerEntry."FA Posting Category"::" ");
-                IF FALedgerEntry.FINDFIRST THEN BEGIN
+                IF FALedgerEntry.FINDFIRST() THEN BEGIN
                     FALedgerEntry.CalcSums(Amount);
                     vgAcqDate := FALedgerEntry."Posting Date";
                     vgDcoumentNo := FALedgerEntry."Document No.";
@@ -77,7 +77,7 @@ report 50040 "Fixed Asset Purchase"
                 END;
 
                 IF NOT FAPostingGroup.GET(FADeprBook."FA Posting Group") THEN
-                    FAPostingGroup.INIT;
+                    FAPostingGroup.INIT();
 
                 vgFALocationName := CodeUnitFunction."GetNameFALocation"("FA Location Code");
                 vgFAClassName := CodeUnitFunction."GetNameFAClass"("FA Class Code");
@@ -119,12 +119,11 @@ report 50040 "Fixed Asset Purchase"
 
     trigger OnPreReport()
     begin
-        CompanyInformation.GET;
+        CompanyInformation.GET();
         vgGetFilters := "Fixed Asset".GETFILTERS;
     end;
 
     var
-        "###Customize.BW.LCL###": Integer;
         FALedgerEntry: Record "FA Ledger Entry";
         vgAcqDate: Date;
         vgAcqCost: Decimal;
@@ -138,6 +137,5 @@ report 50040 "Fixed Asset Purchase"
         vgFASubClassName: Text;
         CompanyInformation: Record "Company Information";
         vgGetFilters: Text;
-        vgBookValue: Decimal;
 }
 

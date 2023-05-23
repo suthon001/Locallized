@@ -4,6 +4,7 @@ Report 50022 "ItemReclass"
     DefaultLayout = RDLC;
     Caption = 'Item Reclass';
     PdfFontEmbedding = yes;
+    ApplicationArea = All;
     dataset
     {
         dataitem("Item Journal Line"; "Item Journal Line")
@@ -70,7 +71,7 @@ Report 50022 "ItemReclass"
             }
             trigger OnPreDataItem()
             begin
-                CompanyInfor.GET;
+                CompanyInfor.GET();
                 CompanyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyInformation"(ComText, false);
                 FilterDescription := GetFilters;

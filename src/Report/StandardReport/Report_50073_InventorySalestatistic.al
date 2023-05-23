@@ -6,6 +6,7 @@ report 50073 "Inventory Sales Statistics"
     Caption = 'Inventory Sales Statistics';
     UsageCategory = ReportsAndAnalysis;
     DataAccessIntent = ReadOnly;
+    ApplicationArea = All;
 
     dataset
     {
@@ -16,7 +17,7 @@ report 50073 "Inventory Sales Statistics"
             column(PeriodTextCaption; StrSubstNo(Text000, PeriodText))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PrintAlsoWithoutSale; PrintAlsoWithoutSale)
@@ -104,8 +105,8 @@ report 50073 "Inventory Sales Statistics"
             begin
                 CalcFields("Assembly BOM");
 
-                SetFilters;
-                Calculate;
+                SetFilters();
+                Calculate();
 
                 if (SalesAmount = 0) and not PrintAlsoWithoutSale then
                     CurrReport.Skip();
@@ -159,18 +160,16 @@ report 50073 "Inventory Sales Statistics"
         ItemFilter := Item.GetFilters;
         PeriodText := Item.GetFilter("Date Filter");
 
-        with ItemStatisticsBuf do begin
-            if Item.GetFilter("Date Filter") <> '' then
-                SetFilter("Date Filter", PeriodText);
-            if Item.GetFilter("Location Filter") <> '' then
-                SetFilter("Location Filter", Item.GetFilter("Location Filter"));
-            if Item.GetFilter("Variant Filter") <> '' then
-                SetFilter("Variant Filter", Item.GetFilter("Variant Filter"));
-            if Item.GetFilter("Global Dimension 1 Filter") <> '' then
-                SetFilter("Global Dimension 1 Filter", Item.GetFilter("Global Dimension 1 Filter"));
-            if Item.GetFilter("Global Dimension 2 Filter") <> '' then
-                SetFilter("Global Dimension 2 Filter", Item.GetFilter("Global Dimension 2 Filter"));
-        end;
+        if Item.GetFilter("Date Filter") <> '' then
+            ItemStatisticsBuf.SetFilter("Date Filter", PeriodText);
+        if Item.GetFilter("Location Filter") <> '' then
+            ItemStatisticsBuf.SetFilter("Location Filter", Item.GetFilter("Location Filter"));
+        if Item.GetFilter("Variant Filter") <> '' then
+            ItemStatisticsBuf.SetFilter("Variant Filter", Item.GetFilter("Variant Filter"));
+        if Item.GetFilter("Global Dimension 1 Filter") <> '' then
+            ItemStatisticsBuf.SetFilter("Global Dimension 1 Filter", Item.GetFilter("Global Dimension 1 Filter"));
+        if Item.GetFilter("Global Dimension 2 Filter") <> '' then
+            ItemStatisticsBuf.SetFilter("Global Dimension 2 Filter", Item.GetFilter("Global Dimension 2 Filter"));
     end;
 
     var
@@ -201,9 +200,9 @@ report 50073 "Inventory Sales Statistics"
 
     local procedure Calculate()
     begin
-        SalesQty := -CalcInvoicedQty;
-        SalesAmount := CalcSalesAmount;
-        COGSAmount := CalcCostAmount + CalcCostAmountNonInvnt;
+        SalesQty := -CalcInvoicedQty();
+        SalesAmount := CalcSalesAmount();
+        COGSAmount := CalcCostAmount() + CalcCostAmountNonInvnt();
         ItemProfit := SalesAmount + COGSAmount;
 
         if SalesAmount <> 0 then
@@ -217,45 +216,35 @@ report 50073 "Inventory Sales Statistics"
 
     local procedure SetFilters()
     begin
-        with ItemStatisticsBuf do begin
-            SetRange("Item Filter", Item."No.");
-            SetRange("Item Ledger Entry Type Filter", "Item Ledger Entry Type Filter"::Sale);
-            SetFilter("Entry Type Filter", '<>%1', "Entry Type Filter"::Revaluation);
-        end;
+        ItemStatisticsBuf.SetRange("Item Filter", Item."No.");
+        ItemStatisticsBuf.SetRange("Item Ledger Entry Type Filter", ItemStatisticsBuf."Item Ledger Entry Type Filter"::Sale);
+        ItemStatisticsBuf.SetFilter("Entry Type Filter", '<>%1', ItemStatisticsBuf."Entry Type Filter"::Revaluation);
     end;
 
     local procedure CalcSalesAmount(): Decimal
     begin
-        with ItemStatisticsBuf do begin
-            CalcFields("Sales Amount (Actual)");
-            exit("Sales Amount (Actual)");
-        end;
+        ItemStatisticsBuf.CalcFields("Sales Amount (Actual)");
+        exit(ItemStatisticsBuf."Sales Amount (Actual)");
     end;
 
     local procedure CalcCostAmount(): Decimal
     begin
-        with ItemStatisticsBuf do begin
-            CalcFields("Cost Amount (Actual)");
-            exit("Cost Amount (Actual)");
-        end;
+        ItemStatisticsBuf.CalcFields("Cost Amount (Actual)");
+        exit(ItemStatisticsBuf."Cost Amount (Actual)");
     end;
 
     local procedure CalcCostAmountNonInvnt(): Decimal
     begin
-        with ItemStatisticsBuf do begin
-            SetRange("Item Ledger Entry Type Filter");
-            CalcFields("Cost Amount (Non-Invtbl.)");
-            exit("Cost Amount (Non-Invtbl.)");
-        end;
+        ItemStatisticsBuf.SetRange("Item Ledger Entry Type Filter");
+        ItemStatisticsBuf.CalcFields("Cost Amount (Non-Invtbl.)");
+        exit(ItemStatisticsBuf."Cost Amount (Non-Invtbl.)");
     end;
 
     local procedure CalcInvoicedQty(): Decimal
     begin
-        with ItemStatisticsBuf do begin
-            SetRange("Entry Type Filter");
-            CalcFields("Invoiced Quantity");
-            exit("Invoiced Quantity");
-        end;
+        ItemStatisticsBuf.SetRange("Entry Type Filter");
+        ItemStatisticsBuf.CalcFields("Invoiced Quantity");
+        exit(ItemStatisticsBuf."Invoiced Quantity");
     end;
 
     local procedure CalcPerUnit(Amount: Decimal; Qty: Decimal): Decimal

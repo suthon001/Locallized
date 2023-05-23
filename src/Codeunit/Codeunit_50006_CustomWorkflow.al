@@ -1,15 +1,10 @@
 codeunit 50006 "Workflow"
 {
-    trigger OnRun()
-    begin
 
-    end;
 
     var
         WFMngt: Codeunit "Workflow Management";
-        AppMgmt: Codeunit "Approvals Mgmt.";
         WorkflowEventHandling: Codeunit "Workflow Event Handling";
-        WorkflowResponseHandling: Codeunit "Workflow Response Handling";
         SendItemJournalReq: Label 'Approval Request for Item Journal Line is requested';
         CancelReqItemJournal: Label 'Approval of a Item Journal Line is canceled';
         ItemJournalLineTypeCondTxt: Label '<?xml version = "1.0" encoding="utf-8" standalone="yes"?><ReportParameters><DataItems><DataItem name="Item Journal Line">%1</DataItem></DataItems></ReportParameters>';
@@ -55,9 +50,8 @@ codeunit 50006 "Workflow"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
     procedure RunWorkflowOnApproveItemJournalApproval(var ApprovalEntry: Record "Approval Entry")
     begin
-        if ApprovalEntry."Table ID" = Database::"Item Journal Line" then begin
+        if ApprovalEntry."Table ID" = Database::"Item Journal Line" then
             WFMngt.HandleEventOnKnownWorkflowInstance(RunWorkflowOnApproveItemJournalLineApprovalCode(), ApprovalEntry, ApprovalEntry."Workflow Step Instance ID");
-        end;
 
     end;
 
@@ -75,9 +69,8 @@ codeunit 50006 "Workflow"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnRejectApprovalRequest', '', false, false)]
     procedure RunWorkflowOnRejectApproval(var ApprovalEntry: Record "Approval Entry")
     begin
-        if ApprovalEntry."Table ID" = Database::"Item Journal Line" then begin
+        if ApprovalEntry."Table ID" = Database::"Item Journal Line" then
             WFMngt.HandleEventOnKnownWorkflowInstance(RunWorkflowOnRejectItemJournalLineApprovalCode(), ApprovalEntry, ApprovalEntry."Workflow Step Instance ID");
-        end;
 
     end;
 
@@ -99,14 +92,12 @@ codeunit 50006 "Workflow"
     var
         ItemJournalLines, ItemJournalLines2 : Record "Item Journal Line";
 
-        PurchaseLine: record "Purchase Line";
-
     begin
         case RecRef.Number of
             DATABASE::"Item Journal Line":
                 begin
                     RecRef.SetTable(ItemJournalLines);
-                    ItemJournalLines2.reset;
+                    ItemJournalLines2.reset();
                     ItemJournalLines2.SetRange("Journal Template Name", ItemJournalLines."Journal Template Name");
                     ItemJournalLines2.SetRange("Journal Batch Name", ItemJournalLines."Journal Batch Name");
                     ItemJournalLines2.SetRange("Document No.", ItemJournalLines."Document No.");
@@ -124,15 +115,12 @@ codeunit 50006 "Workflow"
     var
         ItemJournalLines, ItemJournalLines2 : Record "Item Journal Line";
 
-        PurchaseLine: record "Purchase Line";
-        PurchaseHeader: Record "Purchase Header";
-
     begin
         case RecRef.Number of
             DATABASE::"Item Journal Line":
                 begin
                     RecRef.SetTable(ItemJournalLines);
-                    ItemJournalLines2.reset;
+                    ItemJournalLines2.reset();
                     ItemJournalLines2.SetRange("Journal Template Name", ItemJournalLines."Journal Template Name");
                     ItemJournalLines2.SetRange("Journal Batch Name", ItemJournalLines."Journal Batch Name");
                     ItemJournalLines2.SetRange("Document No.", ItemJournalLines."Document No.");
@@ -150,15 +138,13 @@ codeunit 50006 "Workflow"
     local procedure OnOpenDocument(RecRef: RecordRef; var Handled: Boolean);
     var
         ItemJournalLines, ItemJournalLines2 : Record "Item Journal Line";
-        PurchaseHeader: record "Purchase Header";
-        PurchaseLine: Record "Purchase Line";
 
     begin
         case RecRef.Number of
             DATABASE::"Item Journal Line":
                 begin
                     RecRef.SetTable(ItemJournalLines);
-                    ItemJournalLines2.reset;
+                    ItemJournalLines2.reset();
                     ItemJournalLines2.SetRange("Journal Template Name", ItemJournalLines."Journal Template Name");
                     ItemJournalLines2.SetRange("Journal Batch Name", ItemJournalLines."Journal Batch Name");
                     ItemJournalLines2.SetRange("Document No.", ItemJournalLines."Document No.");
@@ -184,8 +170,6 @@ codeunit 50006 "Workflow"
     local procedure "OnPopulateApprovalEntryArgument"(var RecRef: RecordRef; var ApprovalEntryArgument: Record "Approval Entry"; WorkflowStepInstance: Record "Workflow Step Instance");
     var
         ItemJournal: Record "Item Journal Line";
-
-        PurchaseHeader: Record "Purchase Header";
     begin
         case RecRef.Number OF
             DATABASE::"Item Journal Line":
@@ -269,7 +253,6 @@ codeunit 50006 "Workflow"
     var
         WorkflowSetpArgument: Record 1523;
         blankDateFormula: DateFormula;
-        workflowResponseHanding: Codeunit 1521;
         ItemJournalLine: Record "Item Journal Line";
         WorkflowSetup: Codeunit "Workflow Setup";
 
@@ -296,15 +279,13 @@ codeunit 50006 "Workflow"
     begin
         case EventFunctionName of
             RunWorkflowOnCancelItemJournalLineApprovalCode():
-                begin
 
-                    WorkflowEventHadning.AddEventPredecessor(RunWorkflowOnCancelItemJournalLineApprovalCode, RunWorkflowOnSendItemJournalLineApprovalCode());
-                end;
+
+                WorkflowEventHadning.AddEventPredecessor(RunWorkflowOnCancelItemJournalLineApprovalCode(), RunWorkflowOnSendItemJournalLineApprovalCode());
             WorkflowEventHadning.RunWorkflowOnApproveApprovalRequestCode():
-                begin
 
-                    WorkflowEventHadning.AddEventPredecessor(WorkflowEventHadning.RunWorkflowOnApproveApprovalRequestCode(), RunWorkflowOnSendItemJournalLineApprovalCode());
-                end;
+
+                WorkflowEventHadning.AddEventPredecessor(WorkflowEventHadning.RunWorkflowOnApproveApprovalRequestCode(), RunWorkflowOnSendItemJournalLineApprovalCode());
 
         end;
     end;
@@ -317,35 +298,25 @@ codeunit 50006 "Workflow"
         case ResponseFunctionName of
 
             WorkflowResponseHanding.SetStatusToPendingApprovalCode():
-                begin
-                    WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.SetStatusToPendingApprovalCode(),
-                    RunWorkflowOnSendItemJournalLineApprovalCode());
 
-                end;
+                WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.SetStatusToPendingApprovalCode(),
+                RunWorkflowOnSendItemJournalLineApprovalCode());
             WorkflowResponseHanding.SendApprovalRequestForApprovalCode():
-                begin
-                    WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.SendApprovalRequestForApprovalCode(),
-                    RunWorkflowOnSendItemJournalLineApprovalCode());
 
-                end;
+                WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.SendApprovalRequestForApprovalCode(),
+                RunWorkflowOnSendItemJournalLineApprovalCode());
             WorkflowResponseHanding.RejectAllApprovalRequestsCode():
-                begin
-                    WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.RejectAllApprovalRequestsCode(),
-                    RunWorkflowOnRejectItemJournalLineApprovalCode());
 
-                end;
+                WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.RejectAllApprovalRequestsCode(),
+                RunWorkflowOnRejectItemJournalLineApprovalCode());
             WorkflowResponseHanding.CancelAllApprovalRequestsCode():
-                begin
-                    WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.CancelAllApprovalRequestsCode(),
-                    RunWorkflowOnCancelItemJournalLineApprovalCode());
 
-                end;
+                WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.CancelAllApprovalRequestsCode(),
+                RunWorkflowOnCancelItemJournalLineApprovalCode());
             WorkflowResponseHanding.OpenDocumentCode():
-                begin
-                    WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.OpenDocumentCode(),
-                    RunWorkflowOnCancelItemJournalLineApprovalCode());
 
-                end;
+                WorkflowResponseHanding.AddResponsePredecessor(WorkflowResponseHanding.OpenDocumentCode(),
+                RunWorkflowOnCancelItemJournalLineApprovalCode());
         end;
 
     end;

@@ -7,9 +7,8 @@ pageextension 80046 "FixedJournalLIne" extends "Fixed Asset Journal"
             trigger OnAssistEdit()
             begin
 
-                if Rec."AssistEdit"(xRec) then begin
+                if Rec."AssistEdit"(xRec) then
                     CurrPage.Update();
-                end;
 
             end;
         }

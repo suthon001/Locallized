@@ -119,7 +119,6 @@ codeunit 50002 "Sales Function"
     var
         SalesHeader: Record "Sales Header";
         VendCust: Record "Customer & Vendor Branch";
-        GLAccount: Record "G/L Account";
     begin
         IF SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.") THEN BEGIN
             InvoicePostBuffer."Head Office" := SalesHeader."Head Office";
@@ -131,7 +130,7 @@ codeunit 50002 "Sales Function"
             InvoicePostBuffer."Address" := SalesHeader."Sell-to Address" + ' ' + SalesHeader."Sell-to Address 2";
             InvoicePostBuffer."City" := SalesHeader."Sell-to city";
             InvoicePostBuffer."Post Code" := SalesHeader."Sell-to Post Code";
-            if SalesHeader."Branch Code" <> '' then begin
+            if SalesHeader."Branch Code" <> '' then
                 if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."Head Office", SalesHeader."Branch Code") then begin
                     if VendCust."Name" <> '' then
                         InvoicePostBuffer."Tax Invoice Name" := VendCust."Name";
@@ -139,7 +138,6 @@ codeunit 50002 "Sales Function"
                     InvoicePostBuffer."city" := VendCust."Province";
                     InvoicePostBuffer."Post Code" := VendCust."Post Code";
                 end;
-            end;
 
 
         END;
@@ -159,7 +157,7 @@ codeunit 50002 "Sales Function"
         SalesLine: Record "Sales Line";
         Item: Record Item;
     begin
-        SalesLine.reset;
+        SalesLine.reset();
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         SalesLine.SetRange(Type, SalesLine.Type::Item);

@@ -5,6 +5,7 @@ report 50000 "AP CN Voucher"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50000_APCNVoucher.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(GLEntry; "G/L Entry")
@@ -51,7 +52,7 @@ report 50000 "AP CN Voucher"
                 NewDate: Date;
             begin
 
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", false);
                 FunctionCenter."PurchaseInformation"(PurHeader."Document Type", PurHeader."No.", VendText, 0);
@@ -137,12 +138,12 @@ report 50000 "AP CN Voucher"
                     Item: Record Item;
                 begin
                     IF NOT Item.GET("Item No.") THEN
-                        Item.init;
+                        Item.init();
                     vgUOMFromItemCharge := Item."Base Unit of Measure";
 
 
                     IF NOT PurchRcptHeader.GET("Applies-to Doc. No.") then
-                        PurchRcptHeader.init;
+                        PurchRcptHeader.init();
                     vgVendorNoItemCharge := PurchRcptHeader."Buy-from Vendor No.";
 
 
@@ -178,13 +179,13 @@ report 50000 "AP CN Voucher"
 
         if GLTemp.FindFirst() then begin
             repeat
-                GLEntry.reset;
+                GLEntry.reset();
                 GLEntry.SetRange("G/L Account No.", GLTemp."G/L Account No.");
                 GLEntry.SetRange("Global Dimension 1 Code", GLTemp."Global Dimension 1 Code");
                 GLEntry.SetRange("Global Dimension 2 Code", GLTemp."Global Dimension 2 Code");
                 if not GLEntry.FindFirst() then begin
                     EntryNo += 1;
-                    GLEntry.init;
+                    GLEntry.init();
                     GLEntry.TransferFields(GLTemp);
                     GLEntry."Entry No." := EntryNo;
                     GLEntry.Insert();
@@ -201,8 +202,8 @@ report 50000 "AP CN Voucher"
                     TempAmt += GLEntry."Debit Amount";
                     GLEntry.Modify();
                 end;
-            until GLTemp.next = 0;
-            GLEntry.reset;
+            until GLTemp.next() = 0;
+            GLEntry.reset();
         end;
     end;
 
@@ -213,7 +214,7 @@ report 50000 "AP CN Voucher"
     var
         PurchaseLine: Record "Purchase Line";
     begin
-        PurchaseLine.reset;
+        PurchaseLine.reset();
         PurchaseLine.SetRange("Document Type", PurHeader."Document Type");
         PurchaseLine.SetRange("Document No.", PurHeader."No.");
         PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
@@ -222,7 +223,7 @@ report 50000 "AP CN Voucher"
         PurchaseLine.SetFilter("Tax Invoice No.", '<>%1', '');
         HaveItemVAT := PurchaseLine.Count <> 0;
 
-        PurchaseLine.reset;
+        PurchaseLine.reset();
         PurchaseLine.SetRange("Document Type", PurHeader."Document Type");
         PurchaseLine.SetRange("Document No.", PurHeader."No.");
         PurchaseLine.SetRange(Type, PurchaseLine.Type::"Charge (Item)");

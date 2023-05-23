@@ -177,43 +177,40 @@ report 50013 "WHT PND 03"
 
                 Month_No["Month No."] := '/';
 
-                TaxReportLine.RESET;
+                TaxReportLine.RESET();
                 TaxReportLine.SETFILTER("Tax Type", '%1', "Tax Type");
                 TaxReportLine.SETFILTER("Document No.", '%1', "Document No.");
                 if DateFilter <> '' then
                     TaxReportLine.SETFILTER("Posting Date", DateFilter);
-                IF TaxReportLine.FIND('-') THEN BEGIN
+                IF TaxReportLine.FIND('-') THEN
                     REPEAT
 
                         var_Amount := var_Amount + TaxReportLine."Base Amount";
                         var_WHTAmount := var_WHTAmount + TaxReportLine."VAT Amount";
                         var_WHTTotalAmount := var_WHTTotalAmount + TaxReportLine."VAT Amount";
 
-                    UNTIL TaxReportLine.NEXT = 0;
-                END;
+                    UNTIL TaxReportLine.NEXT() = 0;
 
-                TaxReportLine.RESET;
+                TaxReportLine.RESET();
                 TaxReportLine.SETCURRENTKEY("WHT Registration No.");
                 TaxReportLine.SETFILTER("Tax Type", '%1', "Tax Type");
                 TaxReportLine.SETFILTER("Document No.", '%1', "Document No.");
                 if DateFilter <> '' then
                     TaxReportLine.SETFILTER("Posting Date", DateFilter);
-                IF TaxReportLine.FIND('-') THEN BEGIN
+                IF TaxReportLine.FIND('-') THEN
                     REPEAT
-                        IF (var_WHTRegisNo = '') THEN BEGIN
-                            var_CountVend := var_CountVend + 1;
-                        END ELSE BEGIN
+                        IF (var_WHTRegisNo = '') THEN
+                            var_CountVend := var_CountVend + 1
+                        ELSE
                             IF (var_WHTRegisNo = TaxReportLine."WHT Registration No.") THEN
                                 var_CountVend := var_CountVend
                             ELSE
                                 var_CountVend := var_CountVend + 1;
-                        END;
 
                         var_WHTNo := TaxReportLine."WHT Document No.";
                         var_WHTRegisNo := TaxReportLine."WHT Registration No.";
 
-                    UNTIL TaxReportLine.NEXT = 0;
-                END;
+                    UNTIL TaxReportLine.NEXT() = 0;
 
                 //##### Option Type ######
                 IF Send_Option = Send_Option::"ยื่นปกติ" THEN
@@ -222,15 +219,14 @@ report 50013 "WHT PND 03"
                     var_Send_Option[2] := '/';
 
                 //##########################################
-                IF Send_Type = Send_Type::"3 เตรส" THEN BEGIN
+                IF Send_Type = Send_Type::"3 เตรส" THEN
                     var_Send_Type[1] := '/'
-                END ELSE
-                    IF Send_Type = Send_Type::"65 จัตวา" THEN BEGIN
+                ELSE
+                    IF Send_Type = Send_Type::"65 จัตวา" THEN
                         var_Send_Type[2] := '/'
-                    END ELSE
-                        IF Send_Type = Send_Type::"69 ทวิ" THEN BEGIN
+                    ELSE
+                        IF Send_Type = Send_Type::"69 ทวิ" THEN
                             var_Send_Type[3] := '/';
-                        END;
             end;
         }
     }
@@ -248,16 +244,19 @@ report 50013 "WHT PND 03"
                     {
                         Caption = 'นำส่งภาษีตาม';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the value of the นำส่งภาษีตาม field.';
                     }
                     field(Send_Option; Send_Option)
                     {
                         Caption = 'ประเภทการยื่น';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the value of the ประเภทการยื่น field.';
                     }
                     field(Additional_No; Additional_No)
                     {
                         Caption = 'ครั้งที่';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the value of the ครั้งที่ field.';
                     }
                 }
             }
@@ -271,7 +270,7 @@ report 50013 "WHT PND 03"
     trigger OnPreReport()
     begin
 
-        CompanyInformation.GET;
+        CompanyInformation.GET();
         CompanyInformation.CALCFIELDS(Picture);
     end;
 
@@ -289,22 +288,9 @@ report 50013 "WHT PND 03"
 
     var
         CompanyInformation: Record "Company Information";
-        LineNo: Integer;
         YesrPS: Integer;
-        StartDateFilter: Date;
-        EndDateFilter: Date;
         WHTTypeFilter: Option "ภ.ง.ด. 3","ภ.ง.ด. 53","ภ.ง.ด. 54";
         Rec_WHTBusinessPostingGroup: Record "WHT Business Posting Group";
-        WHTProductPostingGroup: Record "WHT Product Posting Group";
-        SumBaseLCY: Decimal;
-        SumAmountLCY: Decimal;
-        TotalBaseLCY: Decimal;
-        TotalAmountLCY: Decimal;
-        Show_DocumentNo: Boolean;
-        WHTProduct: Code[20];
-        DocumentNo: Code[20];
-        WHTDocumentNo: Code[20];
-        Branch: Text[250];
         VAT_ID: array[15] of Text[10];
         var_VATAddress: Text[150];
         Month_No: array[12] of Text[20];
@@ -318,7 +304,6 @@ report 50013 "WHT PND 03"
         var_Send_Type: array[3] of Text;
         var_Send_Option: array[2] of Text;
         var_CountVend: Integer;
-        varWHTBussiness: Record "WHT Business Posting Group";
         var_CompnayName: Text[50];
         DateFilter: Text[100];
 }

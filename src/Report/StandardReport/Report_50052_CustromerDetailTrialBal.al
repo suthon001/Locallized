@@ -5,6 +5,7 @@ report 50052 "Customer Detail Trial Bal."
     //ApplicationArea = Basic, Suite;
     Caption = 'Customer - Detail Trial Bal.';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -19,7 +20,7 @@ report 50052 "Customer Detail Trial Bal."
             column(PeriodCustDatetFilter; StrSubstNo(Text000, CustDateFilter))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PrintAmountsInLCY; PrintAmountsInLCY)

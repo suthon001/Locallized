@@ -11,7 +11,7 @@ codeunit 50001 "Purchase Function"
         //     PurchInvLine."CalculateDeposit"();
         // end;
         if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
-            FaDepBook.reset;
+            FaDepBook.reset();
             FaDepBook.SetRange("FA No.", PurchLine."No.");
             if FaDepBook.FindFirst() then begin
                 FaDepBook.Validate("Depreciation Starting Date", PurchInvHeader."Posting Date");
@@ -110,7 +110,7 @@ codeunit 50001 "Purchase Function"
         PurchaseLine: Record "Purchase Line";
         ReceiptHeader: Record "Purch. Rcpt. Header";
     begin
-        PurchaseLine.reset;
+        PurchaseLine.reset();
         PurchaseLine.SetRange("Document Type", PurchHeader."Document Type");
         PurchaseLine.SetRange("Document No.", PurchHeader."No.");
         PurchaseLine.SetFilter("Receipt No.", '<>%1', '');
@@ -140,18 +140,12 @@ codeunit 50001 "Purchase Function"
         end;
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterPreparePurchase', '', false, false)]
-    local procedure OnAfterPreparePurchase(var PurchaseLine: Record "Purchase Line"; var InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary)
-    begin
-
-    end;
 
     [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterInvPostBufferPreparePurchase', '', true, true)]
     local procedure "InvoiceBufferPurchase"(var InvoicePostBuffer: Record "Invoice Post. Buffer"; var PurchaseLine: Record "Purchase Line")
     var
         PurchHeader: Record "Purchase Header";
         VendCust: Record "Customer & Vendor Branch";
-        GLAccount: Record "G/L Account";
     begin
         //with InvoicePostBuffer do begin
 
@@ -168,7 +162,7 @@ codeunit 50001 "Purchase Function"
         InvoicePostBuffer."city" := PurchHeader."Buy-from city";
         InvoicePostBuffer."Post Code" := PurchHeader."Buy-from Post Code";
         InvoicePostBuffer."Document Line No." := PurchaseLine."Line No.";
-        if PurchHeader."Branch Code" <> '' then begin
+        if PurchHeader."Branch Code" <> '' then
             if VendCust.Get(VendCust."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."Head Office", PurchHeader."Branch Code") then begin
                 if VendCust."Name" <> '' then
                     InvoicePostBuffer."Tax Invoice Name" := VendCust."Name";
@@ -176,7 +170,6 @@ codeunit 50001 "Purchase Function"
                 InvoicePostBuffer."city" := VendCust."Province";
                 InvoicePostBuffer."Post Code" := VendCust."Post Code";
             end;
-        end;
         InvoicePostBuffer."Description Line" := PurchaseLine.Description + ' ' + PurchaseLine."Description 2";
         IF PurchaseLine."Tax Invoice No." <> '' THEN BEGIN
             InvoicePostBuffer."Tax Vendor No." := PurchaseLine."Tax Vendor No.";
@@ -193,7 +186,7 @@ codeunit 50001 "Purchase Function"
                     InvoicePostBuffer."Tax Invoice Base" := PurchaseLine."Tax Invoice Base";
                     InvoicePostBuffer."Tax Invoice Amount" := PurchaseLine."Tax Invoice Amount";
                 end;
-            END ELSE BEGIN
+            END ELSE
                 if PurchaseLine."Tax Invoice Base" <> 0 then begin
                     InvoicePostBuffer."Tax Invoice Base" := PurchaseLine."Tax Invoice Base";
                     if PurchaseLine."Tax Invoice Amount" <> 0 then
@@ -204,7 +197,6 @@ codeunit 50001 "Purchase Function"
                     InvoicePostBuffer."Tax Invoice Base" := PurchaseLine.Amount;
                     InvoicePostBuffer."Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
                 end;
-            END;
         END;
 
         IF PurchaseLine."VAT Registration No." <> '' THEN

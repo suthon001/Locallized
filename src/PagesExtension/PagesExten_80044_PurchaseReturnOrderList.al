@@ -55,14 +55,17 @@ pageextension 80044 "PurchaseReturnOrderLists" extends "Purchase Return Order Li
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Tax Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
         }
 
@@ -79,12 +82,13 @@ pageextension 80044 "PurchaseReturnOrderLists" extends "Purchase Return Order Li
                 PromotedCategory = Category10;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Purchase Return Order action.';
                 trigger OnAction()
                 var
 
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
                     REPORT.RunModal(REPORT::"PurchaseReturnOrder", true, true, PurchaseHeader);

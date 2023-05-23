@@ -35,6 +35,7 @@ pageextension 80072 "Purchase Invoice Lists" extends "Purchase Invoices"
             {
                 ApplicationArea = all;
                 Caption = 'Posting Description';
+                ToolTip = 'Specifies additional posting information for the document. After you post the document, the description can add detail to vendor and customer ledger entries.';
             }
         }
         addafter(Amount)
@@ -43,6 +44,7 @@ pageextension 80072 "Purchase Invoice Lists" extends "Purchase Invoices"
             {
                 ApplicationArea = all;
                 Caption = 'Amount Including VAT';
+                ToolTip = 'Specifies the total of the amounts, including VAT, on all the lines on the document.';
             }
         }
         addafter("Assigned User ID")
@@ -51,16 +53,19 @@ pageextension 80072 "Purchase Invoice Lists" extends "Purchase Invoices"
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
         }
     }
@@ -76,12 +81,13 @@ pageextension 80072 "Purchase Invoice Lists" extends "Purchase Invoices"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the AP Voucher action.';
                 trigger OnAction()
                 var
                     APVoucher: Report "AP Voucher";
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.Copy(Rec);
                     APVoucher."SetGLEntry"(PurchaseHeader);
                     APVoucher.RunModal();

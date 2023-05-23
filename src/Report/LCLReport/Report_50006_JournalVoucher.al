@@ -5,6 +5,7 @@ report 50006 "Journal Voucher"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50006_JournalVoucher.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(GLEntry; "G/L Entry")
@@ -49,7 +50,7 @@ report 50006 "Journal Voucher"
                 NewDate: Date;
             begin
 
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyInformation"(ComText, false);
                 "GetExchange"();
@@ -62,7 +63,7 @@ report 50006 "Journal Voucher"
                 "FindPostingDescription"();
                 "CheckLineData"();
                 if not GenJournalBatchName.GET(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name") then
-                    GenJournalBatchName.init;
+                    GenJournalBatchName.init();
 
                 JournalDescriptionThai := GenJournalBatchName."Description TH Voucher";
                 JournalDescriptionEng := GenJournalBatchName."Description EN Voucher";
@@ -113,7 +114,7 @@ report 50006 "Journal Voucher"
     var
         GenLine: Record "Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -131,7 +132,7 @@ report 50006 "Journal Voucher"
     var
         GenLine: Record "Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -146,12 +147,10 @@ report 50006 "Journal Voucher"
     /// <param name="GenLine">Parameter of type Record "Gen. Journal Line".</param>
     procedure "SetGLEntry"(GenLine: Record "Gen. Journal Line")
     var
-        GLTemp: Record "G/L Entry" temporary;
         PreviewPost: Codeunit EventFunction;
-        EntryNo: Integer;
     begin
         TempAmt := 0;
-        GenJournalLine.reset;
+        GenJournalLine.reset();
         GenJournalLine.SetRange("Journal Template Name", GenLine."Journal Template Name");
         GenJournalLine.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
         GenJournalLine.SetRange("Document No.", GenLine."Document No.");
@@ -196,7 +195,7 @@ report 50006 "Journal Voucher"
     var
         GenLineCheck: Record "Gen. Journal Line";
     begin
-        GenLineCheck.reset;
+        GenLineCheck.reset();
         GenLineCheck.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLineCheck.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLineCheck.SetRange("Document No.", GenJournalLine."Document No.");
@@ -211,23 +210,13 @@ report 50006 "Journal Voucher"
         companyInfor: Record "Company Information";
         ExchangeRate: Text[20];
         ComText: array[10] Of Text[250];
-        CustText: array[10] Of Text[250];
         BranchCode: Text[50];
         SplitDate: Array[3] of Text[20];
-        vgUOMFromItemCharge: Code[10];
-        vgCustNoItemCharge: Code[20];
-        vgQtyonShipItemCharge: Decimal;
         AmtText: Text[1024];
         TempAmt: Decimal;
-        VendorCode: Code[20];
         CurrencyCode: Code[10];
         CurrencyFactor: Decimal;
         PostingDescription: Text[250];
-        CVBufferEntry: Record "CV Ledger Entry Buffer";
-        OK: Boolean;
-        BankName: Text[250];
-        BankBranchNo: Code[30];
-        VendorBankAccountName: Text[250];
         JournalDescriptionThai: Text[250];
         JournalDescriptionEng: Text[250];
         GenJournalBatchName: Record "Gen. Journal Batch";

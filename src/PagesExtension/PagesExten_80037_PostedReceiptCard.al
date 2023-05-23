@@ -29,11 +29,12 @@ pageextension 80037 "PostedReceiptCard" extends "Posted Purchase Receipt"
                 PromotedCategory = Category5;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Purchase Receipt action.';
                 trigger OnAction()
                 var
                     PurchaseRecripet: Record "Purch. Rcpt. Header";
                 begin
-                    PurchaseRecripet.reset;
+                    PurchaseRecripet.reset();
                     PurchaseRecripet.SetRange("No.", rec."No.");
                     REPORT.RunModal(REPORT::"Good Receipt Note", true, true, PurchaseRecripet);
                 end;

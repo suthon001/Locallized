@@ -118,7 +118,7 @@ report 50012 "Purchase Vat Report"
                 if VatBus <> '' then begin
 
                     if not VATBusinessPostingGroup.GET(VatBus) then
-                        VATBusinessPostingGroup.init;
+                        VATBusinessPostingGroup.init();
                     Comtext[1] := VATBusinessPostingGroup."Company Name (Thai)" + ' ' + VATBusinessPostingGroup."Company Name 2 (Thai)";
                     Comtext[2] := VATBusinessPostingGroup."Company Address (Thai)";
                     Comtext[3] := VATBusinessPostingGroup."Company Address 2 (Thai)";
@@ -132,7 +132,7 @@ report 50012 "Purchase Vat Report"
                         var_BrandName := 'สาขาที่ ';
                     END;
                     var_BrandAddress := VATBusinessPostingGroup."Company Address (Thai)" + ' ';
-                    var_BrandAddress2 := VATBusinessPostingGroup."Company Address 2 (Thai)" + ' ' + VATBusinessPostingGroup."City (Thai)" + ' ' + VATBusinessPostingGroup."Postcode";
+                    var_BrandAddress2 := VATBusinessPostingGroup."Company Address 2 (Thai)" + ' ' + VATBusinessPostingGroup."City (Thai)" + ' ' + VATBusinessPostingGroup."Post code";
 
                     VATRegis := VATBusinessPostingGroup."VAT Registration No.";
                 end else begin
@@ -162,16 +162,17 @@ report 50012 "Purchase Vat Report"
     trigger OnPreReport()
     begin
 
-        CompanyInformation.GET;
+        CompanyInformation.GET();
         CompanyInformation.CALCFIELDS(Picture);
     end;
 
     /// <summary> 
     /// Description for SetFilter.
     /// </summary>
-    /// <param name="TempVatBus">Parameter of type Code[30].</param>
+    /// <param name="TempVatBus">Parameter of type Code[250].</param>
+    /// <param name="TemVatPro">Code[250].</param>
     /// <param name="Tempdate">Parameter of type Text[100].</param>
-    procedure "SetFilter"(TempVatBus: Code[30]; TemVatPro: Code[30]; Tempdate: Text[100])
+    procedure "SetFilter"(TempVatBus: Code[250]; TemVatPro: Code[250]; Tempdate: Text)
     begin
         if TempVatBus <> '' then
             "Tax Report Line".SetFilter("VAT Business Posting Group", TempVatBus);
@@ -194,8 +195,7 @@ report 50012 "Purchase Vat Report"
         var_BrandAddress: Text;
         var_BrandAddress2: Text;
         VATRegis: Text;
-        EntryNo: Integer;
-        VatBus: Code[30];
+        VatBus: Code[250];
         Comtext: Array[10] of text[250];
 
 }

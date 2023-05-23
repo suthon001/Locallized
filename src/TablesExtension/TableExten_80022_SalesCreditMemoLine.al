@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenSalesCr.MemoLine (ID 80022) extends Record Sales Cr.Memo Line.
+/// </summary>
 tableextension 80022 "ExtenSalesCr.MemoLine" extends "Sales Cr.Memo Line"
 {
     fields
@@ -32,11 +35,13 @@ tableextension 80022 "ExtenSalesCr.MemoLine" extends "Sales Cr.Memo Line"
         {
             Editable = false;
             Caption = 'Ref. SQ No.';
+            DataClassification = CustomerContent;
         }
         field(80005; "Ref. SQ Line No."; Integer)
         {
             Editable = false;
             Caption = 'Ref. SQ Line No.';
+            DataClassification = CustomerContent;
         }
     }
 }

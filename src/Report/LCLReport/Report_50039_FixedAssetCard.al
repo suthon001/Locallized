@@ -4,6 +4,7 @@ report 50039 "Fixed Asset Card"
     RDLCLayout = './LayoutReport/LCLReport/Report_50039_FixedAssetCard.rdl';
     PreviewMode = PrintLayout;
     Caption = 'Fixed Asset Card';
+    ApplicationArea = All;
 
 
     dataset
@@ -70,14 +71,14 @@ report 50039 "Fixed Asset Card"
                 // "Fixed Asset".CALCFIELDS(Picture);
 
                 IF NOT Vendor.GET("Vendor No.") THEN
-                    Vendor.INIT;
+                    Vendor.INIT();
 
                 vgFALocationName := CodeUnitFunction."GetNameFALocation"("FA Location Code");
                 vgFAClassName := CodeUnitFunction."GetNameFAClass"("FA Class Code");
                 vgFASubClassName := CodeUnitFunction."GetNameFASubClass"("FA Subclass Code");
 
                 IF NOT Employee.GET("Responsible Employee") THEN
-                    Employee.init;
+                    Employee.init();
                 vgEmployeeName := Employee."First Name" + ' ' + Employee."Last Name";
 
                 IF NOT ImageStorage.GET(5600, 1, "No.", 0) then
@@ -92,7 +93,7 @@ report 50039 "Fixed Asset Card"
 
     trigger OnPreReport()
     begin
-        CompanyInformation.GET;
+        CompanyInformation.GET();
     end;
 
     var

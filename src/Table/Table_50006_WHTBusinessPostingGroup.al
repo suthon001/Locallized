@@ -6,6 +6,7 @@ table 50006 "WHT Business Posting Group"
     Caption = 'WHT Business Posting Group';
     DrillDownPageID = "WHT Business Posting Group";
     LookupPageID = "WHT Business Posting Group";
+    DataClassification = CustomerContent;
 
     fields
     {

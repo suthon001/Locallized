@@ -72,54 +72,53 @@ report 50041 "Fixed Asset Sales"
                 vgAcqDate := 0D;
 
                 IF NOT FADeprBook.GET("No.", DeprBookCode) THEN
-                    CurrReport.SKIP
-                ELSE BEGIN
+                    CurrReport.SKIP()
+                ELSE
                     IF (FADeprBook."Disposal Date" = 0D) OR ((FADeprBook."Disposal Date" < vgStartDateFilter) OR (FADeprBook."Disposal Date" > vgEndDateFilter)) THEN
-                        CurrReport.SKIP
+                        CurrReport.SKIP()
                     ELSE
                         vgSalesDate := FADeprBook."Disposal Date";
-                END;
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("Document Type", '%1', FALedgerEntry."Document Type"::Invoice);
-                IF NOT FALedgerEntry.FINDFIRST THEN BEGIN
-                    CurrReport.SKIP;
-                END ELSE
+                IF NOT FALedgerEntry.FINDFIRST() THEN
+                    CurrReport.SKIP()
+                ELSE
                     vgDcoumentNo := FALedgerEntry."Document No.";
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("FA Posting Type", '%1', FALedgerEntry."FA Posting Type"::"Acquisition Cost");
                 FALedgerEntry.SETFILTER("FA Posting Category", '%1', FALedgerEntry."FA Posting Category"::" ");
-                IF FALedgerEntry.FINDFIRST THEN BEGIN
+                IF FALedgerEntry.FINDFIRST() THEN BEGIN
                     vgAcqDate := FALedgerEntry."Posting Date";
                     FALedgerEntry.CalcSums(Amount);
                     vgAcqCost := FALedgerEntry.Amount;
 
                 END;
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("FA Posting Type", '%1', FALedgerEntry."FA Posting Type"::"Gain/Loss");
                 FALedgerEntry.SETFILTER("FA Posting Category", '%1', FALedgerEntry."FA Posting Category"::" ");
-                IF FALedgerEntry.FINDFIRST THEN BEGIN
+                IF FALedgerEntry.FINDFIRST() THEN BEGIN
                     FALedgerEntry.CalcSums(Amount);
                     vgGainLoss := FALedgerEntry.Amount;
 
                 END;
 
                 IF NOT FAPostingGroup.GET(FADeprBook."FA Posting Group") THEN
-                    FAPostingGroup.INIT;
+                    FAPostingGroup.INIT();
 
                 vgFALocationName := CodeUnitFunction."GetNameFALocation"("FA Location Code");
                 vgFAClassName := CodeUnitFunction."GetNameFAClass"("FA Class Code");
                 vgFASubClassName := CodeUnitFunction."GetNameFASubClass"("FA Subclass Code");
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("FA Posting Type", '%1', FALedgerEntry."FA Posting Type"::"Proceeds on Disposal");
@@ -130,7 +129,7 @@ report 50041 "Fixed Asset Sales"
 
                 END;
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("Part of Book Value", '%1', TRUE);
@@ -141,7 +140,7 @@ report 50041 "Fixed Asset Sales"
                     vgAccDepre := FALedgerEntry.Amount;
                 end;
 
-                FALedgerEntry.RESET;
+                FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("FA Posting Type", '%1', FALedgerEntry."FA Posting Type"::"Salvage Value");
@@ -180,10 +179,14 @@ report 50041 "Fixed Asset Sales"
                     field(vgStartDateFilter; vgStartDateFilter)
                     {
                         Caption = 'Start Date';
+                        ToolTip = 'Specifies the value of the Start Date field.';
+                        ApplicationArea = All;
                     }
                     field(vgEndDateFilter; vgEndDateFilter)
                     {
                         Caption = 'End Date';
+                        ToolTip = 'Specifies the value of the End Date field.';
+                        ApplicationArea = All;
                     }
                 }
             }
@@ -196,12 +199,11 @@ report 50041 "Fixed Asset Sales"
 
     trigger OnPreReport()
     begin
-        CompanyInformation.GET;
+        CompanyInformation.GET();
         vgGetFilters := "Fixed Asset".GETFILTERS;
     end;
 
     var
-        "###Customize.BW.LCL###": Integer;
         FALedgerEntry: Record "FA Ledger Entry";
         vgAcqDate: Date;
         vgAcqCost: Decimal;

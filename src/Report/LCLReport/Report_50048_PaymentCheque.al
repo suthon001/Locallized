@@ -3,6 +3,7 @@ report 50048 "Payment Cheque"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50048_PaymentCheque.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
 
     dataset
     {
@@ -75,14 +76,11 @@ report 50048 "Payment Cheque"
                     ELSE
                         var_ChequeAmountText := CodeUnitFunction."NumberEngToText"(ABS(Amount), "Currency Code");
                 END
-                ELSE BEGIN
-
+                ELSE
                     var_ChequeAmountText := CodeUnitFunction."NumberThaiToText"(ABS(Amount));
 
-                END;
-
                 // Assign Value Of Month Thai Or ENG
-                GenJnlLineDesc.RESET;
+                GenJnlLineDesc.RESET();
                 GenJnlLineDesc.SETRANGE("Journal Template Name", "Journal Template Name");
                 GenJnlLineDesc.SETRANGE("Journal Batch Name", "Journal Batch Name");
                 GenJnlLineDesc.SETRANGE("Document No.", "Document No.");
@@ -99,17 +97,16 @@ report 50048 "Payment Cheque"
                 // End
 
 
-                GenJnlLineVen.RESET;
+                GenJnlLineVen.RESET();
                 GenJnlLineVen.SETFILTER("Journal Template Name", '%1', "Journal Template Name");
                 GenJnlLineVen.SETFILTER("Journal Batch Name", '%1', "Journal Batch Name");
                 GenJnlLineVen.SETFILTER("Document No.", '%1', "Document No.");
                 GenJnlLineVen.SETFILTER("Account Type", '%1|%2', "Account Type"::Vendor, "Account Type"::"Bank Account");
                 GenJnlLineVen.SETFILTER("Require Screen Detail", '%1', "Require Screen Detail"::CHEQUE);
-                IF GenJnlLineVen.FIND('-') THEN BEGIN
-                    Payto := GenJnlLineVen."Pay Name";
-                END
+                IF GenJnlLineVen.FIND('-') THEN
+                    Payto := GenJnlLineVen."Pay Name"
                 ELSE BEGIN
-                    GenJnlLineVen.RESET;
+                    GenJnlLineVen.RESET();
                     GenJnlLineVen.SETFILTER("Journal Template Name", '%1', "Journal Template Name");
                     GenJnlLineVen.SETFILTER("Journal Batch Name", '%1', "Journal Batch Name");
                     GenJnlLineVen.SETFILTER("Document No.", '%1', "Document No.");
@@ -134,13 +131,16 @@ report 50048 "Payment Cheque"
                     field(ChequeFormatOfBank; ChequeFormatOfBank)
                     {
                         Caption = 'Bank Type';
+                        ToolTip = 'Specifies the value of the Bank Type field.';
+                        ApplicationArea = All;
                     }
                     group("A/C PAYEE ONLY")
                     {
                         field("var_A/CPayee"; "var_A/CPayee")
                         {
                             Caption = 'A/C PAYEE ONLY';
-
+                            ToolTip = 'Specifies the value of the A/C PAYEE ONLY field.';
+                            ApplicationArea = All;
                             trigger OnValidate()
                             begin
                                 if "var_A/CPayee" then
@@ -150,6 +150,8 @@ report 50048 "Payment Cheque"
                         field(Var_CO; Var_CO)
                         {
                             Caption = '& CO';
+                            ToolTip = 'Specifies the value of the & CO field.';
+                            ApplicationArea = All;
                             trigger OnValidate()
                             begin
                                 if Var_CO then
@@ -160,6 +162,8 @@ report 50048 "Payment Cheque"
                     field(var_Thai; var_Thai)
                     {
                         Caption = 'Amount text in thai';
+                        ToolTip = 'Specifies the value of the Amount text in thai field.';
+                        ApplicationArea = All;
                     }
                 }
             }
@@ -193,22 +197,13 @@ report 50048 "Payment Cheque"
         var_ChequeAmount: Decimal;
         var_ChequeVendor: Text[250];
         var_ChequeAmountText: Text[250];
-        BankCode: Code[20];
         ChequeFormatOfBank: Option BBL,KB,TMB,SCB,BAY,CASH;
         "var_A/CPayee", Var_CO : Boolean;
         var_ShowPayee: Text[5];
-        var_ACP1: Code[30];
-        var_ACP2: Code[20];
-        var_ACP3: Code[30];
-        var_BEARER1: Code[20];
-        var_BEARER2: Code[20];
-        Type: Text[1];
         var_Thai: Boolean;
-        TempGLFilter: Code[20];
 
         CodeUnitFunction: Codeunit "Function Center";
         GenJnlLineDesc: Record "Gen. Journal Line";
-        Month: Text[50];
         var_DateInCheque: Date;
         Payto: Text[250];
         GenJnlLineVen: Record "Gen. Journal Line";
@@ -217,10 +212,6 @@ report 50048 "Payment Cheque"
         varDateInChequeYear: array[4] of Text[1];
 
     procedure GetDateInCheque(dateInCheque: Date)
-    var
-        dateInChequeDayText: Text[2];
-        dateInChequeMonthText: Text[2];
-        dateInChequeYearText: Text[4];
     begin
         //Get Day
         varDateInChequeDay[1] := COPYSTR(FORMAT(dateInCheque, 0, '<Day,2><Month,2><Year4>'), 1, 1);

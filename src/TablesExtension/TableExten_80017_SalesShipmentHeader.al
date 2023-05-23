@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenSalesShipmentHeader (ID 80017) extends Record Sales Shipment Header.
+/// </summary>
 tableextension 80017 "ExtenSalesShipmentHeader" extends "Sales Shipment Header"
 {
     fields
@@ -40,7 +43,7 @@ tableextension 80017 "ExtenSalesShipmentHeader" extends "Sales Shipment Header"
             DataClassification = CustomerContent;
         }
 
-        field(80006; "Create By"; Code[30])
+        field(80006; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;

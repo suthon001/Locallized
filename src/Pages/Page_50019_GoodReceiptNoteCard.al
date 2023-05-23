@@ -1,3 +1,6 @@
+/// <summary>
+/// Page Goods Receipt Note Card (ID 50019).
+/// </summary>
 page 50019 "Goods Receipt Note Card"
 {
     Caption = 'Goods Receipt Note Card';

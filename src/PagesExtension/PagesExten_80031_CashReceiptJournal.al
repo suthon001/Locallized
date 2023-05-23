@@ -7,9 +7,8 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
         {
             trigger OnAssistEdit()
             begin
-                if Rec."AssistEdit"(xRec) then begin
+                if Rec."AssistEdit"(xRec) then
                     CurrPage.Update();
-                end;
             end;
         }
         addafter("VAT Amount")
@@ -17,6 +16,7 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
             field("Require Screen Detail"; Rec."Require Screen Detail")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Require Screen Detail field.';
             }
 
         }
@@ -26,12 +26,14 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
             {
                 ApplicationArea = all;
                 Caption = 'Journal Description';
+                ToolTip = 'Specifies the value of the Journal Description field.';
             }
 
             field("Pay Name"; Rec."Pay Name")
             {
                 ApplicationArea = all;
                 Caption = 'Pay Name';
+                ToolTip = 'Specifies the value of the Pay Name field.';
             }
         }
 
@@ -74,23 +76,24 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                 PromotedIsBig = true;
                 Image = NewSum;
                 ShortcutKey = 'Shift+Ctrl+S';
+                ToolTip = 'Executes the Set Net Balance action.';
                 trigger OnAction()
                 var
                     GenJnlLine: Record "Gen. Journal Line";
                     SummaryAmount: Decimal;
                 begin
-                    GenJnlLine.reset;
+                    GenJnlLine.reset();
                     GenJnlLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJnlLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJnlLine.SetRange("Document No.", rec."Document No.");
                     GenJnlLine.SetFilter("Line No.", '<>%1', rec."Line No.");
-                    if GenJnlLine.findset then begin
+                    if GenJnlLine.findset() then begin
                         GenJnlLine.CalcSums("Amount (LCY)");
                         SummaryAmount := GenJnlLine."Amount (LCY)";
                     end;
-                    if SummaryAmount <> 0 then begin
-                        rec.Validate("Amount (LCY)", SummaryAmount * -1);
-                    end else
+                    if SummaryAmount <> 0 then
+                        rec.Validate("Amount (LCY)", SummaryAmount * -1)
+                    else
                         rec.Validate("Amount (LCY)", 0);
                     rec.Modify();
                 end;
@@ -106,12 +109,13 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Receipt Voucher action.';
                 trigger OnAction()
                 var
                     ReceiptVourcher: Report "Receive Voucher";
                     GenJournalLIne: Record "Gen. Journal Line";
                 begin
-                    GenJournalLIne.reset;
+                    GenJournalLIne.reset();
                     GenJournalLIne.copy(rec);
                     ReceiptVourcher."SetGLEntry"(GenJournalLIne);
                     ReceiptVourcher.RunModal();
@@ -125,11 +129,12 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Receipt Invoice (Apply) action.';
                 trigger OnAction()
                 var
                     RecCustLedgEntry: Record "Cust. Ledger Entry";
                 begin
-                    RecCustLedgEntry.RESET;
+                    RecCustLedgEntry.RESET();
                     RecCustLedgEntry.SETFILTER("Applies-to ID", rec."Document No.");
                     REPORT.RUN(REPORT::"Receipt Tax Invoice", TRUE, TRUE, RecCustLedgEntry);
                 end;
@@ -142,11 +147,12 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Receipt Invoice action.';
                 trigger OnAction()
                 var
                     GenJournalLine: Record "Gen. Journal Line";
                 begin
-                    GenJournalLine.RESET;
+                    GenJournalLine.RESET();
                     GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLine.SetRange("Document No.", rec."Document No.");
@@ -166,6 +172,7 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Show Detail Vat & Cheque & WHT action.';
                 trigger OnAction()
                 var
                     ShowDetailCheque: Page "ShowDetail Cheque";
@@ -180,7 +187,7 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                     CLEAR(ShowDetailVAT);
                     CLEAR(ShowDetailCheque);
                     if Rec."Require Screen Detail" IN [Rec."Require Screen Detail"::VAT, Rec."Require Screen Detail"::CHEQUE, Rec."Require Screen Detail"::WHT] then begin
-                        GenLineDetail.reset;
+                        GenLineDetail.reset();
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
@@ -196,12 +203,12 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                             end else
                                 if Rec."Require Screen Detail" = Rec."Require Screen Detail"::WHT then begin
                                     if Rec."WHT Cust/Vend No." = '' then begin
-                                        GenLine2.reset;
+                                        GenLine2.reset();
                                         GenLine2.SetRange("Journal Template Name", Rec."Journal Template Name");
                                         GenLine2.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                                         GenLine2.SetRange("Document No.", Rec."Document No.");
                                         GenLine2.SetRange("Account Type", GenLine2."Account Type"::Customer);
-                                        if GenLine2.FindFirst() then begin
+                                        if GenLine2.FindFirst() then
                                             if Cust.get(GenLine2."Account No.") then begin
                                                 Rec."WHT Cust/Vend No." := Cust."No.";
                                                 Rec."WHT Name" := Cust.Name;
@@ -215,7 +222,6 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                                                 Rec.Modify();
                                                 Commit();
                                             end;
-                                        end;
                                     end;
                                     ShowDetailWHT.SetTableView(GenLineDetail);
                                     ShowDetailWHT.RunModal();
@@ -227,7 +233,4 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
             }
         }
     }
-    var
-        ShowTax: Boolean;
-        showPDC: Boolean;
 }

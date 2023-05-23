@@ -3,6 +3,7 @@ report 50034 "Good Receipt Note"
     Caption = 'Good Receipt Note';
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50034_GoodReceiptNote.rdl';
+    ApplicationArea = All;
     dataset
     {
         dataitem("Purch. Rcpt. Header"; "Purch. Rcpt. Header")
@@ -94,7 +95,7 @@ report 50034 "Good Receipt Note"
 
             trigger OnPreDataItem()
             begin
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
             end;
 
@@ -112,12 +113,12 @@ report 50034 "Good Receipt Note"
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
-                PurchaserecriptLine.reset;
+                PurchaserecriptLine.reset();
                 PurchaserecriptLine.SetRange("Document No.", "No.");
                 PurchaserecriptLine.CalcSums(Quantity);
                 TotalQuantity := PurchaserecriptLine.Quantity;
                 if not PaymentTerm.GET("Payment Terms Code") then
-                    PaymentTerm.init;
+                    PaymentTerm.init();
             end;
         }
     }
@@ -130,12 +131,8 @@ report 50034 "Good Receipt Note"
         ExchangeRate: Text[20];
         ComText: array[10] Of Text[250];
         VendText: array[10] Of Text[250];
-        BranchCode: Text[50];
         SplitDate: Array[3] of Text[20];
-        AmtText: Text[1024];
-        TotalAmt: array[100] of Decimal;
         CommentText: Array[100] of Text[250];
-        VatText: Text[50];
         LineNo: Integer;
         LotSeriesNo: Code[30];
         TotalQuantity: Decimal;

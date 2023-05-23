@@ -7,6 +7,7 @@ Report 50076 "Account Schedule (New)"
     Caption = '- Account Schedule';
     PreviewMode = PrintLayout;
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
@@ -31,7 +32,7 @@ Report 50076 "Account Schedule (New)"
                 column(PeriodText; PeriodText)
                 {
                 }
-                column(COMPANYNAME; COMPANYPROPERTY.DisplayName)
+                column(COMPANYNAME; COMPANYPROPERTY.DisplayName())
                 {
                 }
                 column(AccScheduleName_Description; AccScheduleName.Description)
@@ -260,20 +261,20 @@ Report 50076 "Account Schedule (New)"
                     i: Integer;
                 begin
                     ColumnLayout.SetRange("Column Layout Name", ColumnLayoutName);
-                    if ColumnLayout.FindSet then
+                    if ColumnLayout.FindSet() then
                         repeat
                             i += 1;
                             ColumnHeaderArrayText[i] := ColumnLayout."Column Header";
-                        until (ColumnLayout.Next = 0) or (i = ArrayLen(ColumnHeaderArrayText));
+                        until (ColumnLayout.Next() = 0) or (i = ArrayLen(ColumnHeaderArrayText));
                 end;
             }
 
             trigger OnAfterGetRecord()
             begin
                 GLSetup.Get();
-                if "Analysis View Name" <> '' then begin
-                    AnalysisView.Get("Analysis View Name");
-                end else begin
+                if "Analysis View Name" <> '' then
+                    AnalysisView.Get("Analysis View Name")
+                else begin
                     AnalysisView.Init();
                     AnalysisView."Dimension 1 Code" := GLSetup."Global Dimension 1 Code";
                     AnalysisView."Dimension 2 Code" := GLSetup."Global Dimension 2 Code";
@@ -331,9 +332,9 @@ Report 50076 "Account Schedule (New)"
 
                             trigger OnValidate()
                             begin
-                                ValidateAccSchedName;
+                                ValidateAccSchedName();
                                 AccSchedNameHidden := '';
-                                SetBudgetFilterEnable;
+                                SetBudgetFilterEnable();
                                 RequestOptionsPage.Update(false);
                             end;
                         }
@@ -353,9 +354,9 @@ Report 50076 "Account Schedule (New)"
                                 if not AccSchedManagement.LookupColumnName(ColumnLayoutName, Text) then
                                     exit(false);
                                 ColumnLayoutName := CopyStr(Text, 1, MaxStrLen(ColumnLayoutName));
-                                SetBudgetFilterEnable;
+                                SetBudgetFilterEnable();
                                 ColumnLayoutNameHidden := '';
-                                RequestOptionsPage.Update;
+                                RequestOptionsPage.Update();
                                 exit(true);
                             end;
 
@@ -364,9 +365,9 @@ Report 50076 "Account Schedule (New)"
                                 if ColumnLayoutName = '' then
                                     Error(Text006);
                                 AccSchedManagement.CheckColumnName(ColumnLayoutName);
-                                SetBudgetFilterEnable;
+                                SetBudgetFilterEnable();
                                 ColumnLayoutNameHidden := '';
-                                RequestOptionsPage.Update;
+                                RequestOptionsPage.Update();
                             end;
                         }
                     }
@@ -383,7 +384,7 @@ Report 50076 "Account Schedule (New)"
 
                             trigger OnValidate()
                             begin
-                                ValidateStartEndDate;
+                                ValidateStartEndDate();
                             end;
                         }
                         field(EndDate; EndDate)
@@ -395,7 +396,7 @@ Report 50076 "Account Schedule (New)"
 
                             trigger OnValidate()
                             begin
-                                ValidateStartEndDate;
+                                ValidateStartEndDate();
                             end;
                         }
                         field(GLBudgetFilter; GLBudgetName)
@@ -610,11 +611,11 @@ Report 50076 "Account Schedule (New)"
         trigger OnOpenPage()
         begin
             GLSetup.Get();
-            TransferValues;
+            TransferValues();
             if AccSchedName <> '' then
                 if (ColumnLayoutName = '') or not AccSchedNameEditable then
-                    ValidateAccSchedName;
-            SetBudgetFilterEnable;
+                    ValidateAccSchedName();
+            SetBudgetFilterEnable();
         end;
     }
 
@@ -625,9 +626,9 @@ Report 50076 "Account Schedule (New)"
 
     trigger OnPreReport()
     begin
-        TransferValues;
-        UpdateFilters;
-        InitAccSched;
+        TransferValues();
+        UpdateFilters();
+        InitAccSched();
     end;
 
     var
@@ -731,11 +732,11 @@ Report 50076 "Account Schedule (New)"
         ColumnValuesAsText := '';
 
         ColumnValuesDisplayed := AccSchedManagement.CalcCell(AccScheduleLine, ColumnLayout, UseAmtsInAddCurr);
-        if AccSchedManagement.GetDivisionError then begin
+        if AccSchedManagement.GetDivisionError() then begin
             if ShowError in [ShowError::"Division by Zero", ShowError::Both] then
                 ColumnValuesAsText := Text002;
         end else
-            if AccSchedManagement.GetPeriodError then begin
+            if AccSchedManagement.GetPeriodError() then begin
                 if ShowError in [ShowError::"Period Error", ShowError::Both] then
                     ColumnValuesAsText := Text004;
             end else begin
@@ -852,9 +853,9 @@ Report 50076 "Account Schedule (New)"
         DimValList.LookupMode(true);
         DimVal.SetRange("Dimension Code", Dim);
         DimValList.SetTableView(DimVal);
-        if DimValList.RunModal = ACTION::LookupOK then begin
+        if DimValList.RunModal() = ACTION::LookupOK then begin
             DimValList.GetRecord(DimVal);
-            Text := DimValList.GetSelectionFilter;
+            Text := DimValList.GetSelectionFilter();
             exit(true);
         end;
         exit(false)
@@ -927,7 +928,7 @@ Report 50076 "Account Schedule (New)"
             if not AccScheduleName.Get(AccSchedName) then
                 AccSchedName := '';
         if AccSchedName = '' then
-            if AccScheduleName.FindFirst then
+            if AccScheduleName.FindFirst() then
                 AccSchedName := AccScheduleName.Name;
 
         if not ColumnLayoutName2.Get(ColumnLayoutName) then
@@ -956,10 +957,10 @@ Report 50076 "Account Schedule (New)"
             Dim4Filter := Dim4FilterHidden;
         end else begin
             if EndDate = 0D then
-                EndDate := WorkDate;
+                EndDate := WorkDate();
             if StartDate = 0D then
                 StartDate := CalcDate('<-CM>', EndDate);
-            ValidateStartEndDate;
+            ValidateStartEndDate();
         end;
 
         if ColumnLayoutName = '' then

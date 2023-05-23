@@ -14,11 +14,12 @@ pageextension 80055 "PostedSalesShipment" extends "Posted Sales Shipment"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Category4;
+                ToolTip = 'Executes the Sales Shipment action.';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Shipment Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Sales Shipment", TRUE, TRUE, RecSalesHeader);
                 end;

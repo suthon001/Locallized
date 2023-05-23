@@ -6,6 +6,7 @@ report 50067 "Customer/Item Sales (new)"
     Caption = 'Customer/Item Sales';
     PreviewMode = PrintLayout;
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
@@ -16,7 +17,7 @@ report 50067 "Customer/Item Sales (new)"
             column(STRSUBSTNO_Text000_PeriodText_; StrSubstNo(Text000, PeriodText))
             {
             }
-            column(COMPANYNAME; COMPANYPROPERTY.DisplayName)
+            column(COMPANYNAME; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PrintOnlyOnePerPage; PrintOnlyOnePerPage)
@@ -109,7 +110,7 @@ report 50067 "Customer/Item Sales (new)"
                 begin
                     ValueEntryBuffer.Init();
                     ValueEntryBuffer.SetRange("Item No.", "Item No.");
-                    EntryInBufferExists := ValueEntryBuffer.FindFirst;
+                    EntryInBufferExists := ValueEntryBuffer.FindFirst();
 
                     if not EntryInBufferExists then
                         ValueEntryBuffer."Entry No." := "Item Ledger Entry No.";
@@ -143,7 +144,7 @@ report 50067 "Customer/Item Sales (new)"
                     end;
 
                     if EntryInBufferExists then
-                        ValueEntryBuffer.Modify
+                        ValueEntryBuffer.Modify()
                     else
                         ValueEntryBuffer.Insert();
                 end;
@@ -192,7 +193,7 @@ report 50067 "Customer/Item Sales (new)"
                     if Number = 1 then
                         ValueEntryBuffer.Find('-')
                     else
-                        ValueEntryBuffer.Next;
+                        ValueEntryBuffer.Next();
 
                     Profit :=
                       ValueEntryBuffer."Sales Amount (Actual)" +

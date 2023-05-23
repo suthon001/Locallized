@@ -107,7 +107,11 @@ tableextension 80033 "ExtenPurchaseCr.MemoLine" extends "Purch. Cr. Memo Line"
             TableRelation = "WHT Product Posting Group"."Code";
             DataClassification = CustomerContent;
         }
-
+        field(80023; "Tax Invoice Name 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Name 2';
+            DataClassification = CustomerContent;
+        }
 
 
     }

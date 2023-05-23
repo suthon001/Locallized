@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension FixedAsset (ID 80044) extends Record Fixed Asset.
+/// </summary>
 tableextension 80044 "FixedAsset" extends "Fixed Asset"
 {
     fields
@@ -69,7 +72,7 @@ tableextension 80044 "FixedAsset" extends "Fixed Asset"
                 Falocation: Record "FA Location";
             begin
                 if not Falocation.GET("FA Location Code") then
-                    Falocation.init;
+                    Falocation.init();
                 "Remark Real Location" := Falocation."Location Detail";
             end;
         }

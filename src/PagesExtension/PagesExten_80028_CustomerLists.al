@@ -11,6 +11,7 @@ pageextension 80028 "ExtenCustomerLists" extends "Customer List"
                 Caption = 'Available Credit (LCY)';
                 Editable = false;
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Available Credit (LCY) field.';
             }
         }
         modify("Credit Limit (LCY)")
@@ -38,10 +39,12 @@ pageextension 80028 "ExtenCustomerLists" extends "Customer List"
             field(Address; Rec.Address)
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the street and number.';
             }
             field("Address 2"; Rec."Address 2")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies additional address information.';
             }
 
 
@@ -52,6 +55,7 @@ pageextension 80028 "ExtenCustomerLists" extends "Customer List"
             field("Fax No."; Rec."Fax No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the customer''s fax number.';
             }
         }
         addafter("Payment Terms Code")
@@ -59,6 +63,7 @@ pageextension 80028 "ExtenCustomerLists" extends "Customer List"
             field("Shipment Method Code"; Rec."Shipment Method Code")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies which shipment method to use when you ship items to the customer.';
             }
         }
         addlast(Control1)
@@ -66,14 +71,17 @@ pageextension 80028 "ExtenCustomerLists" extends "Customer List"
             field("VAT Registration No."; rec."VAT Registration No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the customer''s VAT registration number for customers in EU countries/regions.';
             }
             field("Branch Code"; rec."Branch Code")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("Head Office"; rec."Head Office")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
         }
     }
@@ -81,9 +89,8 @@ pageextension 80028 "ExtenCustomerLists" extends "Customer List"
     trigger OnAfterGetRecord()
     begin
         AvalibleCreditAmt := 0;
-        IF Rec."Credit Limit (LCY)" <> 0 then begin
-            AvalibleCreditAmt := Rec."Credit Limit (LCY)" - Rec.GetTotalAmountLCY;
-        end;
+        IF Rec."Credit Limit (LCY)" <> 0 then
+            AvalibleCreditAmt := Rec."Credit Limit (LCY)" - Rec.GetTotalAmountLCY();
     end;
 
     Var

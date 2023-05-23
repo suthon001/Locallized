@@ -5,6 +5,7 @@ report 50063 "Vend. Detail Trial Balance"
     //ApplicationArea = Basic, Suite;
     Caption = 'Vendor - Detail Trial Balance';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -16,7 +17,7 @@ report 50063 "Vend. Detail Trial Balance"
             column(VendDatetFilterPeriod; StrSubstNo(Text000, VendDateFilter))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(VendorTblCapVendFltr; TableCaption + ': ' + VendFilter)
@@ -299,9 +300,9 @@ report 50063 "Vend. Detail Trial Balance"
                             if "Detailed Vendor Ledg. Entry".Find('-') then
                                 repeat
                                     StartBalAdjLCY := StartBalAdjLCY - "Detailed Vendor Ledg. Entry"."Amount (LCY)";
-                                until "Detailed Vendor Ledg. Entry".Next = 0;
+                                until "Detailed Vendor Ledg. Entry".Next() = 0;
                             "Detailed Vendor Ledg. Entry".Reset();
-                        until VendorLedgerEntry.Next = 0;
+                        until VendorLedgerEntry.Next() = 0;
                 end;
                 //  CurrReport.PrintOnlyIfDetail := ExcludeBalanceOnly or (StartBalanceLCY = 0);
                 VendBalanceLCY := StartBalanceLCY + StartBalAdjLCY;

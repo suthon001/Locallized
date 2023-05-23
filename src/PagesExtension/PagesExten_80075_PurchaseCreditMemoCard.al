@@ -9,21 +9,25 @@ pageextension 80075 "Purchase Credit Memo Card" extends "Purchase Credit Memo"
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
             field("Return Shipment No. Series"; Rec."Return Shipment No. Series")
             {
                 ApplicationArea = all;
                 Caption = 'Return Shipment No. Series';
+                ToolTip = 'Specifies the value of the Return Shipment No. Series field.';
             }
         }
         modify("No.")
@@ -63,12 +67,13 @@ pageextension 80075 "Purchase Credit Memo Card" extends "Purchase Credit Memo"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the AP CN Voucher action.';
                 trigger OnAction()
                 var
                     APCNVoucher: Report "AP CN Voucher";
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.Copy(Rec);
                     APCNVoucher."SetGLEntry"(PurchaseHeader);
                     APCNVoucher.RunModal();

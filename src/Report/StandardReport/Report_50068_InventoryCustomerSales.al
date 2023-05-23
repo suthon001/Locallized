@@ -5,13 +5,14 @@ report 50068 "Inventory Customer Sales (new)"
     // ApplicationArea = Basic, Suite;
     Caption = 'Inventory Customer Sales';
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
         dataitem(ReportHeader; "Integer")
         {
             DataItemTableView = SORTING(Number) WHERE(Number = CONST(0));
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PeriodText; PeriodText)
@@ -73,10 +74,10 @@ report 50068 "Inventory Customer Sales (new)"
                     trigger OnAfterGetRecord()
                     begin
                         if Number = 1 then begin
-                            if not TempValueEntryBuf.FindSet then
+                            if not TempValueEntryBuf.FindSet() then
                                 CurrReport.Break();
                         end else
-                            if TempValueEntryBuf.Next = 0 then
+                            if TempValueEntryBuf.Next() = 0 then
                                 CurrReport.Break();
                     end;
 
@@ -93,12 +94,12 @@ report 50068 "Inventory Customer Sales (new)"
 
                 trigger OnAfterGetRecord()
                 begin
-                    if IsNewGroup then
+                    if IsNewGroup() then
                         AddReportLine(ValueEntryBuf);
 
                     IncrLineAmounts(ValueEntryBuf, "Item Ledger Entry");
 
-                    if IsLastEntry then
+                    if IsLastEntry() then
                         AddReportLine(ValueEntryBuf);
                 end;
 
@@ -159,12 +160,10 @@ report 50068 "Inventory Customer Sales (new)"
     var
         ValueEntry: Record "Value Entry";
     begin
-        with ValueEntry do begin
-            SetCurrentKey("Item Ledger Entry No.");
-            SetRange("Item Ledger Entry No.", ItemLedgerEntryNo);
-            CalcSums("Discount Amount");
-            exit("Discount Amount");
-        end;
+        ValueEntry.SetCurrentKey("Item Ledger Entry No.");
+        ValueEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntryNo);
+        ValueEntry.CalcSums("Discount Amount");
+        exit(ValueEntry."Discount Amount");
     end;
 
     local procedure GetLastItemLedgerEntryNo(var ItemLedgerEntry: Record "Item Ledger Entry"): Integer
@@ -172,7 +171,7 @@ report 50068 "Inventory Customer Sales (new)"
         LastItemLedgerEntry: Record "Item Ledger Entry";
     begin
         LastItemLedgerEntry.Copy(ItemLedgerEntry);
-        if LastItemLedgerEntry.FindLast then
+        if LastItemLedgerEntry.FindLast() then
             exit(LastItemLedgerEntry."Entry No.");
         exit(0);
     end;
@@ -182,21 +181,19 @@ report 50068 "Inventory Customer Sales (new)"
         Profit: Decimal;
         DiscountAmount: Decimal;
     begin
-        with CurrItemLedgEntry do begin
-            CalcFields("Sales Amount (Actual)", "Cost Amount (Actual)", "Cost Amount (Non-Invtbl.)");
-            Profit := "Sales Amount (Actual)" + "Cost Amount (Actual)" + "Cost Amount (Non-Invtbl.)";
-            DiscountAmount := CalcDiscountAmount("Entry No.");
+        CurrItemLedgEntry.CalcFields("Sales Amount (Actual)", "Cost Amount (Actual)", "Cost Amount (Non-Invtbl.)");
+        Profit := CurrItemLedgEntry."Sales Amount (Actual)" + CurrItemLedgEntry."Cost Amount (Actual)" + CurrItemLedgEntry."Cost Amount (Non-Invtbl.)";
+        DiscountAmount := CalcDiscountAmount(CurrItemLedgEntry."Entry No.");
 
-            if ValueEntryBuf."Item No." = '' then begin
-                ValueEntryBuf.Init();
-                ValueEntryBuf."Item No." := "Item No.";
-                ValueEntryBuf."Source No." := "Source No.";
-            end;
-            ValueEntryBuf."Invoiced Quantity" += "Invoiced Quantity";
-            ValueEntryBuf."Sales Amount (Actual)" += "Sales Amount (Actual)";
-            ValueEntryBuf."Sales Amount (Expected)" += Profit;
-            ValueEntryBuf."Purchase Amount (Expected)" += DiscountAmount;
+        if ValueEntryBuf."Item No." = '' then begin
+            ValueEntryBuf.Init();
+            ValueEntryBuf."Item No." := CurrItemLedgEntry."Item No.";
+            ValueEntryBuf."Source No." := CurrItemLedgEntry."Source No.";
         end;
+        ValueEntryBuf."Invoiced Quantity" += CurrItemLedgEntry."Invoiced Quantity";
+        ValueEntryBuf."Sales Amount (Actual)" += CurrItemLedgEntry."Sales Amount (Actual)";
+        ValueEntryBuf."Sales Amount (Expected)" += Profit;
+        ValueEntryBuf."Purchase Amount (Expected)" += DiscountAmount;
     end;
 
     local procedure AddReportLine(var ValueEntryBuf: Record "Value Entry")

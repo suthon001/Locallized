@@ -4,6 +4,7 @@
 Table 50001 "Billing Receipt Header"
 {
     Caption = 'Billing & Receipt Header';
+    DataClassification = CustomerContent;
     fields
     {
         field(1; "Document Type"; Enum "Billing Document Type")

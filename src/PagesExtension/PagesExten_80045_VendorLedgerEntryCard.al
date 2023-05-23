@@ -7,6 +7,7 @@ pageextension 80045 "VendorLedgerCard" extends "Vendor Ledger Entries"
             field("Aging Due Date"; Rec."Aging Due Date")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Aging Due Date field.';
             }
         }
     }

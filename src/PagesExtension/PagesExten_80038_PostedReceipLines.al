@@ -37,6 +37,7 @@ pageextension 80038 "PostedReceiptLines" extends "Posted Purchase Rcpt. Subform"
             field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
 
         }

@@ -6,9 +6,8 @@ pageextension 80010 "Item Reclass. Journal" extends "Item Reclass. Journal"
         {
             trigger OnAssistEdit()
             begin
-                if Rec."AssistEdit"(xRec) then begin
+                if Rec."AssistEdit"(xRec) then
                     CurrPage.Update();
-                end;
             end;
         }
     }
@@ -24,12 +23,13 @@ pageextension 80010 "Item Reclass. Journal" extends "Item Reclass. Journal"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Item Reclass action.';
                 trigger OnAction()
                 var
 
                     ItemJournalLine: Record "Item Journal Line";
                 begin
-                    ItemJournalLine.reset;
+                    ItemJournalLine.reset();
                     ItemJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     ItemJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     ItemJournalLine.SetRange("Document No.", rec."Document No.");

@@ -6,6 +6,7 @@ report 50066 "Customer - Order Summary (new)"
     Caption = 'Customer - Order Summary';
     PreviewMode = PrintLayout;
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
@@ -14,7 +15,7 @@ report 50066 "Customer - Order Summary (new)"
             DataItemTableView = SORTING("No.");
             PrintOnlyIfDetail = true;
             RequestFilterFields = "No.", "Search Name", "Customer Posting Group", "Currency Filter";
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PrintAmountsInLCY; PrintAmountsInLCY)
@@ -155,7 +156,7 @@ report 50066 "Customer - Order Summary (new)"
                     while "Shipment Date" >= PeriodStartDate[PeriodNo] do
                         PeriodNo := PeriodNo + 1;
 
-                    Currency.InitRoundingPrecision;
+                    Currency.InitRoundingPrecision();
                     if "VAT Calculation Type" in ["VAT Calculation Type"::"Normal VAT", "VAT Calculation Type"::"Reverse Charge VAT"] then
                         SalesOrderAmount :=
                           Round(
@@ -179,7 +180,7 @@ report 50066 "Customer - Order Summary (new)"
                             SalesOrderAmountLCY :=
                               Round(
                                 CurrExchRate.ExchangeAmtFCYToLCY(
-                                  WorkDate, SalesHeader."Currency Code",
+                                  WorkDate(), SalesHeader."Currency Code",
                                   SalesOrderAmount, SalesHeader."Currency Factor"));
                     end;
 
@@ -203,7 +204,7 @@ report 50066 "Customer - Order Summary (new)"
 
             trigger OnPreDataItem()
             begin
-                ClearAmounts;
+                ClearAmounts();
             end;
         }
     }
@@ -243,7 +244,7 @@ report 50066 "Customer - Order Summary (new)"
         trigger OnOpenPage()
         begin
             if PeriodStartDate[1] = 0D then
-                PeriodStartDate[1] := WorkDate;
+                PeriodStartDate[1] := WorkDate();
         end;
     }
 
@@ -259,7 +260,7 @@ report 50066 "Customer - Order Summary (new)"
         if not PrintAmountsInLCY then begin
             Currency.SetFilter(Code, Customer.GetFilter("Currency Filter"));
             if Currency.Count = 1 then
-                Currency.FindFirst;
+                Currency.FindFirst();
         end;
         for i := 1 to 3 do
             PeriodStartDate[i + 1] := CalcDate('<1M>', PeriodStartDate[i]);

@@ -4,6 +4,7 @@ report 50036 "Fa Card Detail"
     RDLCLayout = './LayoutReport/LCLReport/Report_50036_FaCardDetail.rdl';
     PreviewMode = PrintLayout;
     Caption = 'Fixed Asset History';
+    ApplicationArea = All;
     dataset
     {
         dataitem("Fixed Asset"; "Fixed Asset")
@@ -32,7 +33,7 @@ report 50036 "Fa Card Detail"
     }
     trigger OnPreReport();
     begin
-        ComInfo.get;
+        ComInfo.get();
     end;
 
     var

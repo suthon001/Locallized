@@ -53,6 +53,7 @@ pageextension 80074 "Purchase Credit MemosLists" extends "Purchase Credit Memos"
             {
                 ApplicationArea = all;
                 Caption = 'Posting Description"';
+                ToolTip = 'Specifies additional posting information for the document. After you post the document, the description can add detail to vendor and customer ledger entries.';
             }
 
         }
@@ -63,6 +64,7 @@ pageextension 80074 "Purchase Credit MemosLists" extends "Purchase Credit Memos"
             {
                 ApplicationArea = all;
                 Caption = 'Amount Including VAT';
+                ToolTip = 'Specifies the total of the amounts, including VAT, on all the lines on the document.';
             }
         }
         addafter("Currency Code")
@@ -71,16 +73,19 @@ pageextension 80074 "Purchase Credit MemosLists" extends "Purchase Credit Memos"
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
         }
     }
@@ -96,12 +101,13 @@ pageextension 80074 "Purchase Credit MemosLists" extends "Purchase Credit Memos"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the AP CN Voucher action.';
                 trigger OnAction()
                 var
                     APCNVoucher: Report "AP CN Voucher";
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.Copy(Rec);
                     APCNVoucher."SetGLEntry"(PurchaseHeader);
                     APCNVoucher.RunModal();

@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension GenJournalTemplat (ID 80025) extends Record Gen. Journal Template.
+/// </summary>
 tableextension 80025 GenJournalTemplat extends "Gen. Journal Template"
 {
     fields

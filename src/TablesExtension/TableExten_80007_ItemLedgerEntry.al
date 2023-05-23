@@ -21,6 +21,7 @@ tableextension 80007 "ExtenItem Ledger Entry" extends "Item Ledger Entry"
             Caption = 'Cost Amount (Actual Cal.)';
             FieldClass = FlowField;
             CalcFormula = Sum("Value Entry"."Cost Amount (Actual)" WHERE("Item Ledger Entry No." = FIELD("Entry No."), "Posting Date" = FIELD("Date Filter")));
+            Editable = false;
         }
         field(80003; "Charge Item Ledg.Entry No."; Integer)
         {
@@ -66,6 +67,7 @@ tableextension 80007 "ExtenItem Ledger Entry" extends "Item Ledger Entry"
             Caption = 'Document Invoice No.';
             FieldClass = FlowField;
             CalcFormula = lookup("Value Entry"."Document No." WHERE("Item Ledger Entry No." = field("Entry No."), "Document Type" = filter("Sales Invoice" | "Purchase Invoice")));
+            Editable = false;
         }
 
     }

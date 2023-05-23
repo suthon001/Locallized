@@ -16,6 +16,7 @@ pageextension 80021 "UserSetup" extends "User Setup"
                     PromotedCategory = Process;
                     RunObject = page "Signature";
                     RunPageLink = "User ID" = field("User ID");
+                    ToolTip = 'Executes the Signature action.';
                 }
             }
         }

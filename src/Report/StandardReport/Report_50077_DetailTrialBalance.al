@@ -7,6 +7,7 @@ report 50077 "Detail Trial Balance (new)"
     Caption = 'Detail Trial Balance';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -18,7 +19,7 @@ report 50077 "Detail Trial Balance (new)"
             column(PeriodGLDtFilter; StrSubstNo(Text000, GLDateFilter))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(ExcludeBalanceOnly; ExcludeBalanceOnly)
@@ -170,7 +171,7 @@ report 50077 "Detail Trial Balance (new)"
                 if GLDateFilter <> '' then begin
                     Date.SetRange("Period Type", Date."Period Type"::Date);
                     Date.SetFilter("Period Start", GLDateFilter);
-                    if Date.FindFirst then begin
+                    if Date.FindFirst() then begin
                         SetRange("Date Filter", 0D, ClosingDate(Date."Period Start" - 1));
                         CalcFields("Net Change");
                         StartBalance := "Net Change";

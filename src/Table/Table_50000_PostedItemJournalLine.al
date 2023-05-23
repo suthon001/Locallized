@@ -4,6 +4,7 @@
 table 50000 "Posted ItemJournal Lines"
 {
     Caption = 'Posted Item Journal Lines';
+    DataClassification = CustomerContent;
     fields
     {
         field(1; "Journal Template Name"; Code[10])

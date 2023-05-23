@@ -5,6 +5,7 @@ report 50074 "Inv.Transaction Detail"
     // ApplicationArea = Basic, Suite;
     Caption = 'Inventory - Transaction Detail';
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
@@ -15,7 +16,7 @@ report 50074 "Inv.Transaction Detail"
             column(PeriodItemDateFilter; StrSubstNo(Text000, ItemDateFilter))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(TableCaptionItemFilter; StrSubstNo('%1: %2', TableCaption, ItemFilter))

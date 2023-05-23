@@ -5,6 +5,7 @@ report 50003 "AR Voucher"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50003_ARVoucher.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(GLEntry; "G/L Entry")
@@ -49,7 +50,7 @@ report 50003 "AR Voucher"
                 NewDate: Date;
             begin
 
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyinformationByVat"(ComText, SalesHeader."VAT Bus. Posting Group", false);
                 FunctionCenter."SalesInformation"(SalesHeader."Document Type", SalesHeader."No.", CustText, 0);
@@ -116,12 +117,12 @@ report 50003 "AR Voucher"
                     Item: Record Item;
                 begin
                     IF NOT Item.GET("Item No.") THEN
-                        Item.init;
+                        Item.init();
                     vgUOMFromItemCharge := Item."Base Unit of Measure";
 
 
                     IF NOT SalesShipHeader.GET("Applies-to Doc. No.") then
-                        SalesShipHeader.init;
+                        SalesShipHeader.init();
                     vgCustNoItemCharge := SalesShipHeader."Sell-to Customer No.";
 
 
@@ -158,13 +159,13 @@ report 50003 "AR Voucher"
 
         if GLTemp.FindFirst() then begin
             repeat
-                GLEntry.reset;
+                GLEntry.reset();
                 GLEntry.SetRange("G/L Account No.", GLTemp."G/L Account No.");
                 GLEntry.SetRange("Global Dimension 1 Code", GLTemp."Global Dimension 1 Code");
                 GLEntry.SetRange("Global Dimension 2 Code", GLTemp."Global Dimension 2 Code");
                 if not GLEntry.FindFirst() then begin
                     EntryNo += 1;
-                    GLEntry.init;
+                    GLEntry.init();
                     GLEntry.TransferFields(GLTemp);
                     GLEntry."Entry No." := EntryNo;
                     GLEntry.Insert();
@@ -181,8 +182,8 @@ report 50003 "AR Voucher"
                     TempAmt += GLEntry."Debit Amount";
                     GLEntry.Modify();
                 end;
-            until GLTemp.next = 0;
-            GLEntry.reset;
+            until GLTemp.next() = 0;
+            GLEntry.reset();
         end;
     end;
 
@@ -193,7 +194,7 @@ report 50003 "AR Voucher"
     var
         SalesLine: Record "Sales Line";
     begin
-        SalesLine.reset;
+        SalesLine.reset();
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         SalesLine.SetRange(Type, SalesLine.Type::Item);
@@ -209,7 +210,6 @@ report 50003 "AR Voucher"
         ExchangeRate: Text[20];
         ComText: array[10] Of Text[250];
         CustText: array[10] Of Text[250];
-        BranchCode: Text[50];
         SplitDate: Array[3] of Text[20];
         vgUOMFromItemCharge: Code[10];
         vgCustNoItemCharge: Code[20];

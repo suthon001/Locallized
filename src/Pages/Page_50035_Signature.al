@@ -6,6 +6,7 @@ page 50035 "Signature"
     InsertAllowed = false;
     Caption = 'Signature';
     DataCaptionFields = "User ID";
+    ApplicationArea = All;
     layout
     {
         area(Content)
@@ -16,6 +17,7 @@ page 50035 "Signature"
                 field("Signature"; Rec."Signature")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Signature field.';
                 }
             }
         }

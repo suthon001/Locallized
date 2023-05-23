@@ -1,3 +1,6 @@
+/// <summary>
+/// Page Sales Vat Subpage (ID 50012).
+/// </summary>
 page 50012 "Sales Vat Subpage"
 {
 
@@ -5,6 +8,7 @@ page 50012 "Sales Vat Subpage"
     SourceTable = "Tax Report Line";
     Caption = 'Sales Vat Subpage';
     InsertAllowed = false;
+    ApplicationArea = All;
 
     layout
     {
@@ -16,78 +20,97 @@ page 50012 "Sales Vat Subpage"
                 field("Send to Report"; Rec."Send to Report")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Send to Report field.';
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Posting Date field.';
                 }
                 field("Voucher No."; Rec."Voucher No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Voucher No. field.';
                 }
                 field("Tax Invoice Date"; Rec."Tax Invoice Date")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Tax Invoice Date field.';
                 }
                 field("Tax Invoice No."; Rec."Tax Invoice No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Tax Invoice No. field.';
                 }
                 field("Customer No."; Rec."Customer No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Customer No. field.';
                 }
                 field("Tax Invoice Name"; Rec."Tax Invoice Name")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Tax Invoice Name field.';
                 }
                 field("Description"; Rec."Description")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Description field.';
                 }
                 field("Address"; Rec."Address")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Address field.';
                 }
                 field("Address 2"; Rec."Address 2")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Address 2 field.';
                 }
                 field("City"; Rec."City")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the City field.';
                 }
                 field("Post Code"; Rec."Post Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Post Code field.';
                 }
                 field("Head Office"; Rec."Head Office")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Head Office field.';
                 }
                 field("Branch Code"; Rec."Branch Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Branch Code field.';
                 }
                 field("VAT Registration No."; Rec."VAT Registration No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the VAT Registration No. field.';
                 }
                 field("Base Amount"; Rec."Base Amount")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Base Amount field.';
                 }
                 field("VAT Amount"; Rec."VAT Amount")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the VAT Amount field.';
                 }
                 field("Cust. Amount"; Rec."Cust. Amount")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Cust. Amount field.';
                 }
                 field("Consession Fee"; Rec."Consession Fee")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Consession Fee field.';
                 }
 
 
@@ -95,10 +118,12 @@ page 50012 "Sales Vat Subpage"
                 field("VAT Business Posting Group"; Rec."VAT Business Posting Group")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the VAT Business Posting Group field.';
                 }
                 field("VAT Product Posting Group"; Rec."VAT Product Posting Group")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the VAT Product Posting Group field.';
                 }
             }
 
@@ -116,6 +141,7 @@ page 50012 "Sales Vat Subpage"
                     Caption = 'Generate Vat Entry';
                     Image = GetEntries;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Generate Vat Entry action.';
                     trigger OnAction()
                     begin
                         Rec."GetVatData"();
@@ -129,16 +155,16 @@ page 50012 "Sales Vat Subpage"
                     Caption = 'Move Month';
                     Image = MoveToNextPeriod;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Move Month action.';
                     trigger OnAction()
                     var
                         MoveMonthPage: Page "Tax Move Month";
                         TaxReportHeader: Record "Tax Report Header";
-                        TempTaxReportLine: Record "Tax Report Line" temporary;
                         TaxReportLine: Record "Tax Report Line";
 
                     begin
                         TaxReportHeader.get(Rec."Tax Type", Rec."Document No.");
-                        TaxReportLine.reset;
+                        TaxReportLine.reset();
                         TaxReportLine.Copy(Rec);
                         CurrPage.SetSelectionFilter(TaxReportLine);
                         Clear(MoveMonthPage);
@@ -155,9 +181,10 @@ page 50012 "Sales Vat Subpage"
     /// <summary> 
     /// Description for SetVatBusFilter.
     /// </summary>
-    /// <param name="VatBus">Parameter of type Code[30].</param>
-    /// <param name="DateFilter">Parameter of type Text[100].</param>
-    procedure "SetVatFilter"(VatBus: Code[30]; Vatprod: Code[30]; DateFilter: Text[100])
+    /// <param name="VatBus">Parameter of type Code[250].</param>
+    /// <param name="Vatprod">Code[250].</param>
+    /// <param name="DateFilter">Parameter of type Text.</param>
+    procedure "SetVatFilter"(VatBus: Code[250]; Vatprod: Code[250]; DateFilter: Text)
     begin
         Rec.SETFILTER("VAT Business Posting Group", VatBus);
         rec.SetFilter("VAT Product Posting Group", Vatprod);
@@ -174,7 +201,7 @@ page 50012 "Sales Vat Subpage"
     var
         TaxReportLine: Record "Tax Report Line";
     begin
-        TaxReportLine.reset;
+        TaxReportLine.reset();
         TaxReportLine.CopyFilters(rec);
         if TaxReportLine.FindFirst() then begin
             TaxReportLine.CalcSums("Base Amount", "VAT Amount");

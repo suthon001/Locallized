@@ -1,3 +1,6 @@
+/// <summary>
+/// Page Get Purchase Lines (ID 50042).
+/// </summary>
 page 50042 "Get Purchase Lines"
 {
     SourceTable = "Purchase Line";
@@ -7,6 +10,7 @@ page 50042 "Get Purchase Lines"
     ModifyAllowed = false;
     InsertAllowed = false;
     PageType = List;
+    UsageCategory = None;
     layout
     {
         area(Content)
@@ -17,66 +21,82 @@ page 50042 "Get Purchase Lines"
                 field("Document Type"; rec."Document Type")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the type of document that you are about to create.';
                 }
                 field("Document No."; rec."Document No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the document number.';
                 }
                 field("Buy-from Vendor No."; rec."Buy-from Vendor No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the name of the vendor who delivered the items.';
                 }
                 field(Type; rec.Type)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the line type.';
                 }
                 field("No."; rec."No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the number of a general ledger account, item, additional cost, or fixed asset, depending on what you selected in the Type field.';
                 }
                 field(Description; rec.Description)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies a description of the entry of the product to be purchased. To add a non-transactional text line, fill in the Description field only.';
                 }
                 field("Description 2"; rec."Description 2")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies information in addition to the description.';
                 }
                 field("Location Code"; rec."Location Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies a code for the location where you want the items to be placed when they are received.';
                 }
                 field(Quantity; rec.Quantity)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the number of units of the item specified on the line.';
                 }
                 field("Outstanding Quantity"; rec."Outstanding Quantity")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies how many units on the order line have not yet been received.';
                 }
                 field("Unit of Measure Code"; rec."Unit of Measure Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies how each unit of the item or resource is measured, such as in pieces or hours. By default, the value in the Base Unit of Measure field on the item or resource card is inserted.';
                 }
                 field("Direct Unit Cost"; rec."Direct Unit Cost")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the cost of one unit of the selected item or resource.';
                 }
                 field("Line Amount"; rec."Line Amount")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the net amount, excluding any invoice discount amount, that must be paid for products on the line.';
                 }
                 field("Line Discount %"; rec."Line Discount %")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the discount percentage that is granted for the item on the line.';
                 }
                 field("Shortcut Dimension 1 Code"; rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                 }
                 field("Shortcut Dimension 2 Code"; rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                 }
             }
         }
@@ -102,7 +122,7 @@ page 50042 "Get Purchase Lines"
         CurrPage.SetSelectionFilter(PurchaseQuotesLine);
         if PurchaseQuotesLine.FindFirst() then
             repeat
-                PurchaseOrderLine.init;
+                PurchaseOrderLine.init();
                 PurchaseOrderLine.TransferFields(PurchaseQuotesLine, false);
                 PurchaseOrderLine."Document Type" := PurchaseHeader."Document Type";
                 PurchaseOrderLine."Document No." := PurchaseHeader."No.";
@@ -135,7 +155,7 @@ page 50042 "Get Purchase Lines"
 
                 PurchCommentLine.CopyLineComments(0, 1, PurchaseQuotesLine."Document No.", PurchaseOrderLine."Document No.", PurchaseQuotesLine."Line No.", PurchaseOrderLine."Line No.");
                 CopyCommentDescription(PurchaseQuotesLine."Document Type", PurchaseOrderLine."Document Type", PurchaseQuotesLine."Document No.", PurchaseOrderLine."Document No.", PurchaseQuotesLine."Line No.");
-            until PurchaseQuotesLine.next = 0;
+            until PurchaseQuotesLine.next() = 0;
     end;
 
     procedure CopyCommentDescription(FromDOcumentType: Enum "Purchase Document Type"; ToDocumentType: Enum "Purchase Document Type"; FromNo: Code[20]; ToNo: Code[20]; FromLineNo: Integer)
@@ -144,21 +164,21 @@ page 50042 "Get Purchase Lines"
         ReqisitionLine2: Record "Purchase Line";
         PurchaseLine: Record "Purchase Line";
     begin
-        ReqisitionLine.reset;
+        ReqisitionLine.reset();
         ReqisitionLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
         ReqisitionLine.SetRange("Document Type", FromDOcumentType);
         ReqisitionLine.SetRange("DOcument No.", FromNo);
         ReqisitionLine.SetFilter("Line No.", '>%1', FromLineNo);
         ReqisitionLine.SetFilter("No.", '<>%1', '');
         if ReqisitionLine.FindFirst() then begin
-            ReqisitionLine2.reset;
+            ReqisitionLine2.reset();
             ReqisitionLine2.SetCurrentKey("Document Type", "Document No.", "Line No.");
             ReqisitionLine2.SetRange("Document Type", FromDOcumentType);
             ReqisitionLine2.SetRange("DOcument No.", FromNo);
             ReqisitionLine2.SetFilter("Line No.", '<%1', ReqisitionLine."Line No.");
             ReqisitionLine2.SetRange("No.", '');
             ReqisitionLine2.SetFilter(Description, '<>%1', '');
-            if ReqisitionLine2.FindFirst() then begin
+            if ReqisitionLine2.FindFirst() then
                 repeat
                     PurchaseLine.Init();
                     PurchaseLine."Document Type" := ToDocumentType;
@@ -169,16 +189,15 @@ page 50042 "Get Purchase Lines"
                     PurchaseLine."Description 2" := ReqisitionLine2."Description 2";
                     PurchaseLine.Insert(True);
                 until ReqisitionLine2.Next() = 0;
-            end;
         end else begin
-            ReqisitionLine.reset;
+            ReqisitionLine.reset();
             ReqisitionLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
             ReqisitionLine.SetRange("Document Type", FromDOcumentType);
             ReqisitionLine.SetRange("DOcument No.", FromNo);
             ReqisitionLine.SetFilter("Line No.", '>%1', FromLineNo);
             ReqisitionLine.SetFilter("No.", '%1', '');
             ReqisitionLine.SetFilter(Description, '<>%1', '');
-            if ReqisitionLine.FindFirst() then begin
+            if ReqisitionLine.FindFirst() then
                 repeat
                     PurchaseLine.Init();
                     PurchaseLine."Document Type" := ToDocumentType;
@@ -189,7 +208,6 @@ page 50042 "Get Purchase Lines"
                     PurchaseLine."Description 2" := ReqisitionLine."Description 2";
                     PurchaseLine.Insert(True);
                 until ReqisitionLine.Next() = 0;
-            end;
         end;
     end;
 

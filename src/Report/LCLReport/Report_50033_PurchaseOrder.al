@@ -3,6 +3,7 @@ report 50033 "PurchaseOrder"
     Caption = 'Purchase Order';
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50033_PurchaseOrder.rdl';
+    ApplicationArea = All;
     dataset
     {
         dataitem(PurchaseHeader; "Purchase Header")
@@ -105,7 +106,7 @@ report 50033 "PurchaseOrder"
 
             trigger OnPreDataItem()
             begin
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
             end;
 
@@ -126,7 +127,7 @@ report 50033 "PurchaseOrder"
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 if not PaymentTerm.GET("Payment Terms Code") then
-                    PaymentTerm.init;
+                    PaymentTerm.init();
             end;
         }
     }
@@ -139,7 +140,6 @@ report 50033 "PurchaseOrder"
         ExchangeRate: Text[20];
         ComText: array[10] Of Text[250];
         VendText: array[10] Of Text[250];
-        BranchCode: Text[50];
         SplitDate: Array[3] of Text[20];
         AmtText: Text[1024];
         TotalAmt: array[100] of Decimal;

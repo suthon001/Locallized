@@ -127,7 +127,7 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
     var
         ItemJournalLine: Record "Item Journal Line";
     begin
-        ItemJournalLine.reset;
+        ItemJournalLine.reset();
         ItemJournalLine.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
         ItemJournalLine.SetRange("Journal Template Name", "Journal Template Name");
         ItemJournalLine.SetRange("Journal Batch Name", "Journal Batch Name");

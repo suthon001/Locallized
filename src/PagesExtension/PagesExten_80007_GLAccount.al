@@ -7,6 +7,7 @@ pageextension 80007 "ExtenGLAccount" extends "G/L Account Card"
             field("Require Screen Detail"; Rec."Require Screen Detail")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Require Screen Detail field.';
             }
 
         }

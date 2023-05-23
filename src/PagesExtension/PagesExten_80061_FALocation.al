@@ -7,6 +7,7 @@ pageextension 80061 "FALocation" extends "FA Locations"
             field("Location Detail"; rec."Location Detail")
             {
                 ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Location Detail field.';
             }
 
         }

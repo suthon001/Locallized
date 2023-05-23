@@ -1,3 +1,6 @@
+/// <summary>
+/// Page Purchase Vat Card (ID 50014).
+/// </summary>
 page 50014 "Purchase Vat Card"
 {
 
@@ -6,7 +9,7 @@ page 50014 "Purchase Vat Card"
     Caption = 'Purchase Vat Card';
     RefreshOnActivate = true;
     PromotedActionCategories = 'New,Process,Print';
-    DataCaptionExpression = StrSubstNo('%1 ปี %2', Rec."Month Name", Rec."Year No.");
+    UsageCategory = None;
     layout
     {
         area(content)
@@ -17,6 +20,7 @@ page 50014 "Purchase Vat Card"
                 field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Document No. field.';
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit(xRec) then
@@ -27,6 +31,7 @@ page 50014 "Purchase Vat Card"
                 field("End date of Month"; Rec."End date of Month")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the End date of Month field.';
                     trigger OnValidate()
                     begin
                         CurrPage.Update();
@@ -35,28 +40,34 @@ page 50014 "Purchase Vat Card"
                 field("Year-Month"; Rec."Year-Month")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Year-Month field.';
                 }
                 field("Month No."; Rec."Month No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Month No field.';
                 }
                 field("Month Name"; Rec."Month Name")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Month Name field.';
                 }
                 field("Year No."; Rec."Year No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Year No field.';
                 }
                 field("Vat Option"; Rec."Vat Option")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Vat Option field.';
                 }
                 field(VatBusFilter; VatBusFilter)
                 {
                     Caption = 'Vat Business Posing Group Filter';
                     TableRelation = "VAT Business Posting Group".Code;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Vat Business Posing Group Filter field.';
                     trigger OnValidate()
                     begin
                         CurrPage."PurchaseVatSubpage".Page."SetVatFilter"(VatBusFilter, VatProdFilter, DateFilter);
@@ -68,6 +79,7 @@ page 50014 "Purchase Vat Card"
                     Caption = 'Vat Prod. Posing Group Filter';
                     TableRelation = "VAT Product Posting Group".Code;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Vat Prod. Posing Group Filter field.';
                     trigger OnValidate()
                     begin
                         CurrPage."PurchaseVatSubpage".Page."SetVatFilter"(VatBusFilter, VatProdFilter, DateFilter);
@@ -78,6 +90,7 @@ page 50014 "Purchase Vat Card"
                 {
                     Caption = 'Date Filter';
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Date Filter field.';
                     trigger OnValidate()
                     var
                         ApplicationManagement: Codeunit "Filter Tokens";
@@ -96,12 +109,14 @@ page 50014 "Purchase Vat Card"
                     Caption = 'Total Base Amount';
                     Editable = false;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Total Base Amount field.';
                 }
                 field("Total Vat Amount"; TotalVatAmt)
                 {
                     Caption = 'Total Vat Amount';
                     Editable = false;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Total Vat Amount field.';
                 }
 
             }
@@ -130,6 +145,7 @@ page 50014 "Purchase Vat Card"
                 PromotedCategory = Report;
                 PromotedIsBig = true;
                 Image = PrintVAT;
+                ToolTip = 'Executes the รายงานภาษีซื้อ action.';
                 trigger OnAction()
                 var
                     TaxReportHeader: Record "Tax Report Header";
@@ -168,7 +184,7 @@ page 50014 "Purchase Vat Card"
     procedure "GetDataFromReport"(var SetVatBus: Code[250]; var SetDate: Text[250])
     begin
         SetVatBus := VatBusFilter;
-        SetDate := DateFilter;
+        SetDate := COPYSTR(DateFilter, 1, 250);
     end;
 
 
@@ -177,7 +193,7 @@ page 50014 "Purchase Vat Card"
         TotaBaseAmt: Decimal;
         TotalVatAmt: Decimal;
         VatBusFilter, VatProdFilter : Code[250];
-        DateFilter: Text[250];
+        DateFilter: Text;
 
 
 

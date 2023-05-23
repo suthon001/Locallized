@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension Requisition WorkSheet (ID 80049) extends Record Requisition Line.
+/// </summary>
 tableextension 80049 "Requisition WorkSheet" extends "Requisition Line"
 {
     fields
@@ -8,7 +11,7 @@ tableextension 80049 "Requisition WorkSheet" extends "Requisition Line"
             DataClassification = CustomerContent;
         }
 
-        field(80002; "Create By"; Code[30])
+        field(80002; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
@@ -53,7 +56,7 @@ tableextension 80049 "Requisition WorkSheet" extends "Requisition Line"
     trigger OnInsert()
     begin
         TestField("No.");
-        "Create By" := UserId;
-        "Create DateTime" := CurrentDateTime;
+        "Create By" := COPYSTR(UserId, 1, 50);
+        "Create DateTime" := CurrentDateTime();
     end;
 }

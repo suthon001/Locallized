@@ -238,7 +238,7 @@ report 50018 "Report Stock Card Cost"
                 IF var_ItemDateFilter <> '' THEN begin
                     Evaluate(StartingDate, '01010000D');
                     IF GETRANGEMIN("Date Filter") > StartingDate THEN BEGIN
-                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.RESET();
                         ItemLedgerEntry.SETFILTER("Item No.", '%1', "No.");
                         ItemLedgerEntry.SETRANGE("Posting Date", StartingDate, GETRANGEMIN("Date Filter") - 1);
                         ItemLedgerEntry.SETRANGE("Date Filter", StartingDate, GETRANGEMIN("Date Filter") - 1);
@@ -247,7 +247,7 @@ report 50018 "Report Stock Card Cost"
                             REPEAT
                                 ItemLedgerEntry.CALCFIELDS("Cost Amount (Actual)", "Cost Amount (Actual Cal.)");
                                 var_Amount2 += ItemLedgerEntry."Cost Amount (Actual Cal.)";
-                            UNTIL ItemLedgerEntry.NEXT = 0;
+                            UNTIL ItemLedgerEntry.NEXT() = 0;
                     END;
                 end;
 
@@ -283,6 +283,7 @@ report 50018 "Report Stock Card Cost"
                     {
                         Caption = 'Show Summary';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the value of the Show Summary field.';
                     }
 
                 }
@@ -298,7 +299,7 @@ report 50018 "Report Stock Card Cost"
     var
         POS: Integer;
     begin
-        CompanyInfo.GET;
+        CompanyInfo.GET();
         var_OpeningBalance2 := 0;
 
         var_ItemDateFilter := Item.GETFILTER(Item."Date Filter");
@@ -321,7 +322,6 @@ report 50018 "Report Stock Card Cost"
 
     var
         var_Description: Text[1024];
-        Item2: Record ITem;
         var_Pos: Decimal;
         var_Neg: Decimal;
         var_UnitCostPos: Decimal;
@@ -334,11 +334,7 @@ report 50018 "Report Stock Card Cost"
         var_TotalPos: Decimal;
         var_TotalNeg: Decimal;
         var_ItemDateFilter: Text[60];
-        var_MinRange: Date;
-        var_MaxRange: Date;
-        Sales_ship: Record 111;
         var_flightno: Text[30];
-        var_loc: Text[30];
         LastFieldNo: Integer;
         CompanyInfo: Record 79;
         var_ItemNo: Code[20];

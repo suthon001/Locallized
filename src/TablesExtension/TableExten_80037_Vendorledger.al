@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenVendorLedger Entry (ID 80037) extends Record Vendor Ledger Entry.
+/// </summary>
 tableextension 80037 "ExtenVendorLedger Entry" extends "Vendor Ledger Entry"
 {
     fields

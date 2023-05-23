@@ -29,7 +29,7 @@ report 50049 "GL Journal Report"
             column(CompanyInfor_Name; CompanyInfor.Name + ' ' + CompanyInfor."Name 2") { }
             trigger OnPreDataItem()
             begin
-                CompanyInfor.GET;
+                CompanyInfor.GET();
                 FilterDescription := GetFilters();
             end;
 

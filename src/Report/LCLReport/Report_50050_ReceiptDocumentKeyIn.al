@@ -3,6 +3,7 @@ report 50050 "Receipt Ducument"
     Caption = 'Report Receipt Ducument';
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50050_ReciepDocument.rdl';
+    ApplicationArea = All;
 
     dataset
     {
@@ -41,7 +42,7 @@ report 50050 "Receipt Ducument"
 
             trigger OnPreDataItem()
             begin
-                RecComInfo.get;
+                RecComInfo.get();
                 RecComInfo.CalcFields(Picture);
                 // หา Vat Business
                 Clear(VatBusinessPostingGroup);
@@ -92,7 +93,7 @@ report 50050 "Receipt Ducument"
                         varTotal += GenJournalLine."VAT Base Amount" * -1;
                         varGandtotal += GenJournalLine.Amount * -1;
                         varVat := varGandtotal - varTotal;
-                    until GenJournalLine.next = 0;
+                    until GenJournalLine.next() = 0;
                 SumTotalAmountText := CUFunction."NumberThaiToText"(varGandtotal);
 
 
@@ -131,6 +132,7 @@ report 50050 "Receipt Ducument"
                     {
                         ApplicationArea = all;
                         Caption = 'Caption';
+                        ToolTip = 'Specifies the value of the Caption field.';
                         trigger OnValidate()
                         begin
                             HeadEng := HeadThai;
@@ -156,7 +158,6 @@ report 50050 "Receipt Ducument"
         varGandtotal: Decimal;
         LineNo: Integer;
         SumTotalAmountText: Text[250];
-        RecCurrency: Record Currency;
         CurrencyCode: Code[20];
         HeadEng: Option "RECEIPT","RECEIPT/TAX INVOICE";
         HeadThai: Option ใบเสร็จรับเงิน,"ใบเสร็จรับเงิน/ใบกำกับภาษี";

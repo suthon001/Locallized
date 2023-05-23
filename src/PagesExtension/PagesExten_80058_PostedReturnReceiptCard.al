@@ -14,12 +14,13 @@ pageextension 80058 "PostedReturnReceiptCard" extends "Posted Return Receipt"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Category4;
+                ToolTip = 'Executes the Sales Return Receipt action.';
                 trigger OnAction()
                 var
                     ReturnHeader: Record "Return Receipt Header";
                 // SalesReturnOrder: Report "Sales Return Order";
                 begin
-                    ReturnHeader.RESET;
+                    ReturnHeader.RESET();
                     ReturnHeader.SetRange("Return Order No.", rec."No.");
                     Report.Run(Report::"Sales Return Receipt", TRUE, TRUE, ReturnHeader);
                 end;

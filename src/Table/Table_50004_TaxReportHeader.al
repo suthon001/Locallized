@@ -4,6 +4,7 @@
 table 50004 "Tax Report Header"
 {
     Caption = 'Tax Report Header';
+    DataClassification = CustomerContent;
     fields
     {
         field(1; "Tax Type"; Enum "Tax Type")

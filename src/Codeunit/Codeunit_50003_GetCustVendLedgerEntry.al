@@ -22,7 +22,7 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
                     GetCustLedger."SetDocument"(BillingHeader."Document Type", BillingHeader."No.");
                     GetCustLedger.LOOKUPMODE := TRUE;
                     GetCustLedger.SETTABLEVIEW(CustLedgEntry);
-                    IF GetCustLedger.RUNMODAL <> ACTION::Cancel THEN;
+                    IF GetCustLedger.RUNMODAL() <> ACTION::Cancel THEN;
                 END;
             BillingHeader."Document Type"::"Purchase Billing":
                 BEGIN
@@ -34,7 +34,7 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
                     GetVendLedger."SetDocument"(BillingHeader."Document Type", BillingHeader."No.");
                     GetVendLedger.LOOKUPMODE := TRUE;
                     GetVendLedger.SETTABLEVIEW(VendLedgEntry);
-                    IF GetVendLedger.RUNMODAL <> ACTION::Cancel THEN;
+                    IF GetVendLedger.RUNMODAL() <> ACTION::Cancel THEN;
                 END;
         END;
 
@@ -62,7 +62,7 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
         BillingHeader.TESTFIELD("Status", BillingHeader."Status"::Open);
 
         // WITH CustLedgEntry2 DO BEGIN
-        IF CustLedgEntry2.FINDSET THEN
+        IF CustLedgEntry2.FINDSET() THEN
             REPEAT
                 CurrencyFactor := 0;
                 if CustLedgEntry2."Currency Code" <> '' then
@@ -70,7 +70,7 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
 
                 CustLedgEntry2.CALCFIELDS("Original Amount", "Original Amt. (LCY)", "Billing Amount", "Billing Amount (LCY)",
                  "Receipt Amount", "Receipt Amount (LCY)");
-                BillingLine.LOCKTABLE;
+                BillingLine.LOCKTABLE();
                 BillingLine.SETRANGE("Document Type", BillingHeader."Document Type");
                 BillingLine.SETRANGE("Document No.", BillingHeader."No.");
                 BillingLine."Document Type" := BillingHeader."Document Type";
@@ -80,7 +80,7 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
                 BillingLine."Due Date" := BillingHeader."Due Date";
                 BillingLine."Bill/Pay-to Cust/Vend No." := BillingHeader."Bill/Pay-to Cust/Vend No.";
                 BillingLine."Line No." := BillingLine."FindLastLineNo"();
-                BillingLine.INSERT;
+                BillingLine.INSERT();
                 CustLedgEntry2.TESTFIELD("Customer No.", BillingHeader."Bill/Pay-to Cust/Vend No.");
                 BillingLine."Source Ledger Entry No." := CustLedgEntry2."Entry No.";
                 BillingLine."Source Document Type" := CustLedgEntry2."Document Type";
@@ -105,7 +105,7 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
                             else
                                 BillingLine."Amount (LCY)" := BillingLine."Amount";
                             CustLedgEntry2."Completed Billing" := TRUE;
-                            CustLedgEntry2.MODIFY;
+                            CustLedgEntry2.MODIFY();
                         END;
                     BillingLine."Document Type"::"Sales Receipt":
                         BEGIN
@@ -117,12 +117,12 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
                                 BillingLine."Amount (LCY)" := BillingLine."Amount";
 
                             CustLedgEntry2."Completed Receipt" := TRUE;
-                            CustLedgEntry2.MODIFY;
+                            CustLedgEntry2.MODIFY();
                         END;
                 END;
-                BillingLine.MODIFY;
-            UNTIL CustLedgEntry2.NEXT = 0;
-        COMMIT;
+                BillingLine.MODIFY();
+            UNTIL CustLedgEntry2.NEXT() = 0;
+        COMMIT();
         // END;
     end;
 
@@ -136,19 +136,19 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
 
 
         //  WITH VendLedgEntry2 DO BEGIN
-        IF VendLedgEntry2.FINDSET THEN
+        IF VendLedgEntry2.FINDSET() THEN
             REPEAT
                 CurrencyFactor := 0;
                 VendLedgEntry2.CALCFIELDS("Original Amount", "Original Amt. (LCY)", "Billing Amount", "Billing Amount (LCY)");
                 if VendLedgEntry2."Currency Code" <> '' then
                     CurrencyFactor := (1 / currencyExchange.ExchangeRate(VendLedgEntry2."Posting Date", VendLedgEntry2."Currency Code"));
-                BillingLine.LOCKTABLE;
+                BillingLine.LOCKTABLE();
                 BillingLine.SETRANGE("Document Type", BillingHeader."Document Type");
                 BillingLine.SETRANGE("Document No.", BillingHeader."No.");
                 BillingLine."Document Type" := BillingHeader."Document Type";
                 BillingLine."Document No." := BillingHeader."No.";
                 BillingLine."Line No." := BillingLine."FindLastLineNo"();
-                BillingLine.INSERT;
+                BillingLine.INSERT();
                 VendLedgEntry2.TESTFIELD("Vendor No.", BillingHeader."Bill/Pay-to Cust/Vend No.");
                 BillingLine."Source Ledger Entry No." := VendLedgEntry2."Entry No.";
                 BillingLine."Source Document Type" := VendLedgEntry2."Document Type";
@@ -168,10 +168,10 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
                 else
                     BillingLine."Amount (LCY)" := BillingLine."Amount";
                 VendLedgEntry2."Completed Billing" := TRUE;
-                VendLedgEntry2.MODIFY;
-                BillingLine.MODIFY;
-            UNTIL VendLedgEntry2.NEXT = 0;
-        COMMIT;
+                VendLedgEntry2.MODIFY();
+                BillingLine.MODIFY();
+            UNTIL VendLedgEntry2.NEXT() = 0;
+        COMMIT();
         //  END;
     end;
 

@@ -21,6 +21,7 @@ tableextension 80008 "ExtenItem Journal Batch" extends "Item Journal Batch"
             CaptionClass = '1,2,1';
             Caption = 'Shortcut Dimension 1 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            DataClassification = CustomerContent;
         }
 
     }

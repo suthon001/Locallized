@@ -7,10 +7,12 @@ pageextension 80080 FixedassetCard extends "Fixed Asset Card"
             field("Acq. Date"; rec."Acq. Date")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Acq. Date field.';
             }
             field(Quantity; rec.Quantity)
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Quantity field.';
             }
         }
     }
@@ -28,14 +30,14 @@ pageextension 80080 FixedassetCard extends "Fixed Asset Card"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Fixed Assed  action.';
                 trigger OnAction()
                 var
                     fixsset: Record "Fixed Asset";
-                    GenQRCode: Codeunit "Function Center";
                 begin
                     //GenQRCode.GenerateQrBarcode(Database::"Fixed Asset", "No.", 0, Description, 200, 200, TRUE, 1);
                     //   Commit();
-                    fixsset.RESET;
+                    fixsset.RESET();
                     fixsset.SetRange("No.", rec."No.");
                     Report.Run(Report::"Fixed Asset Card", TRUE, TRUE, fixsset);
                 end;

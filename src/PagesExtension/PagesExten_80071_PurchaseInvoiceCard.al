@@ -9,22 +9,26 @@ pageextension 80071 "Purchase Invoice Card" extends "Purchase Invoice"
             {
                 ApplicationArea = all;
                 Caption = 'Gen. Bus. Posting Group';
+                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
 
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
 
         }
@@ -33,6 +37,7 @@ pageextension 80071 "Purchase Invoice Card" extends "Purchase Invoice"
             field("Pay-to Vendor No."; rec."Pay-to Vendor No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the number of the vendor that you received the invoice from.';
             }
         }
         modify("No.")
@@ -91,12 +96,13 @@ pageextension 80071 "Purchase Invoice Card" extends "Purchase Invoice"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the AP Voucher action.';
                 trigger OnAction()
                 var
                     APVoucher: Report "AP Voucher";
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.Copy(Rec);
                     APVoucher."SetGLEntry"(PurchaseHeader);
                     APVoucher.RunModal();

@@ -4,6 +4,7 @@ report 50037 "FA G/L Journal Voucher"
     Caption = 'FA G/L Journal Voucher';
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50037_FAGlJournalReport.rdl';
+    ApplicationArea = All;
     dataset
     {
         dataitem(GLEntry; "G/L Entry")
@@ -43,7 +44,7 @@ report 50037 "FA G/L Journal Voucher"
                 NewDate: Date;
             begin
 
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyInformation"(ComText, false);
                 "GetExchange"();
@@ -55,7 +56,7 @@ report 50037 "FA G/L Journal Voucher"
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 "FindPostingDescription"();
                 if not GenJournalBatchName.GET(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name") then
-                    GenJournalBatchName.init;
+                    GenJournalBatchName.init();
 
                 JournalDescriptionThai := GenJournalBatchName."Description TH Voucher";
                 JournalDescriptionEng := GenJournalBatchName."Description EN Voucher";
@@ -70,7 +71,7 @@ report 50037 "FA G/L Journal Voucher"
     var
         GenLine: Record "Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -88,7 +89,7 @@ report 50037 "FA G/L Journal Voucher"
     var
         GenLine: Record "Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -108,7 +109,7 @@ report 50037 "FA G/L Journal Voucher"
         EntryNo: Integer;
     begin
         TempAmt := 0;
-        GenJournalLine.reset;
+        GenJournalLine.reset();
         GenJournalLine.SetRange("Journal Template Name", GenLine."Journal Template Name");
         GenJournalLine.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
         GenJournalLine.SetRange("Document No.", GenLine."Document No.");
@@ -117,13 +118,13 @@ report 50037 "FA G/L Journal Voucher"
 
         if GLTemp.FindFirst() then begin
             repeat
-                GLEntry.reset;
+                GLEntry.reset();
                 GLEntry.SetRange("G/L Account No.", GLTemp."G/L Account No.");
                 GLEntry.SetRange("Global Dimension 1 Code", GLTemp."Global Dimension 1 Code");
                 GLEntry.SetRange("Global Dimension 2 Code", GLTemp."Global Dimension 2 Code");
                 if not GLEntry.FindFirst() then begin
                     EntryNo += 1;
-                    GLEntry.init;
+                    GLEntry.init();
                     GLEntry.TransferFields(GLTemp);
                     GLEntry."Entry No." := EntryNo;
                     GLEntry.Insert();
@@ -140,8 +141,8 @@ report 50037 "FA G/L Journal Voucher"
                     TempAmt += GLEntry."Debit Amount";
                     GLEntry.Modify();
                 end;
-            until GLTemp.next = 0;
-            GLEntry.reset;
+            until GLTemp.next() = 0;
+            GLEntry.reset();
         end;
     end;
 
@@ -152,23 +153,12 @@ report 50037 "FA G/L Journal Voucher"
         companyInfor: Record "Company Information";
         ExchangeRate: Text[20];
         ComText: array[10] Of Text[250];
-        CustText: array[10] Of Text[250];
-        BranchCode: Text[50];
         SplitDate: Array[3] of Text[20];
-        vgUOMFromItemCharge: Code[10];
-        vgCustNoItemCharge: Code[20];
-        vgQtyonShipItemCharge: Decimal;
         AmtText: Text[1024];
         TempAmt: Decimal;
-        VendorCode: Code[20];
         CurrencyCode: Code[10];
         CurrencyFactor: Decimal;
         PostingDescription: Text[250];
-        CVBufferEntry: Record "CV Ledger Entry Buffer";
-        OK: Boolean;
-        BankName: Text[250];
-        BankBranchNo: Code[30];
-        VendorBankAccountName: Text[250];
         JournalDescriptionThai: Text[250];
         JournalDescriptionEng: Text[250];
         GenJournalBatchName: Record "Gen. Journal Batch";

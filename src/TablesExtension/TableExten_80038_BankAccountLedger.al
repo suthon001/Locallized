@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenBank Account Ledger (ID 80038) extends Record Bank Account Ledger Entry.
+/// </summary>
 tableextension 80038 "ExtenBank Account Ledger" extends "Bank Account Ledger Entry"
 {
     fields
@@ -37,6 +40,7 @@ tableextension 80038 "ExtenBank Account Ledger" extends "Bank Account Ledger Ent
             Caption = 'Source Type';
             OptionMembers = " ","Customer","Vendor";
             OptionCaption = ' ,Customer,Vendor';
+            DataClassification = CustomerContent;
         }
         field(80006; "Bank Branch No."; Text[20])
         {

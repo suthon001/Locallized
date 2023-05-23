@@ -7,6 +7,7 @@ report 50071 "Inventory Valuation (new)"
     EnableHyperlinks = true;
     UsageCategory = ReportsAndAnalysis;
     DataAccessIntent = ReadOnly;
+    ApplicationArea = All;
 
     dataset
     {
@@ -17,7 +18,7 @@ report 50071 "Inventory Valuation (new)"
             column(BoM_Text; BoM_TextLbl)
             {
             }
-            column(COMPANYNAME; COMPANYPROPERTY.DisplayName)
+            column(COMPANYNAME; COMPANYPROPERTY.DisplayName())
             {
             }
             column(STRSUBSTNO___1___2__Item_TABLECAPTION_ItemFilter_; StrSubstNo('%1: %2', TableCaption, ItemFilter))
@@ -245,13 +246,13 @@ report 50071 "Inventory Valuation (new)"
 
                 ValueEntry.SetRange("Posting Date", StartDate, EndDate);
                 ValueEntry.SetRange("Item Ledger Entry Type", ValueEntry."Item Ledger Entry Type"::Transfer);
-                if ValueEntry.FindSet then
+                if ValueEntry.FindSet() then
                     repeat
                         if true in [ValueEntry."Valued Quantity" < 0, not GetOutboundItemEntry(ValueEntry."Item Ledger Entry No.")] then
                             AssignAmounts(ValueEntry, DecreaseInvoicedValue, DecreaseInvoicedQty, DecreaseExpectedValue, DecreaseExpectedQty, -1)
                         else
                             AssignAmounts(ValueEntry, IncreaseInvoicedValue, IncreaseInvoicedQty, IncreaseExpectedValue, IncreaseExpectedQty, 1);
-                    until ValueEntry.Next = 0;
+                    until ValueEntry.Next() = 0;
 
                 IsEmptyLine := IsEmptyLine and ((IncreaseInvoicedValue = 0) and (IncreaseInvoicedQty = 0));
                 IsEmptyLine := IsEmptyLine and ((DecreaseInvoicedValue = 0) and (DecreaseInvoicedQty = 0));
@@ -320,7 +321,7 @@ report 50071 "Inventory Valuation (new)"
         trigger OnOpenPage()
         begin
             if (StartDate = 0D) and (EndDate = 0D) then
-                EndDate := WorkDate;
+                EndDate := WorkDate();
         end;
     }
 
@@ -333,7 +334,7 @@ report 50071 "Inventory Valuation (new)"
     trigger OnPreReport()
     begin
         if (StartDate = 0D) and (EndDate = 0D) then
-            EndDate := WorkDate;
+            EndDate := WorkDate();
 
         if StartDate in [0D, 00000101D] then
             StartDateText := ''
@@ -399,7 +400,7 @@ report 50071 "Inventory Valuation (new)"
     begin
         ItemApplnEntry.SetCurrentKey("Item Ledger Entry No.");
         ItemApplnEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntryNo);
-        if not ItemApplnEntry.FindFirst then
+        if not ItemApplnEntry.FindFirst() then
             exit(true);
 
         ItemLedgEntry.SetRange("Item No.", Item."No.");
@@ -408,7 +409,7 @@ report 50071 "Inventory Valuation (new)"
         ItemLedgEntry.SetFilter("Global Dimension 1 Code", Item.GetFilter("Global Dimension 1 Filter"));
         ItemLedgEntry.SetFilter("Global Dimension 2 Code", Item.GetFilter("Global Dimension 2 Filter"));
         ItemLedgEntry."Entry No." := ItemApplnEntry."Outbound Item Entry No.";
-        exit(not ItemLedgEntry.Find);
+        exit(not ItemLedgEntry.Find());
     end;
 
     procedure SetStartDate(DateValue: Date)
@@ -437,7 +438,7 @@ report 50071 "Inventory Valuation (new)"
         // TODO
         // Eventually leverage parameters 5 and 6 of GETURL by adding ",Item,TRUE)" and
         // use filter Item.SETFILTER("No.",'=%1',ItemNumber);.
-        exit(GetUrl(ClientTypeManagement.GetCurrentClientType, CompanyName, OBJECTTYPE::Report, REPORT::"Invt. Valuation - Cost Spec.") +
+        exit(GetUrl(ClientTypeManagement.GetCurrentClientType(), CompanyName, OBJECTTYPE::Report, REPORT::"Invt. Valuation - Cost Spec.") +
           StrSubstNo('&filter=Item.Field1:%1', ItemNumber));
     end;
 

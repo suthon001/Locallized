@@ -50,14 +50,17 @@ pageextension 80039 "PostedInvoiceList" extends "Posted Purchase Invoices"
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Tax Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
         }
     }

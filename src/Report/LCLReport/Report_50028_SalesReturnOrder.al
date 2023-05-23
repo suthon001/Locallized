@@ -4,6 +4,7 @@ report 50028 "Sales Return Order"
     RDLCLayout = './LayoutReport/LCLReport/Report_50028_SalesReturnOrder.rdl';
     PreviewMode = PrintLayout;
     Caption = 'Sales Return Order';
+    ApplicationArea = All;
 
     dataset
     {
@@ -102,7 +103,6 @@ report 50028 "Sales Return Order"
 
             trigger OnAfterGetRecord()
             var
-                countComment: Integer;
                 NewDate: Date;
             begin
 
@@ -114,7 +114,7 @@ report 50028 "Sales Return Order"
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();
                 IF NOT ShipMethod.Get("Shipment Method Code") then
-                    ShipMethod.Init;
+                    ShipMethod.Init();
                 NewDate := DT2Date("Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');

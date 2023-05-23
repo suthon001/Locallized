@@ -6,6 +6,7 @@ report 50059 "Fixed Asset - Book Value01"
     Caption = 'Fixed Asset Book Value 01';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -15,7 +16,7 @@ report 50059 "Fixed Asset - Book Value01"
             column(MainHeadLineText_FA; MainHeadLineText)
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(TodayFormatted; Format(Today, 0, 4))
@@ -186,7 +187,7 @@ report 50059 "Fixed Asset - Book Value01"
             begin
                 if not FADeprBook.Get("No.", DeprBookCode) then
                     CurrReport.Skip();
-                if SkipRecord then
+                if SkipRecord() then
                     CurrReport.Skip();
 
                 if GroupTotals = GroupTotals::"FA Posting Group" then
@@ -225,7 +226,7 @@ report 50059 "Fixed Asset - Book Value01"
                       FAGenReport.CalcFAPostedAmount(
                         "No.", PostingType, Period2, StartingDate, EndingDate,
                         DeprBookCode, BeforeAmount, EndingAmount, false, true);
-                    if GetPeriodDisposal then
+                    if GetPeriodDisposal() then
                         DisposalAmounts[i] := -(StartAmounts[i] + NetChangeAmounts[i])
                     else
                         DisposalAmounts[i] := 0;
@@ -241,14 +242,14 @@ report 50059 "Fixed Asset - Book Value01"
                     BookValueAtStartingDate := BookValueAtStartingDate + StartAmounts[j];
                 end;
 
-                MakeGroupHeadLine;
-                UpdateTotals;
-                CreateGroupTotals;
+                MakeGroupHeadLine();
+                UpdateTotals();
+                CreateGroupTotals();
             end;
 
             trigger OnPostDataItem()
             begin
-                CreateTotals;
+                CreateTotals();
             end;
 
             trigger OnPreDataItem()
@@ -332,7 +333,7 @@ report 50059 "Fixed Asset - Book Value01"
 
         trigger OnOpenPage()
         begin
-            GetDepreciationBookCode;
+            GetDepreciationBookCode();
         end;
     }
 
@@ -352,10 +353,10 @@ report 50059 "Fixed Asset - Book Value01"
         if BudgetReport then
             MainHeadLineText := StrSubstNo('%1 %2', MainHeadLineText, Text001);
         DeprBookText := StrSubstNo('%1%2 %3', DeprBook.TableCaption, ':', DeprBookCode);
-        MakeGroupTotalText;
+        MakeGroupTotalText();
         FAGenReport.ValidateDates(StartingDate, EndingDate);
-        MakeDateText;
-        MakeHeadLine;
+        MakeDateText();
+        MakeHeadLine();
         if PrintDetails then begin
             FANo := "Fixed Asset".FieldCaption("No.");
             FADescription := "Fixed Asset".FieldCaption(Description);

@@ -4,6 +4,7 @@ report 50047 "Receipt Tax Invoice"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50047_ReceiptTaxInvoice.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(CustLedgerEntry; "Cust. Ledger Entry")
@@ -66,15 +67,14 @@ report 50047 "Receipt Tax Invoice"
             trigger OnPreDataItem()
             begin
                 CLEAR(GrandTotalAmt);
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 Clear(RecCustLedgEntry);
                 RecCustLedgEntry.CopyFilters(CustLedgerEntry);
-                if RecCustLedgEntry.FindSet then begin
+                if RecCustLedgEntry.FindSet() then
                     repeat
                         InsertDetailReceipt(RecCustLedgEntry."Document No.");
-                    until RecCustLedgEntry.next = 0;
-                end;
+                    until RecCustLedgEntry.next() = 0;
             end;
 
             trigger OnAfterGetRecord()
@@ -93,10 +93,10 @@ report 50047 "Receipt Tax Invoice"
                 end;
 
                 if not RecSalesPerson.Get(SalesPersonCode) then
-                    RecSalesPerson.init;
+                    RecSalesPerson.init();
 
                 if not RecPaymentTerms.Get(PaymentTerm) then
-                    RecPaymentTerms.init;
+                    RecPaymentTerms.init();
 
 
 
@@ -126,7 +126,7 @@ report 50047 "Receipt Tax Invoice"
         if NOT TempSalesLine.IsTemporary then
             ERROR('Table must be Tempolary');
 
-        salesInvoiceLine.reset;
+        salesInvoiceLine.reset();
         salesInvoiceLine.SetRange("Document No.", DocNo);
         salesInvoiceLine.SetFilter("No.", '<>%1', '');
         if salesInvoiceLine.FindFirst() then begin
@@ -138,14 +138,14 @@ report 50047 "Receipt Tax Invoice"
             GrandTotalAmt[5] += TotalAmt[5];
             repeat
                 EntryNo += 1;
-                TempSalesLine.init;
+                TempSalesLine.init();
                 TempSalesLine."Document Type" := TempSalesLine."Document Type"::Invoice;
                 TempSalesLine.TransferFields(salesInvoiceLine);
                 TempSalesLine."Line No." := EntryNo;
                 TempSalesLine.Insert();
-            until salesInvoiceLine.next = 0;
+            until salesInvoiceLine.next() = 0;
         end;
-        SalesCreditMemoLine.reset;
+        SalesCreditMemoLine.reset();
         SalesCreditMemoLine.SetRange("Document No.", DocNo);
         SalesCreditMemoLine.SetFilter("No.", '<>%1', '');
         if SalesCreditMemoLine.FindFirst() then begin
@@ -157,21 +157,19 @@ report 50047 "Receipt Tax Invoice"
             GrandTotalAmt[5] += (TotalAmt[5]) * -1;
             repeat
                 EntryNo += 1;
-                TempSalesLine.init;
+                TempSalesLine.init();
                 TempSalesLine."Document Type" := TempSalesLine."Document Type"::"Credit Memo";
                 TempSalesLine.TransferFields(SalesCreditMemoLine);
                 TempSalesLine."Line No." := EntryNo;
                 TempSalesLine.Insert();
-            until SalesCreditMemoLine.next = 0;
+            until SalesCreditMemoLine.next() = 0;
         end;
-        TempSalesLine.reset;
+        TempSalesLine.reset();
     end;
 
     var
-        ShowShipAddress: Boolean;
         ComText: array[100] of Text[250];
         CustText: array[10] of Text[250];
-        RecGenJnlLine: Record "Gen. Journal Line";
         companyInfor: Record "Company Information";
         CUFunction: Codeunit "Function Center";
 
@@ -186,10 +184,8 @@ report 50047 "Receipt Tax Invoice"
         PaymentTerm: Text[100];
         RecPaymentTerms: Record "Payment Terms";
         LineNo: Integer;
-        FunctionCenter: Codeunit "Function Center";
         TotalAmt: array[100] of Decimal;
         GrandTotalAmt: array[100] of Decimal;
-        RecCurrency: Record Currency;
         CurrencyCode: code[20];
 
 

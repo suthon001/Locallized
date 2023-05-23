@@ -50,7 +50,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
             DataClassification = SystemMetadata;
             Caption = 'Qty. to Cancel (Base)';
         }
-        field(80002; "Make Order By"; Code[30])
+        field(80002; "Make Order By"; Code[50])
         {
             Caption = 'Make Order By';
             Editable = false;
@@ -119,6 +119,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
                 if not Vend.GET("Tax Vendor No.") then
                     Vend.init();
                 "Tax Invoice Name" := Vend.Name;
+                "Tax Invoice Name 2" := Vend."Name 2";
                 "Vat Registration No." := Vend."VAT Registration No.";
                 "Head Office" := Vend."Head Office";
                 "Branch Code" := Vend."Branch Code";
@@ -178,7 +179,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
             Caption = 'Status';
             FieldClass = FlowField;
             CalcFormula = lookup("Purchase Header".Status where("Document Type" = field("Document Type"), "No." = field("Document No.")));
-
+            Editable = false;
         }
         field(80018; "Select"; Boolean)
         {
@@ -215,7 +216,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
 
             begin
                 if "Make to PO Qty." > "Outstanding Quantity" then
-                    FieldError("Make to PO Qty.", StrSubstNo('not more than %1', "Outstanding Quantity"));
+                    FieldError("Make to PO Qty.", StrSubstNo(PoQtyErr, "Outstanding Quantity"));
                 Validate("Make to PO Qty. (Base)", "Make to PO Qty.");
             end;
 
@@ -227,7 +228,11 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
             Editable = false;
 
         }
-
+        field(80023; "Tax Invoice Name 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Name 2';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()
@@ -236,7 +241,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
             begin
                 if Type = Type::Item then begin
                     if not Item.Get("No.") then
-                        Item.init;
+                        Item.init();
                     "WHT Product Posting Group" := Item."WHT Product Posting Group";
                 end;
             end;
@@ -250,6 +255,9 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
         }
 
     }
+    /// <summary>
+    /// GetPurchaseQuotesLine.
+    /// </summary>
     procedure GetPurchaseQuotesLine()
     var
         PurchaseQuotesLine: Record "Purchase Line";
@@ -259,7 +267,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
         CLEAR(GetPurchaseLine);
         PurchaseHeader.GET("Document Type", "Document No.");
         PurchaseHeader.TestField(Status, PurchaseHeader.Status::Open);
-        PurchaseQuotesLine.reset;
+        PurchaseQuotesLine.reset();
         PurchaseQuotesLine.SetRange("Document Type", PurchaseQuotesLine."Document Type"::Quote);
         PurchaseQuotesLine.SetRange("Buy-from Vendor No.", PurchaseHeader."Buy-from Vendor No.");
         PurchaseQuotesLine.SetRange(Status, PurchaseQuotesLine.Status::Released);
@@ -273,11 +281,15 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
 
     end;
 
+    /// <summary>
+    /// GetLastLine.
+    /// </summary>
+    /// <returns>Return value of type Integer.</returns>
     procedure GetLastLine(): Integer
     var
         PurchaseLine: Record "Purchase Line";
     begin
-        PurchaseLine.reset;
+        PurchaseLine.reset();
         PurchaseLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
         PurchaseLine.SetRange("Document Type", "Document Type");
         PurchaseLine.SetRange("Document No.", "Document No.");
@@ -286,7 +298,7 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
         exit(10000);
     end;
 
-    procedure "CheckQtyPR"()
+    local procedure CheckQtyPR()
 
     var
         POLine: Record "Purchase Line";
@@ -346,4 +358,5 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
 
     var
         PrRemainingErr: Label 'PR No. %1 ,Remaining Quantity is %2', Locked = true;
+        PoQtyErr: label 'not more than %1', Locked = true;
 }

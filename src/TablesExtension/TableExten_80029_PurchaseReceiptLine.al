@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenPurchase Rcpt. Line (ID 80029) extends Record Purch. Rcpt. Line.
+/// </summary>
 tableextension 80029 "ExtenPurchase Rcpt. Line" extends "Purch. Rcpt. Line"
 {
     fields
@@ -124,7 +127,11 @@ tableextension 80029 "ExtenPurchase Rcpt. Line" extends "Purch. Rcpt. Line"
             DataClassification = CustomerContent;
 
         }
-
+        field(80023; "Tax Invoice Name 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Name 2';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

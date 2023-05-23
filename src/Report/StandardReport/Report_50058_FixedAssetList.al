@@ -5,6 +5,7 @@ report 50058 "Fixed Asset - List (new)"
     //ApplicationArea = FixedAssets;
     Caption = 'Fixed Asset List';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -13,7 +14,7 @@ report 50058 "Fixed Asset - List (new)"
             DataItemTableView = SORTING("No.");
             PrintOnlyIfDetail = true;
             RequestFilterFields = "No.", "FA Class Code", "FA Subclass Code", "Budgeted Asset";
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(DeprBookText; DeprBookText)

@@ -1,3 +1,6 @@
+/// <summary>
+/// Page WHT Certificate (ID 50008).
+/// </summary>
 page 50008 "WHT Certificate"
 {
     PageType = Document;
@@ -6,6 +9,7 @@ page 50008 "WHT Certificate"
     InsertAllowed = false;
     DeleteAllowed = false;
     Caption = 'Certificate Card';
+    UsageCategory = None;
     layout
     {
 
@@ -18,14 +22,17 @@ page 50008 "WHT Certificate"
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    ToolTip = 'Specifies the value of the WHT No. field.';
                 }
                 field("WHT Business Posting Group"; Rec."WHT Business Posting Group")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Business Posting Group field.';
                 }
                 field("WHT Certificate No."; Rec."WHT Certificate No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Certificate No field.';
                     trigger OnAssistEdit()
                     begin
                         Rec."AssistEditCertificate"();
@@ -34,91 +41,113 @@ page 50008 "WHT Certificate"
                 field("WHT Date"; Rec."WHT Date")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Date field.';
                 }
                 field("WHT Source Type"; Rec."WHT Source Type")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Source Type field.';
                 }
                 field("WHT Source No."; Rec."WHT Source No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Source No. field.';
                 }
 
                 field("WHT Name"; Rec."WHT Name")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Name field.';
                 }
                 field("WHT Name 2"; Rec."WHT Name 2")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Name 2 field.';
                 }
                 field("WHT Address"; Rec."WHT Address")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Address field.';
                 }
                 field("WHT Address 2"; Rec."WHT Address 2")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Address 2 field.';
                 }
                 field("WHT Address 3"; Rec."WHT Address 3")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Address 3 field.';
                 }
                 field("WHT City"; Rec."WHT City")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT City field.';
                 }
                 field("Wht Post Code"; Rec."Wht Post Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Wht Post Code field.';
                 }
                 field("VAT Registration No."; Rec."VAT Registration No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the VAT Registration No. field.';
                 }
                 field("Head Office"; Rec."Head Office")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Head Office field.';
                 }
                 field("VAT Branch Code"; Rec."VAT Branch Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the VAT Branch Code field.';
                 }
                 field("WHT Type"; Rec."WHT Type")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Type field.';
                 }
                 field("WHT Option"; Rec."WHT Option")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Option field.';
                 }
                 field("WHT Base"; Rec."WHT Base")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Base field.';
                 }
                 field("WHT Amount"; Rec."WHT Amount")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Amount field.';
                 }
                 field("Gen. Journal Template Code"; Rec."Gen. Journal Template Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Gen. Journal Template Code field.';
                 }
                 field("Gen. Journal Batch Code"; Rec."Gen. Journal Batch Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Gen. Journal Batch Code field.';
                 }
                 field("Gen. Journal Document No."; Rec."Gen. Journal Document No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Gen. Journal Document No. field.';
                 }
                 field("Gen. Journal Line No."; Rec."Gen. Journal Line No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Gen. Journal Line No. field.';
                 }
                 field("Posted"; Rec."Posted")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Posted field.';
                 }
 
 
@@ -152,6 +181,7 @@ page 50008 "WHT Certificate"
                 ApplicationArea = all;
                 PromotedCategory = Report;
                 Caption = 'WHT Certificate(4Copies)';
+                ToolTip = 'Executes the WHT Certificate(4Copies) action.';
                 trigger OnAction()
                 var
                     WHTEntry: Record "WHT Header";
@@ -171,6 +201,7 @@ page 50008 "WHT Certificate"
                 ApplicationArea = all;
                 Caption = 'WHT Certificate(Preprint)';
                 PromotedCategory = Report;
+                ToolTip = 'Executes the WHT Certificate(Preprint) action.';
                 trigger OnAction()
                 var
                     WHTEntry: Record "WHT Header";
@@ -192,6 +223,7 @@ page 50008 "WHT Certificate"
                 PromotedIsBig = true;
                 Visible = false;
                 Image = GetLines;
+                ToolTip = 'Executes the Get WHT Line from Purch. Invoice action.';
                 trigger OnAction()
                 var
                     VendLedgEntry: Record "Vendor Ledger Entry";
@@ -199,23 +231,23 @@ page 50008 "WHT Certificate"
                     WHTLine: Record "WHT Lines";
                     LastLineNo: Integer;
                 begin
-                    VendLedgEntry.reset;
+                    VendLedgEntry.reset();
                     VendLedgEntry.SetRange("Applies-to ID", GDocNo);
                     if VendLedgEntry.FindSet() then
                         repeat
-                            PurchInvLine.reset;
+                            PurchInvLine.reset();
                             PurchInvLine.SetRange("Document No.", VendLedgEntry."Document No.");
                             PurchInvLine.SetFilter("WHT Business Posting Group", '<>%1', '');
-                            if PurchInvLine.findset then
+                            if PurchInvLine.findset() then
                                 repeat
-                                    WHTLine.RESET;
+                                    WHTLine.RESET();
                                     WHTLine.SetRange("WHT No.", Rec."WHT No.");
                                     WHTLine.SetRange("WHT Product Posting Group", '%1', PurchInvLine."WHT Product Posting Group");
                                     if WHTLine.FindFirst() then begin
                                         WHTLine.Validate("WHT Base", WHTLine."WHT Base" + PurchInvLine."Line Amount");
                                         WHTLine.Modify();
                                     end else begin
-                                        WHTLine.reset;
+                                        WHTLine.reset();
                                         WHTLine.SetRange("WHT No.", Rec."WHT No.");
                                         if WHTLine.FindLast() then
                                             LastLineNo := WHTLine."WHT Line No." + 10000
@@ -239,7 +271,7 @@ page 50008 "WHT Certificate"
     /// <summary> 
     /// Description for CreateWHTCertificate.
     /// </summary>
-    local procedure "CreateWHTCertificate"() ReturnResult: Boolean
+    local procedure "CreateWHTCertificate"(): Boolean
     var
         GenJnlLine: Record "Gen. Journal Line";
         GenJnlLine2: Record "Gen. Journal Line";
@@ -255,23 +287,22 @@ page 50008 "WHT Certificate"
         END ELSE BEGIN
             Rec.TESTfield("WHT Business Posting Group");
             IF NOT GenJnlLine.GET(Rec."Gen. Journal Template Code", Rec."Gen. Journal Batch Code", Rec."Gen. Journal Line No.") THEN BEGIN
-                GenJnlLine.RESET;
+                GenJnlLine.RESET();
                 GenJnlLine.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line NO.");
                 GenJnlLine.SETRANGE("Journal Template Name", Rec."Gen. Journal Template Code");
                 GenJnlLine.SETRANGE("Journal Batch Name", Rec."Gen. Journal Batch Code");
                 GenJnlLine.SETFILTER("Document No.", '%1', Rec."Gen. Journal Document No.");
-                IF GenJnlLine.FindLast() THEN BEGIN
+                IF GenJnlLine.FindLast() THEN
                     CurrLine := GenJnlLine."Line No.";
-                END;
 
-                GenJnlLine2.RESET;
+                GenJnlLine2.RESET();
                 GenJnlLine2.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line NO.");
                 GenJnlLine2.SETRANGE("Journal Template Name", Rec."Gen. Journal Template Code");
                 GenJnlLine2.SETRANGE("Journal Batch Name", Rec."Gen. Journal Batch Code");
                 GenJnlLine2.SETFILTER("Document No.", '%1', Rec."Gen. Journal Document No.");
                 IF GenJnlLine2.FindLast() THEN;
 
-                GenJnlLine.RESET;
+                GenJnlLine.RESET();
                 GenJnlLine.SETRANGE("Journal Template Name", Rec."Gen. Journal Template Code");
                 GenJnlLine.SETRANGE("Journal Batch Name", Rec."Gen. Journal Batch Code");
                 GenJnlLine.SETFILTER("Line No.", '>%1', CurrLine);
@@ -285,11 +316,11 @@ page 50008 "WHT Certificate"
                 WHTSetup.GET(Rec."WHT Business Posting Group");
                 WHTSetup.TESTfield("G/L Account No.");
 
-                GenJnlLine.INIT;
+                GenJnlLine.INIT();
                 GenJnlLine."Journal Template Name" := Rec."Gen. Journal Template Code";
                 GenJnlLine."Journal Batch Name" := Rec."Gen. Journal Batch Code";
                 GenJnlLine."Line No." := CurrLine;
-                GenJnlLine.INSERT;
+                GenJnlLine.INSERT();
                 GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
                 GenJnlLine.VALIDATE("Account No.", WHTSetup."G/L Account No.");
                 GenJnlLine."Posting Date" := GenJnlLine2."Posting Date";
@@ -300,7 +331,7 @@ page 50008 "WHT Certificate"
                 GenJnlLine."WHT Document No." := Rec."WHT No.";
                 GenJnlLine."Require Screen Detail" := GenJnlLine."Require Screen Detail"::WHT;
                 SumAmt := 0;
-                WHTEntry.RESET;
+                WHTEntry.RESET();
                 WHTEntry.SETRANGE("WHT No.", Rec."WHT No.");
                 IF WHTEntry.FIND('-') THEN begin
 
@@ -311,13 +342,13 @@ page 50008 "WHT Certificate"
                 GenJnlLine."Amount (LCY)" := -SumAmt;
                 GenJnlLine."Balance (LCY)" := -SumAmt; // 2016-12-06
                 GenJnlLine."Credit Amount" := SumAmt;
-                GenJnlLine.MODIFY;
+                GenJnlLine.MODIFY();
                 Rec."Gen. Journal Line No." := CurrLine;
                 Rec."Gen. Journal Document No." := GenJnlLine."Document No.";
-                Rec.MODIFY;
+                Rec.MODIFY();
             END ELSE BEGIN
                 SumAmt := 0;
-                WHTEntry.RESET;
+                WHTEntry.RESET();
                 WHTEntry.SETRANGE("WHT No.", Rec."WHT No.");
                 IF WHTEntry.FIND('-') THEN begin
 
@@ -330,12 +361,11 @@ page 50008 "WHT Certificate"
                 GenJnlLine."Balance (LCY)" := -SumAmt; //
                 GenJnlLine."Credit Amount" := SumAmt;
 
-                GenJnlLine.MODIFY;
-                IF Rec."Gen. Journal Line No." = 0 THEN BEGIN
+                GenJnlLine.MODIFY();
+                IF Rec."Gen. Journal Line No." = 0 THEN
                     Rec."Gen. Journal Line No." := GenJnlLine."Line No.";
-                END;
                 Rec."Gen. Journal Document No." := GenJnlLine."Document No.";
-                Rec.MODIFY;
+                Rec.MODIFY();
             END;
         END;
 
@@ -365,6 +395,5 @@ page 50008 "WHT Certificate"
         GJnlBatch: Code[20];
         GDocNo: Code[20];
         MyLineNo: Integer;
-        GenJnlLineDelte: Record "Gen. Journal Line";
 
 }

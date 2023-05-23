@@ -28,6 +28,7 @@ pageextension 80043 "PurchaseReturnOrderCard" extends "Purchase Return Order"
             field("Return Shipment No. Series"; Rec."Return Shipment No. Series")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Return Shipment No. Series field.';
             }
 
         }
@@ -44,12 +45,13 @@ pageextension 80043 "PurchaseReturnOrderCard" extends "Purchase Return Order"
                 PromotedCategory = Category10;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Purchase Return Order action.';
                 trigger OnAction()
                 var
 
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
                     REPORT.RunModal(REPORT::"PurchaseReturnOrder", true, true, PurchaseHeader);

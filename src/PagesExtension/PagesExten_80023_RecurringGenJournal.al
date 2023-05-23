@@ -6,9 +6,8 @@ pageextension 80023 "ReCurringGenJournal" extends "Recurring General Journal"
         {
             trigger OnAssistEdit()
             begin
-                if Rec."AssistEdit"(xRec) then begin
+                if Rec."AssistEdit"(xRec) then
                     CurrPage.Update();
-                end;
             end;
         }
     }

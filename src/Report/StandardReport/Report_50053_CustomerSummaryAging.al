@@ -6,6 +6,7 @@ report 50053 "Customer - Summary Aging (new)"
     //ApplicationArea = Basic, Suite;
     Caption = 'Customer - Summary Aging';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -13,7 +14,7 @@ report 50053 "Customer - Summary Aging (new)"
         {
             DataItemTableView = SORTING("No.");
             RequestFilterFields = "No.", "Search Name", "Customer Posting Group", "Currency Filter";
-            column(COMPANYNAME; COMPANYPROPERTY.DisplayName)
+            column(COMPANYNAME; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PrintAmountsInLCY; PrintAmountsInLCY)
@@ -197,7 +198,7 @@ report 50053 "Customer - Summary Aging (new)"
                     if Number = 1 then
                         Currency2.Find('-')
                     else
-                        if Currency2.Next = 0 then
+                        if Currency2.Next() = 0 then
                             CurrReport.Break();
                     Currency2.CalcFields("Cust. Ledg. Entries in Filter");
                     if not Currency2."Cust. Ledg. Entries in Filter" then
@@ -274,7 +275,7 @@ report 50053 "Customer - Summary Aging (new)"
                     repeat
                         Currency2 := Currency;
                         Currency2.Insert();
-                    until Currency.Next = 0;
+                    until Currency.Next() = 0;
             end;
         }
     }
@@ -320,7 +321,7 @@ report 50053 "Customer - Summary Aging (new)"
         trigger OnOpenPage()
         begin
             if PeriodStartDate[2] = 0D then
-                PeriodStartDate[2] := WorkDate;
+                PeriodStartDate[2] := WorkDate();
             if Format(PeriodLength) = '' then
                 Evaluate(PeriodLength, '<1M>');
         end;

@@ -8,6 +8,7 @@ pageextension 80054 "ApplyVendLedgEntry" extends "Apply Vendor Entries"
             {
                 ApplicationArea = All;
                 Editable = false;
+                ToolTip = 'Specifies the value of the PurchBillingDocNo field.';
             }
         }
     }
@@ -17,12 +18,11 @@ pageextension 80054 "ApplyVendLedgEntry" extends "Apply Vendor Entries"
         PurchBillingLine: Record "Billing Receipt Line";
     begin
         PurchBillingDocNo := '';
-        PurchBillingLine.reset;
+        PurchBillingLine.reset();
         PurchBillingLine.SetRange("Document Type", PurchBillingLine."Document Type"::"Purchase Billing");
         PurchBillingLine.SetRange("Source Ledger Entry No.", Rec."Entry No.");
-        if PurchBillingLine.FindFirst() then begin
+        if PurchBillingLine.FindFirst() then
             PurchBillingDocNo := PurchBillingLine."Document No.";
-        end;
     end;
 
     var

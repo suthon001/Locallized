@@ -1,3 +1,6 @@
+/// <summary>
+/// Page Tax Move Month (ID 50021).
+/// </summary>
 page 50021 "Tax Move Month"
 {
     SourceTable = "Tax Report Header";
@@ -7,6 +10,7 @@ page 50021 "Tax Move Month"
     PageType = List;
     Caption = 'Tax - Move Month';
     SourceTableTemporary = true;
+    UsageCategory = None;
     layout
     {
         area(Content)
@@ -17,14 +21,17 @@ page 50021 "Tax Move Month"
                 field("Year-Month"; Rec."Year-Month")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Year-Month field.';
                 }
                 field("Month Name"; Rec."Month Name")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Month Name field.';
                 }
                 field("Year No."; Rec."Year No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Year No field.';
                 }
             }
         }
@@ -32,17 +39,15 @@ page 50021 "Tax Move Month"
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
         if CloseAction = Action::LookupOK then
-            "MoveLine"();
+            MoveLine();
     end;
 
     /// <summary> 
     /// Description for MoveLine.
     /// </summary>
-    local procedure "MoveLine"()
+    local procedure MoveLine()
     var
         TaxReportLine: Record "Tax Report Line";
-        TaxReportLineOld: Record "Tax Report Line";
-        NewEntryNo: Integer;
     begin
 
 
@@ -57,7 +62,7 @@ page 50021 "Tax Move Month"
 
                 TaxLine.Delete();
 
-            until TaxLine.next = 0;
+            until TaxLine.next() = 0;
 
     end;
 
@@ -67,7 +72,7 @@ page 50021 "Tax Move Month"
     /// <param name="EntryType">Parameter of type Option Purchase,Sale,WHT.</param>
     /// <param name="EndOfWork">Parameter of type Date.</param>
     /// <param name="OldTaxLine">Parameter of type Record "Tax Report Line".</param>
-    procedure "SetData"(EntryType: Option Purchase,Sale,WHT; EndOfWork: Date; var OldTaxLine: Record "Tax Report Line")
+    procedure "SetData"(EntryType: Enum "Tax Type"; EndOfWork: Date; var OldTaxLine: Record "Tax Report Line")
     var
         TaxHeader: Record "Tax Report Header";
 
@@ -75,7 +80,7 @@ page 50021 "Tax Move Month"
 
         TaxLine.Copy(OldTaxLine);
 
-        TaxHeader.reset;
+        TaxHeader.reset();
         TaxHeader.SetRange("Tax Type", EntryType);
         TaxHeader.SetFilter("End date of Month", '<>%1', EndOfWork);
         if TaxHeader.FindFirst() then
@@ -84,7 +89,7 @@ page 50021 "Tax Move Month"
                 Rec.TransferFields(TaxHeader);
                 Rec.Insert();
             until TaxHeader.Next() = 0;
-        Rec.reset;
+        Rec.reset();
         Rec.SetCurrentKey("Tax Type", "Document No.");
     end;
 

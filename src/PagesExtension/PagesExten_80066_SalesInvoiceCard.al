@@ -60,12 +60,13 @@ pageextension 80066 "Sales Invoice Card" extends "Sales Invoice"
                 PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the AR Voucher action.';
                 trigger OnAction()
                 var
                     ARVoucher: Report "AR Voucher";
                     SalesHeader: Record "Sales Header";
                 begin
-                    SalesHeader.reset;
+                    SalesHeader.reset();
                     SalesHeader.Copy(Rec);
                     ARVoucher."SetGLEntry"(SalesHeader);
                     ARVoucher.RunModal();
@@ -79,11 +80,12 @@ pageextension 80066 "Sales Invoice Card" extends "Sales Invoice"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Sales Invoice action.';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Report Sales Invoice", TRUE, TRUE, RecSalesHeader);
@@ -97,11 +99,12 @@ pageextension 80066 "Sales Invoice Card" extends "Sales Invoice"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Debit Note action.';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Debit Note", TRUE, TRUE, RecSalesHeader);

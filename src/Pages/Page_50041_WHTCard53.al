@@ -1,3 +1,6 @@
+/// <summary>
+/// Page WHT53 Card (ID 50041).
+/// </summary>
 page 50041 "WHT53 Card"
 {
 
@@ -6,7 +9,7 @@ page 50041 "WHT53 Card"
     Caption = 'Withholding tax Card';
     RefreshOnActivate = true;
     SourceTableView = sorting("Tax Type", "Document No.") where("Tax Type" = filter(WHT53));
-    DataCaptionExpression = StrSubstNo('%1 ปี %2', Rec."Month Name", Rec."Year No.");
+    UsageCategory = None;
     layout
     {
         area(content)
@@ -17,6 +20,7 @@ page 50041 "WHT53 Card"
                 field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Document No. field.';
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit(xRec) then
@@ -27,6 +31,7 @@ page 50041 "WHT53 Card"
                 field("End date of Month"; Rec."End date of Month")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the End date of Month field.';
                     trigger OnValidate()
                     begin
                         CurrPage.Update();
@@ -35,24 +40,29 @@ page 50041 "WHT53 Card"
                 field("Year-Month"; Rec."Year-Month")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Year-Month field.';
                 }
                 field("Month No."; Rec."Month No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Month No field.';
                 }
                 field("Month Name"; Rec."Month Name")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Month Name field.';
                 }
                 field("Year No."; Rec."Year No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Year No field.';
                 }
 
                 field("Date Filter"; DateFilter)
                 {
                     Caption = 'Date Filter';
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Date Filter field.';
                     trigger OnValidate()
                     var
                         ApplicationManagement: Codeunit "Filter Tokens";
@@ -69,12 +79,14 @@ page 50041 "WHT53 Card"
                     Caption = 'Total Base Amount';
                     Editable = false;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Total Base Amount field.';
                 }
                 field("Total Vat Amount"; TotalVatAmt)
                 {
                     Caption = 'Total WHT Amount';
                     Editable = false;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Total WHT Amount field.';
                 }
 
             }
@@ -102,6 +114,7 @@ page 50041 "WHT53 Card"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 Image = ExportFile;
+                ToolTip = 'Executes the Export PND action.';
                 trigger OnAction()
                 begin
                     CurrPage."WHTSubpage".Page."ExportPND"();
@@ -115,6 +128,7 @@ page 50041 "WHT53 Card"
                 PromotedCategory = Report;
                 PromotedIsBig = true;
                 Image = PrintReport;
+                ToolTip = 'Executes the รายงานใบต่อ ภ.ง.ด. action.';
                 trigger OnAction()
                 var
                     TaxReportHeader: Record "Tax Report Header";
@@ -139,11 +153,11 @@ page 50041 "WHT53 Card"
                 PromotedCategory = Report;
                 PromotedIsBig = true;
                 Image = PrintReport;
+                ToolTip = 'Executes the PND 53 action.';
                 trigger OnAction()
                 var
                     TaxReportHeader: Record "Tax Report Header";
                     PND53Report: Report "WHT PND 53";
-                    WHTBusRec: Record "WHT Business Posting Group";
                 begin
                     Clear(PND53Report);
                     TaxReportHeader.Reset();
@@ -183,7 +197,7 @@ page 50041 "WHT53 Card"
         TotaBaseAmt: Decimal;
         TotalVatAmt: Decimal;
         WHTBusFilter: Code[250];
-        DateFilter: Text[250];
+        DateFilter: Text;
 
 
 }

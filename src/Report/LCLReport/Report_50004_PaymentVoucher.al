@@ -5,6 +5,7 @@ report 50004 "Payment Voucher"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50004_PaymentVoucher.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(GLEntry; "G/L Entry")
@@ -58,7 +59,7 @@ report 50004 "Payment Voucher"
                 NewDate: Date;
             begin
 
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyInformation"(ComText, false);
                 "GetVendorExchange"();
@@ -73,7 +74,7 @@ report 50004 "Payment Voucher"
                 "CheckLineData"();
                 "FindPostingDescription"();
                 if not GenJournalBatchName.GET(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name") then
-                    GenJournalBatchName.init;
+                    GenJournalBatchName.init();
 
                 JournalDescriptionThai := GenJournalBatchName."Description TH Voucher";
                 JournalDescriptionEng := GenJournalBatchName."Description EN Voucher";
@@ -106,9 +107,9 @@ report 50004 "Payment Voucher"
                 IF Number = 1 THEN
                     OK := CVBufferEntry.FindFirst()
                 ELSE
-                    OK := CVBufferEntry.NEXT <> 0;
+                    OK := CVBufferEntry.NEXT() <> 0;
                 IF NOT OK THEN
-                    CurrReport.BREAK;
+                    CurrReport.BREAK();
             end;
         }
         dataitem(GenJournalLineVAT; "Gen. Journal Line")
@@ -188,18 +189,18 @@ report 50004 "Payment Voucher"
             begin
                 VendorBankAccountName := '';
                 if not BankAccount.get("Account No.") then
-                    BankAccount.init;
+                    BankAccount.init();
 
                 BankName := BankAccount.Name + ' ' + BankAccount."Name 2";
                 BankBranchNo := BankAccount."Bank Branch No.";
 
-                GenJournalLineBank.RESET;
+                GenJournalLineBank.RESET();
                 GenJournalLineBank.SETFILTER("Document No.", '%1', "Document No.");
                 GenJournalLineBank.SETFILTER("Account Type", '%1', GenJournalLineBank."Account Type"::Vendor);
                 GenJournalLineBank.SETFILTER("Recipient Bank Account", '<>%1', '');
                 IF GenJournalLineBank.FIND('-') THEN BEGIN
                     IF NOT VendorBankAccount.GET(GenJournalLine."Account No.", GenJournalLine."Recipient Bank Account") THEN
-                        VendorBankAccount.init;
+                        VendorBankAccount.init();
                     VendorBankAccountName := VendorBankAccount.Name;
 
                 END;
@@ -242,7 +243,7 @@ report 50004 "Payment Voucher"
     var
         GenLine: Record "Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -263,7 +264,7 @@ report 50004 "Payment Voucher"
     var
         GenLine: Record "Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
@@ -284,7 +285,7 @@ report 50004 "Payment Voucher"
         EntryNo: Integer;
     begin
         TempAmt := 0;
-        GenJournalLine.reset;
+        GenJournalLine.reset();
         GenJournalLine.SetRange("Journal Template Name", GenLine."Journal Template Name");
         GenJournalLine.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
         GenJournalLine.SetRange("Document No.", GenLine."Document No.");
@@ -293,13 +294,13 @@ report 50004 "Payment Voucher"
         GenjournalTemplate.get(GenLine."Journal Template Name");
         if GLTemp.FindFirst() then begin
             repeat
-                GLEntry.reset;
+                GLEntry.reset();
                 GLEntry.SetRange("G/L Account No.", GLTemp."G/L Account No.");
                 GLEntry.SetRange("Global Dimension 1 Code", GLTemp."Global Dimension 1 Code");
                 GLEntry.SetRange("Global Dimension 2 Code", GLTemp."Global Dimension 2 Code");
                 if not GLEntry.FindFirst() then begin
                     EntryNo += 1;
-                    GLEntry.init;
+                    GLEntry.init();
                     GLEntry.TransferFields(GLTemp);
                     GLEntry."Entry No." := EntryNo;
                     GLEntry.Insert();
@@ -316,8 +317,8 @@ report 50004 "Payment Voucher"
                     TempAmt += GLEntry."Debit Amount";
                     GLEntry.Modify();
                 end;
-            until GLTemp.next = 0;
-            GLEntry.reset;
+            until GLTemp.next() = 0;
+            GLEntry.reset();
         end;
     end;
 
@@ -329,7 +330,7 @@ report 50004 "Payment Voucher"
     var
         GenLineCheck: Record "Gen. Journal Line";
     begin
-        GenLineCheck.reset;
+        GenLineCheck.reset();
         GenLineCheck.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLineCheck.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLineCheck.SetRange("Document No.", GenJournalLine."Document No.");
@@ -339,7 +340,7 @@ report 50004 "Payment Voucher"
         HaveWHT := GenLineCheck.Count <> 0;
         GenLineCheck.SetRange("Require Screen Detail", GenLineCheck."Require Screen Detail"::CHEQUE);
         haveCheque := GenLineCheck.Count <> 0;
-        GenLineCheck.reset;
+        GenLineCheck.reset();
         GenLineCheck.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLineCheck.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLineCheck.SetRange("Document No.", GenJournalLine."Document No.");
@@ -357,9 +358,6 @@ report 50004 "Payment Voucher"
         VendText: array[10] Of Text[250];
         BranchCode: Text[50];
         SplitDate: Array[3] of Text[20];
-        vgUOMFromItemCharge: Code[10];
-        vgCustNoItemCharge: Code[20];
-        vgQtyonShipItemCharge: Decimal;
         AmtText: Text[1024];
         TempAmt: Decimal;
         VendorCode: Code[20];

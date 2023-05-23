@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension Vat Entry (ID 80026) extends Record VAT Entry.
+/// </summary>
 tableextension 80026 "Vat Entry" extends "VAT Entry"
 {
     fields
@@ -29,7 +32,7 @@ tableextension 80026 "Vat Entry" extends "VAT Entry"
             DataClassification = CustomerContent;
             //TableRelation = Vendor."No.";
         }
-        field(80006; "Tax Invoice Name"; Text[150])
+        field(80006; "Tax Invoice Name"; Text[100])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;
@@ -58,7 +61,7 @@ tableextension 80026 "Vat Entry" extends "VAT Entry"
             DataClassification = SystemMetadata;
 
         }
-        field(80011; "Tax Invoice Address"; Text[150])
+        field(80011; "Tax Invoice Address"; Text[100])
         {
             Caption = 'Tax Invoice Address';
             DataClassification = SystemMetadata;
@@ -81,5 +84,17 @@ tableextension 80026 "Vat Entry" extends "VAT Entry"
             Caption = 'Document Line No.';
             DataClassification = SystemMetadata;
         }
+        field(80015; "Tax Invoice Name 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Name 2';
+            DataClassification = CustomerContent;
+        }
+        field(80016; "Tax Invoice Address 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Address 2';
+            DataClassification = SystemMetadata;
+
+        }
+
     }
 }

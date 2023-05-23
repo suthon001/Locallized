@@ -1,17 +1,18 @@
+/// <summary>
+/// TableExtension VatPostingSetup (ID 80040) extends Record VAT Posting Setup.
+/// </summary>
 tableextension 80040 "VatPostingSetup" extends "VAT Posting Setup"
 {
     fields
     {
-
-
-        field(80000; "Generate Sales Vat Report"; Boolean)
+        field(80000; "Allow Generate to Sales Vat"; Boolean)
         {
-            Caption = 'Generate Sales Vat Report';
+            Caption = 'Allow Generate Sales Vat';
             DataClassification = CustomerContent;
         }
-        field(80001; "Generate Purch. Vat Report"; Boolean)
+        field(80001; "Allow Generate to Purch. Vat"; Boolean)
         {
-            Caption = 'Generate Purch. Vat Report';
+            Caption = 'Allow Generate Purch. Vat';
             DataClassification = CustomerContent;
         }
     }

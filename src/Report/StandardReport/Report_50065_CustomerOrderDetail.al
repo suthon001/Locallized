@@ -6,6 +6,7 @@ report 50065 "Customer - Order Detail (new)"
     Caption = 'Customer - Order Detail';
     PreviewMode = PrintLayout;
     UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
 
     dataset
     {
@@ -16,7 +17,7 @@ report 50065 "Customer - Order Detail (new)"
             column(ShipmentPeriodDate; StrSubstNo(Text000, PeriodText))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PrintAmountsInLCY; PrintAmountsInLCY)
@@ -131,11 +132,11 @@ report 50065 "Customer - Order Detail (new)"
                     NewOrder := "Document No." <> SalesHeader."No.";
                     if NewOrder then
                         SalesHeader.Get(1, "Document No.");
-                    if "Shipment Date" <= WorkDate then
+                    if "Shipment Date" <= WorkDate() then
                         BackOrderQty := "Outstanding Quantity"
                     else
                         BackOrderQty := 0;
-                    Currency.InitRoundingPrecision;
+                    Currency.InitRoundingPrecision();
                     if "VAT Calculation Type" in ["VAT Calculation Type"::"Normal VAT", "VAT Calculation Type"::"Reverse Charge VAT"] then
                         SalesOrderAmount :=
                           Round(
@@ -152,13 +153,13 @@ report 50065 "Customer - Order Detail (new)"
                             SalesOrderAmountLCY :=
                               Round(
                                 CurrExchRate.ExchangeAmtFCYToLCY(
-                                  WorkDate, SalesHeader."Currency Code",
+                                  WorkDate(), SalesHeader."Currency Code",
                                   SalesOrderAmountLCY, SalesHeader."Currency Factor"));
                         if PrintAmountsInLCY then begin
                             "Unit Price" :=
                               Round(
                                 CurrExchRate.ExchangeAmtFCYToLCY(
-                                  WorkDate, SalesHeader."Currency Code",
+                                  WorkDate(), SalesHeader."Currency Code",
                                   "Unit Price", SalesHeader."Currency Factor"));
                             SalesOrderAmount := SalesOrderAmountLCY;
                         end;
@@ -201,7 +202,7 @@ report 50065 "Customer - Order Detail (new)"
                     if Number = 1 then
                         OK := CurrencyTotalBuffer.Find('-')
                     else
-                        OK := CurrencyTotalBuffer.Next <> 0;
+                        OK := CurrencyTotalBuffer.Next() <> 0;
                     if not OK then
                         CurrReport.Break();
 
@@ -250,7 +251,7 @@ report 50065 "Customer - Order Detail (new)"
                 if Number = 1 then
                     OK := CurrencyTotalBuffer2.Find('-')
                 else
-                    OK := CurrencyTotalBuffer2.Next <> 0;
+                    OK := CurrencyTotalBuffer2.Next() <> 0;
                 if not OK then
                     CurrReport.Break();
             end;

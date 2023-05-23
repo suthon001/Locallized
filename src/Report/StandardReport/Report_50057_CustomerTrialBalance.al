@@ -7,6 +7,7 @@ report 50057 "Customer - Trial Balance (new)"
     Caption = 'Customer - Trial Balance';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -14,7 +15,7 @@ report 50057 "Customer - Trial Balance (new)"
         {
             DataItemTableView = SORTING("Customer Posting Group");
             RequestFilterFields = "No.", "Date Filter", "Customer Posting Group";
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PeriodFilter; StrSubstNo(Text003, PeriodFilter))
@@ -156,7 +157,7 @@ report 50057 "Customer - Trial Balance (new)"
         Customer.SetRange("Date Filter", PeriodStartDate, PeriodEndDate);
         AccountingPeriod.SetRange("Starting Date", 0D, PeriodEndDate);
         AccountingPeriod.SetRange("New Fiscal Year", true);
-        if AccountingPeriod.FindLast then
+        if AccountingPeriod.FindLast() then
             FiscalYearStartDate := AccountingPeriod."Starting Date"
         else
             Error(Text000, AccountingPeriod.FieldCaption("Starting Date"), AccountingPeriod.TableCaption);

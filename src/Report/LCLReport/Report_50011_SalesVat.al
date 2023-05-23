@@ -160,8 +160,9 @@ report 50011 "Sales Vat"
     /// Description for SetFilter.
     /// </summary>
     /// <param name="TempVatBus">Parameter of type Code[30].</param>
+    /// <param name="TempProd">Code[250].</param>
     /// <param name="Tempdate">Parameter of type Text[100].</param>
-    procedure "SetFilter"(TempVatBus: Code[30]; TempProd: Code[30]; Tempdate: Text[100])
+    procedure "SetFilter"(TempVatBus: Code[250]; TempProd: Code[250]; Tempdate: Text)
     begin
         if TempVatBus <> '' then
             "Tax Report Line".SetFilter("VAT Business Posting Group", TempVatBus);
@@ -174,7 +175,7 @@ report 50011 "Sales Vat"
 
     trigger OnPreReport()
     begin
-        CompanyInformation.GET;
+        CompanyInformation.GET();
         CompanyInformation.CALCFIELDS(Picture);
 
     end;
@@ -188,10 +189,6 @@ report 50011 "Sales Vat"
         VATBusPostingGroup: Record "VAT Business Posting Group";
         var_BrandNo: Text[10];
         var_BrandName: Code[20];
-        var_BrandAddress: Text;
-        var_BrandAddress2: Text;
-        VATRegis: Text;
-        EntryNo: Integer;
         VatBus: Code[30];
         Comtext: Array[10] of text[250];
 

@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenGenJournal Lines (ID 80014) extends Record Gen. Journal Line.
+/// </summary>
 tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
 {
     fields
@@ -57,33 +60,38 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                 Vendor: Record Vendor;
                 Cust: Record Customer;
             begin
-                //   if "Journal Template Name" = 'CASH RECE' then begin
-                IF Cust.GET("Tax Vendor No.") THEN begin
-                    Cust.INIT;
-                    "Tax Invoice Name" := Cust.Name + ' ' + Cust."Name 2";
+                IF "Gen. Posting Type" = "Gen. Posting Type"::Sale then begin
+                    IF not Cust.GET("Tax Vendor No.") THEN
+                        Cust.INIT();
+                    "Tax Invoice Name" := Cust.Name;
+                    "Tax Invoice Name 2" := Cust."Name 2";
                     "Head Office" := Cust."Head Office";
                     "Branch Code" := Cust."Branch Code";
                     if (NOT "Head Office") AND ("Branch Code" = '') then
                         "Head Office" := true;
-                    "Tax Invoice Address" := Cust.Address + ' ' + Cust."Address 2";
+                    "Tax Invoice Address" := Cust.Address;
+                    "Tax Invoice Address 2" := Cust."Address 2";
                     "VAT Registration No." := Cust."VAT Registration No.";
-                end else begin
-                    IF NOT Vendor.GET("Tax Vendor No.") THEN
-                        Vendor.INIT;
+                end else
+                    IF "Gen. Posting Type" = "Gen. Posting Type"::Purchase then begin
+                        IF NOT Vendor.GET("Tax Vendor No.") THEN
+                            Vendor.INIT();
+                        "Tax Invoice Name" := Vendor.Name;
+                        "Tax Invoice Name 2" := Vendor."Name 2";
+                        "Head Office" := Vendor."Head Office";
+                        "Branch Code" := Vendor."Branch Code";
+                        if (NOT "Head Office") AND ("Branch Code" = '') then
+                            "Head Office" := true;
+                        "Tax Invoice Address" := Vendor.Address;
+                        "Tax Invoice Address 2" := Vendor."Address 2";
+                        "VAT Registration No." := Vendor."VAT Registration No.";
+                    end;
 
-                    "Tax Invoice Name" := Vendor.Name + ' ' + Vendor."Name 2";
-                    "Head Office" := Vendor."Head Office";
-                    "Branch Code" := Vendor."Branch Code";
-                    if (NOT "Head Office") AND ("Branch Code" = '') then
-                        "Head Office" := true;
-                    "Tax Invoice Address" := Vendor.Address + ' ' + Vendor."Address 2";
-                    "VAT Registration No." := Vendor."VAT Registration No.";
-                end;
 
             end;
 
         }
-        field(80008; "Tax Invoice Name"; Text[150])
+        field(80008; "Tax Invoice Name"; Text[100])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;
@@ -100,9 +108,9 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "Head Office" then begin
+                if "Head Office" then
                     "Branch Code" := '';
-                end;
+
             end;
 
         }
@@ -142,9 +150,9 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                 WHTBusinessPostingGroup: Record "WHT Business Posting Group";
             begin
                 IF NOT WHTBusinessPostingGroup.GET("WHT Business Posting Group") THEN
-                    WHTBusinessPostingGroup.init;
+                    WHTBusinessPostingGroup.init();
                 "WHT No. Series" := WHTBusinessPostingGroup."WHT Certificate No. Series";
-                "CalWhtAmount"();
+                CalWhtAmount();
             end;
         }
         field(80014; "WHT Product Posting Group"; Code[10])
@@ -154,30 +162,30 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                "CalWhtAmount"();
+                CalWhtAmount();
             end;
         }
-        field(80015; "WHT Name"; text[50])
+        field(80015; "WHT Name"; text[100])
         {
             Caption = 'WHT Name';
             DataClassification = CustomerContent;
         }
-        field(80016; "WHT Name 2"; text[100])
+        field(80016; "WHT Name 2"; text[50])
         {
             Caption = 'WHT Name 2';
             DataClassification = CustomerContent;
         }
-        field(80017; "WHT Address"; Text[50])
+        field(80017; "WHT Address"; Text[100])
         {
             Caption = 'WHT Address';
             DataClassification = CustomerContent;
         }
-        field(80018; "WHT Address 2"; Text[100])
+        field(80018; "WHT Address 2"; Text[50])
         {
             Caption = 'WHT Address 2';
             DataClassification = CustomerContent;
         }
-        field(80019; "WHT Post Code"; Code[10])
+        field(80019; "WHT Post Code"; Code[20])
         {
             Caption = 'WHT Post Code';
             DataClassification = CustomerContent;
@@ -208,7 +216,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                "CalWhtAmount"();
+                CalWhtAmount();
             end;
         }
         field(80025; "WHT Amount"; Decimal)
@@ -262,14 +270,14 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                 BankAcc: Record "Bank Account";
             begin
                 IF NOT BankAcc.GET("Bank Code") THEN
-                    BankAcc.INIT;
-                "Bank Name" := BankAcc.Name + ' ' + BankAcc."Name 2";
+                    BankAcc.INIT();
+                "Bank Name" := BankAcc.Name;
                 "Bank Account No." := BankAcc."Bank Account No.";
                 "Bank Branch No." := BankAcc."Bank Branch No.";
             end;
 
         }
-        field(80034; "Bank Name"; Text[150])
+        field(80034; "Bank Name"; Text[100])
         {
             Caption = 'Bank Name';
             DataClassification = CustomerContent;
@@ -304,7 +312,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             DataClassification = CustomerContent;
 
         }
-        field(80039; "Pay Name"; Text[150])
+        field(80039; "Pay Name"; Text[100])
         {
             Caption = 'Pay Name';
             DataClassification = CustomerContent;
@@ -321,7 +329,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                 Vendor: Record vendor;
             begin
                 IF NOT Vendor.GET("WHT Vendor No.") THEN
-                    Vendor.INIT;
+                    Vendor.INIT();
 
                 "VAT Registration No." := Vendor."VAT Registration No.";
                 "WHT Name" := Vendor.Name;
@@ -333,7 +341,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                 "WHT County" := Vendor.County;
                 VALIDATE("WHT Business Posting Group", Vendor."WHT Business Posting Group");
                 "WHT Registration No." := Vendor."VAT Registration No.";
-                "CalWhtAmount"();
+                CalWhtAmount();
             end;
         }
         field(80041; "Tax Invoice Address"; Code[150])
@@ -374,12 +382,12 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             begin
                 if ("Template Source Type" = "Template Source Type"::"Cash Receipts") then begin
                     IF not Customer.GET("Customer/Vendor No.") THEN
-                        Customer.init;
-                    "Pay Name" := Customer.Name + ' ' + Customer."Name 2";
+                        Customer.init();
+                    "Pay Name" := Customer.Name;
                 end else begin
                     IF not Vendor.GET("Customer/Vendor No.") THEN
-                        Vendor.init;
-                    "Pay Name" := Vendor.Name + ' ' + Vendor."Name 2";
+                        Vendor.init();
+                    "Pay Name" := Vendor.Name;
                 end;
 
 
@@ -404,15 +412,12 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
         {
             DataClassification = CustomerContent;
         }
-
-        field(80059; "Template Source Type"; Enum "Gen. Journal Template Type")
+        field(80049; "Tax Invoice Name 2"; text[50])
         {
-            Editable = false;
-            FieldClass = FlowField;
-            CalcFormula = lookup("Gen. Journal Template".Type where(Name = field("Journal Template Name")));
-            Caption = 'Template Source Type';
+            DataClassification = CustomerContent;
         }
-        field(80050; "Create By"; Code[30])
+
+        field(80050; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
@@ -430,8 +435,18 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             DataClassification = SystemMetadata;
             Editable = false;
         }
+        field(80053; "Tax Invoice Address 2"; text[50])
+        {
+            DataClassification = CustomerContent;
+        }
 
-
+        field(80054; "Template Source Type"; Enum "Gen. Journal Template Type")
+        {
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = lookup("Gen. Journal Template".Type where(Name = field("Journal Template Name")));
+            Caption = 'Template Source Type';
+        }
 
         modify("External Document No.")
         {
@@ -453,25 +468,27 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                 Vend: record Vendor;
             begin
                 if not GLAccount.GET("Account No.") then
-                    GLAccount.init;
+                    GLAccount.init();
 
                 if not BankAccount.GET("Account No.") then
-                    BankAccount.init;
-                "Bank Name" := BankAccount.Name + ' ' + BankAccount."Name 2";
+                    BankAccount.init();
+                "Bank Name" := BankAccount.Name;
                 "Bank Branch No." := BankAccount."Bank Branch No.";
                 "Bank Account No." := BankAccount."Bank Account No.";
 
                 if "Account Type" = "Account Type"::Customer then begin
                     if not Cust.GET("Account No.") then
-                        Cust.init;
+                        Cust.init();
                     "Head Office" := Cust."Head Office";
                     "Branch Code" := Cust."Branch Code";
+                    "VAT Registration No." := Cust."VAT Registration No.";
                 end;
                 if "Account Type" = "Account Type"::Vendor then begin
                     if not Vend.GET("Account No.") then
-                        Vend.init;
+                        Vend.init();
                     "Head Office" := Vend."Head Office";
                     "Branch Code" := Vend."Branch Code";
+                    "VAT Registration No." := Vend."VAT Registration No.";
                 end;
 
             end;
@@ -490,10 +507,15 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
     }
     trigger OnInsert()
     begin
-        "Create By" := USERID;
+        "Create By" := COPYSTR(USERID, 1, 50);
         "Create DateTime" := CurrentDateTime;
     end;
 
+    /// <summary>
+    /// AssistEdit.
+    /// </summary>
+    /// <param name="OldGenJnlLine">Record "Gen. Journal Line".</param>
+    /// <returns>Return value of type Boolean.</returns>
     procedure "AssistEdit"(OldGenJnlLine: Record "Gen. Journal Line"): Boolean
     var
         GenJnlLine: Record "Gen. Journal Line";
@@ -513,7 +535,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
         //  END;
     end;
 
-    local procedure "CalWhtAmount"()
+    local procedure CalWhtAmount()
     var
         WHTPostingSetup: Record "WHT Posting Setup";
 
@@ -534,11 +556,15 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
         END;
     end;
 
-    procedure "GetLastLine"(): Integer
+    /// <summary>
+    /// GetLastLine.
+    /// </summary>
+    /// <returns>Return value of type Integer.</returns>
+    procedure GetLastLine(): Integer
     var
         genJournalLine: Record "Gen. Journal Line";
     begin
-        genJournalLine.reset;
+        genJournalLine.reset();
         genJournalLine.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
         genJournalLine.SetRange("Journal Template Name", "Journal Template Name");
         genJournalLine.SetRange("Journal Batch Name", "Journal Batch Name");

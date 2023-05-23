@@ -1,7 +1,4 @@
-/// <summary>
-/// TableExtension ExtenInvoice Post. Buffer (ID 80016) extends Record Invoice Post. Buffer.
-/// </summary>
-tableextension 80016 "ExtenInvoice Post. Buffer" extends "Invoice Post. Buffer"
+tableextension 80052 "ExtenInvoice Posting Buffer" extends "Invoice Posting Buffer"
 {
     fields
     {

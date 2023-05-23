@@ -10,6 +10,7 @@ pageextension 80027 "CustomerStaticFacbox" extends "Customer Statistics FactBox"
                 Caption = 'Available Credit (LCY)';
                 Editable = false;
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Available Credit (LCY) field.';
             }
         }
     }
@@ -17,9 +18,8 @@ pageextension 80027 "CustomerStaticFacbox" extends "Customer Statistics FactBox"
     trigger OnAfterGetRecord()
     begin
         AvalibleCreditAmt := 0;
-        IF Rec."Credit Limit (LCY)" <> 0 then begin
-            AvalibleCreditAmt := Rec."Credit Limit (LCY)" - Rec.GetTotalAmountLCY;
-        end;
+        IF Rec."Credit Limit (LCY)" <> 0 then
+            AvalibleCreditAmt := Rec."Credit Limit (LCY)" - Rec.GetTotalAmountLCY();
     end;
 
     Var

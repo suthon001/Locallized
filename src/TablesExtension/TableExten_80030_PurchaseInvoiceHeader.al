@@ -22,7 +22,7 @@ tableextension 80030 "Purchase Inv. Header" extends "Purch. Inv. Header"
             DataClassification = CustomerContent;
         }
 
-        field(80003; "Create By"; Code[30])
+        field(80003; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;

@@ -4,6 +4,7 @@
 table 50007 "WHT Posting Setup"
 {
     Caption = 'WHT Posting Setup';
+    DataClassification = CustomerContent;
 
     fields
     {

@@ -43,18 +43,14 @@ codeunit 50020 "Record Deletion Mgt."
     TableData "VAT Transections" = rimd, TableData "Posted Gen. Journal Line" = rimd, TableData "Posted ItemJournal Lines" = rimd,
     TableData "Tax Report Header" = rimd, TableData "Tax Report Line" = rimd, TableData "WHT Header" = rimd,
     TableData "WHT Lines" = rimd, TableData "Billing Receipt Header" = rimd, TableData "Billing Receipt Line" = rimd,
-    TableData "Image Storage" = rimd,
     tabledata "Record Deletion Table" = rimd,
     tabledata "g/l entry - vat Entry link" = rimd,
     tabledata "Change Log Entry" = ridm,
     tabledata "Fa Register" = ridm,
     tabledata "G/L - Item Ledger Relation" = ridm;
-    trigger OnRun()
-    begin
-    end;
+
 
     var
-        Text0001: Label 'Delete Records?';
         Text0002: Label 'Deleting Records!\Table: #1#######';
 
     procedure DeleteRecords(pCompanyName: Text[1024]; setdefultnoseries: Boolean)
@@ -65,23 +61,23 @@ codeunit 50020 "Record Deletion Mgt."
         NoseriesLine: Record "No. Series Line";
     begin
         Window.Open(Text0002);
-        RecordDeletionTable.reset;
+        RecordDeletionTable.reset();
         RecordDeletionTable.SetRange("Delete Records", true);
-        if RecordDeletionTable.FindSet then begin
+        if RecordDeletionTable.FindSet() then begin
             repeat
                 Window.Update(1, Format(RecordDeletionTable."Table ID"));
                 RecRef.Open(RecordDeletionTable."Table ID", false, pCompanyName);
                 if RecRef.FindSet() then
-                    RecRef.DeleteAll;
-                RecRef.Close;
+                    RecRef.DeleteAll();
+                RecRef.Close();
 
                 RecordDeletionTable."LastTime Clean Transection" := CurrentDateTime;
                 RecordDeletionTable."LastTime Clean By" := UserId;
                 RecordDeletionTable.Modify();
 
-            until RecordDeletionTable.Next = 0;
+            until RecordDeletionTable.Next() = 0;
             if setdefultnoseries then begin
-                NoseriesLine.reset;
+                NoseriesLine.reset();
                 if NoseriesLine.FindSet() then begin
                     NoseriesLine.modifyall("Last Date Used", 0D);
                     NoseriesLine.modifyall("Last No. Used", '');
@@ -89,7 +85,7 @@ codeunit 50020 "Record Deletion Mgt."
             end;
         end else
             Message('Nothing to Clean');
-        Window.Close;
+        Window.Close();
     end;
 
     procedure "Generate Table"()
@@ -302,14 +298,14 @@ codeunit 50020 "Record Deletion Mgt."
         MyTable.add('Production Forecast Entry');
         MyTable.add('Untracked Planning Element');
         MyTable.add('Posted Gen. Journal Line');
-        RecordDeltetionEntry.reset;
+        RecordDeltetionEntry.reset();
         RecordDeltetionEntry.DeleteAll();
         foreach NyTableName in MyTable do begin
-            ObjectAll.reset;
+            ObjectAll.reset();
             ObjectAll.SetRange("Object Type", ObjectAll."Object Type"::Table);
             ObjectAll.SetRange("Object Name", NyTableName);
             if ObjectAll.FindFirst() then begin
-                RecordDeltetionEntry.init;
+                RecordDeltetionEntry.init();
                 RecordDeltetionEntry."Table ID" := ObjectAll."Object ID";
                 RecordDeltetionEntry."Table Name" := ObjectAll."Object Name";
                 RecordDeltetionEntry."Delete Records" := true;

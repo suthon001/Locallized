@@ -7,6 +7,7 @@ pageextension 80022 "BankAccountPostingGroup" extends "Bank Account Posting Grou
             field("Description"; Rec."Description")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Description field.';
             }
         }
 

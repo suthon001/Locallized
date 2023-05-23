@@ -5,6 +5,7 @@ report 50038 "Recript to CashReceipt"
     Caption = 'Receipt to CashReceipt';
     ProcessingOnly = true;
     Permissions = TableData "Cust. Ledger Entry" = imd;
+    ApplicationArea = All;
     dataset
     {
         dataitem("Billing - Receipt Header"; "Billing Receipt Header")
@@ -39,12 +40,12 @@ report 50038 "Recript to CashReceipt"
                 //Insert Customer Line
                 // IF "Receive Voucher No." = '' THEN
                 DocumentNo := NosMgt.GetNextNo(RVSeries, "Receive Date", TRUE);
-                GenJnlLine.INIT;
+                GenJnlLine.INIT();
                 GenJnlLine."Journal Template Name" := GenTemplate.Name;
                 GenJnlLine."Journal Batch Name" := GenBatch.Name;
-                GenJnlLine."Line No." := GetLastLine;
+                GenJnlLine."Line No." := GetLastLine();
                 GenJnlLine."Source Code" := GenTemplate."Source Code";
-                GenJnlLine.INSERT;
+                GenJnlLine.INSERT();
 
                 GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
                 GenJnlLine.VALIDATE("Document No.", DocumentNo);
@@ -56,25 +57,25 @@ report 50038 "Recript to CashReceipt"
                 GenJnlLine.VALIDATE("Amount (LCY)", -"Amount (LCY)");
                 GenJnlLine."Applies-to ID" := DocumentNo;
                 GenJnlLine."Sales Receipt No." := "No.";
-                GenJnlLine.MODIFY;
+                GenJnlLine.MODIFY();
 
                 //Apply Document
-                BillingLine.RESET;
+                BillingLine.RESET();
                 BillingLine.SETRANGE("Document Type", "Document Type");
                 BillingLine.SETRANGE("Document No.", "No.");
                 IF BillingLine.FIND('-') THEN
                     REPEAT
                         CustLedgEntry.GET(BillingLine."Source Ledger Entry No.");
                         SetCustApplId(CustLedgEntry, BillingLine."Amount (LCY)");
-                    UNTIL BillingLine.NEXT = 0;
+                    UNTIL BillingLine.NEXT() = 0;
                 //Insert WHT
                 IF "Prepaid WHT Amount (LCY)" <> 0 THEN BEGIN
-                    GenJnlLine.INIT;
+                    GenJnlLine.INIT();
                     GenJnlLine."Journal Template Name" := GenTemplate.Name;
                     GenJnlLine."Journal Batch Name" := GenBatch.Name;
-                    GenJnlLine."Line No." := GetLastLine;
+                    GenJnlLine."Line No." := GetLastLine();
                     GenJnlLine."Source Code" := GenTemplate."Source Code";
-                    GenJnlLine.INSERT;
+                    GenJnlLine.INSERT();
 
 
                     GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
@@ -86,16 +87,16 @@ report 50038 "Recript to CashReceipt"
                     GenJnlLine.VALIDATE("Document Date", "Prepaid WHT Date");
                     GenJnlLine.VALIDATE("External Document No.", "Prepaid WHT No.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Prepaid WHT Amount (LCY)");
-                    GenJnlLine.MODIFY;
+                    GenJnlLine.MODIFY();
                 END;
                 //Insert Bank Fee
                 IF "Bank Fee Amount (LCY)" <> 0 THEN BEGIN
-                    GenJnlLine.INIT;
+                    GenJnlLine.INIT();
                     GenJnlLine."Journal Template Name" := GenTemplate.Name;
                     GenJnlLine."Journal Batch Name" := GenBatch.Name;
-                    GenJnlLine."Line No." := GetLastLine;
+                    GenJnlLine."Line No." := GetLastLine();
                     GenJnlLine."Source Code" := GenTemplate."Source Code";
-                    GenJnlLine.INSERT;
+                    GenJnlLine.INSERT();
 
 
                     GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
@@ -105,16 +106,16 @@ report 50038 "Recript to CashReceipt"
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
                     GenJnlLine.VALIDATE("Account No.", "Bank Fee Acc.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Bank Fee Amount (LCY)");
-                    GenJnlLine.MODIFY;
+                    GenJnlLine.MODIFY();
                 END;
                 //Insert Diff Amount
                 IF "Diff Amount (LCY)" <> 0 THEN BEGIN
-                    GenJnlLine.INIT;
+                    GenJnlLine.INIT();
                     GenJnlLine."Journal Template Name" := GenTemplate.Name;
                     GenJnlLine."Journal Batch Name" := GenBatch.Name;
-                    GenJnlLine."Line No." := GetLastLine;
+                    GenJnlLine."Line No." := GetLastLine();
                     GenJnlLine."Source Code" := GenTemplate."Source Code";
-                    GenJnlLine.INSERT;
+                    GenJnlLine.INSERT();
 
 
                     GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
@@ -124,15 +125,15 @@ report 50038 "Recript to CashReceipt"
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
                     GenJnlLine.VALIDATE("Account No.", "Diff Amount Acc.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Diff Amount (LCY)");
-                    GenJnlLine.MODIFY;
+                    GenJnlLine.MODIFY();
                 END;
                 //Insert Receive Line
-                GenJnlLine.INIT;
+                GenJnlLine.INIT();
                 GenJnlLine."Journal Template Name" := GenTemplate.Name;
                 GenJnlLine."Journal Batch Name" := GenBatch.Name;
-                GenJnlLine."Line No." := GetLastLine;
+                GenJnlLine."Line No." := GetLastLine();
                 GenJnlLine."Source Code" := GenTemplate."Source Code";
-                GenJnlLine.INSERT;
+                GenJnlLine.INSERT();
 
 
                 GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
@@ -150,12 +151,12 @@ report 50038 "Recript to CashReceipt"
                     GenJnlLine.VALIDATE("External Document No.", BillingHeader."Cheque No.");
                 GenJnlLine.Description := COPYSTR(STRSUBSTNO('Receive From %1', BillingHeader."Bill/Pay-to Cus/Vend Name2"), 1, 100);
                 GenJnlLine.VALIDATE("Amount (LCY)", BillingHeader."Receive Amount");
-                GenJnlLine.MODIFY;
+                GenJnlLine.MODIFY();
 
                 BillingHeader."Receive Status" := BillingHeader."Receive Status"::"In used";
                 BillingHeader."Journal Document No." := DocumentNo;
                 BillingHeader."Status" := BillingHeader."Status"::"Create RV";
-                BillingHeader.MODIFY;
+                BillingHeader.MODIFY();
             end;
         }
     }
@@ -169,14 +170,14 @@ report 50038 "Recript to CashReceipt"
                 EarlierPostingDateErr, BillingHeader."Document Type", BillingHeader."No.",
                 CustLedgEntry."Document Type", CustLedgEntry."Document No.");
         CustLedgEntry."Applies-to ID" := DocumentNo;
-        CustLedgEntry.MODIFY;
+        CustLedgEntry.MODIFY();
     end;
 
-    local procedure GetLastLine() ReturnLine: Integer
+    local procedure GetLastLine(): Integer
     var
         GenLine: Record "Gen. Journal Line";
     begin
-        GenLine.reset;
+        GenLine.reset();
         GenLine.SetFilter("Journal Template Name", GenTemplate.Name);
         GenLine.SetFilter("Journal Batch Name", GenBatch.Name);
         if GenLine.FindLast() then
@@ -202,7 +203,5 @@ report 50038 "Recript to CashReceipt"
         NosMgt: Codeunit NoSeriesManagement;
         GenJnlLine: Record "Gen. Journal Line";
         BillingLine: Record "Billing Receipt Line";
-        LastLineNo: Integer;
-        CustEntrySetApplID: Codeunit "Cust. Entry-SetAppl.ID";
 
 }

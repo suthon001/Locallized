@@ -1,6 +1,7 @@
 table 50010 "WHT Lines"
 {
     Caption = 'WHT Lines';
+    DataClassification = CustomerContent;
     fields
     {
         field(1; "WHT No."; Code[20])

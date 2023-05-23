@@ -22,12 +22,13 @@ page 99999 "Record Deletion"
                     Caption = 'company';
                     TableRelation = Company.Name;
                     ApplicationArea = all;
-
+                    ToolTip = 'Specifies the value of the company field.';
                 }
                 field(cleardetailNoseries; cleardetailNoseries)
                 {
                     Caption = 'Set Defualt No. series';
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Set Defualt No. series field.';
                 }
             }
             repeater(Group)
@@ -35,6 +36,7 @@ page 99999 "Record Deletion"
                 field("Delete Records"; rec."Delete Records")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Delete Records field.';
                 }
                 field("Table ID"; rec."Table ID")
                 {
@@ -45,14 +47,17 @@ page 99999 "Record Deletion"
                 field("Table Name"; rec."Table Name")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Table Name field.';
                 }
                 field("Last Time Clean Transection"; rec."LastTime Clean Transection")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the LastTime Clean Transection field.';
                 }
                 field("Last Time Clean By"; rec."LastTime Clean By")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Last Time Clean By field.';
                 }
             }
         }
@@ -70,7 +75,7 @@ page 99999 "Record Deletion"
                 PromotedIsBig = true;
                 ApplicationArea = All;
                 Image = DeleteRow;
-
+                ToolTip = 'Executes the START DELETE RECORDS action.';
                 trigger OnAction()
                 var
                     RecordDeletionMgt: Codeunit "Record Deletion Mgt.";
@@ -92,7 +97,7 @@ page 99999 "Record Deletion"
                 PromotedIsBig = true;
                 ApplicationArea = All;
                 Image = GetEntries;
-
+                ToolTip = 'Executes the Generate Table action.';
                 trigger OnAction()
                 var
                     RecordDeletionMgt: Codeunit "Record Deletion Mgt.";
@@ -109,12 +114,11 @@ page 99999 "Record Deletion"
         AccessControl: Record "Access Control";
     begin
         company := CompanyName;
-        AccessControl.reset;
+        AccessControl.reset();
         AccessControl.SetRange("User Name", UserId);
         AccessControl.SetRange("Role ID", 'CLEARTRANS');
-        if not AccessControl.FindFirst() then begin
+        if not AccessControl.FindFirst() then
             Error(ErrrPermission);
-        end;
     end;
 
     var

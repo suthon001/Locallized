@@ -4,6 +4,7 @@
 table 50011 "VAT Transections"
 {
     Caption = 'VAT Transections';
+    DataClassification = CustomerContent;
 
     fields
     {
@@ -392,6 +393,48 @@ table 50011 "VAT Transections"
             Editable = false;
             DataClassification = SystemMetadata;
         }
+        field(78; "Journal Templ. Name"; Code[10])
+        {
+            Caption = 'Journal Template Name';
+        }
+        field(79; "Journal Batch Name"; Code[10])
+        {
+            Caption = 'Journal Batch Name';
+        }
+        field(81; "Realized Amount"; Decimal)
+        {
+            AutoFormatType = 1;
+            Caption = 'Realized Amount';
+            Editable = false;
+        }
+        field(82; "Realized Base"; Decimal)
+        {
+            AutoFormatType = 1;
+            Caption = 'Realized Base';
+            Editable = false;
+        }
+        field(83; "Add.-Curr. Realized Amount"; Decimal)
+        {
+            AutoFormatType = 1;
+            Caption = 'Add.-Curr. Realized Amount';
+            Editable = false;
+        }
+        field(84; "Add.-Curr. Realized Base"; Decimal)
+        {
+            AutoFormatType = 1;
+            Caption = 'Add.-Curr. Realized Base';
+            Editable = false;
+        }
+        field(85; "G/L Acc. No."; Code[20])
+        {
+            Caption = 'G/L Account No.';
+            TableRelation = "G/L Account";
+        }
+        field(86; "VAT Reporting Date"; Date)
+        {
+            Caption = 'VAT Date';
+
+        }
         field(80001; "Tax Invoice No."; Code[20])
         {
             Caption = 'Tax Invoice No.';
@@ -448,7 +491,7 @@ table 50011 "VAT Transections"
             DataClassification = SystemMetadata;
 
         }
-        field(80011; "Tax Invoice Address"; Text[150])
+        field(80011; "Tax Invoice Address"; Text[100])
         {
             Caption = 'Tax Invoice Address';
             DataClassification = SystemMetadata;
@@ -475,6 +518,12 @@ table 50011 "VAT Transections"
         {
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
+        }
+        field(80016; "Tax Invoice Address 2"; Text[50])
+        {
+            Caption = 'Tax Invoice Address 2';
+            DataClassification = SystemMetadata;
+
         }
         field(99993; "Ref. Tax Type"; Enum "Tax Type")
         {
@@ -507,7 +556,7 @@ table 50011 "VAT Transections"
         {
             Caption = 'Allow Generate Purch. to Vat';
             FieldClass = FlowField;
-            CalcFormula = lookup("VAT Posting Setup"."Generate Purch. Vat Report" where("VAT Bus. Posting Group" = field("VAT Bus. Posting Group"), "VAT Prod. Posting Group" = field("VAT Prod. Posting Group")));
+            CalcFormula = lookup("VAT Posting Setup"."Allow Generate to Purch. Vat" where("VAT Bus. Posting Group" = field("VAT Bus. Posting Group"), "VAT Prod. Posting Group" = field("VAT Prod. Posting Group")));
             Editable = false;
 
         }
@@ -515,7 +564,7 @@ table 50011 "VAT Transections"
         {
             Caption = 'Allow Generate Sale to Vat';
             FieldClass = FlowField;
-            CalcFormula = lookup("VAT Posting Setup"."Generate Purch. Vat Report" where("VAT Bus. Posting Group" = field("VAT Bus. Posting Group"), "VAT Prod. Posting Group" = field("VAT Prod. Posting Group")));
+            CalcFormula = lookup("VAT Posting Setup"."Allow Generate to Sales Vat" where("VAT Bus. Posting Group" = field("VAT Bus. Posting Group"), "VAT Prod. Posting Group" = field("VAT Prod. Posting Group")));
             Editable = false;
 
         }

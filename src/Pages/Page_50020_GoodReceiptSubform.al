@@ -1,3 +1,6 @@
+/// <summary>
+/// Page Goods Receipt Note Subform (ID 50020).
+/// </summary>
 page 50020 "Goods Receipt Note Subform"
 {
     AutoSplitKey = true;
@@ -21,10 +24,12 @@ page 50020 "Goods Receipt Note Subform"
                 field("Ref. PR No."; Rec."Ref. PQ No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Ref. PR No. field.';
                 }
                 field("Ref. PR Line No."; Rec."Ref. PQ Line No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Ref. PR Line No. field.';
                 }
                 field(Type; Rec.Type)
                 {
@@ -33,11 +38,11 @@ page 50020 "Goods Receipt Note Subform"
                     Editable = false;
                     trigger OnValidate()
                     begin
-                        NoOnAfterValidate;
+                        NoOnAfterValidate();
 
-                        UpdateEditableOnRow;
-                        UpdateTypeText;
-                        DeltaUpdateTotals;
+                        UpdateEditableOnRow();
+                        UpdateTypeText();
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("No."; Rec."No.")
@@ -50,10 +55,10 @@ page 50020 "Goods Receipt Note Subform"
                     trigger OnValidate()
                     begin
                         Rec.ShowShortcutDimCode(ShortcutDimCode);
-                        NoOnAfterValidate;
+                        NoOnAfterValidate();
 
-                        UpdateTypeText;
-                        DeltaUpdateTotals;
+                        UpdateTypeText();
+                        DeltaUpdateTotals();
                     end;
                 }
 
@@ -87,7 +92,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field(Nonstock; Rec.Nonstock)
@@ -106,7 +111,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field(Description; Rec.Description)
@@ -117,13 +122,14 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
-                        NoOnAfterValidate;
+                        DeltaUpdateTotals();
+                        NoOnAfterValidate();
                     end;
                 }
                 field("Description 2"; rec."Description 2")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies information in addition to the description.';
                 }
                 field("Return Reason Code"; Rec."Return Reason Code")
                 {
@@ -141,7 +147,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("Bin Code"; Rec."Bin Code")
@@ -163,16 +169,18 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("Over-Receipt Code"; Rec."Over-Receipt Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies over-receipt code.';
                 }
                 field("Over-Receipt Quantity"; Rec."Over-Receipt Quantity")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies over-receipt quantity.';
                 }
                 field("Reserved Quantity"; Rec."Reserved Quantity")
                 {
@@ -197,7 +205,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("Unit of Measure"; Rec."Unit of Measure")
@@ -219,7 +227,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
 
@@ -236,7 +244,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("Line Amount"; Rec."Line Amount")
@@ -249,7 +257,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("Line Discount Amount"; Rec."Line Discount Amount")
@@ -261,7 +269,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("Prepayment %"; Rec."Prepayment %")
@@ -294,7 +302,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("Inv. Discount Amount"; Rec."Inv. Discount Amount")
@@ -306,7 +314,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnValidate()
                     begin
-                        DeltaUpdateTotals;
+                        DeltaUpdateTotals();
                     end;
                 }
                 field("Inv. Disc. Amount to Invoice"; Rec."Inv. Disc. Amount to Invoice")
@@ -346,6 +354,7 @@ page 50020 "Goods Receipt Note Subform"
                 field("Qty. to Cancel"; rec."Qty. to Cancel")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Qty. to Cancel field.';
                 }
                 field("Prepmt Amt to Deduct"; Rec."Prepmt Amt to Deduct")
                 {
@@ -377,8 +386,8 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnDrillDown()
                     begin
-                        CurrPage.SaveRecord;
-                        Rec.ShowItemChargeAssgnt;
+                        CurrPage.SaveRecord();
+                        Rec.ShowItemChargeAssgnt();
                         UpdateForm(false);
                     end;
                 }
@@ -391,8 +400,8 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnDrillDown()
                     begin
-                        CurrPage.SaveRecord;
-                        Rec.ShowItemChargeAssgnt;
+                        CurrPage.SaveRecord();
+                        Rec.ShowItemChargeAssgnt();
                         UpdateForm(false);
                     end;
                 }
@@ -597,7 +606,7 @@ page 50020 "Goods Receipt Note Subform"
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
                     Visible = DimVisible3;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[3] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(3, ShortcutDimCode[3]);
@@ -613,7 +622,7 @@ page 50020 "Goods Receipt Note Subform"
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
                     Visible = DimVisible4;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[4] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(4, ShortcutDimCode[4]);
@@ -629,7 +638,7 @@ page 50020 "Goods Receipt Note Subform"
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
                     Visible = DimVisible5;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[5] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(5, ShortcutDimCode[5]);
@@ -645,7 +654,7 @@ page 50020 "Goods Receipt Note Subform"
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
                     Visible = DimVisible6;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[6] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(6, ShortcutDimCode[6]);
@@ -661,7 +670,7 @@ page 50020 "Goods Receipt Note Subform"
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
                     Visible = DimVisible7;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[7] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(7, ShortcutDimCode[7]);
@@ -677,7 +686,7 @@ page 50020 "Goods Receipt Note Subform"
                                                                   "Dimension Value Type" = CONST(Standard),
                                                                   Blocked = CONST(false));
                     Visible = DimVisible8;
-
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[8] field.';
                     trigger OnValidate()
                     begin
                         Rec.ValidateShortcutDimCode(8, ShortcutDimCode[8]);
@@ -734,7 +743,7 @@ page 50020 "Goods Receipt Note Subform"
 
                         trigger OnValidate()
                         begin
-                            ValidateInvoiceDiscountAmount;
+                            ValidateInvoiceDiscountAmount();
                             // DocumentTotals.PurchaseDocTotalsNotUpToDate;
                         end;
                     }
@@ -750,7 +759,7 @@ page 50020 "Goods Receipt Note Subform"
                         begin
                             AmountWithDiscountAllowed := DocumentTotals.CalcTotalPurchAmountOnlyDiscountAllowed(Rec);
                             InvoiceDiscountAmount := Round(AmountWithDiscountAllowed * InvoiceDiscountPct / 100, Currency."Amount Rounding Precision");
-                            ValidateInvoiceDiscountAmount;
+                            ValidateInvoiceDiscountAmount();
                             // DocumentTotals.PurchaseDocTotalsNotUpToDate;
                         end;
                     }
@@ -809,7 +818,7 @@ page 50020 "Goods Receipt Note Subform"
 
                 trigger OnAction()
                 begin
-                    Rec.SelectMultipleItems;
+                    Rec.SelectMultipleItems();
                 end;
             }
             group("&Line")
@@ -829,7 +838,7 @@ page 50020 "Goods Receipt Note Subform"
 
                         trigger OnAction()
                         begin
-                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByEvent)
+                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByEvent())
                         end;
                     }
                     action(Period)
@@ -841,7 +850,7 @@ page 50020 "Goods Receipt Note Subform"
 
                         trigger OnAction()
                         begin
-                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByPeriod)
+                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByPeriod())
                         end;
                     }
                     action(Variant)
@@ -853,7 +862,7 @@ page 50020 "Goods Receipt Note Subform"
 
                         trigger OnAction()
                         begin
-                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByVariant)
+                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByVariant())
                         end;
                     }
                     action(Location)
@@ -866,7 +875,7 @@ page 50020 "Goods Receipt Note Subform"
 
                         trigger OnAction()
                         begin
-                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByLocation)
+                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByLocation())
                         end;
                     }
                     action("BOM Level")
@@ -879,7 +888,7 @@ page 50020 "Goods Receipt Note Subform"
 
                         trigger OnAction()
                         begin
-                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByBOM)
+                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByBOM())
                         end;
                     }
                 }
@@ -906,7 +915,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnAction()
                     begin
-                        Rec.OpenItemTrackingLines;
+                        Rec.OpenItemTrackingLines();
                     end;
                 }
                 action(Dimensions)
@@ -920,7 +929,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnAction()
                     begin
-                        Rec.ShowDimensions;
+                        Rec.ShowDimensions();
                     end;
                 }
                 action("Co&mments")
@@ -932,7 +941,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnAction()
                     begin
-                        Rec.ShowLineComments;
+                        Rec.ShowLineComments();
                     end;
                 }
                 action(ItemChargeAssignment)
@@ -945,8 +954,8 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnAction()
                     begin
-                        Rec.ShowItemChargeAssgnt;
-                        SetItemChargeFieldsStyle;
+                        Rec.ShowItemChargeAssgnt();
+                        SetItemChargeFieldsStyle();
                     end;
                 }
                 action(DocumentLineTracking)
@@ -957,7 +966,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnAction()
                     begin
-                        ShowDocumentLineTracking;
+                        ShowDocumentLineTracking();
                     end;
                 }
 
@@ -975,7 +984,7 @@ page 50020 "Goods Receipt Note Subform"
                     begin
                         RecRef.GetTable(Rec);
                         DocumentAttachmentDetails.OpenForRecRef(RecRef);
-                        DocumentAttachmentDetails.RunModal;
+                        DocumentAttachmentDetails.RunModal();
                     end;
                 }
             }
@@ -993,7 +1002,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnAction()
                     begin
-                        ExplodeBOM;
+                        ExplodeBOM();
                     end;
                 }
                 action("Insert Ext. Texts")
@@ -1019,8 +1028,8 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnAction()
                     begin
-                        Rec.Find;
-                        Rec.ShowReservation;
+                        Rec.Find();
+                        Rec.ShowReservation();
                     end;
                 }
                 action(OrderTracking)
@@ -1032,7 +1041,7 @@ page 50020 "Goods Receipt Note Subform"
 
                     trigger OnAction()
                     begin
-                        ShowTracking;
+                        ShowTracking();
                     end;
                 }
             }
@@ -1054,7 +1063,7 @@ page 50020 "Goods Receipt Note Subform"
 
                         trigger OnAction()
                         begin
-                            OpenSalesOrderForm;
+                            OpenSalesOrderForm();
                         end;
                     }
                 }
@@ -1122,18 +1131,18 @@ page 50020 "Goods Receipt Note Subform"
 
     trigger OnAfterGetCurrRecord()
     begin
-        GetTotalsPurchaseHeader;
-        CalculateTotals;
-        UpdateEditableOnRow;
-        UpdateTypeText;
-        SetItemChargeFieldsStyle;
+        GetTotalsPurchaseHeader();
+        CalculateTotals();
+        UpdateEditableOnRow();
+        UpdateTypeText();
+        SetItemChargeFieldsStyle();
     end;
 
     trigger OnAfterGetRecord()
     begin
         Rec.ShowShortcutDimCode(ShortcutDimCode);
-        UpdateTypeText;
-        SetItemChargeFieldsStyle;
+        UpdateTypeText();
+        SetItemChargeFieldsStyle();
     end;
 
 
@@ -1142,14 +1151,14 @@ page 50020 "Goods Receipt Note Subform"
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        Rec.InitType;
+        Rec.InitType();
         // Default to Item for the first line and to previous line type for the others
-        if ApplicationAreaMgmtFacade.IsFoundationEnabled then
+        if ApplicationAreaMgmtFacade.IsFoundationEnabled() then
             if xRec."Document No." = '' then
                 Rec.Type := Rec.Type::Item;
 
         Clear(ShortcutDimCode);
-        UpdateTypeText;
+        UpdateTypeText();
     end;
 
 
@@ -1196,7 +1205,7 @@ page 50020 "Goods Receipt Note Subform"
     procedure ApproveCalcInvDisc()
     begin
         CODEUNIT.Run(CODEUNIT::"Purch.-Disc. (Yes/No)", Rec);
-        DocumentTotals.PurchaseDocTotalsNotUpToDate;
+        DocumentTotals.PurchaseDocTotalsNotUpToDate();
     end;
 
     /// <summary> 
@@ -1207,11 +1216,11 @@ page 50020 "Goods Receipt Note Subform"
         ConfirmManagement: Codeunit "Confirm Management";
     begin
         PurchaseHeader.Get(Rec."Document Type", Rec."Document No.");
-        if PurchaseHeader.InvoicedLineExists then
+        if PurchaseHeader.InvoicedLineExists() then
             if not ConfirmManagement.GetResponseOrDefault(UpdateInvDiscountQst, true) then
                 exit;
 
-        DocumentTotals.PurchaseDocTotalsNotUpToDate;
+        DocumentTotals.PurchaseDocTotalsNotUpToDate();
         PurchCalcDiscByType.ApplyInvDiscBasedOnAmt(InvoiceDiscountAmount, PurchaseHeader);
         CurrPage.Update(false);
     end;
@@ -1224,7 +1233,7 @@ page 50020 "Goods Receipt Note Subform"
         if Rec."Prepmt. Amt. Inv." <> 0 then
             Error(Text001);
         CODEUNIT.Run(CODEUNIT::"Purch.-Explode BOM", Rec);
-        DocumentTotals.PurchaseDocTotalsNotUpToDate;
+        DocumentTotals.PurchaseDocTotalsNotUpToDate();
     end;
 
     /// <summary> 
@@ -1239,7 +1248,7 @@ page 50020 "Goods Receipt Note Subform"
         SalesHeader.SetRange("No.", Rec."Sales Order No.");
         SalesOrder.SetTableView(SalesHeader);
         SalesOrder.Editable := false;
-        SalesOrder.Run;
+        SalesOrder.Run();
     end;
 
     /// <summary> 
@@ -1250,10 +1259,10 @@ page 50020 "Goods Receipt Note Subform"
     begin
         OnBeforeInsertExtendedText(Rec);
         if TransferExtendedText.PurchCheckIfAnyExtText(Rec, Unconditionally) then begin
-            CurrPage.SaveRecord;
+            CurrPage.SaveRecord();
             TransferExtendedText.InsertPurchExtText(Rec);
         end;
-        if TransferExtendedText.MakeUpdate then
+        if TransferExtendedText.MakeUpdate() then
             UpdateForm(true);
     end;
 
@@ -1265,7 +1274,7 @@ page 50020 "Goods Receipt Note Subform"
         TrackingForm: Page "Order Tracking";
     begin
         TrackingForm.SetPurchLine(Rec);
-        TrackingForm.RunModal;
+        TrackingForm.RunModal();
     end;
 
     /// <summary> 
@@ -1280,7 +1289,7 @@ page 50020 "Goods Receipt Note Subform"
         SalesHeader.SetRange("No.", Rec."Special Order Sales No.");
         SalesOrder.SetTableView(SalesHeader);
         SalesOrder.Editable := false;
-        SalesOrder.Run;
+        SalesOrder.Run();
     end;
 
     /// <summary> 
@@ -1297,12 +1306,12 @@ page 50020 "Goods Receipt Note Subform"
     /// </summary>
     procedure NoOnAfterValidate()
     begin
-        UpdateEditableOnRow;
+        UpdateEditableOnRow();
         InsertExtendedText(false);
         if (Rec.Type = Rec.Type::"Charge (Item)") and (Rec."No." <> xRec."No.") and
            (xRec."No." <> '')
         then
-            CurrPage.SaveRecord;
+            CurrPage.SaveRecord();
     end;
 
     /// <summary> 
@@ -1322,7 +1331,7 @@ page 50020 "Goods Receipt Note Subform"
     begin
         Clear(DocumentLineTracking);
         DocumentLineTracking.SetDoc(1, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
-        DocumentLineTracking.RunModal;
+        DocumentLineTracking.RunModal();
     end;
 
     /// <summary> 
@@ -1330,7 +1339,7 @@ page 50020 "Goods Receipt Note Subform"
     /// </summary>
     procedure RedistributeTotalsOnAfterValidate()
     begin
-        CurrPage.SaveRecord;
+        CurrPage.SaveRecord();
 
         DocumentTotals.PurchaseRedistributeInvoiceDiscountAmounts(Rec, VATAmount, TotalPurchaseLine);
         CurrPage.Update(false);
@@ -1361,8 +1370,8 @@ page 50020 "Goods Receipt Note Subform"
     procedure DeltaUpdateTotals()
     begin
         DocumentTotals.PurchaseDeltaUpdateTotals(Rec, xRec, TotalPurchaseLine, VATAmount, InvoiceDiscountAmount, InvoiceDiscountPct);
-        CurrPage.SaveRecord;
-        Rec.SendLineInvoiceDiscountResetNotification;
+        CurrPage.SaveRecord();
+        Rec.SendLineInvoiceDiscountResetNotification();
     end;
 
     /// <summary> 
@@ -1398,7 +1407,7 @@ page 50020 "Goods Receipt Note Subform"
     local procedure SetItemChargeFieldsStyle()
     begin
         ItemChargeStyleExpression := '';
-        if Rec.AssignedItemCharge and (Rec."Qty. Assigned" <> Rec.Quantity) then
+        if Rec.AssignedItemCharge() and (Rec."Qty. Assigned" <> Rec.Quantity) then
             ItemChargeStyleExpression := 'Unfavorable';
     end;
 

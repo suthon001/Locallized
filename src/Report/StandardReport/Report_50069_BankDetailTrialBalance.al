@@ -3,6 +3,7 @@ report 50069 "Bank Acc.Detail Trial Bal."
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/StandardReport/Report_50069_BankDetailTrialBalance.rdl';
     Caption = 'Bank Accounts - Detail Trial Balance';
+    ApplicationArea = All;
 
     dataset
     {
@@ -14,7 +15,7 @@ report 50069 "Bank Acc.Detail Trial Bal."
             column(FilterPeriod_BankAccLedg; StrSubstNo(Text000, DateFilter_BankAccount))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(ExcludeBalanceOnly; ExcludeBalanceOnly)

@@ -1,3 +1,6 @@
+/// <summary>
+/// Page WHT Subpage (ID 50023).
+/// </summary>
 page 50023 "WHT Subpage"
 {
 
@@ -15,10 +18,12 @@ page 50023 "WHT Subpage"
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Entry No. field.';
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Posting Date field.';
                 }
                 // field("WHT Date"; "WHT Date")
                 // {
@@ -28,71 +33,88 @@ page 50023 "WHT Subpage"
                 {
                     ApplicationArea = All;
                     Caption = 'Document No.';
+                    ToolTip = 'Specifies the value of the Document No. field.';
                 }
                 field("WHT Document No."; Rec."WHT Document No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the WHT Document No. field.';
                 }
                 field("WHT Certificate No."; rec."WHT Certificate No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Certificate No. field.';
                 }
                 field("Base Amount"; Rec."Base Amount")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Base Amount field.';
                 }
                 field("VAT Amount"; Rec."VAT Amount")
                 {
                     ApplicationArea = All;
                     Caption = 'WHT Amount';
+                    ToolTip = 'Specifies the value of the WHT Amount field.';
                 }
                 field("WHT %"; Rec."WHT %")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the WHT % field.';
                 }
                 field("WHT Business Posting Group"; Rec."WHT Business Posting Group")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the WHT Business Posting Group field.';
                 }
                 field("WHT Product Posting Group"; Rec."WHT Product Posting Group")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the WHT Product Posting Group field.';
                 }
                 field("Name"; Rec."Name")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Name field.';
                 }
                 field("Name 2"; Rec."Name 2")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Name 2 field.';
                 }
                 field("Address"; Rec."Address")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Address field.';
                 }
                 field("Address 2"; Rec."Address 2")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Address 2 field.';
                 }
                 field("City"; Rec."City")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the City field.';
                 }
                 field("Post Code"; Rec."Post Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Post Code field.';
                 }
                 field("Head Office"; Rec."Head Office")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Head Office field.';
                 }
                 field("Branch Code"; Rec."Branch Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Branch Code field.';
                 }
                 field("WHT Registration No."; Rec."WHT Registration No.")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the WHT Registration No. field.';
                 }
             }
         }
@@ -109,6 +131,7 @@ page 50023 "WHT Subpage"
                     Caption = 'Generate WHT Entry';
                     Image = GetEntries;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Generate WHT Entry action.';
                     trigger OnAction()
                     begin
                         Rec."Get WHTData"();
@@ -122,16 +145,16 @@ page 50023 "WHT Subpage"
                     Image = MoveToNextPeriod;
                     ApplicationArea = all;
                     Visible = false;
+                    ToolTip = 'Executes the Move Month action.';
                     trigger OnAction()
                     var
                         MoveMonthPage: Page "Tax Move Month";
                         TaxReportHeader: Record "Tax Report Header";
-                        TempTaxReportLine: Record "Tax Report Line" temporary;
                         TaxReportLine: Record "Tax Report Line";
 
                     begin
                         TaxReportHeader.get(Rec."Tax Type", Rec."Document No.");
-                        TaxReportLine.reset;
+                        TaxReportLine.reset();
                         TaxReportLine.Copy(Rec);
                         CurrPage.SetSelectionFilter(TaxReportLine);
                         Clear(MoveMonthPage);
@@ -154,7 +177,7 @@ page 50023 "WHT Subpage"
     var
         TaxReportLine: Record "Tax Report Line";
     begin
-        TaxReportLine.reset;
+        TaxReportLine.reset();
         TaxReportLine.CopyFilters(rec);
         if TaxReportLine.FindFirst() then begin
             TaxReportLine.CalcSums("Base Amount", "VAT Amount");
@@ -179,16 +202,17 @@ page 50023 "WHT Subpage"
         TempTaxt: Text;
         LineNo: Integer;
         TaxReportHeader: Record "Tax Report Header";
+        ltFileNameLbl: Label '%1_%2%3', Locked = true;
     begin
 
         LineNo := 0;
         TaxReportHeader.get(Rec."Tax Type", Rec."Document No.");
         WHTBusinessPostingGroup.Get(format(rec."Tax Type"));
-        FileName := StrSubstNo('%1_%2%3', TaxReportHeader."End date of Month", WHTBusinessPostingGroup."Code", '.txt');
+        FileName := StrSubstNo(ltFileNameLbl, TaxReportHeader."End date of Month", WHTBusinessPostingGroup."Code", '.txt');
         TempBlob.CreateOutStream(OutStrm, TextEncoding::UTF8);
-        TaxReportLine.reset;
+        TaxReportLine.reset();
         TaxReportLine.CopyFilters(Rec);
-        if TaxReportLine.FindFirst() then begin
+        if TaxReportLine.FindSet() then
             repeat
                 if TaxReportLine."Head Office" then
                     BranchCode := '00000'
@@ -196,13 +220,13 @@ page 50023 "WHT Subpage"
                     BranchCode := TaxReportLine."Branch Code";
                 if BranchCode = '' then
                     BranchCode := '-';
-                CustVendorBranch.reset;
+                CustVendorBranch.reset();
                 CustVendorBranch.SetRange("Source Type", CustVendorBranch."Source Type"::Vendor);
                 CustVendorBranch.SetRange("Source No.", TaxReportLine."Vendor No.");
                 CustVendorBranch.SetRange("Head Office", TaxReportLine."Head Office");
                 CustVendorBranch.SetRange("Branch Code", TaxReportLine."Branch Code");
                 if CustVendorBranch.FindFirst() then begin
-                    BranchData[1] := CustVendorBranch."Title Name";
+                    BranchData[1] := format(CustVendorBranch."Title Name");
                     if BranchData[1] = '' then
                         BranchData[1] := '-';
                     BranchData[2] := CustVendorBranch."Name";
@@ -220,9 +244,9 @@ page 50023 "WHT Subpage"
                 end;
 
                 IF NOT WHTProductPortingGroup.Get(TaxReportLine."WHT Product Posting Group") then
-                    WHTProductPortingGroup.init;
+                    WHTProductPortingGroup.init();
                 LineNo += 1;
-                if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.3") then begin
+                if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.3") then
                     TempTaxt := FORMAT(LineNo) + '|' + FORMAT(DelChr(TaxReportLine."VAT Registration No.", '=', '-')) + '|' +
                                 BranchCode + '|' + BranchData[1] + '|' + FORMAT(BranchData[2]) + '|' + '|' + FORMAT(BranchData[3]) + '|' +
                                 FORMAT(BranchData[4]) + '|' + FORMAT(BranchData[5]) + '|' + FORMAT(BranchData[6]) + '|' + FORMAT(BranchData[7]) + '|' +
@@ -230,9 +254,9 @@ page 50023 "WHT Subpage"
                                 FORMAT(BranchData[12]) + '|' + FORMAT(BranchData[13]) + '|' +
                                 FORMAT(TaxReportLine."Posting Date", 0, '<Day,2>/<Month,2>/<Year4>') + '|' + FORMAT(WHTProductPortingGroup."Description") + '|' +
                                 DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."WHT %"), '=', ',') + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."Base Amount"), '=', ',')
-                                + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."VAT Amount"), '=', ',') + '|' + FORMAT(1);
-                end else begin
-                    if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.53") then begin
+                                + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."VAT Amount"), '=', ',') + '|' + FORMAT(1)
+                else
+                    if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.53") then
                         TempTaxt := FORMAT(LineNo) + '|' + FORMAT(DelChr(TaxReportLine."VAT Registration No.", '=', '-')) + '|' +
                               BranchCode + '|' + BranchData[1] + '|' + FORMAT(BranchData[2]) + '|' + FORMAT(BranchData[3]) + '|' +
                               FORMAT(BranchData[4]) + '|' + FORMAT(BranchData[5]) + '|' + FORMAT(BranchData[6]) + '|' + FORMAT(BranchData[7]) + '|' +
@@ -241,13 +265,10 @@ page 50023 "WHT Subpage"
                               FORMAT(TaxReportLine."Posting Date", 0, '<Day,2>/<Month,2>/<Year4>') + '|' + FORMAT(WHTProductPortingGroup."Description") + '|' +
                               DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."WHT %"), '=', ',') + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."Base Amount"), '=', ',')
                               + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."VAT Amount"), '=', ',') + '|' + FORMAT(1);
-                    end;
-                end;
                 OutStrm.WriteText(TempTaxt);
                 OutStrm.WriteText();
                 TempTaxt := '';
             Until TaxReportLine.Next() = 0;
-        end;
 
         TempBlob.CreateInStream(Instrm, TextEncoding::UTF8);
         DownloadFromStream(Instrm, 'Export', '', '*.txt|(*.txt)', FileName);
@@ -270,7 +291,6 @@ page 50023 "WHT Subpage"
     end;
 
     var
-        WHTCode: Code[30];
         WHTBusinessPostingGroup: Record "WHT Business Posting Group";
         BranchCode: Code[5];
         BranchData: array[13] of text;

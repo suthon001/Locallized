@@ -4,6 +4,7 @@ report 50023 "Report Sales Quotes"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50023_SalesQuotes.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(SalesHeader; "Sales Header")
@@ -97,7 +98,6 @@ report 50023 "Report Sales Quotes"
 
             trigger OnAfterGetRecord()
             var
-                countComment: Integer;
                 NewDate: Date;
             begin
 
@@ -109,7 +109,7 @@ report 50023 "Report Sales Quotes"
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();
                 IF NOT ShipMethod.Get("Shipment Method Code") then
-                    ShipMethod.Init;
+                    ShipMethod.Init();
                 NewDate := DT2Date("Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');

@@ -6,6 +6,7 @@ report 50055 "Aged Accounts Receivable (new)"
     Caption = 'Aged Accounts Receivable';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -196,7 +197,7 @@ report 50055 "Aged Accounts Receivable (new)"
                         if CustLedgEntry.FindSet(false, false) then
                             repeat
                                 InsertTemp(CustLedgEntry);
-                            until CustLedgEntry.Next = 0;
+                            until CustLedgEntry.Next() = 0;
 
                         CustLedgEntry.Reset();
                         CustLedgEntry.SetRange("Entry No.", "Closed by Entry No.");
@@ -205,7 +206,7 @@ report 50055 "Aged Accounts Receivable (new)"
                         if CustLedgEntry.FindSet(false, false) then
                             repeat
                                 InsertTemp(CustLedgEntry);
-                            until CustLedgEntry.Next = 0;
+                            until CustLedgEntry.Next() = 0;
                         CurrReport.Skip();
                     end;
 
@@ -401,7 +402,7 @@ report 50055 "Aged Accounts Receivable (new)"
                                 if not TempCustLedgEntry.FindSet(false, false) then
                                     CurrReport.Break();
                             end else
-                                if TempCustLedgEntry.Next = 0 then
+                                if TempCustLedgEntry.Next() = 0 then
                                     CurrReport.Break();
 
                             CustLedgEntryEndingDate := TempCustLedgEntry;
@@ -412,7 +413,7 @@ report 50055 "Aged Accounts Receivable (new)"
                                         DetailedCustomerLedgerEntry."Entry Type"::"Initial Entry") and
                                        (CustLedgEntryEndingDate."Posting Date" > EndingDate) and
                                        (AgingBy <> AgingBy::"Posting Date")
-                                    then begin
+                                    then
                                         if CustLedgEntryEndingDate."Document Date" <= EndingDate then
                                             DetailedCustomerLedgerEntry."Posting Date" :=
                                               CustLedgEntryEndingDate."Document Date"
@@ -421,8 +422,7 @@ report 50055 "Aged Accounts Receivable (new)"
                                                (AgingBy = AgingBy::"Due Date")
                                             then
                                                 DetailedCustomerLedgerEntry."Posting Date" :=
-                                                  CustLedgEntryEndingDate."Due Date"
-                                    end;
+                                                  CustLedgEntryEndingDate."Due Date";
 
                                     if (DetailedCustomerLedgerEntry."Posting Date" <= EndingDate) or
                                        (TempCustLedgEntry.Open and
@@ -457,7 +457,7 @@ report 50055 "Aged Accounts Receivable (new)"
                                               CustLedgEntryEndingDate."Remaining Amt. (LCY)" + DetailedCustomerLedgerEntry."Amount (LCY)";
                                         end;
                                     end;
-                                until DetailedCustomerLedgerEntry.Next = 0;
+                                until DetailedCustomerLedgerEntry.Next() = 0;
 
                             if CustLedgEntryEndingDate."Remaining Amount" = 0 then
                                 CurrReport.Skip();
@@ -491,17 +491,16 @@ report 50055 "Aged Accounts Receivable (new)"
                         trigger OnPostDataItem()
                         begin
                             if not PrintAmountInLCY then
-                                UpdateCurrencyTotals;
+                                UpdateCurrencyTotals();
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            if not PrintAmountInLCY then begin
+                            if not PrintAmountInLCY then
                                 if (TempCurrency.Code = '') or (TempCurrency.Code = GLSetup."LCY Code") then
                                     TempCustLedgEntry.SetFilter("Currency Code", '%1|%2', GLSetup."LCY Code", '')
                                 else
                                     TempCustLedgEntry.SetRange("Currency Code", TempCurrency.Code);
-                            end;
 
                             PageGroupNo := NextPageGroupNo;
                             if NewPagePercustomer and (NumberOfCurrencies > 0) then
@@ -517,7 +516,7 @@ report 50055 "Aged Accounts Receivable (new)"
                             if not TempCurrency.FindSet(false, false) then
                                 CurrReport.Break();
                         end else
-                            if TempCurrency.Next = 0 then
+                            if TempCurrency.Next() = 0 then
                                 CurrReport.Break();
 
                         if TempCurrency.Code <> '' then
@@ -550,8 +549,8 @@ report 50055 "Aged Accounts Receivable (new)"
                 trigger OnPreDataItem()
                 begin
                     NumCustLedgEntriesperCust.SetFilter(Customer_No, GetFilter("No."));
-                    if NumCustLedgEntriesperCust.Open then
-                        while NumCustLedgEntriesperCust.Read do
+                    if NumCustLedgEntriesperCust.Open() then
+                        while NumCustLedgEntriesperCust.Read() do
                             if not CustomersWithLedgerEntriesList.Contains(NumCustLedgEntriesperCust.Customer_No) then
                                 CustomersWithLedgerEntriesList.Add(NumCustLedgEntriesperCust.Customer_No);
                 end;
@@ -607,7 +606,7 @@ report 50055 "Aged Accounts Receivable (new)"
                         if not TempCurrency2.FindSet(false, false) then
                             CurrReport.Break();
                     end else
-                        if TempCurrency2.Next = 0 then
+                        if TempCurrency2.Next() = 0 then
                             CurrReport.Break();
 
                     Clear(AgedCustLedgEntry);
@@ -619,7 +618,7 @@ report 50055 "Aged Accounts Receivable (new)"
                                   TempCurrencyAmount.Amount
                             else
                                 AgedCustLedgEntry[6]."Remaining Amount" := TempCurrencyAmount.Amount;
-                        until TempCurrencyAmount.Next = 0;
+                        until TempCurrencyAmount.Next() = 0;
                 end;
             }
         }
@@ -691,7 +690,7 @@ report 50055 "Aged Accounts Receivable (new)"
         trigger OnOpenPage()
         begin
             if EndingDate = 0D then
-                EndingDate := WorkDate;
+                EndingDate := WorkDate();
             if Format(PeriodLength) = '' then
                 Evaluate(PeriodLength, '<1M>');
         end;
@@ -710,14 +709,14 @@ report 50055 "Aged Accounts Receivable (new)"
 
         GLSetup.Get();
 
-        CalcDates;
-        CreateHeadings;
+        CalcDates();
+        CreateHeadings();
 
         PageGroupNo := 1;
         NextPageGroupNo := 1;
         CustFilterCheck := (CustFilter <> 'No.');
 
-        CompanyDisplayName := COMPANYPROPERTY.DisplayName;
+        CompanyDisplayName := COMPANYPROPERTY.DisplayName();
     end;
 
     var
@@ -831,7 +830,7 @@ report 50055 "Aged Accounts Receivable (new)"
         if TempCustLedgEntry.Get(CustLedgEntry."Entry No.") then
             exit;
         TempCustLedgEntry := CustLedgEntry;
-        TempCustLedgEntry.Insert;
+        TempCustLedgEntry.Insert();
         if PrintAmountInLCY then begin
             Clear(TempCurrency);
             TempCurrency."Amount Rounding Precision" := GLSetup."Amount Rounding Precision";
@@ -880,26 +879,26 @@ report 50055 "Aged Accounts Receivable (new)"
         for i := 1 to ArrayLen(TotalCustLedgEntry) do begin
             TempCurrencyAmount."Currency Code" := CurrencyCode;
             TempCurrencyAmount.Date := PeriodStartDate[i];
-            if TempCurrencyAmount.Find then begin
+            if TempCurrencyAmount.Find() then begin
                 TempCurrencyAmount.Amount := TempCurrencyAmount.Amount + TotalCustLedgEntry[i]."Remaining Amount";
-                TempCurrencyAmount.Modify;
+                TempCurrencyAmount.Modify();
             end else begin
                 TempCurrencyAmount."Currency Code" := CurrencyCode;
                 TempCurrencyAmount.Date := PeriodStartDate[i];
                 TempCurrencyAmount.Amount := TotalCustLedgEntry[i]."Remaining Amount";
-                TempCurrencyAmount.Insert;
+                TempCurrencyAmount.Insert();
             end;
         end;
         TempCurrencyAmount."Currency Code" := CurrencyCode;
         TempCurrencyAmount.Date := DMY2Date(31, 12, 9999);
-        if TempCurrencyAmount.Find then begin
+        if TempCurrencyAmount.Find() then begin
             TempCurrencyAmount.Amount := TempCurrencyAmount.Amount + TotalCustLedgEntry[1].Amount;
-            TempCurrencyAmount.Modify;
+            TempCurrencyAmount.Modify();
         end else begin
             TempCurrencyAmount."Currency Code" := CurrencyCode;
             TempCurrencyAmount.Date := DMY2Date(31, 12, 9999);
             TempCurrencyAmount.Amount := TotalCustLedgEntry[1].Amount;
-            TempCurrencyAmount.Insert;
+            TempCurrencyAmount.Insert();
         end;
         // end;
     end;

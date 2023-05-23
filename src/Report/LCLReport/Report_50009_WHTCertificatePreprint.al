@@ -4,6 +4,7 @@ report 50009 "WHT Certificate Preprint"
     RDLCLayout = './LayoutReport/LCLReport/Report_50009_WHTCertificatePreprint.rdl';
     Caption = 'WHT Certificate (Preprint)';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem("WHT Header"; "WHT Header")
@@ -33,12 +34,11 @@ report 50009 "WHT Certificate Preprint"
                 DigitCount := 1;
                 REPEAT
                     Currcount += 1;
-                    IF COPYSTR(WHTRegID2, Currcount, 1) IN ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'] THEN BEGIN
+                    IF COPYSTR(WHTRegID2, Currcount, 1) IN ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'] THEN
                         IF DigitCount <= 13 THEN BEGIN
                             WHTRegID[DigitCount] := COPYSTR(WHTRegID2, Currcount, 1);
                             DigitCount += 1;
                         END;
-                    END;
                 UNTIL Currcount > STRLEN(WHTRegID2);
 
                 VATRegID2 := "VAT Registration No.";
@@ -46,12 +46,11 @@ report 50009 "WHT Certificate Preprint"
                 DigitCount := 1;
                 REPEAT
                     Currcount += 1;
-                    IF COPYSTR(VATRegID2, Currcount, 1) IN ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'] THEN BEGIN
+                    IF COPYSTR(VATRegID2, Currcount, 1) IN ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'] THEN
                         IF DigitCount <= 13 THEN BEGIN
                             VATRegID[DigitCount] := COPYSTR(VATRegID2, Currcount, 1);
                             DigitCount += 1;
                         END;
-                    END;
                 UNTIL Currcount > STRLEN(VATRegID2);
                 IF "WHT Option" = "WHT Option"::"1" THEN
                     WHTOPtion[1] := 'X'
@@ -64,10 +63,10 @@ report 50009 "WHT Certificate Preprint"
                         ELSE
                             WHTOPtion[4] := 'X';
 
-                WHTEntry.RESET;
+                WHTEntry.RESET();
                 WHTEntry.SETRANGE("WHT No.", "WHT No.");
                 WHTEntry.SETFILTER("WHT Amount", '<>%1', 0);
-                IF WHTEntry.FIND('-') THEN begin
+                IF WHTEntry.FIND('-') THEN
                     REPEAT
                         WHTSumBase += WHTEntry."WHT Base";
                         WHTSumAmt += WHTEntry."WHT Amount";
@@ -166,8 +165,7 @@ report 50009 "WHT Certificate Preprint"
                                                                                     WHTLineAmt[6] := WHTEntry."WHT Amount";
                                                                                     WHT6Description := WHTProductPostingGroup."Description";
                                                                                 END;
-                    UNTIL WHTEntry.NEXT = 0;
-                end;
+                    UNTIL WHTEntry.NEXT() = 0;
 
             end;
         }
@@ -281,7 +279,7 @@ report 50009 "WHT Certificate Preprint"
             trigger OnPreDataItem()
 
             begin
-                generaledgersetup.get;
+                generaledgersetup.get();
                 // generaledgersetup.TestField("No. of Copy WHT Cert.");
                 SetFilter(Number, '%1..%2', 1, 1);
             end;

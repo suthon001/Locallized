@@ -1,23 +1,26 @@
+/// <summary>
+/// TableExtension VATBusinessPostingGroup (ID 80023) extends Record VAT Business Posting Group.
+/// </summary>
 tableextension 80023 VATBusinessPostingGroup extends "VAT Business Posting Group"
 {
     fields
     {
-        field(80000; "Company Name (Thai)"; Text[50])
+        field(80000; "Company Name (Thai)"; Text[100])
         {
             Caption = 'Company Name (Thai)';
             DataClassification = CustomerContent;
         }
-        field(80001; "Company Name 2 (Thai)"; Text[100])
+        field(80001; "Company Name 2 (Thai)"; Text[50])
         {
             Caption = 'Company Name 2 (Thai)';
             DataClassification = CustomerContent;
         }
-        field(80002; "Company Address (Thai)"; Text[50])
+        field(80002; "Company Address (Thai)"; Text[100])
         {
             Caption = 'Company Address (Thai)';
             DataClassification = CustomerContent;
         }
-        field(80003; "Company Address 2 (Thai)"; Text[100])
+        field(80003; "Company Address 2 (Thai)"; Text[50])
         {
             Caption = 'Company Address 2 (Thai)';
             DataClassification = CustomerContent;
@@ -27,12 +30,11 @@ tableextension 80023 VATBusinessPostingGroup extends "VAT Business Posting Group
             Caption = 'Head Office';
             DataClassification = CustomerContent;
             trigger OnValidate()
-            var
-                TempSendtoUpdate: Text[50];
+
             begin
-                if "Head Office" then begin
+                if "Head Office" then
                     "Branch Code" := '';
-                end;
+
             end;
 
         }
@@ -81,28 +83,28 @@ tableextension 80023 VATBusinessPostingGroup extends "VAT Business Posting Group
             Caption = 'City (Thai)';
             DataClassification = CustomerContent;
         }
-        field(80012; "Postcode"; Code[20])
+        field(80012; "Post code"; Code[20])
         {
-            Caption = 'Postcode';
+            Caption = 'Post code';
             DataClassification = CustomerContent;
         }
 
-        field(80013; "Company Name (Eng)"; Text[50])
+        field(80013; "Company Name (Eng)"; Text[100])
         {
             Caption = 'Company Name (Eng)';
             DataClassification = CustomerContent;
         }
-        field(80014; "Company Name 2 (Eng)"; Text[100])
+        field(80014; "Company Name 2 (Eng)"; Text[50])
         {
             Caption = 'Company Name 2 (Eng)';
             DataClassification = CustomerContent;
         }
-        field(80015; "Company Address (Eng)"; Text[50])
+        field(80015; "Company Address (Eng)"; Text[100])
         {
             Caption = 'Company Address (Eng)';
             DataClassification = CustomerContent;
         }
-        field(80016; "Company Address 2 (Eng)"; Text[100])
+        field(80016; "Company Address 2 (Eng)"; Text[50])
         {
             Caption = 'Company Address 2 (Eng)';
             DataClassification = CustomerContent;

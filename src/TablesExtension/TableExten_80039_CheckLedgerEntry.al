@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenCheck Ledger Entry (ID 80039) extends Record Check Ledger Entry.
+/// </summary>
 tableextension 80039 "ExtenCheck Ledger Entry" extends "Check Ledger Entry"
 {
     fields
@@ -37,6 +40,7 @@ tableextension 80039 "ExtenCheck Ledger Entry" extends "Check Ledger Entry"
             Caption = 'Source Type';
             OptionMembers = " ","Customer","Vendor";
             OptionCaption = ' ,Customer,Vendor';
+            DataClassification = CustomerContent;
         }
         field(80006; "Bank Branch No."; Text[20])
         {

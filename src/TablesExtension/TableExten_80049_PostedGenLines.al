@@ -1,8 +1,10 @@
+/// <summary>
+/// TableExtension ExtenPostedGenLines (ID 80050) extends Record Posted Gen. Journal Line.
+/// </summary>
 tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
 {
     fields
     {
-
         field(80001; "Document No. Series"; Code[20])
         {
             Caption = 'Document No. Series';
@@ -39,10 +41,17 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
         {
             Caption = 'Tax Vendor/Cutomer No.';
             DataClassification = CustomerContent;
+            TableRelation = IF ("Gen. Posting Type" = filter(Purchase)) Vendor."no."
+            else
+            IF ("Gen. Posting Type" = filter(Sale)) Customer."No."
+            else
+            IF ("Gen. Posting Type" = filter(" "), "Template Source Type" = filter("Cash Receipts")) Customer."No."
+            else
+            Vendor."No.";
 
 
         }
-        field(80008; "Tax Invoice Name"; Text[150])
+        field(80008; "Tax Invoice Name"; Text[100])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;
@@ -57,7 +66,6 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
         {
             Caption = 'Head Office';
             DataClassification = CustomerContent;
-
 
         }
         field(80011; "Branch Code"; Code[5])
@@ -86,27 +94,27 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
             DataClassification = CustomerContent;
 
         }
-        field(80015; "WHT Name"; text[50])
+        field(80015; "WHT Name"; text[100])
         {
             Caption = 'WHT Name';
             DataClassification = CustomerContent;
         }
-        field(80016; "WHT Name 2"; text[100])
+        field(80016; "WHT Name 2"; text[50])
         {
             Caption = 'WHT Name 2';
             DataClassification = CustomerContent;
         }
-        field(80017; "WHT Address"; Text[50])
+        field(80017; "WHT Address"; Text[100])
         {
             Caption = 'WHT Address';
             DataClassification = CustomerContent;
         }
-        field(80018; "WHT Address 2"; Text[100])
+        field(80018; "WHT Address 2"; Text[50])
         {
             Caption = 'WHT Address 2';
             DataClassification = CustomerContent;
         }
-        field(80019; "WHT Post Code"; Code[10])
+        field(80019; "WHT Post Code"; Code[20])
         {
             Caption = 'WHT Post Code';
             DataClassification = CustomerContent;
@@ -183,19 +191,9 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
         {
             Caption = 'Bank Code';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            var
-                BankAcc: Record "Bank Account";
-            begin
-                IF NOT BankAcc.GET("Bank Code") THEN
-                    BankAcc.INIT;
-                "Bank Name" := BankAcc.Name + ' ' + BankAcc."Name 2";
-                "Bank Account No." := BankAcc."Bank Account No.";
-                "Bank Branch No." := BankAcc."Bank Branch No.";
-            end;
 
         }
-        field(80034; "Bank Name"; Text[150])
+        field(80034; "Bank Name"; Text[100])
         {
             Caption = 'Bank Name';
             DataClassification = CustomerContent;
@@ -217,11 +215,7 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
         {
             Caption = 'Cheque No.';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                "External Document No." := "Cheque No.";
-                "Cheque Date" := TODAY;
-            end;
+
 
         }
         field(80038; "Cheque Date"; Date)
@@ -230,7 +224,7 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
             DataClassification = CustomerContent;
 
         }
-        field(80039; "Pay Name"; Text[150])
+        field(80039; "Pay Name"; Text[100])
         {
             Caption = 'Pay Name';
             DataClassification = CustomerContent;
@@ -242,25 +236,7 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
             Caption = 'WHT Vendor No.';
             DataClassification = CustomerContent;
             TableRelation = Vendor."No.";
-            trigger OnValidate()
-            var
-                Vendor: Record vendor;
-            begin
-                IF NOT Vendor.GET("WHT Vendor No.") THEN
-                    Vendor.INIT;
 
-                "VAT Registration No." := Vendor."VAT Registration No.";
-                "WHT Name" := Vendor.Name;
-                "WHT Name 2" := Vendor."Name 2";
-                "WHT Address" := Vendor.Address;
-                "WHT Address 2" := Vendor."Address 2";
-                "WHT City" := Vendor.City;
-                "WHT Post Code" := Vendor."Post Code";
-                "WHT County" := Vendor.County;
-                VALIDATE("WHT Business Posting Group", Vendor."WHT Business Posting Group");
-                "WHT Registration No." := Vendor."VAT Registration No.";
-
-            end;
         }
         field(80041; "Tax Invoice Address"; Code[150])
         {
@@ -290,9 +266,9 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
         {
             Caption = 'Customer/Vendor No.';
             DataClassification = CustomerContent;
+
+
         }
-
-
         field(80046; "Cheque Name"; Text[100])
         {
             Caption = 'Cheque Name';
@@ -309,15 +285,12 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
         {
             DataClassification = CustomerContent;
         }
-
-        field(80049; "Template Source Type"; Enum "Gen. Journal Template Type")
+        field(80049; "Tax Invoice Name 2"; text[50])
         {
-            Editable = false;
-            FieldClass = FlowField;
-            CalcFormula = lookup("Gen. Journal Template".Type where(Name = field("Journal Template Name")));
-            Caption = 'Template Source Type';
+            DataClassification = CustomerContent;
         }
-        field(80050; "Create By"; Code[30])
+
+        field(80050; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
@@ -328,6 +301,24 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
             Caption = 'Create DateTime';
             DataClassification = SystemMetadata;
             Editable = false;
+        }
+        field(80052; "Document Line No."; Integer)
+        {
+            Caption = 'Document Line No.';
+            DataClassification = SystemMetadata;
+            Editable = false;
+        }
+        field(80053; "Tax Invoice Address 2"; text[50])
+        {
+            DataClassification = CustomerContent;
+        }
+
+        field(80054; "Template Source Type"; Enum "Gen. Journal Template Type")
+        {
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = lookup("Gen. Journal Template".Type where(Name = field("Journal Template Name")));
+            Caption = 'Template Source Type';
         }
     }
 }

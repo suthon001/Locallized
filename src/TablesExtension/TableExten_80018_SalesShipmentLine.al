@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenSalesShipment Line (ID 80018) extends Record Sales Shipment Line.
+/// </summary>
 tableextension 80018 "ExtenSalesShipment Line" extends "Sales Shipment Line"
 {
     fields
@@ -33,11 +36,13 @@ tableextension 80018 "ExtenSalesShipment Line" extends "Sales Shipment Line"
         {
             Editable = false;
             Caption = 'Ref. SQ No.';
+            DataClassification = CustomerContent;
         }
         field(80005; "Ref. SQ Line No."; Integer)
         {
             Editable = false;
             Caption = 'Ref. SQ Line No.';
+            DataClassification = CustomerContent;
         }
     }
 }

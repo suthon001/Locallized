@@ -8,22 +8,26 @@ pageextension 80040 "PostedInvoiceCard" extends "Posted Purchase Invoice"
             {
                 ApplicationArea = all;
                 Caption = 'Gen. Bus. Posting Group';
+                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
 
             field("Head Office"; Rec."Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
         }
 
@@ -48,6 +52,7 @@ pageextension 80040 "PostedInvoiceCard" extends "Posted Purchase Invoice"
             field("Buy-from Vendor No."; Rec."Buy-from Vendor No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the identifier of the vendor that you bought the items from.';
             }
         }
     }

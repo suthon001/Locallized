@@ -5,6 +5,7 @@ report 50056 "Customer Balance to Date (new)"
     //ApplicationArea = Basic, Suite;
     Caption = 'Customer Balance to Date';
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -19,7 +20,7 @@ report 50056 "Customer Balance to Date (new)"
             column(TxtCustGeTranmaxDtFilter; StrSubstNo(Text000, Format(GetRangeMax("Date Filter"))))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PrintOnePrPage; PrintOnePrPage)
@@ -169,10 +170,10 @@ report 50056 "Customer Balance to Date (new)"
                     TempCustLedgerEntry: Record "Cust. Ledger Entry" temporary;
                     ClosedEntryIncluded: Boolean;
                 begin
-                    Reset;
+                    Reset();
                     SetRange("Date Filter", 0D, MaxDate);
                     FilterCustLedgerEntry(CustLedgEntry3);
-                    if FindSet then
+                    if FindSet() then
                         repeat
                             if not Open then
                                 ClosedEntryIncluded := CheckCustEntryIncluded("Entry No.");
@@ -181,7 +182,7 @@ report 50056 "Customer Balance to Date (new)"
                                 TempCustLedgerEntry := CustLedgEntry3;
                                 TempCustLedgerEntry.Insert();
                             end;
-                        until Next = 0;
+                        until Next() = 0;
 
                     SetCurrentKey("Entry No.");
                     MarkedOnly(true);
@@ -211,7 +212,7 @@ report 50056 "Customer Balance to Date (new)"
                     if Number = 1 then
                         OK := CurrencyTotalBuffer.Find('-')
                     else
-                        OK := CurrencyTotalBuffer.Next <> 0;
+                        OK := CurrencyTotalBuffer.Next() <> 0;
                     if not OK then
                         CurrReport.Break();
 
@@ -269,7 +270,7 @@ report 50056 "Customer Balance to Date (new)"
                 if Number = 1 then
                     OK := CurrencyTotalBuffer2.Find('-')
                 else
-                    OK := CurrencyTotalBuffer2.Next <> 0;
+                    OK := CurrencyTotalBuffer2.Next() <> 0;
                 if not OK then
                     CurrReport.Break();
             end;
@@ -407,7 +408,7 @@ report 50056 "Customer Balance to Date (new)"
         TempCustLedgerEntry.SetCurrentKey("Entry No.");
         TempCustLedgerEntry.SetRange("Date Filter", 0D, MaxDate);
         AddCustomerDimensionFilter(TempCustLedgerEntry);
-        if TempCustLedgerEntry.FindSet then
+        if TempCustLedgerEntry.FindSet() then
             repeat
                 if PrintAmountInLCY then begin
                     TempCustLedgerEntry.CalcFields("Remaining Amt. (LCY)");

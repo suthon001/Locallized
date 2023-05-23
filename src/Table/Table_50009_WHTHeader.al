@@ -4,6 +4,7 @@
 table 50009 "WHT Header"
 {
     Caption = 'WHT Header';
+    DataClassification = CustomerContent;
     fields
     {
         field(1; "WHT No."; Code[20])

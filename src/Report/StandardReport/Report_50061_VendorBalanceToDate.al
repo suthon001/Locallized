@@ -6,6 +6,7 @@ report 50061 "Vendor - Balance to Date (new)"
     Caption = 'Vendor - Balance to Date';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -17,7 +18,7 @@ report 50061 "Vendor - Balance to Date (new)"
             column(StrNoVenGetMaxDtFilter; StrSubstNo(Text000, Format(GetRangeMax("Date Filter"))))
             {
             }
-            column(CompanyName; COMPANYPROPERTY.DisplayName)
+            column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
             column(VendFilter; VendFilter)
@@ -174,20 +175,20 @@ report 50061 "Vendor - Balance to Date (new)"
 
                 trigger OnPreDataItem()
                 begin
-                    Reset;
+                    Reset();
                     FilterDetailedVendLedgerEntry(DtldVendLedgEntry, StrSubstNo('%1..%2', MaxDate + 1, DMY2Date(31, 12, 9999)));
                     if DtldVendLedgEntry.Find('-') then
                         repeat
                             "Entry No." := DtldVendLedgEntry."Vendor Ledger Entry No.";
                             if CheckVendEntryIncluded("Entry No.") then
                                 Mark(true);
-                        until DtldVendLedgEntry.Next = 0;
+                        until DtldVendLedgEntry.Next() = 0;
 
                     FilterVendorLedgerEntry(VendLedgEntry3);
                     if Find('-') then
                         repeat
                             Mark(true);
-                        until Next = 0;
+                        until Next() = 0;
 
                     SetCurrentKey("Entry No.");
                     SetRange(Open);
@@ -196,7 +197,7 @@ report 50061 "Vendor - Balance to Date (new)"
 
                     AddVendorDimensionFilter(VendLedgEntry3);
 
-                    CalcTotalVendorAmount;
+                    CalcTotalVendorAmount();
                 end;
             }
             dataitem(Integer2; "Integer")
@@ -219,7 +220,7 @@ report 50061 "Vendor - Balance to Date (new)"
                     if Number = 1 then
                         OK := CurrencyTotalBuffer.Find('-')
                     else
-                        OK := CurrencyTotalBuffer.Next <> 0;
+                        OK := CurrencyTotalBuffer.Next() <> 0;
                     if not OK then
                         CurrReport.Break();
 
@@ -275,7 +276,7 @@ report 50061 "Vendor - Balance to Date (new)"
                 if Number = 1 then
                     OK := CurrencyTotalBuffer2.Find('-')
                 else
-                    OK := CurrencyTotalBuffer2.Next <> 0;
+                    OK := CurrencyTotalBuffer2.Next() <> 0;
                 if not OK then
                     CurrReport.Break();
             end;
@@ -395,34 +396,28 @@ report 50061 "Vendor - Balance to Date (new)"
 
     local procedure FilterDetailedVendLedgerEntry(var DetailedVendorLedgEntry: Record "Detailed Vendor Ledg. Entry"; DateFilter: Text)
     begin
-        with DetailedVendorLedgEntry do begin
-            SetCurrentKey("Vendor No.", "Posting Date", "Entry Type");
-            SetRange("Vendor No.", Vendor."No.");
-            SetFilter("Posting Date", DateFilter);
-            SetRange("Entry Type", DtldVendLedgEntry."Entry Type"::Application);
-        end;
+        DetailedVendorLedgEntry.SetCurrentKey("Vendor No.", "Posting Date", "Entry Type");
+        DetailedVendorLedgEntry.SetRange("Vendor No.", Vendor."No.");
+        DetailedVendorLedgEntry.SetFilter("Posting Date", DateFilter);
+        DetailedVendorLedgEntry.SetRange("Entry Type", DtldVendLedgEntry."Entry Type"::Application);
     end;
 
     local procedure FilterVendorLedgerEntry(var VendorLedgerEntry: Record "Vendor Ledger Entry")
     begin
-        with VendorLedgerEntry do begin
-            SetCurrentKey("Vendor No.", Open);
-            SetRange("Vendor No.", Vendor."No.");
-            SetRange(Open, true);
-            SetRange("Posting Date", 0D, MaxDate);
-        end;
+        VendorLedgerEntry.SetCurrentKey("Vendor No.", Open);
+        VendorLedgerEntry.SetRange("Vendor No.", Vendor."No.");
+        VendorLedgerEntry.SetRange(Open, true);
+        VendorLedgerEntry.SetRange("Posting Date", 0D, MaxDate);
     end;
 
     local procedure AddVendorDimensionFilter(var VendorLedgerEntry: Record "Vendor Ledger Entry")
     begin
-        with VendorLedgerEntry do begin
-            if Vendor.GetFilter("Global Dimension 1 Filter") <> '' then
-                SetRange("Global Dimension 1 Code", Vendor.GetFilter("Global Dimension 1 Filter"));
-            if Vendor.GetFilter("Global Dimension 2 Filter") <> '' then
-                SetRange("Global Dimension 2 Code", Vendor.GetFilter("Global Dimension 2 Filter"));
-            if Vendor.GetFilter("Currency Filter") <> '' then
-                SetRange("Currency Code", Vendor.GetFilter("Currency Filter"));
-        end;
+        if Vendor.GetFilter("Global Dimension 1 Filter") <> '' then
+            VendorLedgerEntry.SetRange("Global Dimension 1 Code", Vendor.GetFilter("Global Dimension 1 Filter"));
+        if Vendor.GetFilter("Global Dimension 2 Filter") <> '' then
+            VendorLedgerEntry.SetRange("Global Dimension 2 Code", Vendor.GetFilter("Global Dimension 2 Filter"));
+        if Vendor.GetFilter("Currency Filter") <> '' then
+            VendorLedgerEntry.SetRange("Currency Code", Vendor.GetFilter("Currency Filter"));
     end;
 
     local procedure CalcTotalVendorAmount()
@@ -431,50 +426,48 @@ report 50061 "Vendor - Balance to Date (new)"
         TempVendorLedgerEntry: Record "Vendor Ledger Entry" temporary;
         DetailedVendorLedgEntry: Record "Detailed Vendor Ledg. Entry";
     begin
-        with TempVendorLedgerEntry do begin
-            FilterDetailedVendLedgerEntry(DetailedVendorLedgEntry, '');
-            if DetailedVendorLedgEntry.FindSet then
-                repeat
-                    VendorLedgerEntry.Get(DetailedVendorLedgEntry."Vendor Ledger Entry No.");
-                    if not Get(VendorLedgerEntry."Entry No.") then
-                        if CheckVendEntryIncluded(VendorLedgerEntry."Entry No.") then begin
-                            TempVendorLedgerEntry := VendorLedgerEntry;
-                            Insert;
-                        end;
-                until DetailedVendorLedgEntry.Next = 0;
-
-            FilterVendorLedgerEntry(VendorLedgerEntry);
-            if VendorLedgerEntry.FindSet then
-                repeat
-                    if not Get(VendorLedgerEntry."Entry No.") then begin
+        FilterDetailedVendLedgerEntry(DetailedVendorLedgEntry, '');
+        if DetailedVendorLedgEntry.FindSet() then
+            repeat
+                VendorLedgerEntry.Get(DetailedVendorLedgEntry."Vendor Ledger Entry No.");
+                if not TempVendorLedgerEntry.Get(VendorLedgerEntry."Entry No.") then
+                    if CheckVendEntryIncluded(VendorLedgerEntry."Entry No.") then begin
                         TempVendorLedgerEntry := VendorLedgerEntry;
-                        Insert;
+                        TempVendorLedgerEntry.Insert();
                     end;
-                until VendorLedgerEntry.Next = 0;
+            until DetailedVendorLedgEntry.Next() = 0;
 
-            SetCurrentKey("Entry No.");
-            SetRange("Date Filter", 0D, MaxDate);
-            AddVendorDimensionFilter(TempVendorLedgerEntry);
-            if FindSet then
-                repeat
-                    if PrintAmountInLCY then begin
-                        CalcFields("Remaining Amt. (LCY)");
-                        RemainingAmt := "Remaining Amt. (LCY)";
-                        CurrencyCode := '';
-                    end else begin
-                        CalcFields("Remaining Amount");
-                        RemainingAmt := "Remaining Amount";
-                        CurrencyCode := "Currency Code";
-                    end;
+        FilterVendorLedgerEntry(VendorLedgerEntry);
+        if VendorLedgerEntry.FindSet() then
+            repeat
+                if not TempVendorLedgerEntry.Get(VendorLedgerEntry."Entry No.") then begin
+                    TempVendorLedgerEntry := VendorLedgerEntry;
+                    TempVendorLedgerEntry.Insert();
+                end;
+            until VendorLedgerEntry.Next() = 0;
 
-                    if RemainingAmt <> 0 then
-                        CurrencyTotalBuffer.UpdateTotal(
-                          CurrencyCode,
-                          RemainingAmt,
-                          0,
-                          Counter1);
-                until Next = 0;
-        end;
+        TempVendorLedgerEntry.SetCurrentKey("Entry No.");
+        TempVendorLedgerEntry.SetRange("Date Filter", 0D, MaxDate);
+        AddVendorDimensionFilter(TempVendorLedgerEntry);
+        if TempVendorLedgerEntry.FindSet() then
+            repeat
+                if PrintAmountInLCY then begin
+                    TempVendorLedgerEntry.CalcFields("Remaining Amt. (LCY)");
+                    RemainingAmt := TempVendorLedgerEntry."Remaining Amt. (LCY)";
+                    CurrencyCode := '';
+                end else begin
+                    TempVendorLedgerEntry.CalcFields("Remaining Amount");
+                    RemainingAmt := TempVendorLedgerEntry."Remaining Amount";
+                    CurrencyCode := TempVendorLedgerEntry."Currency Code";
+                end;
+
+                if RemainingAmt <> 0 then
+                    CurrencyTotalBuffer.UpdateTotal(
+                      CurrencyCode,
+                      RemainingAmt,
+                      0,
+                      Counter1);
+            until TempVendorLedgerEntry.Next() = 0;
     end;
 
     local procedure CheckVendEntryIncluded(EntryNo: Integer): Boolean
@@ -496,14 +489,12 @@ report 50061 "Vendor - Balance to Date (new)"
     var
         DetailedVendorLedgEntry: Record "Detailed Vendor Ledg. Entry";
     begin
-        with DetailedVendorLedgEntry do begin
-            SetCurrentKey("Vendor Ledger Entry No.", "Entry Type", "Posting Date");
-            SetRange("Vendor Ledger Entry No.", EntryNo);
-            SetRange("Entry Type", "Entry Type"::Application);
-            SetFilter("Posting Date", '>%1', MaxDate);
-            SetRange(Unapplied, true);
-            exit(not IsEmpty);
-        end;
+        DetailedVendorLedgEntry.SetCurrentKey("Vendor Ledger Entry No.", "Entry Type", "Posting Date");
+        DetailedVendorLedgEntry.SetRange("Vendor Ledger Entry No.", EntryNo);
+        DetailedVendorLedgEntry.SetRange("Entry Type", DetailedVendorLedgEntry."Entry Type"::Application);
+        DetailedVendorLedgEntry.SetFilter("Posting Date", '>%1', MaxDate);
+        DetailedVendorLedgEntry.SetRange(Unapplied, true);
+        exit(not DetailedVendorLedgEntry.IsEmpty);
     end;
 
     local procedure GetAppliedEntryExternalDocNo(AppliedEntryNo: Integer): Code[35]

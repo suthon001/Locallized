@@ -6,6 +6,7 @@ table 50003 "Customer & Vendor Branch"
     Caption = 'Customer & Vendor Branch';
     DrillDownPageId = "Cust. & Vendor BranchLists";
     LookupPageId = "Cust. & Vendor BranchLists";
+    DataClassification = CustomerContent;
     fields
     {
         field(1; "Source Type"; Option)

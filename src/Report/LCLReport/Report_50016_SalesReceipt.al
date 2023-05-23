@@ -4,6 +4,7 @@ report 50016 "Sales Receipt"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50016_SalesReceipt.rdl';
     PreviewMode = PrintLayout;
+    ApplicationArea = All;
     dataset
     {
         dataitem(BWBillingReceiptHeader; "Billing Receipt Header")
@@ -52,14 +53,13 @@ report 50016 "Sales Receipt"
             }
             trigger OnPreDataItem()
             begin
-                companyInfor.get;
+                companyInfor.get();
                 companyInfor.CalcFields(Picture);
             end;
 
             trigger OnAfterGetRecord()
             var
                 NewDate: Date;
-                BillingReceiptLine: Record "Billing Receipt Line";
 
             begin
                 FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
@@ -70,7 +70,7 @@ report 50016 "Sales Receipt"
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 if not PaymentTerm.GET("Payment Terms Code") then
-                    PaymentTerm.init;
+                    PaymentTerm.init();
 
                 AmtText := FunctionCenter."NumberThaiToText"("Amount (LCY)");
             end;
@@ -86,7 +86,6 @@ report 50016 "Sales Receipt"
 
         companyInfor: Record "Company Information";
         ExchangeRate: Text[20];
-        BranchCode: Text[50];
         SplitDate: Array[3] of Text[20];
         AmtText: Text[1024];
         PaymentTerm: Record "Payment Terms";

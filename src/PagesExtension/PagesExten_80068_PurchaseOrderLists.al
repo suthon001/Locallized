@@ -12,16 +12,19 @@ pageextension 80068 "Purchase Order Lists" extends "Purchase Order List"
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
+                ToolTip = 'Specifies the value of the Head Office field.';
             }
             field("Branch Code"; Rec."Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
                 ApplicationArea = all;
                 Caption = 'VAT Registration No.';
+                ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
         }
         modify(Status)
@@ -58,12 +61,13 @@ pageextension 80068 "Purchase Order Lists" extends "Purchase Order List"
                 PromotedCategory = Category5;
                 Promoted = true;
                 PromotedIsBig = true;
+                ToolTip = 'Executes the Purchase Order action.';
                 trigger OnAction()
                 var
 
                     PurchaseHeader: Record "Purchase Header";
                 begin
-                    PurchaseHeader.reset;
+                    PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
                     REPORT.RunModal(REPORT::"PurchaseOrder", true, true, PurchaseHeader);

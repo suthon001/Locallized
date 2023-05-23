@@ -7,6 +7,7 @@ report 50051 "Trial Balance (New)"
     Caption = 'Trial Balance';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    ApplicationArea = All;
 
     dataset
     {
@@ -17,7 +18,7 @@ report 50051 "Trial Balance (New)"
             column(STRSUBSTNO_Text000_PeriodText_; StrSubstNo(Text000, PeriodText))
             {
             }
-            column(COMPANYNAME; COMPANYPROPERTY.DisplayName)
+            column(COMPANYNAME; COMPANYPROPERTY.DisplayName())
             {
             }
             column(PeriodText; PeriodText)

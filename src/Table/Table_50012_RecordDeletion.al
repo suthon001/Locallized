@@ -3,6 +3,7 @@
 /// </summary>
 table 50012 "Record Deletion Table"
 {
+    DataClassification = CustomerContent;
 
     fields
     {

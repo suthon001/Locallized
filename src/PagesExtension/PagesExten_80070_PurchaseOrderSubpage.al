@@ -7,10 +7,12 @@ pageextension 80070 "Purchase Order Subpage" extends "Purchase Order Subform"
             field("Ref. PQ No."; rec."Ref. PQ No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Ref. PR No. field.';
             }
             field("Ref. PQ Line No."; rec."Ref. PQ Line No.")
             {
                 ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Ref. PR Line No. field.';
             }
         }
         modify("Description 2")
@@ -54,6 +56,7 @@ pageextension 80070 "Purchase Order Subpage" extends "Purchase Order Subform"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                ToolTip = 'Executes the Get Purchase Lines action.';
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";
@@ -69,7 +72,7 @@ pageextension 80070 "Purchase Order Subpage" extends "Purchase Order Subform"
     var
         PQLine: Record "Purchase Line";
     begin
-        if rec."Ref. PQ No." <> '' then begin
+        if rec."Ref. PQ No." <> '' then
             if PQLine.GET(PQLine."Document Type"::Quote, rec."Ref. PQ No.", rec."Ref. PQ Line No.") then begin
                 PQLine."Outstanding Quantity" := PQLine."Outstanding Quantity" + rec.Quantity;
                 PQLine."Outstanding Qty. (Base)" := PQLine."Outstanding Qty. (Base)" + rec."Quantity (Base)";
@@ -78,7 +81,6 @@ pageextension 80070 "Purchase Order Subpage" extends "Purchase Order Subform"
                 PQLine."Make to PO Qty. (Base)" := PQLine."Outstanding Qty. (Base)";
                 PQLine.Modify();
             end;
-        end;
     end;
 
 }

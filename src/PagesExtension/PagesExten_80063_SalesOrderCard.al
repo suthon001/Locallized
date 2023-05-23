@@ -76,11 +76,12 @@ pageextension 80063 "Sales Order Card" extends "Sales Order"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Sales Order action.';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Report Sales Order", TRUE, TRUE, RecSalesHeader);
@@ -94,11 +95,12 @@ pageextension 80063 "Sales Order Card" extends "Sales Order"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Sales Shipment action.';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Shipment Header";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetCurrentKey("Order No.");
                     RecSalesHeader.SetRange("ORder No.", rec."No.");
                     if RecSalesHeader.FindLast() then

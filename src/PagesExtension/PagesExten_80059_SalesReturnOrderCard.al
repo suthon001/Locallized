@@ -34,12 +34,13 @@ pageextension 80059 "SalesReturnOrder" extends "Sales Return Order"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Report;
+                ToolTip = 'Executes the Sales Return Order action.';
                 trigger OnAction()
                 var
                     RecSalesHeader: Record "Sales Header";
                 // SalesReturnOrder: Report "Sales Return Order";
                 begin
-                    RecSalesHeader.RESET;
+                    RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
                     Report.Run(Report::"Sales Return Order", TRUE, TRUE, RecSalesHeader);
