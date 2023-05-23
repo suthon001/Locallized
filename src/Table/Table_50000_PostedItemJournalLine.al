@@ -862,7 +862,7 @@ table 50000 "Posted ItemJournal Lines"
             Editable = false;
         }
 
-        field(80098; "Posted By"; Code[30])
+        field(80098; "Posted By"; Code[50])
         {
             Caption = 'Posted By';
             DataClassification = SystemMetadata;

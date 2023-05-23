@@ -52,10 +52,6 @@ pageextension 80070 "Purchase Order Subpage" extends "Purchase Order Subform"
                 Caption = 'Get Purchase Lines';
                 Image = GetLines;
                 ApplicationArea = all;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
                 ToolTip = 'Executes the Get Purchase Lines action.';
                 trigger OnAction()
                 var

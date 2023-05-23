@@ -72,7 +72,7 @@ codeunit 50005 EventFunction
     procedure "SalesPreviewVourcher"(SalesHeader: Record "Sales Header"; var TemporaryGL: Record "G/L Entry" temporary)
     var
         RecRef: RecordRef;
-        ErrorMsg: Record "Error Message" temporary;
+        TempErrorMessage: Record "Error Message" temporary;
     begin
         ErrorMessageMgt.Activate(ErrorMessageHandler);
         BindSubscription(SalesPostYesNo);
@@ -80,10 +80,10 @@ codeunit 50005 EventFunction
         IF NOT GenJnlPostPreview.Run() AND GenJnlPostPreview.IsSuccess() THEN begin
             GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
             PostingPreviewEventHandler.GetEntries(Database::"G/L Entry", RecRef);
-            "InsertToTempGL"(RecRef, TemporaryGL);
+            InsertToTempGL(RecRef, TemporaryGL);
         end;
-        if ErrorMessageMgt.GetErrors(ErrorMsg) then
-            ERROR(STRSUBSTNO('%1 %2', ErrorMsg."Field Name", ErrorMsg.Description));
+        if ErrorMessageMgt.GetErrors(TempErrorMessage) then
+            ERROR(TempErrorMessage.Message);
     end;
 
     /// <summary> 
@@ -94,7 +94,7 @@ codeunit 50005 EventFunction
     procedure "PurchasePreviewVourcher"(PurchaseHeader: Record "Purchase Header"; var TemporaryGL: Record "G/L Entry" temporary)
     var
         RecRef: RecordRef;
-        ErrorMsg: Record "Error Message" temporary;
+        TempErrorMessage: Record "Error Message" temporary;
     begin
         ErrorMessageMgt.Activate(ErrorMessageHandler);
         BindSubscription(PurchasePostYesNo);
@@ -102,11 +102,11 @@ codeunit 50005 EventFunction
         IF NOT GenJnlPostPreview.Run() AND GenJnlPostPreview.IsSuccess() THEN begin
             GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
             PostingPreviewEventHandler.GetEntries(Database::"G/L Entry", RecRef);
-            "InsertToTempGL"(RecRef, TemporaryGL);
+            InsertToTempGL(RecRef, TemporaryGL);
 
         end;
-        if ErrorMessageMgt.GetErrors(ErrorMsg) then
-            ERROR(STRSUBSTNO('%1 %2', ErrorMsg."Field Name", ErrorMsg.Description));
+        if ErrorMessageMgt.GetErrors(TempErrorMessage) then
+            ERROR(TempErrorMessage.Message);
     end;
 
     /// <summary> 
@@ -117,7 +117,7 @@ codeunit 50005 EventFunction
     procedure "GenLinePreviewVourcher"(GenJournalLine: Record "Gen. Journal Line"; var TemporaryGL: Record "G/L Entry" temporary)
     var
         RecRef: RecordRef;
-        ErrorMsg: Record "Error Message" temporary;
+        TempErrorMessage: Record "Error Message" temporary;
         GenLine: Record "Gen. Journal Line";
     begin
 
@@ -132,10 +132,10 @@ codeunit 50005 EventFunction
         IF NOT GenJnlPostPreview.Run() AND GenJnlPostPreview.IsSuccess() THEN begin
             GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
             PostingPreviewEventHandler.GetEntries(Database::"G/L Entry", RecRef);
-            "InsertToTempGL"(RecRef, TemporaryGL);
+            InsertToTempGL(RecRef, TemporaryGL);
         end;
-        if ErrorMessageMgt.GetErrors(ErrorMsg) then
-            ERROR(STRSUBSTNO('%1 %2', ErrorMsg."Field Name", ErrorMsg.Description));
+        if ErrorMessageMgt.GetErrors(TempErrorMessage) then
+            ERROR(TempErrorMessage.Message);
     end;
 
     /// <summary> 
@@ -143,7 +143,7 @@ codeunit 50005 EventFunction
     /// </summary>
     /// <param name="RecRef2">Parameter of type RecordRef.</param>
     /// <param name="TempGLEntry">Parameter of type Record "G/L Entry" temporary.</param>
-    local procedure "InsertToTempGL"(RecRef2: RecordRef; var TempGLEntry: Record "G/L Entry" temporary)
+    local procedure InsertToTempGL(RecRef2: RecordRef; var TempGLEntry: Record "G/L Entry" temporary)
     begin
         if NOT TempGLEntry.IsTemporary then
             Error('GL Entry must be Temporary Table!');

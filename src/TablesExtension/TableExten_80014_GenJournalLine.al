@@ -283,7 +283,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             DataClassification = CustomerContent;
 
         }
-        field(80035; "Bank Account No."; text[30])
+        field(80035; "Bank Account No."; text[20])
         {
             Caption = 'Bank Account No.';
             DataClassification = CustomerContent;
@@ -344,7 +344,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                 CalWhtAmount();
             end;
         }
-        field(80041; "Tax Invoice Address"; Code[150])
+        field(80041; "Tax Invoice Address"; Code[100])
         {
             Caption = 'Tax Invoice Address';
             DataClassification = CustomerContent;

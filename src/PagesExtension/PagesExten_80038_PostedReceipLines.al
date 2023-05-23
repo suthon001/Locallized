@@ -1,12 +1,7 @@
 pageextension 80038 "PostedReceiptLines" extends "Posted Purchase Rcpt. Subform"
 {
-
     layout
     {
-
-
-
-
         modify("Qty. Rcd. Not Invoiced")
         {
             Visible = true;

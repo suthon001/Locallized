@@ -3,7 +3,7 @@
 /// </summary>
 page 50037 "Posted ShowDetail Vat"
 {
-    Caption = 'ShowDetail Vat';
+    Caption = 'Show Vat';
     SourceTable = "Posted Gen. Journal Line";
     SourceTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.");
     InsertAllowed = false;

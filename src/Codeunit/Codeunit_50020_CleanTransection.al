@@ -53,7 +53,7 @@ codeunit 50020 "Record Deletion Mgt."
     var
         Text0002: Label 'Deleting Records!\Table: #1#######';
 
-    procedure DeleteRecords(pCompanyName: Text[1024]; setdefultnoseries: Boolean)
+    procedure DeleteRecords(pCompanyName: Text; setdefultnoseries: Boolean)
     var
         Window: Dialog;
         RecRef: RecordRef;

@@ -59,7 +59,7 @@ table 50003 "Customer & Vendor Branch"
             DataClassification = CustomerContent;
         }
 
-        field(6; "Address"; Text[160])
+        field(6; "Address"; Text[100])
         {
             Caption = 'Address';
             DataClassification = CustomerContent;
@@ -142,6 +142,11 @@ table 50003 "Customer & Vendor Branch"
         field(22; "Fax No."; Text[30])
         {
             Caption = 'Fax No.';
+            DataClassification = CustomerContent;
+        }
+        field(23; "Address 2"; Text[50])
+        {
+            Caption = 'Address 2';
             DataClassification = CustomerContent;
         }
     }

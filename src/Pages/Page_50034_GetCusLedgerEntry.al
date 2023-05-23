@@ -82,7 +82,7 @@ page 50034 "Get Cus. Ledger Entry"
     /// </summary>
     /// <param name="NewDocumentType">Option "Sales Billing","Sales Receipt","Purchase Billing".</param>
     /// <param name="NewDocumentNo">Code[20].</param>
-    procedure SetDocument(NewDocumentType: Option "Sales Billing","Sales Receipt","Purchase Billing"; NewDocumentNo: Code[20])
+    procedure SetDocument(NewDocumentType: Enum "Billing Document Type"; NewDocumentNo: Code[20])
     begin
         DocumentType := NewDocumentType;
         DocumentNo := NewDocumentNo;
@@ -100,7 +100,7 @@ page 50034 "Get Cus. Ledger Entry"
 
     var
         DocumentNo: Code[30];
-        DocumentType: Option "Sales Billing","Sales Receipt","Purchase Billing";
+        DocumentType: Enum "Billing Document Type";
         BillingHeader: Record "Billing Receipt Header";
 
 }

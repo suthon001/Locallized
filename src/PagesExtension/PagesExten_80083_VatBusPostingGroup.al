@@ -65,7 +65,7 @@ pageextension 80083 "Vat Business Posting Groups" extends "VAT Business Posting 
                 Caption = 'City (Eng)';
                 ToolTip = 'Specifies the value of the City (Eng) field.';
             }
-            field("Postcode"; Rec."Postcode")
+            field("Post code"; Rec."Post code")
             {
                 ApplicationArea = all;
                 Caption = 'Post code';

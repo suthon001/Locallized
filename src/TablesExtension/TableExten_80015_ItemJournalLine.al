@@ -33,13 +33,13 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
             TableRelation = "VAT Business Posting Group";
             DataClassification = SystemMetadata;
         }
-        field(80005; "Vendor/Customer Name"; Text[150])
+        field(80005; "Vendor/Customer Name"; Text[100])
         {
             DataClassification = CustomerContent;
             Editable = false;
             Caption = 'Vendor/Customer Name';
         }
-        field(80006; "Create By"; Code[30])
+        field(80006; "Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
@@ -63,7 +63,7 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
 
     trigger OnInsert()
     begin
-        "Create By" := USERID;
+        "Create By" := COPYSTR(USERID, 1, 50);
         "Create DateTime" := CurrentDateTime;
     end;
 
@@ -115,11 +115,11 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
     /// <returns>Return variable "Boolean".</returns>
     procedure CheckWorkflowItemJournalEnabled(var ItemJournal: Record "Item Journal Line"): Boolean
     var
-        NoWorkflowEnb: Label 'No workflow Enabled for this Record type';
+        NoWorkflowEnbMsg: Label 'No workflow Enabled for this Record type';
     begin
         ItemJournal.TestField("Document No.");
         if not IsItemJournalEnabled(ItemJournal) then
-            Error(NoWorkflowEnb);
+            Error(NoWorkflowEnbMsg);
         exit(true);
     end;
 

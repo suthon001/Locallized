@@ -34,7 +34,7 @@ tableextension 80052 "ExtenInvoice Posting Buffer" extends "Invoice Posting Buff
             Caption = 'Tax Invoice Name';
             DataClassification = SystemMetadata;
         }
-        field(80006; "Description Line"; Text[250])
+        field(80006; "Description Line"; Text[150])
         {
             Caption = 'Description Line';
             DataClassification = SystemMetadata;
@@ -84,7 +84,7 @@ tableextension 80052 "ExtenInvoice Posting Buffer" extends "Invoice Posting Buff
             Caption = 'Document Line No.';
             DataClassification = SystemMetadata;
         }
-        field(80015; "Vendor Invoice No."; Code[30])
+        field(80015; "Vendor Invoice No."; Code[35])
         {
             Caption = 'Vendor Invoice No.';
             DataClassification = SystemMetadata;

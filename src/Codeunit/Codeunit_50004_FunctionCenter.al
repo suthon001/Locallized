@@ -36,26 +36,6 @@ codeunit 50004 "Function Center"
 
     end;
 
-    /// <summary> 
-    /// Description for GetLastLineNoFromGenJnlLine.
-    /// </summary>
-    /// <param name="pTemplateName">Parameter of type Code[20].</param>
-    /// <param name="pBatchName">Parameter of type Code[20].</param>
-    procedure "GetLastLineNoFromGenJnlLine"(pTemplateName: Code[20]; pBatchName: Code[20]) rLineNo: Integer
-    var
-        vlGenJnLineRec: Record "Gen. Journal Line";
-    begin
-        vlGenJnLineRec.RESET();
-        vlGenJnLineRec.SETFILTER("Journal Template Name", '%1', pTemplateName);
-        vlGenJnLineRec.SETFILTER("Journal Batch Name", '%1', pBatchName);
-        IF vlGenJnLineRec.FIND('+') THEN BEGIN
-            rLineNo := vlGenJnLineRec."Line No.";
-            EXIT(rLineNo);
-        END ELSE BEGIN
-            rLineNo := 10000;
-            EXIT(rLineNo);
-        END;
-    end;
 
     /// <summary> 
     /// Description for ConverseDecimalToText.
@@ -126,7 +106,7 @@ codeunit 50004 "Function Center"
             Text[1] += VATBusinessPostingGroup."Company Name 2 (Eng)";
             Text[2] := VATBusinessPostingGroup."Company Address (Eng)" + ' ';
             Text[3] := VATBusinessPostingGroup."Company Address 2 (Eng)" + ' ';
-            Text[3] += VATBusinessPostingGroup."City (Eng)" + ' ' + VATBusinessPostingGroup."Postcode";
+            Text[3] += VATBusinessPostingGroup."City (Eng)" + ' ' + VATBusinessPostingGroup."Post code";
 
             Text[4] := 'Tel. : ' + VATBusinessPostingGroup."Phone No." + ' ';
             if VATBusinessPostingGroup."Fax No." <> '' then
@@ -142,7 +122,7 @@ codeunit 50004 "Function Center"
             Text[1] += VATBusinessPostingGroup."Company Name 2 (Thai)";
             Text[2] := VATBusinessPostingGroup."Company Address (Thai)" + ' ';
             Text[3] := VATBusinessPostingGroup."Company Address 2 (Thai)" + ' ';
-            Text[3] += VATBusinessPostingGroup."City (Thai)" + ' ' + VATBusinessPostingGroup."Postcode";
+            Text[3] += VATBusinessPostingGroup."City (Thai)" + ' ' + VATBusinessPostingGroup."Post code";
 
             Text[4] := 'โทร : ' + VATBusinessPostingGroup."Phone No.";
             if VATBusinessPostingGroup."Fax No." <> '' then
@@ -306,6 +286,7 @@ codeunit 50004 "Function Center"
     procedure "ConvExchRate"(CurrencyCode: Code[10]; CurrencyFactor: Decimal; VAR Text: Text[30])
     var
         GLSetup: Record "General Ledger Setup";
+        Amt1Lbl: Label '%1 (%2)', Locked = true;
     begin
         GLSetup.GET();
         Text := '';
@@ -313,7 +294,7 @@ codeunit 50004 "Function Center"
             Text := 'THB'
         ELSE
             if CurrencyCode <> 'THB' then
-                Text := STRSUBSTNO('%1 (%2)', COPYSTR(CurrencyCode, 1, 3), ROUND(1 / CurrencyFactor, 0.00001));
+                Text := STRSUBSTNO(Amt1Lbl, COPYSTR(CurrencyCode, 1, 3), ROUND(1 / CurrencyFactor, 0.00001));
     end;
 
 
@@ -323,10 +304,12 @@ codeunit 50004 "Function Center"
     /// </summary>
     /// <param name="TDecimal">Parameter of type Decimal.</param>
     /// <param name="CurrencyCode">Parameter of type Code[30].</param>
-    procedure "NumberEngToText"(TDecimal: Decimal; CurrencyCode: Code[30]) TText: Text
+    procedure "NumberEngToText"(TDecimal: Decimal; CurrencyCode: Code[10]) TText: Text
     var
         TLow: Decimal;
         TText1: array[2] of Text[1024];
+        Amt1Lbl: Label '%3 : %1 %2', Locked = true;
+        Amt2Lbl: Label '%1 %2', Locked = true;
     begin
         TDecimal := ROUND(TDecimal, 0.01);
         "InitTextVariable"();
@@ -335,9 +318,9 @@ codeunit 50004 "Function Center"
         IF TLow < 1 THEN
             TLow := 0;
         if CurrencyCode <> '' then
-            TText := STRSUBSTNO('%3 : %1 %2', TText1[1], TText1[2], CurrencyCode)
+            TText := STRSUBSTNO(Amt1Lbl, TText1[1], TText1[2], CurrencyCode)
         else
-            TText := StrSubstNo('%1 %2', TText1[1], TText1[2]);
+            TText := StrSubstNo(Amt2Lbl, TText1[1], TText1[2]);
         exit(TText);
     end;
 
@@ -348,13 +331,13 @@ codeunit 50004 "Function Center"
     /// <returns>Return variable "Text".</returns>
     procedure "NumberThaiToText"(Amount: Decimal): Text
     var
-        AmountText: Text[1024];
+        AmountText: Text;
         x: Integer;
         l: Integer;
         P: Integer;
         adigit: text[1];
         dflag: Boolean;
-        AmtThaiText: text[200];
+        AmtThaiText: text;
     begin
         AmountText := FORMAT(Amount, 0);
         x := STRPOS(AmountText, '.');
@@ -461,71 +444,71 @@ codeunit 50004 "Function Center"
     Local procedure "InitTextVariable"()
     var
 
-        Text032: Label 'ONE';
-        Text033: Label 'TWO';
-        Text034: Label 'THREE';
-        Text035: Label 'FOUR';
-        Text036: Label 'FIVE';
-        Text037: Label 'SIX';
-        Text038: Label 'SEVEN';
-        Text039: Label 'EIGHT';
-        Text040: Label 'NINE';
-        Text041: Label 'TEN';
-        Text042: Label 'ELEVEN';
-        Text043: Label 'TWELVE';
-        Text044: Label 'THIRTEEN';
-        Text045: Label 'FOURTEEN';
-        Text046: Label 'FIFTEEN';
-        Text047: Label 'SIXTEEN';
-        Text048: Label 'SEVENTEEN';
-        Text049: Label 'EIGHTEEN';
-        Text050: Label 'NINETEEN';
-        Text051: Label 'TWENTY';
-        Text052: Label 'THIRTY';
-        Text053: Label 'FORTY';
-        Text054: Label 'FIFTY';
-        Text055: Label 'SIXTY';
-        Text056: Label 'SEVENTY';
-        Text057: Label 'EIGHTY';
-        Text058: Label 'NINETY';
-        Text059: Label 'THOUSAND';
-        Text060: Label 'MILLION';
-        Text061: Label 'BILLION';
+        Text032Lbl: Label 'ONE';
+        Text033Lbl: Label 'TWO';
+        Text034Lbl: Label 'THREE';
+        Text035Lbl: Label 'FOUR';
+        Text036Lbl: Label 'FIVE';
+        Text037Lbl: Label 'SIX';
+        Text038Lbl: Label 'SEVEN';
+        Text039Lbl: Label 'EIGHT';
+        Text040Lbl: Label 'NINE';
+        Text041Lbl: Label 'TEN';
+        Text042Lbl: Label 'ELEVEN';
+        Text043Lbl: Label 'TWELVE';
+        Text044Lbl: Label 'THIRTEEN';
+        Text045Lbl: Label 'FOURTEEN';
+        Text046Lbl: Label 'FIFTEEN';
+        Text047Lbl: Label 'SIXTEEN';
+        Text048Lbl: Label 'SEVENTEEN';
+        Text049Lbl: Label 'EIGHTEEN';
+        Text050Lbl: Label 'NINETEEN';
+        Text051Lbl: Label 'TWENTY';
+        Text052Lbl: Label 'THIRTY';
+        Text053Lbl: Label 'FORTY';
+        Text054Lbl: Label 'FIFTY';
+        Text055Lbl: Label 'SIXTY';
+        Text056Lbl: Label 'SEVENTY';
+        Text057Lbl: Label 'EIGHTY';
+        Text058Lbl: Label 'NINETY';
+        Text059Lbl: Label 'THOUSAND';
+        Text060Lbl: Label 'MILLION';
+        Text061Lbl: Label 'BILLION';
     begin
-        OnesText[1] := Text032;
-        OnesText[2] := Text033;
-        OnesText[3] := Text034;
-        OnesText[4] := Text035;
-        OnesText[5] := Text036;
-        OnesText[6] := Text037;
-        OnesText[7] := Text038;
-        OnesText[8] := Text039;
-        OnesText[9] := Text040;
-        OnesText[10] := Text041;
-        OnesText[11] := Text042;
-        OnesText[12] := Text043;
-        OnesText[13] := Text044;
-        OnesText[14] := Text045;
-        OnesText[15] := Text046;
-        OnesText[16] := Text047;
-        OnesText[17] := Text048;
-        OnesText[18] := Text049;
-        OnesText[19] := Text050;
+        OnesText[1] := Text032Lbl;
+        OnesText[2] := Text033Lbl;
+        OnesText[3] := Text034Lbl;
+        OnesText[4] := Text035Lbl;
+        OnesText[5] := Text036Lbl;
+        OnesText[6] := Text037Lbl;
+        OnesText[7] := Text038Lbl;
+        OnesText[8] := Text039Lbl;
+        OnesText[9] := Text040Lbl;
+        OnesText[10] := Text041Lbl;
+        OnesText[11] := Text042Lbl;
+        OnesText[12] := Text043Lbl;
+        OnesText[13] := Text044Lbl;
+        OnesText[14] := Text045Lbl;
+        OnesText[15] := Text046Lbl;
+        OnesText[16] := Text047Lbl;
+        OnesText[17] := Text048Lbl;
+        OnesText[18] := Text049Lbl;
+        OnesText[19] := Text050Lbl;
 
         TensText[1] := '';
-        TensText[2] := Text051;
-        TensText[3] := Text052;
-        TensText[4] := Text053;
-        TensText[5] := Text054;
-        TensText[6] := Text055;
-        TensText[7] := Text056;
-        TensText[8] := Text057;
-        TensText[9] := Text058;
+        TensText[2] := Text051Lbl;
+        TensText[3] := Text052Lbl;
+        TensText[4] := Text053Lbl;
+        TensText[5] := Text054Lbl;
+        TensText[6] := Text055Lbl;
+        TensText[7] := Text056Lbl;
+        TensText[8] := Text057Lbl;
+        TensText[9] := Text058Lbl;
 
         ExponentText[1] := '';
-        ExponentText[2] := Text059;
-        ExponentText[3] := Text060;
-        ExponentText[4] := Text061;
+        ExponentText[2] := Text059Lbl;
+        ExponentText[3] := Text060Lbl;
+        ExponentText[4] := Text061Lbl;
     end;
 
     Local procedure "EngInterger"(VAR NoText: ARRAY[2] OF Text[80]; No: Decimal; CurrencyCode: Code[10])
@@ -537,16 +520,16 @@ codeunit 50004 "Function Center"
         Exponent: Integer;
         NoTextIndex: Integer;
         varzero: Code[10];
-        Text027: Label 'HUNDRED';
-        Text026: Label 'ZERO';
-        Text028: Label 'AND';
+        Text027Lbl: Label 'HUNDRED';
+        Text026Lbl: Label 'ZERO';
+        Text028Lbl: Label 'AND';
     begin
         CLEAR(NoText);
         NoTextIndex := 1;
         NoText[1] := '';
 
         IF No < 1 THEN
-            "AddToNoText"(NoText, NoTextIndex, PrintExponent, Text026)
+            "AddToNoText"(NoText, NoTextIndex, PrintExponent, Text026Lbl)
         ELSE
             FOR Exponent := 4 DOWNTO 1 DO BEGIN
                 PrintExponent := FALSE;
@@ -556,7 +539,7 @@ codeunit 50004 "Function Center"
                 Ones := Ones MOD 10;
                 IF Hundreds > 0 THEN BEGIN
                     "AddToNoText"(NoText, NoTextIndex, PrintExponent, OnesText[Hundreds]);
-                    "AddToNoText"(NoText, NoTextIndex, PrintExponent, Text027);
+                    "AddToNoText"(NoText, NoTextIndex, PrintExponent, Text027Lbl);
                 END;
                 IF Tens >= 2 THEN BEGIN
                     "AddToNoText"(NoText, NoTextIndex, PrintExponent, TensText[Tens]);
@@ -577,7 +560,7 @@ codeunit 50004 "Function Center"
             END
             ELSE BEGIN
                 //  "AddToNoText"(NoText,NoTextIndex,PrintExponent,'BAHT');
-                "AddToNoText"(NoText, NoTextIndex, PrintExponent, Text028);
+                "AddToNoText"(NoText, NoTextIndex, PrintExponent, Text028Lbl);
                 "AddToNoText"(NoText, NoTextIndex, PrintExponent, 'POINT');
                 Ones := No * 100;
                 Tens := (Ones MOD 100) DIV 10;
@@ -640,14 +623,14 @@ codeunit 50004 "Function Center"
     /// <param name="AddText">Parameter of type Text[30].</param>
     local procedure "AddToNoText"(VAR NoText: ARRAY[2] OF Text[80]; VAR NoTextIndex: Integer; VAR PrintExponent: Boolean; AddText: Text[30])
     var
-        Text029: Label '%1 results in a written number that is too long.';
+        Text029Msg: Label '%1 results in a written number that is too long.', Locked = true;
     begin
         PrintExponent := TRUE;
 
         WHILE STRLEN(NoText[NoTextIndex] + ' ' + AddText) > MAXSTRLEN(NoText[1]) DO BEGIN
             NoTextIndex := NoTextIndex + 1;
             IF NoTextIndex > ARRAYLEN(NoText) THEN
-                ERROR(Text029, AddText);
+                ERROR(Text029Msg, AddText);
         END;
 
         NoText[NoTextIndex] := DELCHR(NoText[NoTextIndex] + ' ' + AddText, '<');
@@ -967,8 +950,8 @@ codeunit 50004 "Function Center"
         Currency: Record "Currency";
         CurrExchRate: Record "Currency Exchange Rate";
         Cust: Record "Customer";
-        Text000: Label 'VAT Amount';
-        Text001: Label 'VAT %1%';
+        Text000Lbl: Label 'VAT Amount';
+        Text001Lbl: Label 'VAT %1%', Locked = true;
 
 
 
@@ -1010,9 +993,9 @@ codeunit 50004 "Function Center"
             InvDiscAmount := ROUND(InvDiscAmount, Currency."Amount Rounding Precision");
 
             IF VATPercentage <= 0 THEN
-                VATAmountText := Text000
+                VATAmountText := Text000Lbl
             ELSE
-                VATAmountText := STRSUBSTNO(Text001, VATPercentage);
+                VATAmountText := STRSUBSTNO(Text001Lbl, VATPercentage);
 
             IF SalesInvHeader."Currency Code" = '' THEN
                 AmountLCY := CustAmount
@@ -1105,8 +1088,8 @@ codeunit 50004 "Function Center"
         Currency: Record "Currency";
         CurrExchRate: Record "Currency Exchange Rate";
         Cust: Record "Customer";
-        Text000: Label 'VAT Amount';
-        Text001: Label 'VAT %1%';
+        Text000Lbl: Label 'VAT Amount';
+        Text001Lbl: Label 'VAT %1%', Locked = true;
 
     begin
         SalesCrMemoHeader.SETRANGE("No.", DocumentNo);
@@ -1143,9 +1126,9 @@ codeunit 50004 "Function Center"
             InvDiscAmount := ROUND(InvDiscAmount, Currency."Amount Rounding Precision");
 
             IF VATpercentage <= 0 THEN
-                VATAmountText := Text000
+                VATAmountText := Text000Lbl
             ELSE
-                VATAmountText := STRSUBSTNO(Text001, VATpercentage);
+                VATAmountText := STRSUBSTNO(Text001Lbl, VATpercentage);
 
             IF SalesCrMemoHeader."Currency Code" = '' THEN
                 AmountLCY := CustAmount
@@ -1223,115 +1206,24 @@ codeunit 50004 "Function Center"
     /// <param name="VAR VATText">Parameter of type Text[30].</param>
     procedure SalesStatistic(DocumentType: Enum "Sales Document Type"; DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
     var
-        SalesSetup: Record "Sales & Receivables Setup";
-        Cust: Record "Customer";
+
         SalesHeader: Record "Sales Header";
-        SalesLine: Record "Sales Line";
-        AllowInvDisc: Boolean;
-        AllowVATDifference: Boolean;
-        TempSalesLine: Record "Sales Line" temporary;
+        DocumentTotals: Codeunit "Document Totals";
+        VATAmount, InvoiceDiscountAmount, InvoiceDiscountPct : Decimal;
         TotalSalesLine: Record "Sales Line";
-        TotalSalesLineLCY: Record "Sales Line";
-        SalesPost: Codeunit "Sales-Post";
-        VATAmount: Decimal;
-        VATAmountText: Text[30];
-        ProfitLCY: Decimal;
-        ProfitPct: Decimal;
-        TotalAmount1: Decimal;
-        TotalAmount2: Decimal;
-        CreditLimitLCYExpendedPct: Decimal;
-        TotalAdjCostLCY: Decimal;
-        TempVATAmountLine: Record "VAT Amount Line" temporary;
 
     begin
+        CLEAR(TotalAmt);
         IF NOT SalesHeader.GET(DocumentType, DocumentNo) THEN
             EXIT;
-
-        SalesSetup.GET();
-        AllowInvDisc :=
-        NOT (SalesSetup."Calc. Inv. Discount" AND "CustInvDiscRecExists"(SalesHeader."Invoice Disc. Code"));
-        AllowVATDifference :=
-        SalesSetup."Allow VAT Difference" AND
-        NOT (SalesHeader."Document Type" IN [SalesHeader."Document Type"::Quote, SalesHeader."Document Type"::"Blanket Order"]);
-
-        CLEAR(SalesLine);
-        CLEAR(TotalSalesLine);
-        CLEAR(TotalSalesLineLCY);
-        CLEAR(SalesPost);
-        CLEAR(TotalAdjCostLCY);
-
-        SalesPost.GetSalesLines(SalesHeader, TempSalesLine, 0);
-        CLEAR(SalesPost);
-        SalesPost.SumSalesLinesTemp(
-        SalesHeader, TempSalesLine, 0, TotalSalesLine, TotalSalesLineLCY,
-        VATAmount, VATAmountText, ProfitLCY, ProfitPct, TotalAdjCostLCY);
-
-        IF SalesHeader."Prices Including VAT" THEN BEGIN
-            TotalAmount2 := TotalSalesLine.Amount;
-            TotalAmount1 := TotalAmount2 + VATAmount;
-            TotalSalesLine."Line Amount" := TotalAmount1 + TotalSalesLine."Inv. Discount Amount";
-        END ELSE BEGIN
-            TotalAmount1 := TotalSalesLine.Amount;
-            TotalAmount2 := TotalSalesLine."Amount Including VAT";
-        END;
-
-        IF Cust.GET(SalesHeader."Bill-to Customer No.") THEN
-            Cust.CALCFIELDS("Balance (LCY)")
-        ELSE
-            CLEAR(Cust);
-        IF Cust."Credit Limit (LCY)" = 0 THEN
-            CreditLimitLCYExpendedPct := 0
-        ELSE
-            IF Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" < 0 THEN
-                CreditLimitLCYExpendedPct := 0
-            ELSE
-                IF Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" > 1 THEN
-                    CreditLimitLCYExpendedPct := 10000
-                ELSE
-                    CreditLimitLCYExpendedPct := ROUND(Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" * 10000, 1);
-
-        SalesLine.CalcVATAmountLines(1, SalesHeader, TempSalesLine, TempVATAmountLine);
-        TempVATAmountLine.MODIFYALL(Modified, FALSE);
-
-
-        VATText := STRSUBSTNO(Text005, 0);
-        IF VATAmount <> 0 THEN
-            VATText := STRSUBSTNO(Text005, TotalSalesLine."VAT %");
-        IF NOT SalesHeader."Prices Including VAT" THEN BEGIN
-            TotalAmt[1] := TotalSalesLine."Line Amount";
-            TotalAmt[2] := TotalSalesLine."Inv. Discount Amount";
-            TotalAmt[3] := TotalAmount1;
-            TotalAmt[4] := VATAmount;
-            TotalAmt[5] := TotalAmount2;
-            TotalAmt[6] := TotalSalesLineLCY.Amount;
-            TotalAmt[7] := TotalSalesLineLCY."Unit Cost (LCY)";
-            TotalAmt[8] := ProfitLCY;
-            TotalAmt[9] := ProfitPct;
-            TotalAmt[10] := TotalSalesLine.Quantity;
-            TotalAmt[11] := TotalSalesLine."Units per Parcel";
-            TotalAmt[12] := TotalSalesLine."Net Weight";
-            TotalAmt[13] := TotalSalesLine."Gross Weight";
-            TotalAmt[14] := TotalSalesLine."Unit Volume";
-            TotalAmt[15] := Cust."Balance (LCY)";
-            TotalAmt[16] := Cust."Credit Limit (LCY)";
-        END ELSE BEGIN
-            TotalAmt[1] := TotalSalesLine."Line Amount";
-            TotalAmt[2] := TotalSalesLine."Inv. Discount Amount";
-            TotalAmt[3] := TotalAmount2;
-            TotalAmt[4] := VATAmount;
-            TotalAmt[5] := TotalAmount1;
-            TotalAmt[6] := TotalSalesLineLCY.Amount;
-            TotalAmt[7] := TotalSalesLineLCY."Unit Cost (LCY)";
-            TotalAmt[8] := ProfitLCY;
-            TotalAmt[9] := ProfitPct;
-            TotalAmt[10] := TotalSalesLine.Quantity;
-            TotalAmt[11] := TotalSalesLine."Units per Parcel";
-            TotalAmt[12] := TotalSalesLine."Net Weight";
-            TotalAmt[13] := TotalSalesLine."Gross Weight";
-            TotalAmt[14] := TotalSalesLine."Unit Volume";
-            TotalAmt[15] := Cust."Balance (LCY)";
-            TotalAmt[16] := Cust."Credit Limit (LCY)";
-        END;
+        DocumentTotals.CalculateSalesSubPageTotals(SalesHeader, TotalSalesLine, VATAmount, InvoiceDiscountAmount, InvoiceDiscountPct);
+        TotalAmt[1] := TotalSalesLine."Line Amount";
+        TotalAmt[2] := InvoiceDiscountAmount;
+        TotalAmt[3] := TotalSalesLine.Amount;
+        TotalAmt[4] := VATAmount;
+        TotalAmt[5] := TotalSalesLine."Amount Including VAT";
+        if VATAmount <> 0 then
+            VATText := STRSUBSTNO(Text002Msg, TotalSalesLine."VAT %");
     end;
 
     /// <summary> 
@@ -1393,7 +1285,7 @@ codeunit 50004 "Function Center"
         end;
 
 
-        MyText[1] := BillingReceiptHeader."Bill/Pay-to Cust/Vend Name" + ' ' + BillingReceiptHeader."Bill/Pay-to Cus/Vend Name2";
+        MyText[1] := BillingReceiptHeader."Bill/Pay-to Cust/Vend Name" + ' ' + BillingReceiptHeader."Bill/Pay-to Cus/Vend Name 2";
         MyText[2] := BillingReceiptHeader."Bill/Pay-to Address" + ' ';
         MyText[3] := BillingReceiptHeader."Bill/Pay-to Address 2" + ' ';
         MyText[3] += BillingReceiptHeader."Bill/Pay-to City" + ' ' + BillingReceiptHeader."Bill/Pay-to Post Code";
@@ -1460,9 +1352,9 @@ codeunit 50004 "Function Center"
         PurchLine.CalcVATAmountLines(1, PurchHeader, TempPurchLine, TempVATAmountLine);
         TempVATAmountLine.MODIFYALL(Modified, FALSE);
 
-        VATText := STRSUBSTNO(Text005, 0);
+        VATText := STRSUBSTNO(Text002Msg, 0);
         IF VATAmount <> 0 THEN
-            VATText := STRSUBSTNO(Text005, TotalPurchLine."VAT %");
+            VATText := STRSUBSTNO(Text002Msg, TotalPurchLine."VAT %");
 
         IF NOT PurchHeader."Prices Including VAT" THEN BEGIN
             TotalAmt[1] := TotalPurchLine."Line Amount";
@@ -2198,90 +2090,90 @@ codeunit 50004 "Function Center"
 
     end;
 
-    /// <summary> 
-    /// Description for GetSignature.
-    /// </summary>
-    /// <param name="DocumentType">Parameter of type Integer.</param>
-    /// <param name="DocNo">Parameter of type Code[30].</param>
-    /// <param name="MyStorage">Parameter of type array[10] of Record "Image Storage" temporary.</param>
-    procedure "GetSignature"(DocumentType: Integer; DocNo: Code[30]; var MyStorage: array[10] of Record "Image Storage" temporary)
-    var
-        UserSetup: Record "User Setup";
-        ApprovalEntry: Record "Approval Entry";
-        LineNO: Integer;
-    begin
-        Clear(MyStorage);
-        ApprovalEntry.reset();
-        ApprovalEntry.SetRange("Document Type", DocumentType);
-        ApprovalEntry.SetRange("Document No.", DocNo);
-        if ApprovalEntry.FindFirst() then begin
-            UserSetup.reset();
-            UserSetup.SetRange("User ID", ApprovalEntry."Sender ID");
-            if UserSetup.FindFirst() then begin
-                UserSetup.CalcFields("Signature");
-                if UserSetup."Signature".HasValue then begin
-                    LineNO += 1;
-                    MyStorage[1]."Line No." := LineNO;
-                    MyStorage[1]."Type" := MyStorage[1]."Type"::IMAGE;
-                    MyStorage[1]."No." := DocNo;
-                    MyStorage[1]."Image" := UserSetup."Signature";
-                    MyStorage[1]."Date Time" := ApprovalEntry."Last Date-Time Modified";
-                    MyStorage[1].Insert();
-                end;
-            end;
-        end;
-        LineNO := 1;
-        ApprovalEntry.reset();
-        ApprovalEntry.SetCurrentKey("Entry No.");
-        ApprovalEntry.SetRange("Document Type", DocumentType);
-        ApprovalEntry.SetRange("Document No.", DocNo);
-        ApprovalEntry.SetFilter("Pending Approvals", '<>%1', 0);
-        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-        if ApprovalEntry.FindFirst() then
-            repeat
-                UserSetup.reset();
-                UserSetup.SetRange("User ID", ApprovalEntry."Approver ID");
-                if UserSetup.FindFirst() then begin
-                    UserSetup.CalcFields("Signature");
-                    if UserSetup."Signature".HasValue then begin
-                        LineNO += 1;
-                        MyStorage[LineNO]."Line No." := LineNO;
-                        MyStorage[LineNO]."Type" := MyStorage[LineNO]."Type"::IMAGE;
-                        MyStorage[LineNO]."No." := DocNo;
-                        MyStorage[LineNO]."Image" := UserSetup."Signature";
-                        MyStorage[LineNO]."Date Time" := ApprovalEntry."Last Date-Time Modified";
-                        MyStorage[LineNO].Insert();
-                    end;
-                end;
-            until ApprovalEntry.next() = 0;
+    // /// <summary> 
+    // /// Description for GetSignature.
+    // /// </summary>
+    // /// <param name="DocumentType">Parameter of type Integer.</param>
+    // /// <param name="DocNo">Parameter of type Code[30].</param>
+    // /// <param name="MyStorage">Parameter of type array[10] of Record "Image Storage" temporary.</param>
+    // procedure "GetSignature"(DocumentType: Integer; DocNo: Code[30]; var MyStorage: array[10] of Record "Image Storage" temporary)
+    // var
+    //     UserSetup: Record "User Setup";
+    //     ApprovalEntry: Record "Approval Entry";
+    //     LineNO: Integer;
+    // begin
+    //     Clear(MyStorage);
+    //     ApprovalEntry.reset();
+    //     ApprovalEntry.SetRange("Document Type", DocumentType);
+    //     ApprovalEntry.SetRange("Document No.", DocNo);
+    //     if ApprovalEntry.FindFirst() then begin
+    //         UserSetup.reset();
+    //         UserSetup.SetRange("User ID", ApprovalEntry."Sender ID");
+    //         if UserSetup.FindFirst() then begin
+    //             UserSetup.CalcFields("Signature");
+    //             if UserSetup."Signature".HasValue then begin
+    //                 LineNO += 1;
+    //                 MyStorage[1]."Line No." := LineNO;
+    //                 MyStorage[1]."Type" := MyStorage[1]."Type"::IMAGE;
+    //                 MyStorage[1]."No." := DocNo;
+    //                 MyStorage[1]."Image" := UserSetup."Signature";
+    //                 MyStorage[1]."Date Time" := ApprovalEntry."Last Date-Time Modified";
+    //                 MyStorage[1].Insert();
+    //             end;
+    //         end;
+    //     end;
+    //     LineNO := 1;
+    //     ApprovalEntry.reset();
+    //     ApprovalEntry.SetCurrentKey("Entry No.");
+    //     ApprovalEntry.SetRange("Document Type", DocumentType);
+    //     ApprovalEntry.SetRange("Document No.", DocNo);
+    //     ApprovalEntry.SetFilter("Pending Approvals", '<>%1', 0);
+    //     ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+    //     if ApprovalEntry.FindFirst() then
+    //         repeat
+    //             UserSetup.reset();
+    //             UserSetup.SetRange("User ID", ApprovalEntry."Approver ID");
+    //             if UserSetup.FindFirst() then begin
+    //                 UserSetup.CalcFields("Signature");
+    //                 if UserSetup."Signature".HasValue then begin
+    //                     LineNO += 1;
+    //                     MyStorage[LineNO]."Line No." := LineNO;
+    //                     MyStorage[LineNO]."Type" := MyStorage[LineNO]."Type"::IMAGE;
+    //                     MyStorage[LineNO]."No." := DocNo;
+    //                     MyStorage[LineNO]."Image" := UserSetup."Signature";
+    //                     MyStorage[LineNO]."Date Time" := ApprovalEntry."Last Date-Time Modified";
+    //                     MyStorage[LineNO].Insert();
+    //                 end;
+    //             end;
+    //         until ApprovalEntry.next() = 0;
 
-        LineNO := 0;
-        ApprovalEntry.reset();
-        ApprovalEntry.SetCurrentKey("Entry No.");
-        ApprovalEntry.SetRange("Document Type", DocumentType);
-        ApprovalEntry.SetRange("Document No.", DocNo);
-        ApprovalEntry.SetFilter("Pending Approvals", '%1', 0);
-        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-        if ApprovalEntry.FindLast() then begin
-            UserSetup.reset();
-            UserSetup.SetRange("User ID", ApprovalEntry."Approver ID");
-            if UserSetup.FindFirst() then begin
-                UserSetup.CalcFields("Signature");
-                if UserSetup."Signature".HasValue then begin
-                    LineNO += 1;
-                    MyStorage[10]."Line No." := LineNO;
-                    MyStorage[10]."Type" := MyStorage[10]."Type"::IMAGE;
-                    MyStorage[10]."No." := DocNo;
-                    MyStorage[10]."Image" := UserSetup."Signature";
-                    MyStorage[10]."Date Time" := ApprovalEntry."Last Date-Time Modified";
-                    MyStorage[10].Insert();
-                end;
-            end;
-        end;
+    //     LineNO := 0;
+    //     ApprovalEntry.reset();
+    //     ApprovalEntry.SetCurrentKey("Entry No.");
+    //     ApprovalEntry.SetRange("Document Type", DocumentType);
+    //     ApprovalEntry.SetRange("Document No.", DocNo);
+    //     ApprovalEntry.SetFilter("Pending Approvals", '%1', 0);
+    //     ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+    //     if ApprovalEntry.FindLast() then begin
+    //         UserSetup.reset();
+    //         UserSetup.SetRange("User ID", ApprovalEntry."Approver ID");
+    //         if UserSetup.FindFirst() then begin
+    //             UserSetup.CalcFields("Signature");
+    //             if UserSetup."Signature".HasValue then begin
+    //                 LineNO += 1;
+    //                 MyStorage[10]."Line No." := LineNO;
+    //                 MyStorage[10]."Type" := MyStorage[10]."Type"::IMAGE;
+    //                 MyStorage[10]."No." := DocNo;
+    //                 MyStorage[10]."Image" := UserSetup."Signature";
+    //                 MyStorage[10]."Date Time" := ApprovalEntry."Last Date-Time Modified";
+    //                 MyStorage[10].Insert();
+    //             end;
+    //         end;
+    //     end;
 
 
 
-    end;
+    // end;
 
     procedure "GetName"(VAR Var_Name: Text[250]) Name: Text[250]
     var
@@ -2349,24 +2241,24 @@ codeunit 50004 "Function Center"
     procedure "InsertDimensionEntry"(var DimensionSetID: Integer; DimCode: code[30]; Dimvalue: code[30])
     var
         DimMgt: Codeunit DimensionManagement;
-        DimSetEntry: Record "Dimension Set Entry" temporary;
+        TempDimSetEntry: Record "Dimension Set Entry" temporary;
     begin
-        DimMgt.GetDimensionSet(DimSetEntry, DimensionSetID);
-        IF NOT DimSetEntry.GET(DimensionSetID, DimCode) then begin
-            DimSetEntry.init();
-            DimSetEntry."Dimension Set ID" := DimensionSetID;
-            DimSetEntry.validate("Dimension Code", DimCode);
-            DimSetEntry.Insert(true);
-            DimSetEntry.Validate("Dimension Value Code", Dimvalue);
-            DimSetEntry.Modify();
+        DimMgt.GetDimensionSet(TempDimSetEntry, DimensionSetID);
+        IF NOT TempDimSetEntry.GET(DimensionSetID, DimCode) then begin
+            TempDimSetEntry.init();
+            TempDimSetEntry."Dimension Set ID" := DimensionSetID;
+            TempDimSetEntry.validate("Dimension Code", DimCode);
+            TempDimSetEntry.Insert(true);
+            TempDimSetEntry.Validate("Dimension Value Code", Dimvalue);
+            TempDimSetEntry.Modify();
         end else
-            if DimCode <> '' then begin
-                DimSetEntry.Validate("Dimension Value Code", Dimvalue);
-                DimSetEntry.Modify();
+            if Dimvalue <> TempDimSetEntry."Dimension Value Code" then begin
+                TempDimSetEntry.Validate("Dimension Value Code", Dimvalue);
+                TempDimSetEntry.Modify();
             end else
-                DimSetEntry.Delete();
-        DimSetEntry.reset();
-        DimensionSetID := DimSetEntry.GetDimensionSetID(DimSetEntry);
+                TempDimSetEntry.Delete();
+        TempDimSetEntry.reset();
+        DimensionSetID := DimMgt.GetDimensionSetID(TempDimSetEntry);
 
     end;
 
@@ -2383,7 +2275,7 @@ codeunit 50004 "Function Center"
             DimensionDefault.Validate("Dimension Value Code", DimValue);
             DimensionDefault.Modify();
         end else
-            if DimValue <> '' then begin
+            if Dimvalue <> DimensionDefault."Dimension Value Code" then begin
                 DimensionDefault.Validate("Dimension Value Code", DimValue);
                 DimensionDefault.Modify();
             end else
@@ -2485,7 +2377,7 @@ codeunit 50004 "Function Center"
         BillingLine.SETRANGE("Document Type", BillingHeader."Document Type");
         BillingLine.SETRANGE("Document No.", BillingHeader."No.");
         IF NOT BillingLine.FindFirst() THEN
-            ERROR(Text001, BillingHeader."Document Type", BillingHeader."No.");
+            ERROR(Text001Msg, BillingHeader."Document Type", BillingHeader."No.");
 
         BillingHeader."Status" := BillingHeader."Status"::Released;
         BillingHeader.MODIFY();
@@ -2503,9 +2395,9 @@ codeunit 50004 "Function Center"
 
     var
         BillingLine: Record "Billing Receipt Line";
-        Text001: Label 'There is nothing to release for %1 %2.';
+        Text001Msg: Label 'There is nothing to release for %1 %2.', Locked = true;
 
-        Text005: Label 'VAT %1%', MaxLength = 1024, Locked = true;
+        Text002Msg: Label 'VAT %1%', MaxLength = 1024, Locked = true;
         OnesText: array[20] of text[50];
         TensText: array[10] of Text[50];
         ExponentText: array[5] of text[50];

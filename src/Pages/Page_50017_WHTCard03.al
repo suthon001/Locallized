@@ -176,7 +176,7 @@ page 50017 "WHT Card"
     /// </summary>
     /// <param name="SetWHTBus">Parameter of type Code[250].</param>
     /// <param name="SetDate">Parameter of type Text[250].</param>
-    procedure "GetDataFromReport"(var SetWHTBus: Code[250]; var SetDate: Text[250])
+    procedure GetDataFromReport(var SetWHTBus: Code[250]; var SetDate: Text[250])
     begin
         SetWHTBus := WHTBusFilter;
         SetDate := DateFilter;

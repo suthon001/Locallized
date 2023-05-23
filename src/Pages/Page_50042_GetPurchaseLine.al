@@ -120,7 +120,7 @@ page 50042 "Get Purchase Lines"
     begin
         PurchaseQuotesLine.Copy(rec);
         CurrPage.SetSelectionFilter(PurchaseQuotesLine);
-        if PurchaseQuotesLine.FindFirst() then
+        if PurchaseQuotesLine.FindSet() then
             repeat
                 PurchaseOrderLine.init();
                 PurchaseOrderLine.TransferFields(PurchaseQuotesLine, false);
@@ -130,7 +130,7 @@ page 50042 "Get Purchase Lines"
                 PurchaseOrderLine.Insert();
                 PurchaseOrderLine."Ref. PQ No." := PurchaseQuotesLine."Document No.";
                 PurchaseOrderLine."Ref. PQ Line No." := PurchaseQuotesLine."Line No.";
-                PurchaseOrderLine."Make Order By" := UserId;
+                PurchaseOrderLine."Make Order By" := COPYSTR(UserId, 1, 50);
                 PurchaseOrderLine."Make Order DateTime" := CurrentDateTime;
                 PurchaseOrderLine.Validate(Quantity, PurchaseQuotesLine."Outstanding Quantity");
                 PurchaseOrderLine.Validate("Direct Unit Cost", PurchaseQuotesLine."Direct Unit Cost");
@@ -178,7 +178,7 @@ page 50042 "Get Purchase Lines"
             ReqisitionLine2.SetFilter("Line No.", '<%1', ReqisitionLine."Line No.");
             ReqisitionLine2.SetRange("No.", '');
             ReqisitionLine2.SetFilter(Description, '<>%1', '');
-            if ReqisitionLine2.FindFirst() then
+            if ReqisitionLine2.FindSet() then
                 repeat
                     PurchaseLine.Init();
                     PurchaseLine."Document Type" := ToDocumentType;
@@ -197,7 +197,7 @@ page 50042 "Get Purchase Lines"
             ReqisitionLine.SetFilter("Line No.", '>%1', FromLineNo);
             ReqisitionLine.SetFilter("No.", '%1', '');
             ReqisitionLine.SetFilter(Description, '<>%1', '');
-            if ReqisitionLine.FindFirst() then
+            if ReqisitionLine.FindSet() then
                 repeat
                     PurchaseLine.Init();
                     PurchaseLine."Document Type" := ToDocumentType;

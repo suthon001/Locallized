@@ -6,18 +6,17 @@ codeunit 50002 "Sales Function"
     local procedure "OnBeforConfirmSalesPost"(var DefaultOption: Integer; var HideDialog: Boolean; var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     var
         Handle: Boolean;
+        ConfirmMsg: Label 'Do you want to Post %1 ?', Locked = true;
     begin
         Handle := true;
-        "HandleMessagebeforPostSales"(Handle);
+        HandleMessagebeforPostSales(Handle);
         if Handle then begin
-            if not Confirm(strsubstno('Do you want to Post %1 ?', format(SalesHeader."Document Type"))) then
+            if not Confirm(strsubstno(ConfirmMsg, format(SalesHeader."Document Type"))) then
                 IsHandled := true;
 
             if not IsHandled then begin
                 DefaultOption := 1;
                 HideDialog := true;
-
-
 
                 if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
                     SalesHeader.Ship := true;
@@ -71,29 +70,27 @@ codeunit 50002 "Sales Function"
         NoSeriesMgt: Codeunit NoSeriesManagement;
     begin
         //   with SalesQuoteHeader do begin
-
-
         SalesQuoteHeader.TestField("Make Order No. Series");
         NoSeriesMgt.InitSeries(SalesQuoteHeader."Make Order No. Series", SalesQuoteHeader."Make Order No. Series", SalesQuoteHeader."Posting Date", SalesOrderHeader."No.", SalesOrderHeader."No. Series");
         //   end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", 'OnBeforeInsertSalesOrderLine', '', false, false)]
-    procedure OnAfterInsertSalesOrderLine(var SalesOrderLine: Record "Sales Line"; SalesOrderHeader: Record "Sales Header"; BlanketOrderSalesLine: Record "Sales Line"; BlanketOrderSalesHeader: Record "Sales Header");
+    local procedure OnAfterInsertSalesOrderLine(var SalesOrderLine: Record "Sales Line"; SalesOrderHeader: Record "Sales Header"; BlanketOrderSalesLine: Record "Sales Line"; BlanketOrderSalesHeader: Record "Sales Header");
     begin
         SalesOrderLine."Ref. SQ No." := BlanketOrderSalesLine."Document No.";
         SalesOrderLine."Ref. SQ Line No." := BlanketOrderSalesLine."Line No.";
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", 'OnBeforeInsertSalesOrderLine', '', false, false)]
-    procedure OnBeforeInsertSalesOrderLine(var SalesOrderLine: Record "Sales Line"; SalesOrderHeader: Record "Sales Header"; SalesQuoteLine: Record "Sales Line"; SalesQuoteHeader: Record "Sales Header");
+    local procedure OnBeforeInsertSalesOrderLine(var SalesOrderLine: Record "Sales Line"; SalesOrderHeader: Record "Sales Header"; SalesQuoteLine: Record "Sales Line"; SalesQuoteHeader: Record "Sales Header");
     begin
         SalesOrderLine."Ref. SQ No." := SalesQuoteLine."Document No.";
         SalesOrderLine."Ref. SQ Line No." := SalesQuoteLine."Line No.";
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure "HandleMessagebeforPostSales"(var Handle: Boolean)
+    local procedure HandleMessagebeforPostSales(var Handle: Boolean)
     begin
     end;
 
@@ -108,46 +105,47 @@ codeunit 50002 "Sales Function"
     end;
 
 
-    [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterInvPostBufferPrepareSales', '', TRUE, TRUE)]
+    [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterPrepareSales', '', TRUE, TRUE)]
 
     /// <summary> 
     /// Description for InvoiceBufferSales.
     /// </summary>
     /// <param name="InvoicePostBuffer">Parameter of type Record "Invoice Post. Buffer".</param>
     /// <param name="SalesLine">Parameter of type Record "Sales Line".</param>
-    local procedure "InvoiceBufferSales"(var InvoicePostBuffer: Record "Invoice Post. Buffer"; var SalesLine: Record "Sales Line")
+    local procedure "InvoiceBufferSales"(var InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary; var SalesLine: Record "Sales Line")
     var
         SalesHeader: Record "Sales Header";
         VendCust: Record "Customer & Vendor Branch";
     begin
         IF SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.") THEN BEGIN
-            InvoicePostBuffer."Head Office" := SalesHeader."Head Office";
-            InvoicePostBuffer."Branch Code" := SalesHeader."Branch Code";
-            //InvoicePostBuffer."Tax Invoice No." := SalesHeader."No.";
-            InvoicePostBuffer."VAT Registration No." := SalesHeader."VAT Registration No.";
-            InvoicePostBuffer."Tax Invoice Date" := SalesHeader."Document Date";
-            InvoicePostBuffer."Tax Invoice Name" := SalesHeader."Sell-to Customer Name" + ' ' + SalesHeader."Sell-to Customer Name 2";
-            InvoicePostBuffer."Address" := SalesHeader."Sell-to Address" + ' ' + SalesHeader."Sell-to Address 2";
-            InvoicePostBuffer."City" := SalesHeader."Sell-to city";
-            InvoicePostBuffer."Post Code" := SalesHeader."Sell-to Post Code";
+            InvoicePostingBuffer."Head Office" := SalesHeader."Head Office";
+            InvoicePostingBuffer."Branch Code" := SalesHeader."Branch Code";
+            InvoicePostingBuffer."VAT Registration No." := SalesHeader."VAT Registration No.";
+            InvoicePostingBuffer."Tax Invoice Date" := SalesHeader."Document Date";
+            InvoicePostingBuffer."Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
+            InvoicePostingBuffer."Tax Invoice Name 2" := SalesHeader."Sell-to Customer Name 2";
+            InvoicePostingBuffer."Address" := SalesHeader."Sell-to Address";
+            InvoicePostingBuffer."Address 2" := SalesHeader."Sell-to Address 2";
+            InvoicePostingBuffer."City" := SalesHeader."Sell-to city";
+            InvoicePostingBuffer."Post Code" := SalesHeader."Sell-to Post Code";
             if SalesHeader."Branch Code" <> '' then
                 if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."Head Office", SalesHeader."Branch Code") then begin
-                    if VendCust."Name" <> '' then
-                        InvoicePostBuffer."Tax Invoice Name" := VendCust."Name";
-                    InvoicePostBuffer."Address" := VendCust."Address";
-                    InvoicePostBuffer."city" := VendCust."Province";
-                    InvoicePostBuffer."Post Code" := VendCust."Post Code";
+                    InvoicePostingBuffer."Tax Invoice Name" := VendCust."Name";
+                    InvoicePostingBuffer."Address" := VendCust."Address";
+                    InvoicePostingBuffer."Address 2" := VendCust."Address 2";
+                    InvoicePostingBuffer."city" := VendCust."Province";
+                    InvoicePostingBuffer."Post Code" := VendCust."Post Code";
                 end;
 
 
         END;
         //InvoicePostBuffer."Tax Invoice Base" := SalesLine.Amount;
         // InvoicePostBuffer."Tax Invoice Amount" := SalesLine."Amount Including VAT" - SalesLine.Amount;
-        InvoicePostBuffer."Description Line" := SalesLine.Description + ' ' + SalesLine."Description 2";
-        InvoicePostBuffer."Document Line No." := SalesLine."Line No.";
+        InvoicePostingBuffer."Description Line" := SalesLine.Description;
+        InvoicePostingBuffer."Document Line No." := SalesLine."Line No.";
 
-        IF (InvoicePostBuffer.Type = InvoicePostBuffer.Type::"G/L Account") OR (InvoicePostBuffer.Type = InvoicePostBuffer.Type::"Fixed Asset") THEN
-            InvoicePostBuffer."Line No." := SalesLine."Line No.";
+        IF (InvoicePostingBuffer.Type = InvoicePostingBuffer.Type::"G/L Account") OR (InvoicePostingBuffer.Type = InvoicePostingBuffer.Type::"Fixed Asset") THEN
+            InvoicePostingBuffer."Line No." := SalesLine."Line No.";
 
     end;
 
@@ -172,10 +170,12 @@ codeunit 50002 "Sales Function"
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order (Yes/No)", 'OnBeforeConfirmConvertToOrder', '', false, false)]
     local procedure OnBeforeConfirmConvertToOrder(SalesHeader: Record "Sales Header"; var IsHandled: Boolean; var Result: Boolean)
+    var
+        text001Msg: Label 'this document has been order no. %1', Locked = true;
     begin
         SalesHeader.TestField(Status, SalesHeader.Status::Released);
         if SalesHeader."Sales Order No." <> '' then begin
-            MESSAGE(StrSubstNo('this document has been order no. %1', SalesHeader."Sales Order No."));
+            MESSAGE(StrSubstNo(text001Msg, SalesHeader."Sales Order No."));
             IsHandled := true;
             Result := false;
         end;

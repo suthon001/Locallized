@@ -18,7 +18,7 @@ pageextension 80058 "PostedReturnReceiptCard" extends "Posted Return Receipt"
                 trigger OnAction()
                 var
                     ReturnHeader: Record "Return Receipt Header";
-                // SalesReturnOrder: Report "Sales Return Order";
+
                 begin
                     ReturnHeader.RESET();
                     ReturnHeader.SetRange("Return Order No.", rec."No.");

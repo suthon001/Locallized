@@ -172,7 +172,7 @@ page 50011 "Sales Vat Card"
     /// </summary>
     /// <param name="SetVatBus">Parameter of type Code[250].</param>
     /// <param name="SetDate">Parameter of type Text[250].</param>
-    procedure "GetDataFromReport"(var SetVatBus: Code[250]; var SetDate: Text)
+    procedure GetDataFromReport(var SetVatBus: Code[250]; var SetDate: Text)
     begin
         SetVatBus := VatBusFilter;
         SetDate := DateFilter;

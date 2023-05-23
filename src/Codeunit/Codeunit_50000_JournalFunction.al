@@ -47,30 +47,33 @@ codeunit 50000 "Journal Function"
         VATEntry."Tax Invoice Base" := VATEntry.Base;
         VATEntry."Tax Invoice Amount" := VATEntry.Amount;
     end;
-
-    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromInvPostBuffer', '', true, true)]
+    //OnAfterCopyGenJnlLineFromInvPostBuffer
+    [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
     /// <summary> 
     /// Description for CopyHeaderFromInvoiceBuff.
     /// </summary>
     /// <param name="InvoicePostBuffer">Parameter of type Record "Invoice Post. Buffer".</param>
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
-    local procedure "CopyHeaderFromInvoiceBuff"(InvoicePostBuffer: Record "Invoice Post. Buffer"; var GenJournalLine: Record "Gen. Journal Line")
+    local procedure "CopyHeaderFromInvoiceBuff"(InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary; var GenJnlLine: Record "Gen. Journal Line")
     begin
         // with GenJournalLine do begin
-        GenJournalLine."Tax Invoice No." := InvoicePostBuffer."Tax Invoice No.";
-        GenJournalLine."Tax Invoice Date" := InvoicePostBuffer."Tax Invoice Date";
-        GenJournalLine."Tax Invoice Base" := InvoicePostBuffer."Tax Invoice Base";
-        GenJournalLine."Tax Invoice Amount" := InvoicePostBuffer."Tax Invoice Amount";
-        GenJournalLine."Tax Vendor No." := InvoicePostBuffer."Tax Vendor No.";
-        GenJournalLine."Tax Invoice Name" := InvoicePostBuffer."Tax Invoice Name";
-        GenJournalLine."Head Office" := InvoicePostBuffer."Head Office";
-        GenJournalLine."Branch Code" := InvoicePostBuffer."Branch Code";
-        GenJournalLine."VAT Registration No." := InvoicePostBuffer."VAT Registration No.";
-        GenJournalLine."Description Line" := InvoicePostBuffer."Description Line";
-        GenJournalLine."Tax Invoice Address" := InvoicePostBuffer."Address";
-        GenJournalLine."Tax Invoice City" := InvoicePostBuffer."City";
-        GenJournalLine."Tax Invoice Post Code" := InvoicePostBuffer."Post Code";
-        GenJournalLine."Document Line No." := InvoicePostBuffer."Document Line No.";
+        GenJnlLine."Tax Invoice No." := InvoicePostingBuffer."Tax Invoice No.";
+        GenJnlLine."Tax Invoice Date" := InvoicePostingBuffer."Tax Invoice Date";
+        GenJnlLine."Tax Invoice Base" := InvoicePostingBuffer."Tax Invoice Base";
+        GenJnlLine."Tax Invoice Amount" := InvoicePostingBuffer."Tax Invoice Amount";
+        GenJnlLine."Tax Vendor No." := InvoicePostingBuffer."Tax Vendor No.";
+        GenJnlLine."Tax Invoice Name" := InvoicePostingBuffer."Tax Invoice Name";
+        GenJnlLine."Tax Invoice Name 2" := InvoicePostingBuffer."Tax Invoice Name 2";
+        GenJnlLine."Tax Invoice Address" := InvoicePostingBuffer.Address;
+        GenJnlLine."Tax Invoice Address 2" := InvoicePostingBuffer."Address 2";
+        GenJnlLine."Head Office" := InvoicePostingBuffer."Head Office";
+        GenJnlLine."Branch Code" := InvoicePostingBuffer."Branch Code";
+        GenJnlLine."VAT Registration No." := InvoicePostingBuffer."VAT Registration No.";
+        GenJnlLine."Description Line" := InvoicePostingBuffer."Description Line";
+        GenJnlLine."Tax Invoice Address" := InvoicePostingBuffer."Address";
+        GenJnlLine."Tax Invoice City" := InvoicePostingBuffer."City";
+        GenJnlLine."Tax Invoice Post Code" := InvoicePostingBuffer."Post Code";
+        GenJnlLine."Document Line No." := InvoicePostingBuffer."Document Line No.";
 
         // end;
     end;
@@ -91,12 +94,14 @@ codeunit 50000 "Journal Function"
             VATEntry."Branch Code" := GenJournalLine."Branch Code";
             VATEntry."Tax Invoice No." := GenJournalLine."Tax Invoice No.";
             VATEntry."Tax Invoice Name" := GenJournalLine."Tax Invoice Name";
+            VATEntry."Tax Invoice Name 2" := GenJournalLine."Tax Invoice Name 2";
             VATEntry."Tax Vendor No." := GenJournalLine."Tax Vendor No.";
             VATEntry."Tax Invoice Base" := GenJournalLine."Tax Invoice Base";
             VATEntry."Tax Invoice Date" := GenJournalLine."Tax Invoice Date";
             VATEntry."Tax Invoice Amount" := GenJournalLine."Tax Invoice Amount";
             VATEntry."VAT Registration No." := GenJournalLine."VAT Registration No.";
             VATEntry."Tax Invoice Address" := GenJournalLine."Tax Invoice Address";
+            VATEntry."Tax Invoice Address 2" := GenJournalLine."Tax Invoice Address 2";
             VATEntry."Tax Invoice City" := GenJournalLine."Tax Invoice City";
             VATEntry."Tax Invoice Post Code" := GenJournalLine."Tax Invoice Post Code";
             VATEntry."External Document No." := GenJournalLine."External Document No.";
@@ -239,7 +244,7 @@ codeunit 50000 "Journal Function"
     local procedure "CopyFromBankLedger"(BankAccountLedgerEntry: Record "Bank Account Ledger Entry"; var CheckLedgerEntry: Record "Check Ledger Entry")
     begin
         // with CheckLedgerEntry do begin
-        CheckLedgerEntry."Check No." := BankAccountLedgerEntry."External Document No.";
+        CheckLedgerEntry."Check No." := COPYSTR(BankAccountLedgerEntry."External Document No.", 1, 20);
         CheckLedgerEntry."Check Date" := BankAccountLedgerEntry."Document Date";
         CheckLedgerEntry."External Document No." := BankAccountLedgerEntry."Document No.";
         CheckLedgerEntry."Bank Account No." := BankAccountLedgerEntry."Bank Account No.";
@@ -265,21 +270,19 @@ codeunit 50000 "Journal Function"
         GenLine: Record "Gen. Journal Line";
     begin
         // with VendorLedgerEntry do begin
-
-
         GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
         GenLine.SetFilter("Cheque No.", '<>%1', '');
         if GenLine.FindFirst() then begin
-            VendorLedgerEntry."Bank Name" := GenJournalLine."Bank Name";
-            VendorLedgerEntry."Bank Account No." := GenJournalLine."Bank Account No.";
-            VendorLedgerEntry."Bank Branch No." := GenJournalLine."Bank Branch No.";
-            VendorLedgerEntry."Bank Code" := GenJournalLine."Bank Code";
-            VendorLedgerEntry."Cheque Date" := GenJournalLine."Cheque Date";
-            VendorLedgerEntry."Cheque No." := GenJournalLine."Cheque No.";
-            VendorLedgerEntry."Customer/Vendor No." := GenJournalLine."Customer/Vendor No.";
+            VendorLedgerEntry."Bank Name" := GenLine."Bank Name";
+            VendorLedgerEntry."Bank Account No." := GenLine."Bank Account No.";
+            VendorLedgerEntry."Bank Branch No." := GenLine."Bank Branch No.";
+            VendorLedgerEntry."Bank Code" := GenLine."Bank Code";
+            VendorLedgerEntry."Cheque Date" := GenLine."Cheque Date";
+            VendorLedgerEntry."Cheque No." := GenLine."Cheque No.";
+            VendorLedgerEntry."Customer/Vendor No." := GenLine."Customer/Vendor No.";
         end;
         //  end;
     end;
@@ -304,12 +307,12 @@ codeunit 50000 "Journal Function"
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
         GenLine.SetFilter("Cheque No.", '<>%1', '');
         if GenLine.FindFirst() then begin
-            CustLedgerEntry."Bank Account No." := GenJournalLine."Bank Account No.";
-            CustLedgerEntry."Bank Branch No." := GenJournalLine."Bank Branch No.";
-            CustLedgerEntry."Bank Code" := GenJournalLine."Bank Code";
-            CustLedgerEntry."Cheque Date" := GenJournalLine."Cheque Date";
-            CustLedgerEntry."Cheque No." := GenJournalLine."Cheque No.";
-            CustLedgerEntry."Customer/Vendor No." := GenJournalLine."Customer/Vendor No.";
+            CustLedgerEntry."Bank Account No." := GenLine."Bank Account No.";
+            CustLedgerEntry."Bank Branch No." := GenLine."Bank Branch No.";
+            CustLedgerEntry."Bank Code" := GenLine."Bank Code";
+            CustLedgerEntry."Cheque Date" := GenLine."Cheque Date";
+            CustLedgerEntry."Cheque No." := GenLine."Cheque No.";
+            CustLedgerEntry."Customer/Vendor No." := GenLine."Customer/Vendor No.";
         end;
 
         // end;
@@ -340,12 +343,6 @@ codeunit 50000 "Journal Function"
     end;
 
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::LogInManagement, 'OnAfterLogInStart', '', true, true)]
-    local procedure "OnAfterLoginStart"()
-    begin
-        WorkDate := Today;
-    end;
-
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Batch", 'OnBeforeUpdateDeleteLines', '', true, true)]
     local procedure "InsertPostedItemJournalLines"(var ItemJournalLine: Record "Item Journal Line")
     var
@@ -358,7 +355,7 @@ codeunit 50000 "Journal Function"
             PostedItemJournalLines.INIT();
             PostedItemJournalLines.TRANSFERFIELDS(ItemJnlLine2);
             PostedItemJournalLines."Entry No." := PostedItemJournalLines."LastPostedEntryNo"();
-            PostedItemJournalLines."Posted By" := USERID;
+            PostedItemJournalLines."Posted By" := COPYSTR(USERID, 1, 50);
             PostedItemJournalLines."Posted DateTime" := CurrentDateTime();
             PostedItemJournalLines.INSERT(true);
         until ItemJnlLine2.next() = 0;
@@ -420,7 +417,7 @@ codeunit 50000 "Journal Function"
     begin
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Invoice then
             ItemJnlLine."Invoice No." := SalesHeader."No.";
-        ItemJnlLine."Vendor/Customer Name" := SalesHeader."Sell-to Customer Name" + ' ' + SalesHeader."Sell-to Customer Name 2";
+        ItemJnlLine."Vendor/Customer Name" := SalesHeader."Sell-to Customer Name";
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyItemJnlLineFromPurchHeader', '', true, true)]
@@ -433,7 +430,7 @@ codeunit 50000 "Journal Function"
     begin
         if PurchHeader."Document Type" = PurchHeader."Document Type"::Invoice then
             ItemJnlLine."Invoice No." := PurchHeader."No.";
-        ItemJnlLine."Vendor/Customer Name" := PurchHeader."Buy-from Vendor Name" + ' ' + PurchHeader."Buy-from Vendor Name 2";
+        ItemJnlLine."Vendor/Customer Name" := PurchHeader."Buy-from Vendor Name";
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyItemJnlLineFromSalesLine', '', TRUE, TRUE)]
@@ -465,7 +462,6 @@ codeunit 50000 "Journal Function"
         ItemJnlLine."Gen. Bus. Posting Group" := PurchLine."Gen. Bus. Posting Group";
         ItemJnlLine."Bin Code" := PurchLine."Bin Code";
         ItemJnlLine.Description := PurchLine.Description;
-
     end;
 
 

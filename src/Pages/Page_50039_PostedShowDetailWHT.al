@@ -3,7 +3,7 @@
 /// </summary>
 page 50039 "PostedShowDetailWHT"
 {
-    Caption = 'Show Detail WHT';
+    Caption = 'Show WHT';
     SourceTable = "Posted Gen. Journal Line";
     InsertAllowed = false;
     DeleteAllowed = false;

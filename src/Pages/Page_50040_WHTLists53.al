@@ -3,7 +3,6 @@
 /// </summary>
 page 50040 "WHT53 Lists"
 {
-
     PageType = List;
     SourceTable = "Tax Report Header";
     Caption = 'Withholding tax';

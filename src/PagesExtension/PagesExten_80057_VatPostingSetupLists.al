@@ -4,12 +4,12 @@ pageextension 80057 "VatPostingSetupLists" extends "VAT Posting Setup"
     {
         addlast(Control1)
         {
-            field("Include Purch. Vat Report"; Rec."Generate Purch. Vat Report")
+            field("Allow Generate to Purch. Vat"; rec."Allow Generate to Purch. Vat")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Generate Purch. Vat Report field.';
             }
-            field("Include Sales Vat Report"; Rec."Generate Sales Vat Report")
+            field("Allow Generate to Sales Vat"; rec."Allow Generate to Sales Vat")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Generate Sales Vat Report field.';

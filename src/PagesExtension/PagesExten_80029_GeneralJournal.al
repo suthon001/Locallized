@@ -1,6 +1,5 @@
 pageextension 80029 "General Journal" extends "General Journal"
 {
-    PromotedActionCategories = 'New,Process,Print,Bank,Application,Payroll,Approve,Page,Post/Print,Line,Account';
     layout
     {
         modify("Document No.")
@@ -126,17 +125,22 @@ pageextension 80029 "General Journal" extends "General Journal"
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
-                        if Rec."Require Screen Detail" = Rec."Require Screen Detail"::CHEQUE then begin
-                            ShowDetailCheque.SetTableView(GenLineDetail);
-                            ShowDetailCheque.RunModal();
-                            CLEAR(ShowDetailCheque);
-                        end else
-                            if Rec."Require Screen Detail" = Rec."Require Screen Detail"::VAT then begin
-                                ShowDetailVAT.SetTableView(GenLineDetail);
-                                ShowDetailVAT.RunModal();
-                                CLEAR(ShowDetailVAT);
-                            end else
-                                if Rec."Require Screen Detail" = Rec."Require Screen Detail"::WHT then begin
+                        case rec."Require Screen Detail" OF
+                            rec."Require Screen Detail"::CHEQUE:
+                                begin
+                                    ShowDetailCheque.SetTableView(GenLineDetail);
+                                    ShowDetailCheque.RunModal();
+                                    CLEAR(ShowDetailCheque);
+                                end;
+
+                            rec."Require Screen Detail"::VAT:
+                                begin
+                                    ShowDetailVAT.SetTableView(GenLineDetail);
+                                    ShowDetailVAT.RunModal();
+                                    CLEAR(ShowDetailVAT);
+                                end;
+                            rec."Require Screen Detail"::WHT:
+                                begin
                                     if Rec."WHT Cust/Vend No." = '' then begin
                                         GenLine2.reset();
                                         GenLine2.SetRange("Journal Template Name", Rec."Journal Template Name");
@@ -162,6 +166,8 @@ pageextension 80029 "General Journal" extends "General Journal"
                                     ShowDetailWHT.RunModal();
                                     Clear(ShowDetailWHT);
                                 end;
+
+                        end;
                     end else
                         MESSAGE('Nothing to Show Detail');
                 end;
@@ -200,7 +206,7 @@ pageextension 80029 "General Journal" extends "General Journal"
         GenJnlLine: Record "Gen. Journal Line";
         Vendor: Record Vendor;
         Customer: Record Customer;
-        WHTDocNo: Code[20];
+        WHTDocNo: Code[30];
         PageWHTCer: Page "WHT Certificate";
         whtBusPostingGroup: Record "WHT Business Posting Group";
         GenJnlLine3: Record "Gen. Journal Line";
@@ -211,7 +217,7 @@ pageextension 80029 "General Journal" extends "General Journal"
             GenJnlLine3.SetRange("Journal Batch Name", rec."Journal Batch Name");
             GenJnlLine3.SetRange("Document No.", rec."Document No.");
             GenJnlLine3.SetFilter("WHT Document No.", '<>%1', '');
-            if GenJnlLine3.FindFirst() then
+            if not GenJnlLine3.IsEmpty then
                 if not Confirm('This document already have wht certificate do you want to create more wht certificate ?') then
                     exit;
         end;

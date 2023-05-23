@@ -199,7 +199,7 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
             DataClassification = CustomerContent;
 
         }
-        field(80035; "Bank Account No."; text[30])
+        field(80035; "Bank Account No."; text[20])
         {
             Caption = 'Bank Account No.';
             DataClassification = CustomerContent;
@@ -238,7 +238,7 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
             TableRelation = Vendor."No.";
 
         }
-        field(80041; "Tax Invoice Address"; Code[150])
+        field(80041; "Tax Invoice Address"; Code[100])
         {
             Caption = 'Tax Invoice Address';
             DataClassification = CustomerContent;

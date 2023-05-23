@@ -191,17 +191,22 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
-                        if Rec."Require Screen Detail" = Rec."Require Screen Detail"::CHEQUE then begin
-                            ShowDetailCheque.SetTableView(GenLineDetail);
-                            ShowDetailCheque.RunModal();
-                            CLEAR(ShowDetailCheque);
-                        end else
-                            if Rec."Require Screen Detail" = Rec."Require Screen Detail"::VAT then begin
-                                ShowDetailVAT.SetTableView(GenLineDetail);
-                                ShowDetailVAT.RunModal();
-                                CLEAR(ShowDetailVAT);
-                            end else
-                                if Rec."Require Screen Detail" = Rec."Require Screen Detail"::WHT then begin
+                        case rec."Require Screen Detail" OF
+                            rec."Require Screen Detail"::CHEQUE:
+                                begin
+                                    ShowDetailCheque.SetTableView(GenLineDetail);
+                                    ShowDetailCheque.RunModal();
+                                    CLEAR(ShowDetailCheque);
+                                end;
+
+                            rec."Require Screen Detail"::VAT:
+                                begin
+                                    ShowDetailVAT.SetTableView(GenLineDetail);
+                                    ShowDetailVAT.RunModal();
+                                    CLEAR(ShowDetailVAT);
+                                end;
+                            rec."Require Screen Detail"::WHT:
+                                begin
                                     if Rec."WHT Cust/Vend No." = '' then begin
                                         GenLine2.reset();
                                         GenLine2.SetRange("Journal Template Name", Rec."Journal Template Name");
@@ -227,6 +232,8 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                                     ShowDetailWHT.RunModal();
                                     Clear(ShowDetailWHT);
                                 end;
+
+                        end;
                     end else
                         MESSAGE('Nothing to Show Detail');
                 end;

@@ -3,7 +3,6 @@
 /// </summary>
 page 50041 "WHT53 Card"
 {
-
     PageType = Document;
     SourceTable = "Tax Report Header";
     Caption = 'Withholding tax Card';
@@ -173,16 +172,7 @@ page 50041 "WHT53 Card"
         }
 
     }
-    /// <summary> 
-    /// Description for GetDataFromReport.
-    /// </summary>
-    /// <param name="SetWHTBus">Parameter of type Code[250].</param>
-    /// <param name="SetDate">Parameter of type Text[250].</param>
-    procedure "GetDataFromReport"(var SetWHTBus: Code[250]; var SetDate: Text[250])
-    begin
-        SetWHTBus := WHTBusFilter;
-        SetDate := DateFilter;
-    end;
+
 
     trigger OnOpenPage()
     begin
@@ -196,7 +186,6 @@ page 50041 "WHT53 Card"
 
         TotaBaseAmt: Decimal;
         TotalVatAmt: Decimal;
-        WHTBusFilter: Code[250];
         DateFilter: Text;
 
 

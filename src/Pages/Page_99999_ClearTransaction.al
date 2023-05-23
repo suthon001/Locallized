@@ -80,7 +80,7 @@ page 99999 "Record Deletion"
                 var
                     RecordDeletionMgt: Codeunit "Record Deletion Mgt.";
                 begin
-                    if not Confirm(StrSubstNo('Do you wan clear transactions companyname %1', company)) then
+                    if not Confirm(StrSubstNo(ConfirmMsg, company)) then
                         exit;
                     if company = '' then
                         Message('Please select company!')
@@ -117,12 +117,13 @@ page 99999 "Record Deletion"
         AccessControl.reset();
         AccessControl.SetRange("User Name", UserId);
         AccessControl.SetRange("Role ID", 'CLEARTRANS');
-        if not AccessControl.FindFirst() then
-            Error(ErrrPermission);
+        if AccessControl.IsEmpty then
+            Error(PermissionErr);
     end;
 
     var
-        company: Text[250];
+        company: Text;
         cleardetailNoseries: Boolean;
-        ErrrPermission: Label 'you don have to mission';
+        PermissionErr: Label 'you don have to mission';
+        ConfirmMsg: Label 'Do you wan clear transactions companyname %1', Locked = true;
 }

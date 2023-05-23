@@ -3,7 +3,7 @@
 /// </summary>
 page 50038 "Posted ShowDetail Cheque"
 {
-    Caption = 'Show Detail Cheque';
+    Caption = 'Show Cheque';
     SourceTable = "Posted Gen. Journal Line";
     SourceTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.");
     InsertAllowed = false;

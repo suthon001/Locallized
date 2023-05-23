@@ -59,7 +59,7 @@ codeunit 50001 "Purchase Function"
     begin
         PurchOrderLine."Ref. PQ No." := PurchQuoteLine."Document No.";
         PurchOrderLine."Ref. PQ Line No." := PurchQuoteLine."Line No.";
-        PurchOrderLine."Make Order By" := UserId;
+        PurchOrderLine."Make Order By" := COPYSTR(UserId, 1, 50);
         PurchOrderLine."Make Order DateTime" := CurrentDateTime;
     end;
 
@@ -73,11 +73,12 @@ codeunit 50001 "Purchase Function"
     local procedure "OnBeforConfirmPurchasePost"(var DefaultOption: Integer; var HideDialog: Boolean; var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
     var
         Handle: Boolean;
+        ConfirmMsg: Label 'Do you want to Post %1 ?', Locked = true;
     begin
         Handle := true;
-        "HandleMessagebeforPostPurchase"(Handle);
+        HandleMessagebeforPostPurchase(Handle);
         if Handle then begin
-            if not Confirm(strsubstno('Do you want to Post %1 ?', format(PurchaseHeader."Document Type"))) then
+            if not Confirm(strsubstno(ConfirmMsg, format(PurchaseHeader."Document Type"))) then
                 IsHandled := true;
             if not IsHandled then begin
                 HideDialog := true;
@@ -124,7 +125,7 @@ codeunit 50001 "Purchase Function"
 
 
     [IntegrationEvent(false, false)]
-    local procedure "HandleMessagebeforPostPurchase"(var Handle: Boolean)
+    local procedure HandleMessagebeforPostPurchase(var Handle: Boolean)
     begin
     end;
 
@@ -141,8 +142,8 @@ codeunit 50001 "Purchase Function"
     end;
 
 
-    [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterInvPostBufferPreparePurchase', '', true, true)]
-    local procedure "InvoiceBufferPurchase"(var InvoicePostBuffer: Record "Invoice Post. Buffer"; var PurchaseLine: Record "Purchase Line")
+    [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterPreparePurchase', '', true, true)]
+    local procedure "InvoiceBufferPurchase"(var InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary; var PurchaseLine: Record "Purchase Line")
     var
         PurchHeader: Record "Purchase Header";
         VendCust: Record "Customer & Vendor Branch";
@@ -151,61 +152,64 @@ codeunit 50001 "Purchase Function"
 
         PurchHeader.GET(PurchaseLine."Document Type", PurchaseLine."Document No.");
         PurchHeader.CALCFIELDS(Amount, "Amount Including VAT");
-        InvoicePostBuffer."Vendor Invoice No." := PurchHeader."Vendor Invoice No.";
-        InvoicePostBuffer."Tax Vendor No." := PurchHeader."Pay-to Vendor No.";
-        InvoicePostBuffer."VAT Registration No." := PurchHeader."VAT Registration No.";
-        InvoicePostBuffer."Head Office" := PurchHeader."Head Office";
-        InvoicePostBuffer."Branch Code" := PurchHeader."Branch Code";
-        InvoicePostBuffer."Tax Invoice Date" := PurchHeader."Document Date";
-        InvoicePostBuffer."Tax Invoice Name" := PurchHeader."Buy-from Vendor Name" + ' ' + PurchHeader."Buy-from Vendor Name 2";
-        InvoicePostBuffer."Address" := PurchHeader."Buy-from Address" + ' ' + PurchHeader."Buy-from Address 2";
-        InvoicePostBuffer."city" := PurchHeader."Buy-from city";
-        InvoicePostBuffer."Post Code" := PurchHeader."Buy-from Post Code";
-        InvoicePostBuffer."Document Line No." := PurchaseLine."Line No.";
+        InvoicePostingBuffer."Vendor Invoice No." := PurchHeader."Vendor Invoice No.";
+        InvoicePostingBuffer."Tax Vendor No." := PurchHeader."Pay-to Vendor No.";
+        InvoicePostingBuffer."VAT Registration No." := PurchHeader."VAT Registration No.";
+        InvoicePostingBuffer."Head Office" := PurchHeader."Head Office";
+        InvoicePostingBuffer."Branch Code" := PurchHeader."Branch Code";
+        InvoicePostingBuffer."Tax Invoice Date" := PurchHeader."Document Date";
+        InvoicePostingBuffer."Tax Invoice Name" := PurchHeader."Buy-from Vendor Name";
+        InvoicePostingBuffer."Tax Invoice Name 2" := PurchHeader."Buy-from Vendor Name 2";
+        InvoicePostingBuffer."Address" := PurchHeader."Buy-from Address";
+        InvoicePostingBuffer."Address 2" := PurchHeader."Buy-from Address 2";
+        InvoicePostingBuffer."city" := PurchHeader."Buy-from city";
+        InvoicePostingBuffer."Post Code" := PurchHeader."Buy-from Post Code";
+        InvoicePostingBuffer."Document Line No." := PurchaseLine."Line No.";
         if PurchHeader."Branch Code" <> '' then
             if VendCust.Get(VendCust."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."Head Office", PurchHeader."Branch Code") then begin
-                if VendCust."Name" <> '' then
-                    InvoicePostBuffer."Tax Invoice Name" := VendCust."Name";
-                InvoicePostBuffer."Address" := VendCust."Address";
-                InvoicePostBuffer."city" := VendCust."Province";
-                InvoicePostBuffer."Post Code" := VendCust."Post Code";
+                InvoicePostingBuffer."Tax Invoice Name" := VendCust."Name";
+                InvoicePostingBuffer."Address" := VendCust."Address";
+                InvoicePostingBuffer."Address 2" := VendCust."Address 2";
+                InvoicePostingBuffer."city" := VendCust."Province";
+                InvoicePostingBuffer."Post Code" := VendCust."Post Code";
             end;
-        InvoicePostBuffer."Description Line" := PurchaseLine.Description + ' ' + PurchaseLine."Description 2";
+        InvoicePostingBuffer."Description Line" := PurchaseLine.Description;
         IF PurchaseLine."Tax Invoice No." <> '' THEN BEGIN
-            InvoicePostBuffer."Tax Vendor No." := PurchaseLine."Tax Vendor No.";
-            InvoicePostBuffer."Head Office" := PurchaseLine."Head Office";
-            InvoicePostBuffer."Branch Code" := PurchaseLine."Branch Code";
-            InvoicePostBuffer."Tax Invoice No." := PurchaseLine."Tax Invoice No.";
-            InvoicePostBuffer."Additional Grouping Identifier" := PurchaseLine."Tax Invoice No.";
-            InvoicePostBuffer."Tax Invoice Date" := PurchaseLine."Tax Invoice Date";
-            InvoicePostBuffer."Tax Invoice Name" := PurchaseLine."Tax Invoice Name";
-            IF InvoicePostBuffer."VAT %" <> 0 THEN BEGIN
-                InvoicePostBuffer."Tax Invoice Base" := PurchaseLine.Amount;
-                InvoicePostBuffer."Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
+            InvoicePostingBuffer."Tax Vendor No." := PurchaseLine."Tax Vendor No.";
+            InvoicePostingBuffer."Head Office" := PurchaseLine."Head Office";
+            InvoicePostingBuffer."Branch Code" := PurchaseLine."Branch Code";
+            InvoicePostingBuffer."Tax Invoice No." := PurchaseLine."Tax Invoice No.";
+            InvoicePostingBuffer."Additional Grouping Identifier" := PurchaseLine."Tax Invoice No.";
+            InvoicePostingBuffer."Tax Invoice Date" := PurchaseLine."Tax Invoice Date";
+            InvoicePostingBuffer."Tax Invoice Name" := PurchaseLine."Tax Invoice Name";
+            InvoicePostingBuffer."Tax Invoice Name 2" := PurchaseLine."Tax Invoice Name 2";
+            IF InvoicePostingBuffer."VAT %" <> 0 THEN BEGIN
+                InvoicePostingBuffer."Tax Invoice Base" := PurchaseLine.Amount;
+                InvoicePostingBuffer."Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
                 if PurchaseLine."Tax Invoice Base" <> 0 then begin
-                    InvoicePostBuffer."Tax Invoice Base" := PurchaseLine."Tax Invoice Base";
-                    InvoicePostBuffer."Tax Invoice Amount" := PurchaseLine."Tax Invoice Amount";
+                    InvoicePostingBuffer."Tax Invoice Base" := PurchaseLine."Tax Invoice Base";
+                    InvoicePostingBuffer."Tax Invoice Amount" := PurchaseLine."Tax Invoice Amount";
                 end;
             END ELSE
                 if PurchaseLine."Tax Invoice Base" <> 0 then begin
-                    InvoicePostBuffer."Tax Invoice Base" := PurchaseLine."Tax Invoice Base";
+                    InvoicePostingBuffer."Tax Invoice Base" := PurchaseLine."Tax Invoice Base";
                     if PurchaseLine."Tax Invoice Amount" <> 0 then
-                        InvoicePostBuffer."Tax Invoice Amount" := PurchaseLine."Tax Invoice Amount"
+                        InvoicePostingBuffer."Tax Invoice Amount" := PurchaseLine."Tax Invoice Amount"
                     else
-                        InvoicePostBuffer."Tax Invoice Amount" := PurchaseLine."Tax Invoice Amount"
+                        InvoicePostingBuffer."Tax Invoice Amount" := PurchaseLine."Tax Invoice Amount"
                 end else begin
-                    InvoicePostBuffer."Tax Invoice Base" := PurchaseLine.Amount;
-                    InvoicePostBuffer."Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
+                    InvoicePostingBuffer."Tax Invoice Base" := PurchaseLine.Amount;
+                    InvoicePostingBuffer."Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
                 end;
         END;
 
         IF PurchaseLine."VAT Registration No." <> '' THEN
-            InvoicePostBuffer."VAT Registration No." := PurchaseLine."VAT Registration No."
+            InvoicePostingBuffer."VAT Registration No." := PurchaseLine."VAT Registration No."
         ELSE
-            InvoicePostBuffer."VAT Registration No." := PurchHeader."VAT Registration No.";
+            InvoicePostingBuffer."VAT Registration No." := PurchHeader."VAT Registration No.";
 
-        IF (InvoicePostBuffer.Type = InvoicePostBuffer.Type::"G/L Account") OR (InvoicePostBuffer.Type = InvoicePostBuffer.Type::"Fixed Asset") THEN
-            InvoicePostBuffer."Line No." := PurchaseLine."Line No.";
+        IF (InvoicePostingBuffer.Type = InvoicePostingBuffer.Type::"G/L Account") OR (InvoicePostingBuffer.Type = InvoicePostingBuffer.Type::"Fixed Asset") THEN
+            InvoicePostingBuffer."Line No." := PurchaseLine."Line No.";
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnAfterCheckPurchaseApprovalPossible', '', false, false)]
@@ -228,10 +232,12 @@ codeunit 50001 "Purchase Function"
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order (Yes/No)", 'OnBeforePurchQuoteToOrder', '', false, false)]
     local procedure OnBeforePurchQuoteToOrder(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
+    var
+        text001Msg: Label 'this document has been order no. %1', Locked = true;
     begin
         PurchaseHeader.TestField(Status, PurchaseHeader.Status::Released);
         if PurchaseHeader."Purchase Order No." <> '' then begin
-            MESSAGE(StrSubstNo('this document has been order no. %1', PurchaseHeader."Purchase Order No."));
+            MESSAGE(StrSubstNo(text001Msg, PurchaseHeader."Purchase Order No."));
             IsHandled := true;
         end;
     end;
