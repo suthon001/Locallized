@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Sales Quote Card (ID 80017) extends Record Sales Quote.
+/// </summary>
 pageextension 80017 "Sales Quote Card" extends "Sales Quote"
 {
     layout

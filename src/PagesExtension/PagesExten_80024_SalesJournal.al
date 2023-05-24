@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension SalesJournal (ID 80024) extends Record Sales Journal.
+/// </summary>
 pageextension 80024 "SalesJournal" extends "Sales Journal"
 {
     layout

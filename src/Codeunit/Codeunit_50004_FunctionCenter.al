@@ -56,6 +56,7 @@ codeunit 50004 "Function Center"
     var
         CompanyInfo: Record "Company Information";
     begin
+        Clear(Text);
         CompanyInfo.GET();
         if NOT EngName then begin
             Text[1] := CompanyInfo.Name + ' ' + CompanyInfo."Name 2";
@@ -98,6 +99,7 @@ codeunit 50004 "Function Center"
     var
         VATBusinessPostingGroup: Record "VAT Business Posting Group";
     begin
+        Clear(Text);
         IF NOT VATBusinessPostingGroup.GET(VatBus) THEN
             VATBusinessPostingGroup.init();
 
@@ -144,7 +146,7 @@ codeunit 50004 "Function Center"
     /// <param name="DocumentNo">Parameter of type Code[20].</param>
     /// <param name="VAR Text">Parameter of type ARRAY[10] OF Text[250].</param>
     /// <param name="Tab">Parameter of type Option General,Invoicing,Shipping.</param>
-    procedure "PurchaseInformation"(DocumentType: Enum "Purchase Document Type"; DocumentNo: Code[20]; VAR Text: ARRAY[10] OF Text[250]; Tab: Option General,Invoicing,Shipping)
+    procedure PurchaseInformation(DocumentType: Enum "Purchase Document Type"; DocumentNo: Code[20]; VAR Text: ARRAY[10] OF Text[250]; Tab: Option General,Invoicing,Shipping)
     var
         PurchHeader: Record "Purchase Header";
         Vend: Record Vendor;
@@ -152,6 +154,7 @@ codeunit 50004 "Function Center"
         VandorBranch: Record "Customer & Vendor Branch";
     begin
         PurchHeader.GET(DocumentType, DocumentNo);
+        CLEAR(Text);
         // CASE DocumentType OF
         //     DocumentType::Quote, DocumentType::Order, DocumentType::Invoice,
         //     DocumentType::"Credit Memo", DocumentType::"Blanket Order", DocumentType::"Return Order", DocumentType::"Requisition":
@@ -169,14 +172,11 @@ codeunit 50004 "Function Center"
                     Text[3] += PurchHeader."Buy-from City" + ' ' + PurchHeader."Buy-from Post Code";
                     Text[4] := Vend."Phone No." + ' ';
                     if PurchHeader."Currency Code" = '' then begin
-
                         IF Vend."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
-
+                            Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
                     end else
-
                         IF Vend."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                            Text[4] += 'Fax. : ' + Vend."Fax No.";
                     Text[5] := PurchHeader."Buy-from Contact";
                     // END else begin
                     if (PurchHeader."Branch Code" <> '') AND (NOT PurchHeader."Head Office") then begin
@@ -188,10 +188,10 @@ codeunit 50004 "Function Center"
                         Text[4] := VandorBranch."Phone No." + ' ';
                         if PurchHeader."Currency Code" = '' then begin
                             IF VandorBranch."Fax No." <> '' THEN
-                                Text[4] += STRSUBSTNO('แฟกซ์ : %1', VandorBranch."Fax No.");
+                                Text[4] += 'แฟกซ์ : ' + VandorBranch."Fax No.";
                         end else
                             IF VandorBranch."Fax No." <> '' THEN
-                                Text[4] += STRSUBSTNO('Fax. : %1', VandorBranch."Fax No.");
+                                Text[4] += 'Fax. : ' + VandorBranch."Fax No.";
 
                     end;
 
@@ -208,14 +208,11 @@ codeunit 50004 "Function Center"
                     Text[3] += PurchHeader."Pay-to City" + ' ' + PurchHeader."Pay-to Post Code";
                     Text[4] := Vend."Phone No." + ' ';
                     if PurchHeader."Currency Code" = '' then begin
-
                         IF Vend."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
-
+                            Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
                     end else
-
                         IF Vend."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                            Text[4] += 'Fax. : ' + Vend."Fax No.";
                     Text[5] := PurchHeader."Pay-to Contact";
                     if (PurchHeader."Branch Code" <> '') AND (NOT PurchHeader."Head Office") then begin
                         if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."Head Office", PurchHeader."Branch Code") then
@@ -226,10 +223,10 @@ codeunit 50004 "Function Center"
                         Text[4] := VandorBranch."Phone No." + ' ';
                         if PurchHeader."Currency Code" = '' then begin
                             IF VandorBranch."Fax No." <> '' THEN
-                                Text[4] += STRSUBSTNO('แฟกซ์ : %1', VandorBranch."Fax No.");
+                                Text[4] += 'แฟกซ์ : ' + VandorBranch."Fax No.";
                         end else
                             IF VandorBranch."Fax No." <> '' THEN
-                                Text[4] += STRSUBSTNO('Fax. : %1', VandorBranch."Fax No.");
+                                Text[4] += 'Fax. : ' + VandorBranch."Fax No.";
 
                     end;
                     Text[9] := PurchHeader."Pay-to Vendor No.";
@@ -244,14 +241,12 @@ codeunit 50004 "Function Center"
                     Text[3] += PurchHeader."Ship-to City" + ' ' + PurchHeader."Ship-to Post Code";
                     Text[4] := Cust."Phone No." + ' ';
                     if PurchHeader."Currency Code" = '' then begin
-
-                        IF Vend."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
-
+                        IF Cust."Fax No." <> '' THEN
+                            Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
                     end else
 
-                        IF Vend."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                        IF Cust."Fax No." <> '' THEN
+                            Text[4] += 'Fax. : ' + Cust."Fax No.";
                     Text[5] := PurchHeader."Ship-to Contact";
 
                 END;
@@ -633,7 +628,7 @@ codeunit 50004 "Function Center"
                 ERROR(Text029Msg, AddText);
         END;
 
-        NoText[NoTextIndex] := DELCHR(NoText[NoTextIndex] + ' ' + AddText, '<');
+        NoText[NoTextIndex] := COPYSTR(DELCHR(NoText[NoTextIndex] + ' ' + AddText, '<'), 1, 80);
     end;
 
     /// <summary> 
@@ -650,11 +645,8 @@ codeunit 50004 "Function Center"
         Shipto: Record "Ship-to Address";
         CustBranch: Record "Customer & Vendor Branch";
     begin
+        CLEAR(Text);
         SalesHeader.GET(DocumentType, DocumentNo);
-        // CASE DocumentType OF
-        //     DocumentType::Quote, DocumentType::Order, DocumentType::Invoice,
-        //     DocumentType::"Credit Memo", DocumentType::"Blanket Order", DocumentType::"Return Order":
-        //         BEGIN
         CASE Tab OF
             Tab::General:
                 BEGIN
@@ -669,12 +661,12 @@ codeunit 50004 "Function Center"
                     if SalesHeader."Currency Code" = '' then begin
 
                         IF Cust."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
+                            Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
 
                     end else
 
                         IF Cust."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                            Text[4] += 'Fax. : ' + Cust."Fax No.";
                     Text[5] := SalesHeader."Sell-to Contact";
                     // end else begin
                     if (SalesHeader."Branch Code" <> '') AND (NOT SalesHeader."Head Office") then begin
@@ -686,10 +678,10 @@ codeunit 50004 "Function Center"
                         Text[4] := CustBranch."Phone No." + ' ';
                         if SalesHeader."Currency Code" = '' then begin
                             IF CustBranch."Fax No." <> '' THEN
-                                Text[4] += STRSUBSTNO('แฟกซ์ : %1', CustBranch."Fax No.");
+                                Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
                         end else
                             IF CustBranch."Fax No." <> '' THEN
-                                Text[4] += STRSUBSTNO('Fax. : %1', CustBranch."Fax No.");
+                                Text[4] += 'Fax. : ' + Cust."Fax No.";
                     end;
                     Text[9] := SalesHeader."Sell-to Customer No.";
                 END;
@@ -703,14 +695,13 @@ codeunit 50004 "Function Center"
                     Text[3] += SalesHeader."Bill-to City" + ' ' + SalesHeader."Bill-to Post Code";
                     Text[4] := Cust."Phone No." + ' ';
                     if SalesHeader."Currency Code" = '' then begin
-
                         IF Cust."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
+                            Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
 
                     end else
 
                         IF Cust."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                            Text[4] += 'Fax. : ' + Cust."Fax No.";
                     Text[5] := SalesHeader."Bill-to Contact";
                     if (SalesHeader."Branch Code" <> '') AND (NOT SalesHeader."Head Office") then begin
                         if not CustBranch.GET(CustBranch."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."Head Office", SalesHeader."Branch Code") then
@@ -721,10 +712,10 @@ codeunit 50004 "Function Center"
                         Text[4] := CustBranch."Phone No." + ' ';
                         if SalesHeader."Currency Code" = '' then begin
                             IF CustBranch."Fax No." <> '' THEN
-                                Text[4] += STRSUBSTNO('แฟกซ์ : %1', CustBranch."Fax No.");
+                                Text[4] += 'แฟกซ์ : ' + CustBranch."Fax No.";
                         end else
                             IF CustBranch."Fax No." <> '' THEN
-                                Text[4] += STRSUBSTNO('Fax. : %1', CustBranch."Fax No.");
+                                Text[4] += 'Fax. : ' + CustBranch."Fax No.";
                     end;
                     Text[9] := SalesHeader."Bill-to Customer No.";
                 END;
@@ -740,13 +731,13 @@ codeunit 50004 "Function Center"
                     Text[4] := Shipto."Phone No." + ' ';
                     if SalesHeader."Currency Code" = '' then begin
 
-                        IF Cust."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('แฟกซ์ : %1', Shipto."Fax No.");
+                        IF Shipto."Fax No." <> '' THEN
+                            Text[4] += 'แฟกซ์ : ' + Shipto."Fax No.";
 
                     end else
 
-                        IF Cust."Fax No." <> '' THEN
-                            Text[4] += STRSUBSTNO('Fax. : %1', Shipto."Fax No.");
+                        IF Shipto."Fax No." <> '' THEN
+                            Text[4] += 'Fax. : ' + Shipto."Fax No.";
                     Text[5] := SalesHeader."Ship-to Contact";
 
                 END;
@@ -784,6 +775,7 @@ codeunit 50004 "Function Center"
     var
         Vendor: Record Vendor;
     begin
+        CLEAR(Text);
         IF NOT Vendor.GET(VendorNo) THEN
             Vendor.INIT();
         Text[1] := Vendor.Name + ' ' + Vendor."Name 2";
@@ -791,7 +783,10 @@ codeunit 50004 "Function Center"
         Text[3] := Vendor."Address 2" + ' ' + Vendor.City + ' ' + Vendor."Post Code";
         Text[4] := Vendor."Phone No." + ' ';
         IF (Vendor."Fax No." <> '') THEN
-            Text[4] += STRSUBSTNO('แฟกซ์', Vendor."Fax No.");
+            if vendor."Currency Code" = '' then
+                Text[4] += 'แฟกซ์ ' + Vendor."Fax No."
+            else
+                Text[4] += 'Fax. ' + Vendor."Fax No.";
         Text[5] := Vendor."E-Mail";
         Text[6] := Vendor.Contact;
         Text[9] := Vendor."No.";
@@ -807,6 +802,7 @@ codeunit 50004 "Function Center"
     var
         Cust: Record Customer;
     begin
+        CLEAR(Text);
         IF NOT Cust.GET(CustNo) THEN
             Cust.INIT();
         Text[1] := Cust.Name + ' ' + Cust."Name 2";
@@ -814,7 +810,10 @@ codeunit 50004 "Function Center"
         Text[3] := Cust."Address 2" + ' ' + Cust.City + ' ' + Cust."Post Code";
         Text[4] := Cust."Phone No." + ' ';
         IF (Cust."Fax No." <> '') THEN
-            Text[4] += STRSUBSTNO('แฟกซ์', Cust."Fax No.");
+            if Cust."Currency Code" = '' then
+                Text[4] += 'แฟกซ์ ' + Cust."Fax No."
+            else
+                Text[4] += 'Fax. ' + Cust."Fax No.";
         Text[5] := Cust."E-Mail";
         Text[6] := Cust.Contact;
         Text[9] := Cust."No.";
@@ -843,7 +842,7 @@ codeunit 50004 "Function Center"
         GenJnlLine.SETRANGE("Journal Batch Name", JnlBatchName);
         GenJnlLine.SETRANGE("Document No.", DocumentNo);
         GenJnlLine.SETRANGE("Posting Date", PostingDate);
-        IF GenJnlLine.FINDFIRST() THEN
+        IF GenJnlLine.FindSet() THEN
             REPEAT
                 IF (GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor) OR
                    (GenJnlLine."Bal. Account Type" = GenJnlLine."Bal. Account Type"::Vendor) THEN BEGIN
@@ -927,274 +926,60 @@ codeunit 50004 "Function Center"
             UNTIL GenJnlLine.NEXT() = 0;
     end;
 
-    procedure "SalesInvoiceStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR TempVATAmountLine: Record "VAT Amount Line" TEMPORARY)
+    procedure "PostedSalesInvoiceStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
+
     var
-        CustAmount: Decimal;
-        AmountInclVAT: Decimal;
-        InvDiscAmount: Decimal;
-        CostLCY: Decimal;
-        LineQty: Decimal;
-        TotalNetWeight: Decimal;
-        TotalGrossWeight: Decimal;
-        TotalVolume: Decimal;
-        TotalParcels: Decimal;
-        VATPercentage: Decimal;
+        DocumentTotals: Codeunit "Document Totals";
+        TotalSalesInvoice: Record "Sales Invoice Header";
+        SalesInvoiceLine: Record "Sales Invoice Line";
         VATAmount: Decimal;
-        VATAmountText: Text[30];
-        AmountLCY: Decimal;
-        ProfitLCY: Decimal;
-        ProfitPct: Decimal;
-        CreditLimitLCYExpendedPct: Decimal;
-        SalesInvHeader: Record "Sales Invoice Header";
-        SalesInvLine: Record "Sales Invoice Line";
-        Currency: Record "Currency";
-        CurrExchRate: Record "Currency Exchange Rate";
-        Cust: Record "Customer";
-        Text000Lbl: Label 'VAT Amount';
-        Text001Lbl: Label 'VAT %1%', Locked = true;
-
-
-
     begin
-        SalesInvHeader.SETRANGE("No.", DocumentNo);
-        IF SalesInvHeader.FindFirst() THEN BEGIN
+        CLEAR(TotalAmt);
+        SalesInvoiceLine.reset();
+        SalesInvoiceLine.SetRange("Document No.", DocumentNo);
+        if SalesInvoiceLine.FindFirst() then
+            DocumentTotals.CalculatePostedSalesInvoiceTotals(TotalSalesInvoice, VATAmount, SalesInvoiceLine);
 
-            IF SalesInvHeader."Currency Code" = '' THEN
-                Currency.InitRoundingPrecision()
-            ELSE
-                Currency.GET(SalesInvHeader."Currency Code");
+        TotalAmt[1] := TotalSalesInvoice.Amount + TotalSalesInvoice."Invoice Discount Amount";
+        TotalAmt[2] := TotalSalesInvoice."Invoice Discount Amount";
+        TotalAmt[3] := TotalSalesInvoice.Amount;
+        TotalAmt[4] := VATAmount;
+        TotalAmt[5] := TotalSalesInvoice."Amount Including VAT";
+        if VATAmount <> 0 then begin
+            SalesInvoiceLine.reset();
+            SalesInvoiceLine.SetRange("Document No.", DocumentNo);
+            SalesInvoiceLine.SetFilter("VAT %", '<>%1', 0);
+            if SalesInvoiceLine.FindFirst() then
+                VATText := STRSUBSTNO(Text002Msg, SalesInvoiceLine."VAT %");
+        end;
 
-            SalesInvLine.SETRANGE("Document No.", SalesInvHeader."No.");
-
-            IF SalesInvLine.FindSet() THEN
-                REPEAT
-                    CustAmount := CustAmount + SalesInvLine.Amount;
-                    AmountInclVAT := AmountInclVAT + SalesInvLine."Amount Including VAT";
-                    IF SalesInvHeader."Prices Including VAT" THEN
-                        InvDiscAmount := InvDiscAmount + SalesInvLine."Inv. Discount Amount" / (1 + SalesInvLine."VAT %" / 100)
-                    ELSE
-                        InvDiscAmount := InvDiscAmount + SalesInvLine."Inv. Discount Amount";
-                    CostLCY := CostLCY + (SalesInvLine.Quantity * SalesInvLine."Unit Cost (LCY)");
-                    LineQty := LineQty + SalesInvLine.Quantity;
-                    TotalNetWeight := TotalNetWeight + (SalesInvLine.Quantity * SalesInvLine."Net Weight");
-                    TotalGrossWeight := TotalGrossWeight + (SalesInvLine.Quantity * SalesInvLine."Gross Weight");
-                    TotalVolume := TotalVolume + (SalesInvLine.Quantity * SalesInvLine."Unit Volume");
-                    IF SalesInvLine."Units per Parcel" > 0 THEN
-                        TotalParcels := TotalParcels + ROUND(SalesInvLine.Quantity / SalesInvLine."Units per Parcel", 1, '>');
-                    IF SalesInvLine."VAT %" <> VATPercentage THEN
-                        IF VATPercentage = 0 THEN
-                            VATPercentage := SalesInvLine."VAT %"
-                        ELSE
-                            VATPercentage := -1;
-                UNTIL SalesInvLine.NEXT() = 0;
-
-
-            VATAmount := AmountInclVAT - CustAmount;
-            InvDiscAmount := ROUND(InvDiscAmount, Currency."Amount Rounding Precision");
-
-            IF VATPercentage <= 0 THEN
-                VATAmountText := Text000Lbl
-            ELSE
-                VATAmountText := STRSUBSTNO(Text001Lbl, VATPercentage);
-
-            IF SalesInvHeader."Currency Code" = '' THEN
-                AmountLCY := CustAmount
-            ELSE
-                AmountLCY := CurrExchRate.ExchangeAmtFCYToLCY(
-                    WORKDATE(), SalesInvHeader."Currency Code", CustAmount, SalesInvHeader."Currency Factor");
-
-
-            ProfitLCY := AmountLCY - CostLCY;
-            IF AmountLCY <> 0 THEN
-                ProfitPct := ROUND(100 * ProfitLCY / AmountLCY, 0.1);
-
-
-            IF Cust.GET(SalesInvHeader."Bill-to Customer No.") THEN
-                Cust.CALCFIELDS("Balance (LCY)");
-
-            IF Cust."Credit Limit (LCY)" = 0 THEN
-                CreditLimitLCYExpendedPct := 0
-            ELSE
-                IF Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" < 0 THEN
-                    CreditLimitLCYExpendedPct := 0
-                ELSE
-                    IF Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" > 1 THEN
-                        CreditLimitLCYExpendedPct := 10000
-                    ELSE
-                        CreditLimitLCYExpendedPct := ROUND(Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" * 10000, 1);
-        END;
-
-        SalesInvLine.CalcVATAmountLines(SalesInvHeader, TempVATAmountLine);
-
-        IF NOT SalesInvHeader."Prices Including VAT" THEN BEGIN
-            TotalAmt[1] := CustAmount + InvDiscAmount;
-            TotalAmt[2] := InvDiscAmount;
-            TotalAmt[3] := CustAmount;
-            TotalAmt[4] := VATAmount;
-            TotalAmt[5] := AmountInclVAT;
-            TotalAmt[6] := AmountLCY;
-            TotalAmt[7] := CostLCY;
-            TotalAmt[8] := ProfitLCY;
-            TotalAmt[9] := ProfitPct;
-            TotalAmt[10] := LineQty;
-            TotalAmt[11] := TotalParcels;
-            TotalAmt[12] := TotalNetWeight;
-            TotalAmt[13] := TotalGrossWeight;
-            TotalAmt[14] := TotalVolume;
-            TotalAmt[15] := Cust."Balance (LCY)";
-            TotalAmt[16] := Cust."Credit Limit (LCY)";
-            TotalAmt[17] := VATPercentage;
-        END ELSE BEGIN
-            TotalAmt[1] := CustAmount + InvDiscAmount;
-            TotalAmt[2] := InvDiscAmount;
-            TotalAmt[3] := AmountInclVAT;
-            TotalAmt[4] := VATAmount;
-            TotalAmt[5] := CustAmount;
-            TotalAmt[6] := AmountLCY;
-            TotalAmt[7] := CostLCY;
-            TotalAmt[8] := ProfitLCY;
-            TotalAmt[9] := ProfitPct;
-            TotalAmt[10] := LineQty;
-            TotalAmt[11] := TotalParcels;
-            TotalAmt[12] := TotalNetWeight;
-            TotalAmt[13] := TotalGrossWeight;
-            TotalAmt[14] := TotalVolume;
-            TotalAmt[15] := Cust."Balance (LCY)";
-            TotalAmt[16] := Cust."Credit Limit (LCY)";
-            TotalAmt[17] := VATPercentage;
-        END;
     end;
 
-    procedure "SalesCrMemoStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR TempVATAmountLine: Record "VAT Amount Line" TEMPORARY)
+    procedure "PostedSalesCrMemoStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
     var
-        CustAmount: Decimal;
-        AmountInclVAT: Decimal;
-        InvDiscAmount: Decimal;
-        CostLCY: Decimal;
-        ProfitLCY: Decimal;
-        ProfitPct: Decimal;
-        LineQty: Decimal;
-        TotalNetWeight: Decimal;
-        TotalGrossWeight: Decimal;
-        TotalVolume: Decimal;
-        TotalParcels: Decimal;
-        AmountLCY: Decimal;
-        CreditLimitLCYExpendedPct: Decimal;
-        VATpercentage: Decimal;
-        VATAmountText: Text[30];
+        DocumentTotals: Codeunit "Document Totals";
+        TotalSalesCreditMemo: Record "Sales Cr.Memo Header";
+        SalesCreditLine: Record "Sales Cr.Memo Line";
         VATAmount: Decimal;
-        SalesCrMemoHeader: Record "Sales Cr.Memo Header";
-        SalesCrMemoLine: Record "Sales Cr.Memo Line";
-        Currency: Record "Currency";
-        CurrExchRate: Record "Currency Exchange Rate";
-        Cust: Record "Customer";
-        Text000Lbl: Label 'VAT Amount';
-        Text001Lbl: Label 'VAT %1%', Locked = true;
-
     begin
-        SalesCrMemoHeader.SETRANGE("No.", DocumentNo);
-        IF SalesCrMemoHeader.FindFirst() THEN BEGIN
-            IF SalesCrMemoHeader."Currency Code" = '' THEN
-                Currency.InitRoundingPrecision()
-            ELSE
-                Currency.GET(SalesCrMemoHeader."Currency Code");
+        CLEAR(TotalAmt);
+        SalesCreditLine.reset();
+        SalesCreditLine.SetRange("Document No.", DocumentNo);
+        if SalesCreditLine.FindFirst() then
+            DocumentTotals.CalculatePostedSalesCreditMemoTotals(TotalSalesCreditMemo, VATAmount, SalesCreditLine);
 
-            SalesCrMemoLine.SETRANGE("Document No.", SalesCrMemoHeader."No.");
-
-            IF SalesCrMemoLine.FindSet() THEN
-                REPEAT
-                    CustAmount := CustAmount + SalesCrMemoLine.Amount;
-                    AmountInclVAT := AmountInclVAT + SalesCrMemoLine."Amount Including VAT";
-                    IF SalesCrMemoHeader."Prices Including VAT" THEN
-                        InvDiscAmount := InvDiscAmount + SalesCrMemoLine."Inv. Discount Amount" / (1 + SalesCrMemoLine."VAT %" / 100)
-                    ELSE
-                        InvDiscAmount := InvDiscAmount + SalesCrMemoLine."Inv. Discount Amount";
-                    CostLCY := CostLCY + (SalesCrMemoLine.Quantity * SalesCrMemoLine."Unit Cost (LCY)");
-                    LineQty := LineQty + SalesCrMemoLine.Quantity;
-                    TotalNetWeight := TotalNetWeight + (SalesCrMemoLine.Quantity * SalesCrMemoLine."Net Weight");
-                    TotalGrossWeight := TotalGrossWeight + (SalesCrMemoLine.Quantity * SalesCrMemoLine."Gross Weight");
-                    TotalVolume := TotalVolume + (SalesCrMemoLine.Quantity * SalesCrMemoLine."Unit Volume");
-                    IF SalesCrMemoLine."Units per Parcel" > 0 THEN
-                        TotalParcels := TotalParcels + ROUND(SalesCrMemoLine.Quantity / SalesCrMemoLine."Units per Parcel", 1, '>');
-                    IF SalesCrMemoLine."VAT %" <> VATpercentage THEN
-                        IF VATpercentage = 0 THEN
-                            VATpercentage := SalesCrMemoLine."VAT %"
-                        ELSE
-                            VATpercentage := -1;
-                UNTIL SalesCrMemoLine.NEXT() = 0;
-            VATAmount := AmountInclVAT - CustAmount;
-            InvDiscAmount := ROUND(InvDiscAmount, Currency."Amount Rounding Precision");
-
-            IF VATpercentage <= 0 THEN
-                VATAmountText := Text000Lbl
-            ELSE
-                VATAmountText := STRSUBSTNO(Text001Lbl, VATpercentage);
-
-            IF SalesCrMemoHeader."Currency Code" = '' THEN
-                AmountLCY := CustAmount
-            ELSE
-                AmountLCY :=
-                CurrExchRate.ExchangeAmtFCYToLCY(
-                    WORKDATE(), SalesCrMemoHeader."Currency Code", CustAmount, SalesCrMemoHeader."Currency Factor");
-            ProfitLCY := AmountLCY - CostLCY;
-            IF AmountLCY <> 0 THEN
-                ProfitPct := ROUND(100 * ProfitLCY / AmountLCY, 0.1);
-
-            IF Cust.GET(SalesCrMemoHeader."Bill-to Customer No.") THEN
-                Cust.CALCFIELDS("Balance (LCY)")
-            ELSE
-                CLEAR(Cust);
-            IF Cust."Credit Limit (LCY)" = 0 THEN
-                CreditLimitLCYExpendedPct := 0
-            ELSE
-                IF Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" < 0 THEN
-                    CreditLimitLCYExpendedPct := 0
-                ELSE
-                    IF Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" > 1 THEN
-                        CreditLimitLCYExpendedPct := 10000
-                    ELSE
-                        CreditLimitLCYExpendedPct := ROUND(Cust."Balance (LCY)" / Cust."Credit Limit (LCY)" * 10000, 1);
-        END;
-
-        SalesCrMemoLine.CalcVATAmountLines(SalesCrMemoHeader, TempVATAmountLine);
-        IF NOT SalesCrMemoHeader."Prices Including VAT" THEN BEGIN
-            TotalAmt[1] := CustAmount + InvDiscAmount;
-            TotalAmt[2] := InvDiscAmount;
-            TotalAmt[3] := CustAmount;
-            TotalAmt[4] := VATAmount;
-            TotalAmt[5] := AmountInclVAT;
-            TotalAmt[6] := AmountLCY;
-            TotalAmt[7] := CostLCY;
-            TotalAmt[8] := ProfitLCY;
-            TotalAmt[9] := ProfitPct;
-            TotalAmt[10] := LineQty;
-            TotalAmt[11] := TotalParcels;
-            TotalAmt[12] := TotalNetWeight;
-            TotalAmt[13] := TotalGrossWeight;
-            TotalAmt[14] := TotalVolume;
-            TotalAmt[15] := Cust."Balance (LCY)";
-            TotalAmt[16] := Cust."Credit Limit (LCY)";
-            TotalAmt[17] := VATpercentage;
-
-        END ELSE BEGIN
-            TotalAmt[1] := CustAmount + InvDiscAmount;
-            TotalAmt[2] := InvDiscAmount;
-            TotalAmt[3] := AmountInclVAT;
-            TotalAmt[4] := VATAmount;
-            TotalAmt[5] := CustAmount;
-            TotalAmt[6] := AmountLCY;
-            TotalAmt[7] := CostLCY;
-            TotalAmt[8] := ProfitLCY;
-            TotalAmt[9] := ProfitPct;
-            TotalAmt[10] := LineQty;
-            TotalAmt[11] := TotalParcels;
-            TotalAmt[12] := TotalNetWeight;
-            TotalAmt[13] := TotalGrossWeight;
-            TotalAmt[14] := TotalVolume;
-            TotalAmt[15] := Cust."Balance (LCY)";
-            TotalAmt[16] := Cust."Credit Limit (LCY)";
-            TotalAmt[17] := VATpercentage;
-        END;
+        TotalAmt[1] := TotalSalesCreditMemo.Amount + TotalSalesCreditMemo."Invoice Discount Amount";
+        TotalAmt[2] := TotalSalesCreditMemo."Invoice Discount Amount";
+        TotalAmt[3] := TotalSalesCreditMemo.Amount;
+        TotalAmt[4] := VATAmount;
+        TotalAmt[5] := TotalSalesCreditMemo."Amount Including VAT";
+        if VATAmount <> 0 then begin
+            SalesCreditLine.reset();
+            SalesCreditLine.SetRange("Document No.", DocumentNo);
+            SalesCreditLine.SetFilter("VAT %", '<>%1', 0);
+            if SalesCreditLine.FindFirst() then
+                VATText := STRSUBSTNO(Text002Msg, SalesCreditLine."VAT %");
+        end;
 
     end;
     /// <summary> 
@@ -1299,91 +1084,80 @@ codeunit 50004 "Function Center"
 
     procedure "PurchStatistic"(DocumentType: Enum "Purchase Document Type"; DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
     var
-        AllowInvDisc: Boolean;
-        AllowVATDifference: Boolean;
-        PurchSetup: Record "Purchases & Payables Setup";
-        PurchHeader: Record "Purchase Header";
-        PurchLine: Record "Purchase Line";
-        Vend: Record "Vendor";
-        TempPurchLine: Record "Purchase Line" temporary;
-        TotalPurchLine: Record "Purchase Line";
-        TotalPurchLineLCY: Record "Purchase Line";
-        PurchPost: Codeunit "Purch.-Post";
-        VATAmount: Decimal;
-        VATAmountText: Text[30];
-        TotalAmount1: Decimal;
-        TotalAmount2: Decimal;
-        TempVATAmountLine: Record "VAT Amount Line" temporary;
+
+        PurchaseHeader: Record "Purchase Header";
+        DocumentTotals: Codeunit "Document Totals";
+        VATAmount, InvoiceDiscountAmount, InvoiceDiscountPct : Decimal;
+        TotalPurchaseLine: Record "Purchase Line";
+
     begin
-        IF NOT PurchHeader.GET(DocumentType, DocumentNo) THEN
+        CLEAR(TotalAmt);
+        IF NOT PurchaseHeader.GET(DocumentType, DocumentNo) THEN
             EXIT;
+        DocumentTotals.CalculatePurchaseSubPageTotals(PurchaseHeader, TotalPurchaseLine, VATAmount, InvoiceDiscountAmount, InvoiceDiscountPct);
+        TotalAmt[1] := TotalPurchaseLine."Line Amount";
+        TotalAmt[2] := InvoiceDiscountAmount;
+        TotalAmt[3] := TotalPurchaseLine.Amount;
+        TotalAmt[4] := VATAmount;
+        TotalAmt[5] := TotalPurchaseLine."Amount Including VAT";
+        if VATAmount <> 0 then
+            VATText := STRSUBSTNO(Text002Msg, TotalPurchaseLine."VAT %");
+    end;
 
-        PurchSetup.GET();
-        AllowInvDisc :=
-        NOT (PurchSetup."Calc. Inv. Discount" AND "VendInvDiscRecExists"(PurchHeader."Invoice Disc. Code"));
-        AllowVATDifference :=
-        PurchSetup."Allow VAT Difference" AND
-        NOT (PurchHeader."Document Type" IN [PurchHeader."Document Type"::Quote, PurchHeader."Document Type"::"Blanket Order"]);
+    procedure "PostedPurchaseInvoiceStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
 
-        CLEAR(PurchLine);
-        CLEAR(TotalPurchLine);
-        CLEAR(TotalPurchLineLCY);
-        CLEAR(PurchPost);
+    var
+        DocumentTotals: Codeunit "Document Totals";
+        TotalPurchInvoice: Record "Purch. Inv. Header";
+        PurchInvoiceLine: Record "Purch. Inv. Line";
+        VATAmount: Decimal;
+    begin
+        CLEAR(TotalAmt);
+        PurchInvoiceLine.reset();
+        PurchInvoiceLine.SetRange("Document No.", DocumentNo);
+        if PurchInvoiceLine.FindFirst() then
+            DocumentTotals.CalculatePostedPurchInvoiceTotals(TotalPurchInvoice, VATAmount, PurchInvoiceLine);
 
-        PurchPost.GetPurchLines(PurchHeader, TempPurchLine, 0);
-        CLEAR(PurchPost);
-        PurchPost.SumPurchLinesTemp(
-        PurchHeader, TempPurchLine, 0, TotalPurchLine, TotalPurchLineLCY, VATAmount, VATAmountText);
+        TotalAmt[1] := TotalPurchInvoice.Amount + TotalPurchInvoice."Invoice Discount Amount";
+        TotalAmt[2] := TotalPurchInvoice."Invoice Discount Amount";
+        TotalAmt[3] := TotalPurchInvoice.Amount;
+        TotalAmt[4] := VATAmount;
+        TotalAmt[5] := TotalPurchInvoice."Amount Including VAT";
+        if VATAmount <> 0 then begin
+            PurchInvoiceLine.reset();
+            PurchInvoiceLine.SetRange("Document No.", DocumentNo);
+            PurchInvoiceLine.SetFilter("VAT %", '<>%1', 0);
+            if PurchInvoiceLine.FindFirst() then
+                VATText := STRSUBSTNO(Text002Msg, PurchInvoiceLine."VAT %");
+        end;
+    end;
 
-        IF PurchHeader."Prices Including VAT" THEN BEGIN
-            TotalAmount2 := TotalPurchLine.Amount;
-            TotalAmount1 := TotalAmount2 + VATAmount;
-            TotalPurchLine."Line Amount" := TotalAmount1 + TotalPurchLine."Inv. Discount Amount";
-        END ELSE BEGIN
-            TotalAmount1 := TotalPurchLine.Amount;
-            TotalAmount2 := TotalPurchLine."Amount Including VAT";
-        END;
+    procedure "PostedPurchaseCreditMemoStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
 
-        IF Vend.GET(PurchHeader."Pay-to Vendor No.") THEN
-            Vend.CALCFIELDS("Balance (LCY)")
-        ELSE
-            CLEAR(Vend);
+    var
+        DocumentTotals: Codeunit "Document Totals";
+        TotalPurchCreditMemo: Record "Purch. Cr. Memo Hdr.";
+        PurchCreditLine: Record "Purch. Cr. Memo Line";
+        VATAmount: Decimal;
+    begin
+        CLEAR(TotalAmt);
+        PurchCreditLine.reset();
+        PurchCreditLine.SetRange("Document No.", DocumentNo);
+        if PurchCreditLine.FindFirst() then
+            DocumentTotals.CalculatePostedPurchCreditMemoTotals(TotalPurchCreditMemo, VATAmount, PurchCreditLine);
 
-        PurchLine.CalcVATAmountLines(1, PurchHeader, TempPurchLine, TempVATAmountLine);
-        TempVATAmountLine.MODIFYALL(Modified, FALSE);
-
-        VATText := STRSUBSTNO(Text002Msg, 0);
-        IF VATAmount <> 0 THEN
-            VATText := STRSUBSTNO(Text002Msg, TotalPurchLine."VAT %");
-
-        IF NOT PurchHeader."Prices Including VAT" THEN BEGIN
-            TotalAmt[1] := TotalPurchLine."Line Amount";
-            TotalAmt[2] := TotalPurchLine."Inv. Discount Amount";
-            TotalAmt[3] := TotalAmount1;
-            TotalAmt[4] := VATAmount;
-            TotalAmt[5] := TotalAmount2;
-            TotalAmt[6] := TotalPurchLineLCY.Amount;
-            TotalAmt[7] := TotalPurchLine.Quantity;
-            TotalAmt[8] := TotalPurchLine."Units per Parcel";
-            TotalAmt[9] := TotalPurchLine."Net Weight";
-            TotalAmt[10] := TotalPurchLine."Gross Weight";
-            TotalAmt[11] := TotalPurchLine."Unit Volume";
-            TotalAmt[12] := Vend."Balance (LCY)";
-        END ELSE BEGIN
-            TotalAmt[1] := TotalPurchLine."Line Amount";
-            TotalAmt[2] := TotalPurchLine."Inv. Discount Amount";
-            TotalAmt[3] := TotalAmount2;
-            TotalAmt[4] := VATAmount;
-            TotalAmt[5] := TotalAmount1;
-            TotalAmt[6] := TotalPurchLineLCY.Amount;
-            TotalAmt[7] := TotalPurchLine.Quantity;
-            TotalAmt[8] := TotalPurchLine."Units per Parcel";
-            TotalAmt[9] := TotalPurchLine."Net Weight";
-            TotalAmt[10] := TotalPurchLine."Gross Weight";
-            TotalAmt[11] := TotalPurchLine."Unit Volume";
-            TotalAmt[12] := Vend."Balance (LCY)";
-
-        END;
+        TotalAmt[1] := TotalPurchCreditMemo.Amount + TotalPurchCreditMemo."Invoice Discount Amount";
+        TotalAmt[2] := TotalPurchCreditMemo."Invoice Discount Amount";
+        TotalAmt[3] := TotalPurchCreditMemo.Amount;
+        TotalAmt[4] := VATAmount;
+        TotalAmt[5] := TotalPurchCreditMemo."Amount Including VAT";
+        if VATAmount <> 0 then begin
+            PurchCreditLine.reset();
+            PurchCreditLine.SetRange("Document No.", DocumentNo);
+            PurchCreditLine.SetFilter("VAT %", '<>%1', 0);
+            if PurchCreditLine.FindFirst() then
+                VATText := STRSUBSTNO(Text002Msg, PurchCreditLine."VAT %");
+        end;
 
     end;
 
@@ -1394,6 +1168,7 @@ codeunit 50004 "Function Center"
 
     begin
         i := 0;
+        CLEAR(SalesComment);
         SalesCommentLine.RESET();
         SalesCommentLine.SETRANGE("Document Type", DocumentType);
         SalesCommentLine.SETRANGE("No.", DocumentNo);
@@ -1402,7 +1177,8 @@ codeunit 50004 "Function Center"
         IF SalesCommentLine.FINDSET() THEN
             REPEAT
                 i += 1;
-                SalesComment[i] := SalesCommentLine.Comment;
+                if i <= 100 then
+                    SalesComment[i] := SalesCommentLine.Comment;
             UNTIL SalesCommentLine.NEXT() = 0;
 
 
@@ -1414,6 +1190,7 @@ codeunit 50004 "Function Center"
         i: Integer;
     begin
         i := 0;
+        CLEAR(PurchCommentLine);
         PurchaseCommentLine.RESET();
         PurchaseCommentLine.SETRANGE("Document Type", DocumentType);
         PurchaseCommentLine.SETRANGE("No.", DocumentNo);
@@ -1422,7 +1199,8 @@ codeunit 50004 "Function Center"
         IF PurchaseCommentLine.FINDSET() THEN
             REPEAT
                 i += 1;
-                PurchCommentLine[i] := PurchaseCommentLine.Comment;
+                if i <= 100 then
+                    PurchCommentLine[i] := PurchaseCommentLine.Comment;
             UNTIL PurchaseCommentLine.NEXT() = 0;
 
     end;

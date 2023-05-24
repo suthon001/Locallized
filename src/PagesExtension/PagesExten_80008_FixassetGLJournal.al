@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Asset G/L Journal (ID 80008) extends Record Fixed Asset G/L Journal.
+/// </summary>
 pageextension 80008 "Asset G/L Journal" extends "Fixed Asset G/L Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Page';

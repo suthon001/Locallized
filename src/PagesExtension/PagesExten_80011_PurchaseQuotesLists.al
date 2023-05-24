@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Purchase Quotes Lists (ID 80011) extends Record Purchase Quotes.
+/// </summary>
 pageextension 80011 "Purchase Quotes Lists" extends "Purchase Quotes"
 {
 

@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension ExtenSales&ReceSetup (ID 80004) extends Record Sales & Receivables Setup.
+/// </summary>
 pageextension 80004 "ExtenSales&ReceSetup" extends "Sales & Receivables Setup"
 {
     layout

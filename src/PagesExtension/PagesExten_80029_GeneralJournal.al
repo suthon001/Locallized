@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension General Journal (ID 80029) extends Record General Journal.
+/// </summary>
 pageextension 80029 "General Journal" extends "General Journal"
 {
     layout

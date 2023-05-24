@@ -1,4 +1,7 @@
-pageextension 80018 "BWK Sales Quotes Subpage" extends "Sales Quote Subform"
+/// <summary>
+/// PageExtension Sales Quotes Subpage (ID 80018) extends Record Sales Quote Subform.
+/// </summary>
+pageextension 80018 "Sales Quotes Subpage" extends "Sales Quote Subform"
 {
     layout
     {

@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension ExtenGLAccount (ID 80007) extends Record G/L Account Card.
+/// </summary>
 pageextension 80007 "ExtenGLAccount" extends "G/L Account Card"
 {
     layout

@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Payment Journal (ID 80030) extends Record Payment Journal.
+/// </summary>
 pageextension 80030 "Payment Journal" extends "Payment Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Bank,Prepare,Approve,Page,Post/Print,Line,Account,Check';

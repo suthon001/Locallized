@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension VatPostingSetupLists (ID 80057) extends Record VAT Posting Setup.
+/// </summary>
 pageextension 80057 "VatPostingSetupLists" extends "VAT Posting Setup"
 {
     layout

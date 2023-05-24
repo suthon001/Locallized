@@ -1,25 +1,88 @@
+/// <summary>
+/// Page Signature (ID 50035).
+/// </summary>
 page 50035 "Signature"
 {
-    PageType = Card;
-    SourceTable = "User Setup";
-    DeleteAllowed = false;
-    InsertAllowed = false;
     Caption = 'Signature';
-    DataCaptionFields = "User ID";
-    ApplicationArea = All;
+    PageType = CardPart;
+    SourceTable = "user setup";
+    RefreshOnActivate = true;
     layout
     {
-        area(Content)
+        area(content)
         {
-            group("Signature Group")
+            group(General)
             {
-                Caption = 'Signature';
-                field("Signature"; Rec."Signature")
+                field(Signature; Rec.Signature)
                 {
-                    ApplicationArea = all;
+                    ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Signature field.';
                 }
             }
+
+        }
+
+    }
+    actions
+    {
+        area(processing)
+        {
+            action(ImportPicture)
+            {
+                ApplicationArea = All;
+                Caption = 'Import';
+                Image = Import;
+                ToolTip = 'Import a picture file.';
+                trigger OnAction()
+                begin
+                    ImportSignature();
+                end;
+            }
+            action(DeleteSignatureAction)
+            {
+                ApplicationArea = All;
+                Caption = 'Delete Signature';
+                Image = Import;
+                ToolTip = 'Delete a picture file.';
+                trigger OnAction()
+                begin
+                    DeleteSignature();
+                end;
+            }
         }
     }
+    /// <summary>
+    /// ImportFromDevice.
+    /// </summary>
+    procedure ImportSignature()
+    var
+        ltFileName: Text;
+        ltInstream: InStream;
+    begin
+        rec.Find();
+        rec.TestField("User ID");
+        UploadIntoStream('Select Picture', '', '', ltFileName, ltInstream);
+        if ltFileName = '' then
+            exit;
+        rec.Signature.ImportStream(ltInstream, ltFileName);
+        rec.Modify();
+    end;
+
+    /// <summary>
+    /// DeleteSignature.
+    /// </summary>
+    procedure DeleteSignature()
+    var
+        DeleteImageQst: Label 'Are you sure you want to delete the Signature?';
+    begin
+
+        Rec.TestField("User ID");
+
+        if not Confirm(DeleteImageQst) then
+            exit;
+
+        Clear(Rec.Signature);
+        Rec.Modify();
+
+    end;
 }

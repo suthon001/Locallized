@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension ExtenItem Journal Batches (ID 80003) extends Record Item Journal Batches.
+/// </summary>
 pageextension 80003 "ExtenItem Journal Batches" extends "Item Journal Batches"
 {
     layout

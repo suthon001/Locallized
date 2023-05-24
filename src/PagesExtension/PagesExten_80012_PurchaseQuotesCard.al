@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Purchase Quote Card (ID 80012) extends Record Purchase Quote.
+/// </summary>
 pageextension 80012 "Purchase Quote Card" extends "Purchase Quote"
 {
     layout

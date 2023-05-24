@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Sales Quotes Lists (ID 80016) extends Record Sales Quotes.
+/// </summary>
 pageextension 80016 "Sales Quotes Lists" extends "Sales Quotes"
 {
     layout

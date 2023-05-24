@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension ExtenCustomer Card (ID 80000) extends Record Customer Card.
+/// </summary>
 pageextension 80000 "ExtenCustomer Card" extends "Customer Card"
 {
     layout

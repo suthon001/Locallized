@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension ExtenVendor Card (ID 80001) extends Record Vendor Card.
+/// </summary>
 pageextension 80001 "ExtenVendor Card" extends "Vendor Card"
 {
 

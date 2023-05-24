@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension ExtenGeneralSetup (ID 80006) extends Record General Ledger Setup.
+/// </summary>
 pageextension 80006 "ExtenGeneralSetup" extends "General Ledger Setup"
 {
     layout

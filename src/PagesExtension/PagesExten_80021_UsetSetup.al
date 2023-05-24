@@ -1,23 +1,17 @@
+/// <summary>
+/// PageExtension UserSetup (ID 80021) extends Record User Setup.
+/// </summary>
 pageextension 80021 "UserSetup" extends "User Setup"
 {
-    actions
+    layout
     {
-        addfirst(Processing)
+        addfirst(factboxes)
         {
-            group("Picture")
+            part(Signature; "Signature")
             {
-                Caption = 'Picture';
-                Image = Signature;
-                action("Signature")
-                {
-                    Caption = 'Signature';
-                    Promoted = true;
-                    ApplicationArea = all;
-                    PromotedCategory = Process;
-                    RunObject = page "Signature";
-                    RunPageLink = "User ID" = field("User ID");
-                    ToolTip = 'Executes the Signature action.';
-                }
+                ApplicationArea = all;
+                SubPageLink = "User ID" = field("User ID");
+                Caption = 'Signature';
             }
         }
     }

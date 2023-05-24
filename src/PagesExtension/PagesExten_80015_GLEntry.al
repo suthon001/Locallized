@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension GLEntry (ID 80015) extends Record General Ledger Entries.
+/// </summary>
 pageextension 80015 "GLEntry" extends "General Ledger Entries"
 {
     layout

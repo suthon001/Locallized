@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension PurchaseJournal (ID 80025) extends Record Purchase Journal.
+/// </summary>
 pageextension 80025 "PurchaseJournal" extends "Purchase Journal"
 {
     layout

@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension VatEntry (ID 80014) extends Record VAT Entries.
+/// </summary>
 pageextension 80014 VatEntry extends "VAT Entries"
 {
     layout

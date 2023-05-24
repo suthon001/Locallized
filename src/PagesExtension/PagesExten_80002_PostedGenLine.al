@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension ExtenPostGenJournalLine (ID 80002) extends Record Posted General Journal.
+/// </summary>
 pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Navigate,Show Detail';

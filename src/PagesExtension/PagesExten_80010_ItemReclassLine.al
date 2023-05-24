@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Item Reclass. Journal (ID 80010) extends Record Item Reclass. Journal.
+/// </summary>
 pageextension 80010 "Item Reclass. Journal" extends "Item Reclass. Journal"
 {
     layout

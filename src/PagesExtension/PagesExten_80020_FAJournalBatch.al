@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension JounralBatch (ID 80020) extends Record FA Journal Batches.
+/// </summary>
 pageextension 80020 "JounralBatch" extends "FA Journal Batches"
 {
     layout

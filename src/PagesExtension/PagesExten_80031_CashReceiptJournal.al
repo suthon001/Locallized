@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Receipt Journal (ID 80031) extends Record Cash Receipt Journal.
+/// </summary>
 pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Approve,Page,Post/Print,Line,Account';

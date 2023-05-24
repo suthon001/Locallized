@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension ExtenCustomerLists (ID 80028) extends Record Customer List.
+/// </summary>
 pageextension 80028 "ExtenCustomerLists" extends "Customer List"
 {
 
