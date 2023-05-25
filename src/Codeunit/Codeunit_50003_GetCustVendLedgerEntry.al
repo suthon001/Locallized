@@ -129,7 +129,11 @@ codeunit 50003 "Get Cust/Vend Ledger Entry"
         // END;
     end;
 
-    procedure "CreateVendBillingLines"(VAR VendLedgEntry2: Record "Vendor Ledger Entry")
+    /// <summary>
+    /// CreateVendBillingLines.
+    /// </summary>
+    /// <param name="VAR VendLedgEntry2">Record "Vendor Ledger Entry".</param>
+    procedure CreateVendBillingLines(VAR VendLedgEntry2: Record "Vendor Ledger Entry")
     var
         BillingLine: Record "Billing Receipt Line";
         CurrencyFactor: Decimal;
