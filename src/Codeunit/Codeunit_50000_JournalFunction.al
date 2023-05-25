@@ -1,3 +1,6 @@
+/// <summary>
+/// Codeunit Journal Function (ID 50000).
+/// </summary>
 codeunit 50000 "Journal Function"
 {
     EventSubscriberInstance = StaticAutomatic;

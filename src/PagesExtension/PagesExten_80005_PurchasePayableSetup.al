@@ -1,5 +1,5 @@
 /// <summary>
-/// PageExtension ExtenPurchaPayablesSetup (ID 80005) extends Record Purchases & Payables Setup.
+/// PageExtension ExtenPurchaPayablesSetup (ID 80005) extends Record Purchases Payables Setup.
 /// </summary>
 pageextension 80005 "ExtenPurchaPayablesSetup" extends "Purchases & Payables Setup"
 {

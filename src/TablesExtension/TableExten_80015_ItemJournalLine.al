@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension ExtenItem Journal Line (ID 80015) extends Record Item Journal Line.
+/// </summary>
 tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
 {
     fields
@@ -54,12 +57,6 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
     }
 
 
-    trigger OnDelete()
-    var
-        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-    begin
-        ApprovalsMgmt.OnDeleteRecordInApprovalRequest(RecordId);
-    end;
 
     trigger OnInsert()
     begin
@@ -67,7 +64,12 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
         "Create DateTime" := CurrentDateTime;
     end;
 
-    procedure "AssistEdit"(OldItemJournalLine: Record "Item Journal Line"): Boolean
+    /// <summary>
+    /// AssistEdit.
+    /// </summary>
+    /// <param name="OldItemJournalLine">Record "Item Journal Line".</param>
+    /// <returns>Return value of type Boolean.</returns>
+    procedure AssistEdit(OldItemJournalLine: Record "Item Journal Line"): Boolean
     var
         ItemJournalLine: Record "Item Journal Line";
         ItemJournalBatch: Record "Item Journal Batch";
@@ -85,45 +87,11 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
         END;
     end;
 
-    [IntegrationEvent(false, false)]
-    PROCEDURE OnSendITemJournalforApproval(var ItemJournal: Record "Item Journal Line");
-    begin
-    end;
-
-    [IntegrationEvent(false, false)]
-    PROCEDURE OnCancelITemJournalLineforApproval(var ItemJournal: Record "Item Journal Line");
-    begin
-    end;
-
-    /// <summary> 
-    /// Description for IsItemJournalEnabled.
+    /// <summary>
+    /// GetLastLine.
     /// </summary>
-    /// <param name="ItemJournal">Parameter of type Record "Item Journal Line".</param>
-    /// <returns>Return variable "Boolean".</returns>
-    local procedure IsItemJournalEnabled(var ItemJournal: Record "Item Journal Line"): Boolean
-    var
-        WFMngt: Codeunit "Workflow Management";
-        WFCode: Codeunit "Workflow";
-    begin
-        exit(WFMngt.CanExecuteWorkflow(ItemJournal, WFCode.RunWorkflowOnSendItemJournalLineApprovalCode()))
-    end;
-
-    /// <summary> 
-    /// Description for CheckWorkflowEnabled.
-    /// </summary>
-    /// <param name="ItemJournal">Parameter of type Record "Item Journal Line".</param>
-    /// <returns>Return variable "Boolean".</returns>
-    procedure CheckWorkflowItemJournalEnabled(var ItemJournal: Record "Item Journal Line"): Boolean
-    var
-        NoWorkflowEnbMsg: Label 'No workflow Enabled for this Record type';
-    begin
-        ItemJournal.TestField("Document No.");
-        if not IsItemJournalEnabled(ItemJournal) then
-            Error(NoWorkflowEnbMsg);
-        exit(true);
-    end;
-
-    procedure "GetLastLine"(): Integer
+    /// <returns>Return value of type Integer.</returns>
+    procedure GetLastLine(): Integer
     var
         ItemJournalLine: Record "Item Journal Line";
     begin

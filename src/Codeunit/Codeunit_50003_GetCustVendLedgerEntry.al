@@ -1,3 +1,6 @@
+/// <summary>
+/// Codeunit Get Cust/Vend Ledger Entry (ID 50003).
+/// </summary>
 codeunit 50003 "Get Cust/Vend Ledger Entry"
 {
     Permissions = TableData "Cust. Ledger Entry" = rm, TableData "Vendor Ledger Entry" = rm;

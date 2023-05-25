@@ -38,7 +38,6 @@ permissionset 50000 LCLPermission
         codeunit "Get Cust/Vend Ledger Entry" = X,
         codeunit "Function Center" = X,
         codeunit EventFunction = X,
-        codeunit Workflow = X,
         codeunit "Record Deletion Mgt." = X,
         page "Cust. & Vendor BranchLists" = X,
         page "WHT Business Posting Group" = X,

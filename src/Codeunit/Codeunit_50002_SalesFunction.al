@@ -1,3 +1,6 @@
+/// <summary>
+/// Codeunit Sales Function (ID 50002).
+/// </summary>
 codeunit 50002 "Sales Function"
 {
 

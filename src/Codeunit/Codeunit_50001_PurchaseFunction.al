@@ -1,3 +1,6 @@
+/// <summary>
+/// Codeunit Purchase Function (ID 50001).
+/// </summary>
 codeunit 50001 "Purchase Function"
 {
     EventSubscriberInstance = StaticAutomatic;
@@ -80,6 +83,8 @@ codeunit 50001 "Purchase Function"
         if Handle then begin
             if not Confirm(strsubstno(ConfirmMsg, format(PurchaseHeader."Document Type"))) then
                 IsHandled := true;
+
+
             if not IsHandled then begin
                 HideDialog := true;
                 if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order then begin

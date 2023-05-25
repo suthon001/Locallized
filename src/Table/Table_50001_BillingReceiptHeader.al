@@ -228,8 +228,8 @@ Table 50001 "Billing Receipt Header"
         field(23; "Status"; Option)
         {
             Caption = 'Status';
-            OptionCaption = 'Open,Released,Create RV,Posted';
-            OptionMembers = Open,Released,"Create RV",Posted;
+            OptionCaption = 'Open,Released,"Pending Approval",Create RV,Posted';
+            OptionMembers = Open,Released,"Pending Approval","Create RV",Posted;
             DataClassification = SystemMetadata;
             Editable = false;
         }
@@ -462,6 +462,12 @@ Table 50001 "Billing Receipt Header"
             Caption = 'Cheque Date';
             DataClassification = CustomerContent;
         }
+        field(53; "ID"; GUID)
+        {
+            Caption = 'ID';
+            DataClassification = SystemMetadata;
+            Editable = false;
+        }
 
     }
     keys
@@ -475,15 +481,23 @@ Table 50001 "Billing Receipt Header"
     begin
         "Create By User" := COPYSTR(UserId(), 1, 50);
         "Create DateTime" := CurrentDateTime;
-        "Posting Date" := Today;
-        "Document Date" := Today;
+        "Posting Date" := Today();
+        "Document Date" := Today();
         TestField("No.");
     end;
 
     trigger OnDelete()
+    var
+        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+        BillingReceiptLine: Record "Billing Receipt Line";
     begin
         TESTFIELD("Status", "Status"::Open);
-        "UpdateBillingLine"(FIELDNO("Due Date"));
+
+        BillingReceiptLine.reset();
+        BillingReceiptLine.SetRange("Document Type", BillingReceiptLine."Document Type");
+        BillingReceiptLine.SetRange("Document No.", "No.");
+        BillingReceiptLine.DeleteAll();
+        ApprovalsMgmt.OnDeleteRecordInApprovalRequest(RecordId);
     end;
 
     trigger OnModify()
@@ -504,7 +518,7 @@ Table 50001 "Billing Receipt Header"
     /// <returns>Return variable "Boolean".</returns>
     procedure "AssistEdit"(OldBillingHeader: Record "Billing Receipt Header"): Boolean
     var
-        BillingHeader2: Record "Billing Receipt Header";
+        BillingHeader2, BillingReceiptHeader : Record "Billing Receipt Header";
     begin
         // WITH BillingReceiptHeader DO BEGIN
         BillingReceiptHeader.COPY(Rec);
@@ -605,11 +619,66 @@ Table 50001 "Billing Receipt Header"
         TESTFIELD("Status", "Status"::Released);
     end;
 
+    [IntegrationEvent(false, false)]
+    PROCEDURE OnSendBillingReceiptforApproval(var BillingReceiptHeader: Record "Billing Receipt Header");
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    PROCEDURE OnCancelBillingReceiptforApproval(var BillingReceiptHeader: Record "Billing Receipt Header");
+    begin
+    end;
+
+
+    local procedure IsItemBillingReceiptEnabled(var BillingReceiptHeader: Record "Billing Receipt Header"): Boolean
+    var
+        WFMngt: Codeunit "Workflow Management";
+        WFCode: Codeunit EventFunction;
+    begin
+        exit(WFMngt.CanExecuteWorkflow(BillingReceiptHeader, WFCode.RunWorkflowOnSendBillingReceiptApprovalCode()))
+    end;
+
+    /// <summary>
+    /// CheckRelease.
+    /// </summary>
+    procedure CheckBeforRelease()
+    begin
+        if IsItemBillingReceiptEnabled(rec) then
+            Error(Text002Msg);
+    end;
+
+    /// <summary>
+    /// CheckbeforReOpen.
+    /// </summary>
+    procedure CheckbeforReOpen()
+    begin
+        if rec.Status = rec.Status::"Pending Approval" then
+            Error(Text003Msg);
+    end;
+
+    /// <summary>
+    /// CheckWorkflowBillingReceiptEnabled.
+    /// </summary>
+    /// <param name="BillingReceiptHeader">VAR Record "Billing Receipt Header".</param>
+    /// <returns>Return value of type Boolean.</returns>
+    procedure CheckWorkflowBillingReceiptEnabled(var BillingReceiptHeader: Record "Billing Receipt Header"): Boolean
+    var
+        NoWorkflowEnbMsg: Label 'No workflow Enabled for this Record type';
+    begin
+        BillingReceiptHeader.TestField("No.");
+        if not IsItemBillingReceiptEnabled(BillingReceiptHeader) then
+            Error(NoWorkflowEnbMsg);
+        exit(true);
+    end;
+
+
     var
         NoSeriesMgt: Codeunit NoSeriesManagement;
-        BillingReceiptHeader: Record "Billing Receipt Header";
         text051Txt: Label 'The document %1 %2 already exists.', Locked = true;
         Text001Err: Label 'Cannot Change';
         Text003Txt: Label 'You cannot rename a %1.', Locked = true;
+        Text002Msg: Label 'This document can only be released when the approval process is complete.';
+        Text003Msg: Label 'The approval process must be cancelled or completed to reopen this document.';
+
 
 }

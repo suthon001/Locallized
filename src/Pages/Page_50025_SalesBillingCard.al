@@ -3,10 +3,9 @@
 /// </summary>
 page 50025 "Sales Billing Card"
 {
-
     PageType = Document;
     SourceTable = "Billing Receipt Header";
-    PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Order,Request Approval,Print/Send,Navigate';
+    PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Request Approval,Approval,Print/Send,Navigate';
     RefreshOnActivate = true;
     Caption = 'Sales Billing Card';
     SourceTableView = where("Document Type" = filter('Sales Billing'));
@@ -211,7 +210,7 @@ page 50025 "Sales Billing Card"
                     ApplicationArea = all;
                     Promoted = true;
                     PromotedIsBig = true;
-                    PromotedCategory = Process;
+                    PromotedCategory = Category5;
                     ToolTip = 'Executes the Release action.';
                     trigger OnAction()
                     var
@@ -227,7 +226,7 @@ page 50025 "Sales Billing Card"
                     ApplicationArea = all;
                     Promoted = true;
                     PromotedIsBig = true;
-                    PromotedCategory = Process;
+                    PromotedCategory = Category5;
                     ToolTip = 'Executes the Open action.';
                     trigger OnAction()
                     var
@@ -237,8 +236,87 @@ page 50025 "Sales Billing Card"
                     end;
                 }
             }
+
+
+            group("Approval")
+            {
+                Caption = 'Approval';
+                action("Approve")
+                {
+                    Caption = 'Approve';
+                    Visible = OpenApprovalEntriesExistForCurrUser;
+                    Image = Approve;
+                    Promoted = true;
+                    PromotedCategory = Category9;
+                    PromotedOnly = true;
+                    ApplicationArea = all;
+                    ToolTip = 'Executes the Approve action.';
+                    trigger OnAction()
+                    begin
+                        ApprovalsMgmt.ApproveRecordApprovalRequest(Rec.RecordId);
+                    end;
+                }
+            }
+            group("Request to Approval")
+            {
+                Caption = 'Request to Approval';
+                action("Send A&pproval Requst")
+                {
+                    Enabled = NOT OpenApprovalEntriesExist AND CanRequstApprovelForFlow;
+                    Image = SendApprovalRequest;
+                    Promoted = true;
+                    PromotedCategory = Category8;
+                    PromotedOnly = true;
+                    ApplicationArea = all;
+                    Caption = 'Send A&pproval Requst';
+                    ToolTip = 'Executes the Send A&pproval Requst action.';
+                    trigger OnAction()
+                    begin
+                        if Rec.CheckWorkflowBillingReceiptEnabled(Rec) then
+                            Rec.OnSendBillingReceiptforApproval(rec);
+                    end;
+
+
+                }
+                action("Cancel Approval Request")
+                {
+                    Enabled = (CancancelApprovalForrecord OR CanRequstApprovelForFlow) AND (OpenApprovalEntriesExist);
+                    Image = CancelApprovalRequest;
+                    Promoted = true;
+                    PromotedCategory = Category8;
+                    ApplicationArea = all;
+                    PromotedOnly = true;
+                    Caption = 'Cancel Approval Request';
+                    ToolTip = 'Executes the Cancel Approval Request action.';
+                    trigger OnAction()
+                    begin
+
+                        Rec.OnCancelBillingReceiptforApproval(rec);
+                    end;
+                }
+            }
         }
     }
 
+    trigger OnAfterGetRecord()
+    begin
+        OpenApprovalEntriesExistForCurrUser := ApprovalsMgmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId);
+        OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(Rec.RecordId);
+        CancancelApprovalForrecord := ApprovalsMgmt.CanCancelApprovalForRecord(Rec.RecordId);
+        workflowWebhoolMgt.GetCanRequestAndCanCancel(Rec.RecordId, CanRequstApprovelForFlow, CancancelApprovalForrecord);
 
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        OpenApprovalEntriesExistForCurrUser := ApprovalsMgmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId);
+        OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(Rec.RecordId);
+        CancancelApprovalForrecord := ApprovalsMgmt.CanCancelApprovalForRecord(Rec.RecordId);
+        workflowWebhoolMgt.GetCanRequestAndCanCancel(Rec.RecordId, CanRequstApprovelForFlow, CancancelApprovalForrecord);
+    end;
+
+    var
+        OpenApprovalEntriesExistForCurrUser, CancancelApprovalForrecord, OpenApprovalEntriesExist, CanRequstApprovelForFlow : Boolean;
+        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+        workflowWebhoolMgt: Codeunit 1543;
 }

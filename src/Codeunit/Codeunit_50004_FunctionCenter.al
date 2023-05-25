@@ -1,3 +1,6 @@
+/// <summary>
+/// Codeunit Function Center (ID 50004).
+/// </summary>
 codeunit 50004 "Function Center"
 {
     /// <summary> 
@@ -376,6 +379,13 @@ codeunit 50004 "Function Center"
         EXIT(AmtThaiText);
     end;
 
+    /// <summary>
+    /// FormatDigitThai.
+    /// </summary>
+    /// <param name="adigit">text[1].</param>
+    /// <param name="pos">Integer.</param>
+    /// <param name="dflag">Boolean.</param>
+    /// <returns>Return value of type Text.</returns>
     Local procedure "FormatDigitThai"(adigit: text[1]; pos: Integer; dflag: Boolean): Text
     var
         fdigit: Text[30];
@@ -1545,7 +1555,7 @@ codeunit 50004 "Function Center"
         CustBranch: Record "Customer & Vendor Branch";
 
     begin
-
+        CLEAR(Text);
         CASE DocumentType OF
             DocumentType::Shipment:
                 BEGIN
@@ -1565,12 +1575,12 @@ codeunit 50004 "Function Center"
                                 if SalesShptHeader."Currency Code" = '' then begin
 
                                     IF Cust."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
 
                                 end else
 
                                     IF Cust."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                                        Text[4] += 'Fax. : ' + Cust."Fax No.";
                                 Text[5] := SalesShptHeader."Sell-to Contact";
 
                                 if (SalesShptHeader."Branch Code" <> '') AND (NOT SalesShptHeader."Head Office") then begin
@@ -1582,10 +1592,10 @@ codeunit 50004 "Function Center"
                                     Text[4] := CustBranch."Phone No." + ' ';
                                     if SalesShptHeader."Currency Code" = '' then begin
                                         IF CustBranch."Fax No." <> '' THEN
-                                            Text[4] += STRSUBSTNO('แฟกซ์ : %1', CustBranch."Fax No.");
+                                            Text[4] += 'แฟกซ์ : ' + CustBranch."Fax No.";
                                     end else
                                         IF CustBranch."Fax No." <> '' THEN
-                                            Text[4] += STRSUBSTNO('Fax. : %1', CustBranch."Fax No.");
+                                            Text[4] += 'Fax. : ' + CustBranch."Fax No.";
 
                                 end;
 
@@ -1603,12 +1613,11 @@ codeunit 50004 "Function Center"
                                 if SalesShptHeader."Currency Code" = '' then begin
 
                                     IF Cust."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
-
+                                        Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
                                 end else
 
                                     IF Cust."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                                        Text[4] += 'Fax. : ' + Cust."Fax No.";
                                 Text[5] := SalesShptHeader."Bill-to Contact";
                                 Text[9] := SalesShptHeader."Bill-to Customer No.";
                             END;
@@ -1624,13 +1633,13 @@ codeunit 50004 "Function Center"
                                 Text[4] := Shipto."Phone No." + ' ';
                                 if SalesShptHeader."Currency Code" = '' then begin
 
-                                    IF Cust."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Shipto."Fax No.");
+                                    IF Shipto."Fax No." <> '' THEN
+                                        Text[4] += 'แฟกซ์ : ' + Shipto."Fax No.";
 
                                 end else
 
-                                    IF Cust."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Shipto."Fax No.");
+                                    IF Shipto."Fax No." <> '' THEN
+                                        Text[4] += 'Fax. : ' + Shipto."Fax No.";
                                 Text[5] := SalesShptHeader."Ship-to Contact";
 
                             END;
@@ -1690,7 +1699,7 @@ codeunit 50004 "Function Center"
                                 if ReturnRcptHeader."Currency Code" = '' then begin
 
                                     IF Cust."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
 
                                 end else
 
@@ -2144,13 +2153,17 @@ codeunit 50004 "Function Center"
 
 
 
+    /// <summary>
+    /// RereleaseBilling.
+    /// </summary>
+    /// <param name="BillingHeader">Record "Billing Receipt Header".</param>
     procedure "RereleaseBilling"(BillingHeader: Record "Billing Receipt Header")
+
     begin
         IF BillingHeader."Status" = BillingHeader."Status"::Released THEN
             EXIT;
-
+        BillingHeader.CheckBeforRelease();
         BillingHeader.TESTFIELD("Bill/Pay-to Cust/Vend No.");
-
         BillingLine.RESET();
         BillingLine.SETRANGE("Document Type", BillingHeader."Document Type");
         BillingLine.SETRANGE("Document No.", BillingHeader."No.");
@@ -2166,6 +2179,7 @@ codeunit 50004 "Function Center"
         //  WITH BillingHeader DO BEGIN
         IF BillingHeader."Status" = BillingHeader."Status"::Open THEN
             EXIT;
+        BillingHeader.CheckbeforReOpen();
         BillingHeader."Status" := BillingHeader."Status"::Open;
         BillingHeader.MODIFY();
         //   END;
