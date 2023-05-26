@@ -181,10 +181,8 @@ table 50009 "WHT Header"
             DataClassification = CustomerContent;
 
         }
-        field(21; "WHT Option"; Option)
+        field(21; "WHT Option"; Enum "WHT Option")
         {
-            OptionMembers = "1","2","3","4";
-            OptionCaption = '(1)หักภาษี ณ ที่จ่าย,(2)ออกภาษีให้ตลอดไป,(3)ออกภาษีให้ครั้งเดียว,(4)อื่นๆ';
             Caption = 'WHT Option';
             DataClassification = CustomerContent;
         }
