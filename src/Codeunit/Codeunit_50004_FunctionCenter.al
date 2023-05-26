@@ -3,6 +3,9 @@
 /// </summary>
 codeunit 50004 "Function Center"
 {
+
+
+
     /// <summary> 
     /// Description for Get ThaiMonth.
     /// </summary>
@@ -1114,6 +1117,12 @@ codeunit 50004 "Function Center"
             VATText := STRSUBSTNO(Text002Msg, TotalPurchaseLine."VAT %");
     end;
 
+    /// <summary>
+    /// PostedPurchaseInvoiceStatistics.
+    /// </summary>
+    /// <param name="DocumentNo">Code[20].</param>
+    /// <param name="VAR TotalAmt">ARRAY[100] OF Decimal.</param>
+    /// <param name="VAR VATText">Text[30].</param>
     procedure "PostedPurchaseInvoiceStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
 
     var

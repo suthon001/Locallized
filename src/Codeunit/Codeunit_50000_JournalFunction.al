@@ -5,6 +5,44 @@ codeunit 50000 "Journal Function"
 {
     EventSubscriberInstance = StaticAutomatic;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterVendLedgEntryInsert', '', false, false)]
+    local procedure OnAfterVendLedgEntryInsert(var VendorLedgerEntry: Record "Vendor Ledger Entry")
+    var
+        WHTAppEntry: Record "WHT Applied Entry";
+        PurchInvLine: Record "Purch. Inv. Line";
+        TempPurchLine: Record "Purchase Line" temporary;
+        LastLineNo: Integer;
+    begin
+        LastLineNo := 0;
+        if (VendorLedgerEntry."Document Type" = VendorLedgerEntry."Document Type"::Invoice) then begin
+            PurchInvLine.reset();
+            PurchInvLine.SetFilter("Document No.", VendorLedgerEntry."Document No.");
+            PurchInvLine.SetFilter("WHT %", '<>%1', 0);
+            IF PurchInvLine.FindSet() then
+                repeat
+                    TempPurchLine.reset();
+                    TempPurchLine.SetFilter("WHT Business Posting Group", '%1', PurchInvLine."WHT Business Posting Group");
+                    TempPurchLine.SetFilter("WHT Product Posting Group", '%1', PurchInvLine."WHT Product Posting Group");
+                    if not TempPurchLine.FindFirst() then begin
+                        LastLineNo := LastLineNo + 10000;
+                        TempPurchLine.init();
+                        TempPurchLine."Line No." := LastLineNo;
+                        TempPurchLine."WHT Product Posting Group" := PurchInvLine."WHT Business Posting Group";
+                        TempPurchLine."WHT Product Posting Group" := PurchInvLine."WHT Product Posting Group";
+                        TempPurchLine."WHT %" := PurchInvLine."WHT %";
+                        TempPurchLine."WHT Option" := PurchInvLine."WHT Option";
+                        TempPurchLine."WHT Base" := PurchInvLine.Amount;
+                        TempPurchLine."WHT Amount" := ROUND(PurchInvLine.Amount * PurchInvLine."WHT %" / 100, 0.01);
+                        TempPurchLine.Insert();
+                    end else begin
+                        TempPurchLine."WHT Base" += PurchInvLine.Amount;
+                        TempPurchLine."WHT Amount" += ROUND(PurchInvLine.Amount * PurchInvLine."WHT %" / 100, 0.01);
+                        TempPurchLine.Modify();
+                    end;
+                until PurchInvLine.Next() = 0;
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforePostGenJnlLine', '', true, true)]
     /// <summary> 
     /// Description for InsertPostedGenLine.
@@ -55,8 +93,6 @@ codeunit 50000 "Journal Function"
     /// <summary> 
     /// Description for CopyHeaderFromInvoiceBuff.
     /// </summary>
-    /// <param name="InvoicePostBuffer">Parameter of type Record "Invoice Post. Buffer".</param>
-    /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     local procedure "CopyHeaderFromInvoiceBuff"(InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary; var GenJnlLine: Record "Gen. Journal Line")
     begin
         // with GenJournalLine do begin

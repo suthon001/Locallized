@@ -244,11 +244,9 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             Caption = 'WHT Document No.';
             DataClassification = CustomerContent;
         }
-        field(80030; "WHT Option"; Option)
+        field(80030; "WHT Option"; Enum "WHT Option")
         {
             Caption = 'WHT Option';
-            OptionCaption = ' ,(1) หักภาษี ณ ที่จ่าย,(2) ออกภาษีให้ตลอดไป,(3) ออกภาษีให้ครั้งเดียว,(4) อื่นๆ';
-            OptionMembers = " ","(1) หักภาษี ณ ที่จ่าย","(2) ออกภาษีให้ตลอดไป","(3) ออกภาษีให้ครั้งเดียว","(4) อื่นๆ";
             DataClassification = CustomerContent;
         }
         field(80031; "WHT No. Series"; Code[10])
@@ -283,7 +281,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             DataClassification = CustomerContent;
 
         }
-        field(80035; "Bank Account No."; text[20])
+        field(80035; "Bank Account No."; text[30])
         {
             Caption = 'Bank Account No.';
             DataClassification = CustomerContent;
@@ -541,6 +539,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
 
     begin
         IF WHTPostingSetup.GET("WHT Business Posting Group", "WHT Product Posting Group") THEN BEGIN
+            CalcFields("Template Source Type");
             "WHT %" := WHTPostingSetup."WHT %";
             "WHT Amount" := ROUND(("WHT Base") * (WHTPostingSetup."WHT %" / 100), 0.01);
             if "Template Source Type" = "Template Source Type"::Payments THEN

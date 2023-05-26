@@ -132,6 +132,30 @@ tableextension 80031 "ExtenPurchase Inv. Line" extends "Purch. Inv. Line"
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
+        field(80024; "WHT %"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'WHT %';
+
+        }
+        field(80025; "WHT Base"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'WHT Base';
+
+        }
+        field(80026; "WHT Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'WHT Amount';
+        }
+        field(80027; "WHT Option"; Option)
+        {
+            OptionMembers = "1","2","3","4";
+            OptionCaption = '1:หัก ณ ที่จ่าย,2:ออกให้ตลอดไป,3:ออกให้ครั้งเดียว,4:อื่นๆ';
+            Caption = 'WHT Option';
+            DataClassification = CustomerContent;
+        }
     }
 
 }

@@ -170,11 +170,9 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
             Caption = 'WHT Document No.';
             DataClassification = CustomerContent;
         }
-        field(80030; "WHT Option"; Option)
+        field(80030; "WHT Option"; Enum "WHT Option")
         {
             Caption = 'WHT Option';
-            OptionCaption = ' ,(1) หักภาษี ณ ที่จ่าย,(2) ออกภาษีให้ตลอดไป,(3) ออกภาษีให้ครั้งเดียว,(4) อื่นๆ';
-            OptionMembers = " ","(1) หักภาษี ณ ที่จ่าย","(2) ออกภาษีให้ตลอดไป","(3) ออกภาษีให้ครั้งเดียว","(4) อื่นๆ";
             DataClassification = CustomerContent;
         }
         field(80031; "WHT No. Series"; Code[10])

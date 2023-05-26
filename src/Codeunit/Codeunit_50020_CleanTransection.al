@@ -51,8 +51,13 @@ codeunit 50020 "Record Deletion Mgt."
 
 
     var
-        Text0002: Label 'Deleting Records!\Table: #1#######';
+        Text0002Lbl: Label 'Deleting Records!\Table: #1#######', Locked = true;
 
+    /// <summary>
+    /// DeleteRecords.
+    /// </summary>
+    /// <param name="pCompanyName">Text.</param>
+    /// <param name="setdefultnoseries">Boolean.</param>
     procedure DeleteRecords(pCompanyName: Text; setdefultnoseries: Boolean)
     var
         Window: Dialog;
@@ -60,7 +65,7 @@ codeunit 50020 "Record Deletion Mgt."
         RecordDeletionTable: Record "Record Deletion Table";
         NoseriesLine: Record "No. Series Line";
     begin
-        Window.Open(Text0002);
+        Window.Open(Text0002Lbl);
         RecordDeletionTable.reset();
         RecordDeletionTable.SetRange("Delete Records", true);
         if RecordDeletionTable.FindSet() then begin
@@ -72,7 +77,7 @@ codeunit 50020 "Record Deletion Mgt."
                 RecRef.Close();
 
                 RecordDeletionTable."LastTime Clean Transection" := CurrentDateTime;
-                RecordDeletionTable."LastTime Clean By" := UserId;
+                RecordDeletionTable."LastTime Clean By" := COPYSTR(UserId, 1, 50);
                 RecordDeletionTable.Modify();
 
             until RecordDeletionTable.Next() = 0;
@@ -88,6 +93,9 @@ codeunit 50020 "Record Deletion Mgt."
         Window.Close();
     end;
 
+    /// <summary>
+    /// Generate Table.
+    /// </summary>
     procedure "Generate Table"()
     var
         MyTable: list of [text];

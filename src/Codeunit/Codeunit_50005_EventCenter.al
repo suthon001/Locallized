@@ -1,6 +1,11 @@
+/// <summary>
+/// Codeunit EventFunction (ID 50005).
+/// </summary>
 codeunit 50005 EventFunction
 {
     Permissions = TableData "G/L Entry" = rimd;
+
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', true, true)]
     local procedure "OnAfterSubstituteReport"(ReportId: Integer; var NewReportId: Integer)
     begin
@@ -60,6 +65,11 @@ codeunit 50005 EventFunction
 
     end;
 
+    /// <summary>
+    /// SalesPreviewVourcher.
+    /// </summary>
+    /// <param name="SalesHeader">Record "Sales Header".</param>
+    /// <param name="TemporaryGL">Temporary VAR Record "G/L Entry".</param>
     procedure "SalesPreviewVourcher"(SalesHeader: Record "Sales Header"; var TemporaryGL: Record "G/L Entry" temporary)
     var
         RecRef: RecordRef;
