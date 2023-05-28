@@ -5,7 +5,7 @@ report 50038 "Recript to CashReceipt"
     Caption = 'Receipt to CashReceipt';
     ProcessingOnly = true;
     Permissions = TableData "Cust. Ledger Entry" = imd;
-    ApplicationArea = All;
+    UsageCategory = None;
     dataset
     {
         dataitem("Billing - Receipt Header"; "Billing Receipt Header")
@@ -155,7 +155,7 @@ report 50038 "Recript to CashReceipt"
 
                 BillingHeader."Receive Status" := BillingHeader."Receive Status"::"In used";
                 BillingHeader."Journal Document No." := DocumentNo;
-                BillingHeader."Status" := BillingHeader."Status"::"Create RV";
+                BillingHeader."Status" := BillingHeader."Status"::"Created RV";
                 BillingHeader.MODIFY();
             end;
         }

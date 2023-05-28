@@ -3,7 +3,7 @@
 /// </summary>
 table 50002 "Billing Receipt Line"
 {
-    Caption = 'Billing & Receipt Line';
+    Caption = 'Billing Receipt Line';
     Permissions = TableData 21 = rm, TableData 25 = rm;
     DataClassification = CustomerContent;
     fields

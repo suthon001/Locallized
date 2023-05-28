@@ -587,14 +587,13 @@ codeunit 50005 EventFunction
 
     local procedure InsertWorkflowBillingReceiptTemplate()
     var
+
         ApprovalEntry: Record "Approval Entry";
         Workflow: Record 1501;
         workflowSetup: Codeunit "Workflow Setup";
-        workflowwebhook: Record "Workflow Webhook Entry";
     begin
-        workflowSetup.InsertTableRelation(Database::"Billing Receipt Header", 0, Database::"Approval Entry", ApprovalEntry.FieldNo("Record ID to Approve"));
-        workflowSetup.InsertTableRelation(Database::"Billing Receipt Header", 53, Database::"Workflow Webhook Entry", workflowwebhook.FieldNo("Data ID"));
 
+        workflowSetup.InsertTableRelation(Database::"Billing Receipt Header", 0, Database::"Approval Entry", ApprovalEntry.FieldNo("Record ID to Approve"));
         workflowSetup.InsertWorkflowTemplate(Workflow, BillingReceiptCatLbl, 'Billing Receipt Workflow', BillingReceiptCatLbl);
         InsertBillingReceiptDetailWOrkflow(Workflow);
         workflowSetup.MarkWorkflowAsTemplate(Workflow);
@@ -602,12 +601,17 @@ codeunit 50005 EventFunction
 
     local procedure InsertBillingReceiptDetailWOrkflow(var workflow: Record 1501)
     var
+        BillingReceiptHeader: Record "Billing Receipt Header";
+        BillingReceiptLine: Record "Billing Receipt Line";
         WorkflowSetpArgument: Record 1523;
         blankDateFormula: DateFormula;
         BillingReceipt: Record "Billing Receipt Header";
         WorkflowSetup: Codeunit "Workflow Setup";
 
     begin
+        workflowSetup.InsertTableRelation(Database::"Billing Receipt Header", BillingReceiptHeader.FieldNo("Document Type"), DATABASE::"Billing Receipt Line", BillingReceiptLine.FieldNo("Document Type"));
+        workflowSetup.InsertTableRelation(Database::"Billing Receipt Header", BillingReceiptHeader.FieldNo("No."), DATABASE::"Billing Receipt Line", BillingReceiptLine.FieldNo("Document No."));
+
         WorkflowSetup.InitWorkflowStepArgument(WorkflowSetpArgument,
         WorkflowSetpArgument."Approver Type"::Approver, WorkflowSetpArgument."Approver Limit Type"::"Direct Approver",
         0, '', blankDateFormula, TRUE);
@@ -634,8 +638,6 @@ codeunit 50005 EventFunction
 
                 WorkflowEventHadning.AddEventPredecessor(RunWorkflowOnCancelBillingReceiptApprovalCode(), RunWorkflowOnSendBillingReceiptApprovalCode());
             WorkflowEventHadning.RunWorkflowOnApproveApprovalRequestCode():
-
-
                 WorkflowEventHadning.AddEventPredecessor(WorkflowEventHadning.RunWorkflowOnApproveApprovalRequestCode(), RunWorkflowOnSendBillingReceiptApprovalCode());
 
         end;
@@ -672,13 +674,14 @@ codeunit 50005 EventFunction
 
     end;
 
-    local procedure BuildBillingReceiptCondition(Status: Option Open,Released,"Pending Approval","Create RV",Posted): Text
+    local procedure BuildBillingReceiptCondition(Status: Enum "Billing Receipt Status"): Text
     var
         BillingReceipt: Record "Billing Receipt Header";
+        BillingReceiptLine: Record "Billing Receipt Line";
         workflowSetup: Codeunit "Workflow Setup";
     begin
         BillingReceipt.SetRange("Status", Status);
-        EXIT(StrSubstNo(ItemBillingReceiptConditionTxt, workflowSetup.Encode(BillingReceipt.GetView(false))));
+        exit(StrSubstNo(BillingReceiptConditionTxt, workflowSetup.Encode(BillingReceipt.GetView(false)), workflowSetup.Encode(BillingReceiptLine.GetView(false))));
     end;
 
     var
@@ -694,6 +697,6 @@ codeunit 50005 EventFunction
         WorkflowEventHandling: Codeunit "Workflow Event Handling";
         SendBillingReceiptReqLbl: Label 'Approval Request for Billing Receipt is requested';
         CancelReqBillingReceiptLbl: Label 'Approval of a Billing Receipt is canceled';
-        ItemBillingReceiptConditionTxt: Label '<?xml version = "1.0" encoding="utf-8" standalone="yes"?><ReportParameters><DataItems><DataItem name="Billing Receipt Header">%1</DataItem></DataItems></ReportParameters>', Locked = true;
+        BillingReceiptConditionTxt: Label '<?xml version = "1.0" encoding="utf-8" standalone="yes"?><ReportParameters><DataItems><DataItem name="Billing Receipt Header">%1</DataItem><DataItem name="Billing Receipt Line">%2</DataItem></DataItems></ReportParameters>', Locked = true;
 
 }

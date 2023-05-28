@@ -3,7 +3,7 @@
 /// </summary>
 Table 50001 "Billing Receipt Header"
 {
-    Caption = 'Billing & Receipt Header';
+    Caption = 'Billing Receipt Header';
     DataClassification = CustomerContent;
     fields
     {
@@ -225,11 +225,9 @@ Table 50001 "Billing Receipt Header"
             Caption = 'No. Series';
             DataClassification = CustomerContent;
         }
-        field(23; "Status"; Option)
+        field(23; "Status"; Enum "Billing Receipt Status")
         {
             Caption = 'Status';
-            OptionCaption = 'Open,Released,"Pending Approval",Create RV,Posted';
-            OptionMembers = Open,Released,"Pending Approval","Create RV",Posted;
             DataClassification = SystemMetadata;
             Editable = false;
         }
@@ -411,11 +409,9 @@ Table 50001 "Billing Receipt Header"
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(47; "Receive Type"; Option)
+        field(47; "Receive Type"; Enum "Billing Receipt Receive Type")
         {
             Caption = 'Receive Type';
-            OptionCaption = 'Bank Account,G/L Account';
-            OptionMembers = "Bank Account","G/L Account";
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
@@ -461,12 +457,6 @@ Table 50001 "Billing Receipt Header"
         {
             Caption = 'Cheque Date';
             DataClassification = CustomerContent;
-        }
-        field(53; "ID"; GUID)
-        {
-            Caption = 'ID';
-            DataClassification = SystemMetadata;
-            Editable = false;
         }
 
     }
