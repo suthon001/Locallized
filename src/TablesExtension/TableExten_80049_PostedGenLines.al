@@ -251,11 +251,9 @@ tableextension 80050 "ExtenPostedGenLines" extends "Posted Gen. Journal Line"
             Caption = 'Tax Invoice Post Code';
             DataClassification = CustomerContent;
         }
-        field(80044; "Require Screen Detail"; Option)
+        field(80044; "Require Screen Detail"; Enum "Require Screen Detail")
         {
             Caption = 'Require Screen Detail';
-            OptionMembers = " ",CHEQUE,VAT,WHT;
-            OptionCaption = ' ,CHEQUE,VAT,WHT';
             DataClassification = CustomerContent;
 
 

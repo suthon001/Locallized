@@ -356,11 +356,9 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             Caption = 'Tax Invoice Post Code';
             DataClassification = CustomerContent;
         }
-        field(80044; "Require Screen Detail"; Option)
+        field(80044; "Require Screen Detail"; Enum "Require Screen Detail")
         {
             Caption = 'Require Screen Detail';
-            OptionMembers = " ",CHEQUE,VAT,WHT;
-            OptionCaption = ' ,CHEQUE,VAT,WHT';
             DataClassification = CustomerContent;
 
 
@@ -471,7 +469,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                     BankAccount.init();
                 "Bank Name" := BankAccount.Name;
                 "Bank Branch No." := BankAccount."Bank Branch No.";
-                "Bank Account No." := BankAccount."Bank Account No.";
+                "Bank Account No." := COPYSTR(BankAccount."Bank Account No.", 1, 20);
 
                 if "Account Type" = "Account Type"::Customer then begin
                     if not Cust.GET("Account No.") then
