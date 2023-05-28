@@ -230,7 +230,10 @@ table 50010 "WHT Line"
         key(PK; "WHT No.", "WHT Line No.")
         {
             Clustered = true;
+            SumIndexFields = "WHT Base", "WHT Amount";
+
         }
+
 
     }
     /// <summary> 
