@@ -726,8 +726,7 @@ Report 50076 "Account Schedule (New)"
         PadString: Text;
 
     local procedure CalcColumnValueAsText(var AccScheduleLine: Record "Acc. Schedule Line"; var ColumnLayout: Record "Column Layout"): Text[30]
-    var
-        ColumnValuesAsText: Text[30];
+
     begin
         ColumnValuesAsText := '';
 
@@ -843,7 +842,7 @@ Report 50076 "Account Schedule (New)"
         exit(true);
     end;
 
-    local procedure FormLookUpDimFilter(Dim: Code[20]; var Text: Text[1024]): Boolean
+    local procedure FormLookUpDimFilter(Dim: Code[20]; var Text: Text): Boolean
     var
         DimVal: Record "Dimension Value";
         DimValList: Page "Dimension Value List";
@@ -992,14 +991,16 @@ Report 50076 "Account Schedule (New)"
     end;
 
     local procedure ValidateStartEndDate()
+    var
+        ltDateLbl: Label '%1..%2', Locked = true;
     begin
         if (StartDate = 0D) and (EndDate = 0D) then
             ValidateDateFilter('')
         else
-            ValidateDateFilter(StrSubstNo('%1..%2', StartDate, EndDate));
+            ValidateDateFilter(StrSubstNo(ltDateLbl, StartDate, EndDate));
     end;
 
-    local procedure ValidateDateFilter(NewDateFilter: Text[30])
+    local procedure ValidateDateFilter(NewDateFilter: Text)
     var
         FilterTokens: Codeunit "Filter Tokens";
     begin

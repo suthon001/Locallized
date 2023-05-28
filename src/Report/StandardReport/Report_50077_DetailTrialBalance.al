@@ -16,7 +16,7 @@ report 50077 "Detail Trial Balance (new)"
             DataItemTableView = WHERE("Account Type" = CONST(Posting));
             PrintOnlyIfDetail = true;
             RequestFilterFields = "No.", "Search Name", "Income/Balance", "Debit/Credit", "Date Filter";
-            column(PeriodGLDtFilter; StrSubstNo(Text000, GLDateFilter))
+            column(PeriodGLDtFilter; StrSubstNo(Text000Lbl, GLDateFilter))
             {
             }
             column(CompanyName; COMPANYPROPERTY.DisplayName())
@@ -158,7 +158,7 @@ report 50077 "Detail Trial Balance (new)"
 
                 trigger OnAfterGetRecord()
                 begin
-                    //   CurrReport.PrintOnlyIfDetail := ExcludeBalanceOnly or (StartBalance = 0);
+                    CurrReport.PrintOnlyIfDetail := ExcludeBalanceOnly or (StartBalance = 0);
                 end;
             }
 
@@ -182,9 +182,9 @@ report 50077 "Detail Trial Balance (new)"
                 if PrintOnlyOnePerPage then begin
                     GLEntry.Reset();
                     GLEntry.SetRange("G/L Account No.", "No.");
-                    // if CurrReport.PrintOnlyIfDetail and GLEntry.FindFirst then
-                    if GLEntry.FindFirst() then
-                        PageGroupNo := PageGroupNo + 1;
+                    if CurrReport.PrintOnlyIfDetail and GLEntry.FindFirst() then
+                        if not GLEntry.IsEmpty() then
+                            PageGroupNo := PageGroupNo + 1;
                 end;
             end;
 
@@ -263,7 +263,7 @@ report 50077 "Detail Trial Balance (new)"
     end;
 
     var
-        Text000: Label 'Period: %1';
+        Text000Lbl: Label 'Period: %1', Locked = true;
         GLDateFilter: Text;
         GLFilter: Text;
         GLBalance: Decimal;
