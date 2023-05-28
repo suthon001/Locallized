@@ -4,6 +4,7 @@ report 50043 "After Phys.Count FA"
     RDLCLayout = './LayoutReport/LCLReport/Report_50043_AfterPhysCountFixedAsset.rdl';
     PreviewMode = PrintLayout;
     Caption = 'After Phys. Count Fixed Asset';
+    UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     dataset
     {
@@ -48,7 +49,7 @@ report 50043 "After Phys.Count FA"
                 column(ResponsibleEmployee_FixedAsset; "Fixed Asset"."Responsible Employee")
                 {
                 }
-                column(ImageStorageImage; ImageStorage."Image")
+                column(ImageStorageImage; TenantMedia.Content)
                 {
                 }
                 column(FADepreciationBookAcqCost; vgFADepreciationBookRec."Acquisition Cost")
@@ -60,17 +61,14 @@ report 50043 "After Phys.Count FA"
 
                 trigger OnAfterGetRecord()
                 begin
-                    ImageStorage.RESET;
-                    ImageStorage.SETFILTER("Entry No.", '%1', "Ref. Image Entry No.");
-                    IF ImageStorage.FIND('-') THEN
-                        ImageStorage.CALCFIELDS("Image")
-                    ELSE
-                        CLEAR(ImageStorage);
+                    CLEAR(TenantMedia);
+                    if TenantMedia.GET(Image.MediaId) then
+                        TenantMedia.CalcFields(Content);
 
                     vgFADepreciationBookRec.RESET();
                     vgFADepreciationBookRec.SETFILTER("FA No.", '%1', "No.");
                     vgFADepreciationBookRec.SETFILTER("Depreciation Book Code", '%1', 'COMPANY');
-                    IF vgFADepreciationBookRec.FIND('-') THEN BEGIN
+                    IF vgFADepreciationBookRec.FindFirst() THEN BEGIN
                         vgFADepreciationBookRec.CALCFIELDS("Acquisition Cost");
                         vgFADepreciationBookRec.CALCFIELDS("Book Value");
                     END;
@@ -85,38 +83,24 @@ report 50043 "After Phys.Count FA"
         }
     }
 
-    requestpage
-    {
 
-        layout
-        {
-        }
-
-        actions
-        {
-        }
-    }
-
-    labels
-    {
-    }
 
     trigger OnPreReport()
     begin
         CompanyInformation.GET();
 
-        vgUserIDText := USERID;
+        vgUserIDText := COPYSTR(USERID, 1, 50);
         vgUserIDText := CodeUnitFunction."GetName"(vgUserIDText);
 
         vgFilterText := "FA Journal Line".GETFILTERS;
     end;
 
     var
-        ImageStorage: Record "Image Storage";
+        TenantMedia: Record "Tenant Media";
         CodeUnitFunction: Codeunit "Function Center";
         CompanyInformation: Record "Company Information";
         vgUserIDText: Text[50];
-        vgFilterText: Text[200];
+        vgFilterText: Text;
         vgFADepreciationBookRec: Record "FA Depreciation Book";
         vgTextWriteoff: Text[50];
 }

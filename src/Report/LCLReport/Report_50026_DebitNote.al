@@ -194,6 +194,7 @@ report 50026 "Debit Note"
                         ApplicationArea = all;
                         Caption = 'Caption';
                         ToolTip = 'Specifies the value of the Caption field.';
+                        OptionCaption = 'ใบเพิ่มหนี้,ใบเพิ่มหนี้/ใบกำกับภาษี';
                         trigger OnValidate()
                         begin
                             CaptionOptionEng := CaptionOptionThai;
@@ -223,9 +224,9 @@ report 50026 "Debit Note"
 
         ShipMethod: Record "Shipment Method";
         var_RefDocumentDate: Date;
-        ExchangeRate: Text[20];
+        ExchangeRate: Text[30];
         LineNo: Integer;
-        LotSeriesNo, RefDocumentNo, var_RefDocumentNo : Code[30];
+        LotSeriesNo, RefDocumentNo, var_RefDocumentNo : Code[50];
         CommentText: Array[99] of Text[250];
 
         FunctionCenter: Codeunit "Function Center";

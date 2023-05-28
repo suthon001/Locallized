@@ -189,7 +189,7 @@ report 50011 "Sales Vat"
         VATBusPostingGroup: Record "VAT Business Posting Group";
         var_BrandNo: Text[10];
         var_BrandName: Code[20];
-        VatBus: Code[30];
+        VatBus: text[250];
         Comtext: Array[10] of text[250];
 
         BranchText: Code[5];

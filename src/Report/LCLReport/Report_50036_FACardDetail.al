@@ -21,13 +21,12 @@ report 50036 "Fa Card Detail"
             column(FA_Subclass_Code; "FA Subclass Code") { }
             column(FA_Location_Code; "FA Location Code") { }
             column(Image; Image) { }
-            column(QRCode; ImageStorage."Image") { }
+            column(QRCode; barcode) { }
             trigger OnAfterGetRecord();
+            var
+                BarcodeSymbology: Enum "Barcode Symbology";
             begin
-                IF NOT ImageStorage.GET(5600, 1, "No.", 0) then
-                    ImageStorage.init;
-
-                ImageStorage.CALCFIELDS("Image");
+                barcode := FunctionCenter.Generatebarcode(BarcodeSymbology::Code39, "No.");
             end;
         }
     }
@@ -38,5 +37,6 @@ report 50036 "Fa Card Detail"
 
     var
         ComInfo: Record "Company Information";
-        ImageStorage: Record "Image Storage";
+        FunctionCenter: Codeunit "Function Center";
+        barcode: Text;
 }

@@ -270,7 +270,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
                 IF NOT BankAcc.GET("Bank Code") THEN
                     BankAcc.INIT();
                 "Bank Name" := BankAcc.Name;
-                "Bank Account No." := BankAcc."Bank Account No.";
+                "Bank Account No." := COPYSTR(BankAcc."Bank Account No.", 1, 20);
                 "Bank Branch No." := BankAcc."Bank Branch No.";
             end;
 
@@ -281,7 +281,7 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             DataClassification = CustomerContent;
 
         }
-        field(80035; "Bank Account No."; text[30])
+        field(80035; "Bank Account No."; text[20])
         {
             Caption = 'Bank Account No.';
             DataClassification = CustomerContent;
@@ -328,7 +328,6 @@ tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
             begin
                 IF NOT Vendor.GET("WHT Vendor No.") THEN
                     Vendor.INIT();
-
                 "VAT Registration No." := Vendor."VAT Registration No.";
                 "WHT Name" := Vendor.Name;
                 "WHT Name 2" := Vendor."Name 2";

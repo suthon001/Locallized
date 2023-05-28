@@ -85,9 +85,9 @@ report 50016 "Sales Receipt"
         FunctionCenterII: Codeunit "Function Center";
 
         companyInfor: Record "Company Information";
-        ExchangeRate: Text[20];
+        ExchangeRate: Text[30];
         SplitDate: Array[3] of Text[20];
-        AmtText: Text[1024];
+        AmtText: Text;
         PaymentTerm: Record "Payment Terms";
 
 }

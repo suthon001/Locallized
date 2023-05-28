@@ -4,6 +4,112 @@
 codeunit 50004 "Function Center"
 {
 
+    Permissions = tabledata "G/L Entry" = rimd;
+    procedure Generatebarcode(pBarcodeSymbology: Enum "Barcode Symbology"; pValue: Text): Text
+    var
+        BarcodeSymbology: Enum "Barcode Symbology";
+        BarcodeFontProvider: Interface "Barcode Font Provider";
+        BarcodeString: Text;
+    begin
+        BarcodeFontProvider := Enum::"Barcode Font Provider"::IDAutomation1D;
+        BarcodeSymbology := pBarcodeSymbology;
+        BarcodeString := pValue;
+        BarcodeFontProvider.ValidateInput(BarcodeString, BarcodeSymbology);
+        exit(BarcodeFontProvider.EncodeFont(BarcodeString, BarcodeSymbology));
+    end;
+
+    procedure SetReportGLEntry(GenLine: Record "Gen. Journal Line"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
+    var
+        TempltGLEntry, TempGLEntry : Record "G/L Entry" temporary;
+        PreviewPost: Codeunit EventFunction;
+        EntryNo: Integer;
+    begin
+        pTotalAmount := 0;
+        EntryNo := 0;
+        PreviewPost."GenLinePreviewVourcher"(GenLine, TempGLEntry);
+        TempGLEntry.reset();
+        TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+        TempGLEntry.SetFilter(Amount, '>%1', 0);
+        if TempGLEntry.FindFirst() then
+            repeat
+                if pGroupping then begin
+                    TempltGLEntry.reset();
+                    TempltGLEntry.SetRange("Document No.", GenLine."Document No.");
+                    TempltGLEntry.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
+                    TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
+                    TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
+                    TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
+                    if not TempltGLEntry.FindFirst() then begin
+                        EntryNo += 1;
+                        TempltGLEntry.init();
+                        TempltGLEntry.TransferFields(TempGLEntry);
+                        TempltGLEntry."Document No." := GenLine."Document No.";
+                        TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
+                        TempltGLEntry."Entry No." := EntryNo;
+                        TempltGLEntry.Insert();
+                    end else begin
+                        TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
+                        if TempltGLEntry.Amount > 0 then begin
+                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                            TempltGLEntry."Credit Amount" := 0;
+                        end else begin
+                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                            TempltGLEntry."Debit Amount" := 0;
+                        end;
+                        TempltGLEntry.Modify();
+                    end;
+                end else begin
+                    EntryNo += 1;
+                    TempltGLEntry.init();
+                    TempltGLEntry.TransferFields(TempGLEntry);
+                    TempltGLEntry."Entry No." := EntryNo;
+                    TempltGLEntry.Insert();
+                end;
+                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+            until TempGLEntry.next() = 0;
+        TempGLEntry.reset();
+        TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+        TempGLEntry.SetFilter(Amount, '<%1', 0);
+        if TempGLEntry.FindFirst() then
+            repeat
+                if pGroupping then begin
+                    TempltGLEntry.reset();
+                    TempltGLEntry.SetRange("Document No.", GenLine."Document No.");
+                    TempltGLEntry.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
+                    TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
+                    TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
+                    TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
+                    if not TempltGLEntry.FindFirst() then begin
+                        EntryNo += 1;
+                        TempltGLEntry.init();
+                        TempltGLEntry.TransferFields(TempGLEntry);
+                        TempltGLEntry."Document No." := GenLine."Document No.";
+                        TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
+                        TempltGLEntry."Entry No." := EntryNo;
+                        TempltGLEntry.Insert();
+                    end else begin
+                        TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
+                        if TempltGLEntry.Amount > 0 then begin
+                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                            TempltGLEntry."Credit Amount" := 0;
+                        end else begin
+                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                            TempltGLEntry."Debit Amount" := 0;
+                        end;
+                        TempltGLEntry.Modify();
+                    end;
+                end else begin
+                    EntryNo += 1;
+                    TempltGLEntry.init();
+                    TempltGLEntry.TransferFields(TempGLEntry);
+                    TempltGLEntry."Entry No." := EntryNo;
+                    TempltGLEntry.Insert();
+                end;
+                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+            until TempGLEntry.next() = 0;
+        pTempGLEntry.Copy(TempltGLEntry, true);
+    end;
+
 
 
     /// <summary> 
@@ -101,7 +207,7 @@ codeunit 50004 "Function Center"
     /// <param name="VAR Text">Parameter of type ARRAY[10] OF Text[250].</param>
     /// <param name="VatBus">Parameter of type Code[10].</param>
     /// <param name="EngName">Parameter of type Boolean.</param>
-    procedure "CompanyinformationByVat"(VAR Text: ARRAY[10] OF Text[250]; VatBus: Code[10]; EngName: Boolean)
+    procedure "CompanyinformationByVat"(VAR Text: ARRAY[10] OF Text[250]; VatBus: Code[20]; EngName: Boolean)
     var
         VATBusinessPostingGroup: Record "VAT Business Posting Group";
     begin
@@ -842,9 +948,106 @@ codeunit 50004 "Function Center"
     /// <param name="PostingDate">Parameter of type Date.</param>
     /// <param name="DocumentNo">Parameter of type Code[20].</param>
     /// <param name="VAR CVLedgEntryBuf">Parameter of type Record "CV Ledger Entry Buffer" TEMPORARY.</param>
-    procedure "JnlFindApplyEntries"(JnlTemplateName: Code[30]; JnlBatchName: code[30]; PostingDate: Date; DocumentNo: Code[20]; VAR CVLedgEntryBuf: Record "CV Ledger Entry Buffer" TEMPORARY)
+    procedure JnlFindApplyEntries(JnlTemplateName: Code[30]; JnlBatchName: code[30]; PostingDate: Date; DocumentNo: Code[20]; VAR CVLedgEntryBuf: Record "CV Ledger Entry Buffer" TEMPORARY)
     var
         GenJnlLine: Record "Gen. Journal Line";
+        VendLedgEntry: Record "Vendor Ledger Entry";
+        CustLedgEntry: Record "Cust. Ledger Entry";
+        CvNo: Code[30];
+    begin
+        GenJnlLine.RESET();
+        GenJnlLine.SETCURRENTKEY("Journal Template Name", "Journal Batch Name", "Document No.", "Posting Date");
+        GenJnlLine.SETRANGE("Journal Template Name", JnlTemplateName);
+        GenJnlLine.SETRANGE("Journal Batch Name", JnlBatchName);
+        GenJnlLine.SETRANGE("Document No.", DocumentNo);
+        GenJnlLine.SETRANGE("Posting Date", PostingDate);
+        IF GenJnlLine.FindSet() THEN
+            REPEAT
+                IF (GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor) OR
+                   (GenJnlLine."Bal. Account Type" = GenJnlLine."Bal. Account Type"::Vendor) THEN BEGIN
+                    CVNo := GenJnlLine."Bal. Account No.";
+                    IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor THEN
+                        CVNo := GenJnlLine."Account No.";
+                    IF GenJnlLine."Applies-to ID" <> '' THEN BEGIN
+                        VendLedgEntry.RESET();
+                        VendLedgEntry.SETCURRENTKEY("Vendor No.", "Applies-to ID", Open, Positive, "Due Date");
+                        VendLedgEntry.SETRANGE("Vendor No.", CVNo);
+                        VendLedgEntry.SETRANGE("Applies-to ID", GenJnlLine."Applies-to ID");
+                        //VendLedgEntry.SETRANGE(Open,TRUE);
+                        IF VendLedgEntry.FINDFIRST() THEN
+                            REPEAT
+                                VendLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
+                                    "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
+                                CVLedgEntryBuf.CopyFromVendLedgEntry(VendLedgEntry);
+                                //GenPostLine.TransferVendLedgEntry(CVLedgEntryBuf,VendLedgEntry,TRUE);
+                                if not CVLedgEntryBuf.INSERT() then
+                                    CVLedgEntryBuf.Modify();
+                            UNTIL VendLedgEntry.NEXT() = 0;
+                    END ELSE
+                        IF GenJnlLine."Applies-to Doc. No." <> '' THEN BEGIN
+                            VendLedgEntry.RESET();
+                            VendLedgEntry.SETCURRENTKEY("Vendor No.", "Document Type", "Document No.", Open);
+                            VendLedgEntry.SETRANGE("Vendor No.", CVNo);
+                            VendLedgEntry.SETRANGE("Document Type", GenJnlLine."Applies-to Doc. Type");
+                            VendLedgEntry.SETRANGE("Document No.", GenJnlLine."Applies-to Doc. No.");
+                            //VendLedgEntry.SETRANGE(Open,TRUE);
+                            IF VendLedgEntry.FINDFIRST() THEN BEGIN
+                                VendLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
+                                    "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
+                                CVLedgEntryBuf.CopyFromVendLedgEntry(VendLedgEntry);
+                                //TmpGenPostLine.TransferVendLedgEntry(CVLedgEntryBuf,VendLedgEntry,TRUE);
+                                //CVLedgEntryBuf."Amount to Apply" := VendLedgEntry."Remaining Amount";
+                                if not CVLedgEntryBuf.INSERT() then
+                                    CVLedgEntryBuf.Modify();
+                            END;
+                        END;
+                END;
+                IF (GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer) OR
+                   (GenJnlLine."Bal. Account Type" = GenJnlLine."Bal. Account Type"::Customer) THEN BEGIN
+                    CVNo := GenJnlLine."Bal. Account No.";
+                    IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN
+                        CVNo := GenJnlLine."Account No.";
+                    IF GenJnlLine."Applies-to ID" <> '' THEN BEGIN
+                        CustLedgEntry.RESET();
+                        CustLedgEntry.SETCURRENTKEY("Customer No.", "Applies-to ID", Open, Positive, "Due Date");
+                        CustLedgEntry.SETRANGE("Customer No.", CVNo);
+                        CustLedgEntry.SETRANGE("Applies-to ID", GenJnlLine."Applies-to ID");
+                        //CustLedgEntry.SETRANGE(Open,TRUE);
+                        IF CustLedgEntry.FINDFIRST() THEN
+                            REPEAT
+                                CustLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
+                                    "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
+                                //TmpGenPostLine.TransferCustLedgEntry(CVLedgEntryBuf,CustLedgEntry,TRUE);
+                                CVLedgEntryBuf.CopyFromCustLedgEntry(CustLedgEntry);
+                                if not CVLedgEntryBuf.INSERT() then
+                                    CVLedgEntryBuf.Modify();
+                            UNTIL CustLedgEntry.NEXT() = 0;
+                    END ELSE
+                        IF GenJnlLine."Applies-to Doc. No." <> '' THEN BEGIN
+                            CustLedgEntry.RESET();
+                            CustLedgEntry.SETCURRENTKEY("Customer No.", "Document Type", "Document No.", Open);
+                            CustLedgEntry.SETRANGE("Customer No.", CVNo);
+                            CustLedgEntry.SETRANGE("Document Type", GenJnlLine."Applies-to Doc. Type");
+                            CustLedgEntry.SETRANGE("Document No.", GenJnlLine."Applies-to Doc. No.");
+                            //CustLedgEntry.SETRANGE(Open,TRUE);
+                            IF CustLedgEntry.FINDFIRST() THEN BEGIN
+                                CustLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
+                                    "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
+                                //TmpGenPostLine.TransferCustLedgEntry(CVLedgEntryBuf,CustLedgEntry,TRUE);
+                                CVLedgEntryBuf.CopyFromCustLedgEntry(CustLedgEntry);
+                                //CVLedgEntryBuf."Amount to Apply" := CustLedgEntry."Remaining Amount";
+                                if not CVLedgEntryBuf.INSERT() then
+                                    CVLedgEntryBuf.Modify();
+                            END;
+                        END;
+                END;
+
+            UNTIL GenJnlLine.NEXT() = 0;
+    end;
+
+    procedure PostedJnlFindApplyEntries(JnlTemplateName: Code[30]; JnlBatchName: code[30]; PostingDate: Date; DocumentNo: Code[20]; VAR CVLedgEntryBuf: Record "CV Ledger Entry Buffer" TEMPORARY)
+    var
+        GenJnlLine: Record "Posted Gen. Journal Line";
         VendLedgEntry: Record "Vendor Ledger Entry";
         CustLedgEntry: Record "Cust. Ledger Entry";
         CvNo: Code[30];
@@ -1030,7 +1233,7 @@ codeunit 50004 "Function Center"
     /// <param name="MyText">Parameter of type array[10] of text[250].</param>
     /// <param name="DocumentType">Parameter of type Option "Sales Billing","Sales Receipt","Purchase Billing".</param>
     /// <param name="DocumentNo">Parameter of type Code[20].</param>
-    procedure "SalesBillingReceiptInformation"(var MyText: array[10] of text[250]; DocumentType: Option "Sales Billing","Sales Receipt","Purchase Billing"; DocumentNo: Code[20])
+    procedure SalesBillingReceiptInformation(var MyText: array[10] of text[250]; DocumentType: Enum "Billing Document Type"; DocumentNo: Code[20])
     var
         BillingReceiptHeader: Record "Billing Receipt Header";
         Cust: Record Customer;
@@ -1039,7 +1242,9 @@ codeunit 50004 "Function Center"
         VatRegis: Text[250];
 
     begin
-        BillingReceiptHeader.GET(DocumentType, DocumentNo);
+        CLEAR(MyText);
+        if not BillingReceiptHeader.GET(DocumentType, DocumentNo) then
+            exit;
         if DocumentType = DocumentType::"Purchase Billing" then begin
             vendor.get(BillingReceiptHeader."Bill/Pay-to Cust/Vend No.");
             Tel := vendor."Phone No." + ' ';
@@ -1095,7 +1300,7 @@ codeunit 50004 "Function Center"
 
     end;
 
-    procedure "PurchStatistic"(DocumentType: Enum "Purchase Document Type"; DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
+    procedure PurchStatistic(DocumentType: Enum "Purchase Document Type"; DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
     var
 
         PurchaseHeader: Record "Purchase Header";
@@ -1123,7 +1328,7 @@ codeunit 50004 "Function Center"
     /// <param name="DocumentNo">Code[20].</param>
     /// <param name="VAR TotalAmt">ARRAY[100] OF Decimal.</param>
     /// <param name="VAR VATText">Text[30].</param>
-    procedure "PostedPurchaseInvoiceStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
+    procedure PostedPurchaseInvoiceStatistics(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
 
     var
         DocumentTotals: Codeunit "Document Totals";
@@ -1180,7 +1385,7 @@ codeunit 50004 "Function Center"
 
     end;
 
-    procedure "GetSalesComment"(DocumentType: Enum "Sales Comment Document Type"; DocumentNo: Code[30]; LineNo: Integer; var SalesComment: array[100] of text[250])
+    procedure GetSalesComment(DocumentType: Enum "Sales Comment Document Type"; DocumentNo: Code[30]; LineNo: Integer; var SalesComment: array[100] of text[250])
     var
         SalesCommentLine: Record "Sales Comment Line";
         i: Integer;
@@ -1203,7 +1408,7 @@ codeunit 50004 "Function Center"
 
     end;
 
-    procedure "GetPurchaseComment"(DocumentType: Enum "Purchase Comment Document Type"; DocumentNo: Code[30]; LineNo: Integer; var PurchCommentLine: array[100] of text[250])
+    procedure GetPurchaseComment(DocumentType: Enum "Purchase Comment Document Type"; DocumentNo: Code[30]; LineNo: Integer; var PurchCommentLine: array[100] of text[250])
     var
         PurchaseCommentLine: Record "Purch. Comment Line";
         i: Integer;
@@ -1224,7 +1429,7 @@ codeunit 50004 "Function Center"
 
     end;
 
-    procedure "PurchasePostedVendorInformation"(DocumentType: Option Receipt,"Return Shipment","Posted Invoice","Posted Credit Memo"; DocumentNo: Code[20]; VAR Text: ARRAY[10] OF Text[250]; Tab: Option General,Invoicing,Shipping)
+    procedure PurchasePostedVendorInformation(DocumentType: Option Receipt,"Return Shipment","Posted Invoice","Posted Credit Memo"; DocumentNo: Code[20]; VAR Text: ARRAY[10] OF Text[250]; Tab: Option General,Invoicing,Shipping)
     var
         PurchRcptHeader: Record "Purch. Rcpt. Header";
         Vend: Record Vendor;
@@ -1234,6 +1439,7 @@ codeunit 50004 "Function Center"
         PurchCrMemoHeader: Record "Purch. Cr. Memo Hdr.";
         VendBranch: Record "Customer & Vendor Branch";
     begin
+        CLEAR(Text);
         CASE DocumentType OF
             DocumentType::Receipt:
                 BEGIN
@@ -1252,12 +1458,12 @@ codeunit 50004 "Function Center"
                                 if PurchRcptHeader."Currency Code" = '' then begin
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
 
                                 end else
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                                        Text[4] += 'Fax. : ' + Vend."Fax No.";
                                 Text[5] := PurchRcptHeader."Buy-from Contact";
 
                                 //end else begin
@@ -1270,10 +1476,10 @@ codeunit 50004 "Function Center"
                                     Text[4] := VendBranch."Phone No." + ' ';
                                     if PurchRcptHeader."Currency Code" = '' then begin
                                         IF VendBranch."Fax No." <> '' THEN
-                                            Text[4] += STRSUBSTNO('แฟกซ์ : %1', VendBranch."Fax No.");
+                                            Text[4] += 'แฟกซ์ : ' + VendBranch."Fax No.";
                                     end else
                                         IF VendBranch."Fax No." <> '' THEN
-                                            Text[4] += STRSUBSTNO('Fax. : %1', VendBranch."Fax No.");
+                                            Text[4] += 'Fax. : ' + VendBranch."Fax No.";
 
                                 end;
                                 Text[9] := PurchRcptHeader."Buy-from Vendor No.";
@@ -1290,12 +1496,12 @@ codeunit 50004 "Function Center"
                                 if PurchRcptHeader."Currency Code" = '' then begin
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
 
                                 end else
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                                        Text[4] += 'Fax. : ' + Vend."Fax No.";
                                 Text[5] := PurchRcptHeader."Pay-to Contact";
                                 Text[9] := PurchRcptHeader."Pay-to Vendor No.";
                             END;
@@ -1310,13 +1516,13 @@ codeunit 50004 "Function Center"
                                 Text[4] := Cust."Phone No." + ' ';
                                 if PurchRcptHeader."Currency Code" = '' then begin
 
-                                    IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
+                                    IF Cust."Fax No." <> '' THEN
+                                        Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
 
                                 end else
 
-                                    IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                                    IF Cust."Fax No." <> '' THEN
+                                        Text[4] += 'Fax. : ' + Cust."Fax No.";
                                 Text[5] := PurchRcptHeader."Ship-to Contact";
 
                             END;
@@ -1356,12 +1562,12 @@ codeunit 50004 "Function Center"
                                 if ReturnShptHeader."Currency Code" = '' then begin
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
 
                                 end else
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                                        Text[4] += 'Fax. : ' + Vend."Fax No.";
                                 Text[5] := ReturnShptHeader."Buy-from Contact";
                                 Text[9] := ReturnShptHeader."Buy-from Vendor No.";
                             END;
@@ -1377,12 +1583,12 @@ codeunit 50004 "Function Center"
                                 if ReturnShptHeader."Currency Code" = '' then begin
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
 
                                 end else
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                                        Text[4] += 'Fax. : ' + Vend."Fax No.";
                                 Text[5] := ReturnShptHeader."Pay-to Contact";
                                 Text[9] := ReturnShptHeader."Pay-to Vendor No.";
                             END;
@@ -1397,13 +1603,13 @@ codeunit 50004 "Function Center"
                                 Text[4] := Cust."Phone No." + ' ';
                                 if ReturnShptHeader."Currency Code" = '' then begin
 
-                                    IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
+                                    IF Cust."Fax No." <> '' THEN
+                                        Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
 
                                 end else
 
-                                    IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                                    IF Cust."Fax No." <> '' THEN
+                                        Text[4] += 'Fax. : ' + Cust."Fax No.";
                                 Text[5] := ReturnShptHeader."Ship-to Contact";
 
                             END;
@@ -1425,12 +1631,12 @@ codeunit 50004 "Function Center"
                                 if PurchInvHeader."Currency Code" = '' then begin
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
 
                                 end else
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                                        Text[4] += 'Fax. : ' + Vend."Fax No.";
                                 Text[5] := PurchInvHeader."Buy-from Contact";
                                 Text[9] := PurchInvHeader."Buy-from Vendor No.";
                             END;
@@ -1446,12 +1652,12 @@ codeunit 50004 "Function Center"
                                 if PurchInvHeader."Currency Code" = '' then begin
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
 
                                 end else
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                                        Text[4] += 'Fax. : ' + Vend."Fax No.";
                                 Text[5] := PurchInvHeader."Pay-to Contact";
                                 Text[9] := PurchInvHeader."Pay-to Vendor No.";
                             END;
@@ -1466,13 +1672,13 @@ codeunit 50004 "Function Center"
                                 Text[4] := Cust."Phone No." + ' ';
                                 if PurchInvHeader."Currency Code" = '' then begin
 
-                                    IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
+                                    IF Cust."Fax No." <> '' THEN
+                                        Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
 
                                 end else
 
-                                    IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                                    IF Cust."Fax No." <> '' THEN
+                                        Text[4] += 'Fax. : ' + Cust."Fax No.";
                                 Text[5] := PurchInvHeader."Ship-to Contact";
 
                             END;
@@ -1494,12 +1700,12 @@ codeunit 50004 "Function Center"
                                 if PurchCrMemoHeader."Currency Code" = '' then begin
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
 
                                 end else
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                                        Text[4] += 'Fax. : ' + Vend."Fax No.";
                                 Text[5] := PurchCrMemoHeader."Buy-from Contact";
                                 Text[9] := PurchCrMemoHeader."Buy-from Vendor No.";
                             END;
@@ -1515,12 +1721,12 @@ codeunit 50004 "Function Center"
                                 if PurchCrMemoHeader."Currency Code" = '' then begin
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Vend."Fax No.");
+                                        Text[4] += 'แฟกซ์ : ' + Vend."Fax No.";
 
                                 end else
 
                                     IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Vend."Fax No.");
+                                        Text[4] += 'Fax. : ' + Vend."Fax No.";
                                 Text[5] := PurchCrMemoHeader."Pay-to Contact";
                                 Text[9] := PurchCrMemoHeader."Pay-to Vendor No.";
                             END;
@@ -1535,13 +1741,13 @@ codeunit 50004 "Function Center"
                                 Text[4] := Cust."Phone No." + ' ';
                                 if PurchCrMemoHeader."Currency Code" = '' then begin
 
-                                    IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('แฟกซ์ : %1', Cust."Fax No.");
+                                    IF Cust."Fax No." <> '' THEN
+                                        Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
 
                                 end else
 
-                                    IF Vend."Fax No." <> '' THEN
-                                        Text[4] += STRSUBSTNO('Fax. : %1', Cust."Fax No.");
+                                    IF Cust."Fax No." <> '' THEN
+                                        Text[4] += 'Fax. : ' + Cust."Fax No.";
                                 Text[5] := PurchCrMemoHeader."Ship-to Contact";
 
                             END;
@@ -1971,7 +2177,7 @@ codeunit 50004 "Function Center"
 
     // end;
 
-    procedure "GetName"(VAR Var_Name: Text[250]) Name: Text[250]
+    procedure "GetName"(Var_Name: Text[250]) Name: Text[50]
     var
         Pos: Integer;
     begin
@@ -2034,7 +2240,7 @@ codeunit 50004 "Function Center"
     /// Description for InsertDimensionEntry.
     /// </summary>
     /// <param name="DimensionSetID">Parameter of type Integer.</param>
-    procedure "InsertDimensionEntry"(var DimensionSetID: Integer; DimCode: code[30]; Dimvalue: code[30])
+    procedure InsertDimensionEntry(var DimensionSetID: Integer; DimCode: code[30]; Dimvalue: code[30])
     var
         DimMgt: Codeunit DimensionManagement;
         TempDimSetEntry: Record "Dimension Set Entry" temporary;
@@ -2058,7 +2264,7 @@ codeunit 50004 "Function Center"
 
     end;
 
-    procedure "SaveDimensionDefault"(TableID: Integer; MyNo: Code[30]; DimCode: Code[30]; DimValue: Code[30])
+    procedure SaveDimensionDefault(TableID: Integer; MyNo: Code[30]; DimCode: Code[30]; DimValue: Code[30])
     var
         DimensionDefault: record "Default Dimension";
     begin
@@ -2078,7 +2284,7 @@ codeunit 50004 "Function Center"
                 DimensionDefault.Delete();
     end;
 
-    procedure "GetMonthNameEng"(MonthNumber: Integer): Text[50];
+    procedure GetMonthNameEng(MonthNumber: Integer): Text[50];
     begin
         case MonthNumber of
             1:
@@ -2110,7 +2316,7 @@ codeunit 50004 "Function Center"
         end;
     end;
 
-    procedure "GetMonthFullNameEng"(MonthNumber: Integer): Text[50];
+    procedure GetMonthFullNameEng(MonthNumber: Integer): Text[50];
     begin
         case MonthNumber of
             1:
@@ -2142,22 +2348,6 @@ codeunit 50004 "Function Center"
         end;
     end;
 
-    procedure "GetCustBranchDate"(PCustNo: Code[20]; PCustBranch: Code[20]; var PCustInfo: array[10] of Text[250])
-    var
-        LRecCust: Record Customer;
-    begin
-        Clear(LRecCust);
-        LRecCust.reset();
-        if LRecCust.Get(PCustNo) then begin
-            PCustInfo[1] := LRecCust."No.";
-            PCustInfo[2] := LRecCust.Name + LRecCust."Name 2";
-            PCustInfo[3] := LRecCust.Address + LRecCust."Address 2" + ' ' + LRecCust.City + LRecCust."Post Code";
-            PCustInfo[4] := 'โทร : ' + LRecCust."Phone No.";
-            PCustInfo[5] := 'แฟกซ์ : ' + LRecCust."Fax No.";
-            PCustInfo[6] := 'เลขประจำตัวผู้เสียภาษี : ' + LRecCust."VAT Registration No.";
-            PCustInfo[7] := '(สำนักงานใหญ่)';
-        end;
-    end;
 
 
 
@@ -2166,7 +2356,7 @@ codeunit 50004 "Function Center"
     /// RereleaseBilling.
     /// </summary>
     /// <param name="BillingHeader">Record "Billing Receipt Header".</param>
-    procedure "RereleaseBilling"(BillingHeader: Record "Billing Receipt Header")
+    procedure RereleaseBilling(BillingHeader: Record "Billing Receipt Header")
 
     begin
         IF BillingHeader."Status" = BillingHeader."Status"::Released THEN

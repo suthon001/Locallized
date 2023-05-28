@@ -131,7 +131,8 @@ report 50050 "Receipt Ducument"
                     field(HeadThai; HeadThai)
                     {
                         ApplicationArea = all;
-                        Caption = 'Caption';
+                        OptionCaption = 'ใบเสร็จรับเงิน,"ใบเสร็จรับเงิน/ใบกำกับภาษี';
+                        Caption = 'Report Name';
                         ToolTip = 'Specifies the value of the Caption field.';
                         trigger OnValidate()
                         begin
@@ -152,13 +153,13 @@ report 50050 "Receipt Ducument"
         VatBusinessPostingGroup: code[20];
         RecComInfo: Record "Company Information";
         GenJournalLine: Record "Gen. Journal Line";
-        ExchangeRate: text[20];
+        ExchangeRate: text[30];
         varTotal: Decimal;
         varVat: Decimal;
         varGandtotal: Decimal;
         LineNo: Integer;
-        SumTotalAmountText: Text[250];
-        CurrencyCode: Code[20];
+        SumTotalAmountText: Text;
+        CurrencyCode: Code[10];
         HeadEng: Option "RECEIPT","RECEIPT/TAX INVOICE";
         HeadThai: Option ใบเสร็จรับเงิน,"ใบเสร็จรับเงิน/ใบกำกับภาษี";
 }

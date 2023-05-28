@@ -4,7 +4,7 @@
 page 50009 "WHT Certificate Subform"
 {
     PageType = ListPart;
-    SourceTable = "WHT Lines";
+    SourceTable = "WHT Line";
     MultipleNewLines = false;
     AutoSplitKey = true;
     RefreshOnActivate = true;

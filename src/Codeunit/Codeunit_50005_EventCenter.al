@@ -5,6 +5,201 @@ codeunit 50005 EventFunction
 {
     Permissions = TableData "G/L Entry" = rimd;
 
+    [EventSubscriber(ObjectType::Page, Page::"Payment Journal", 'OnAfterValidateEvent', 'AppliesToDocNo', false, false)]
+    local procedure AppliesToDocNo(var Rec: Record "Gen. Journal Line"; var xRec: Record "Gen. Journal Line")
+    begin
+        if rec."Applies-to Doc. No." <> xRec."Applies-to Doc. No." then
+            if (rec."Applies-to Doc. No." <> '') and (rec."Account Type" = rec."Account Type"::Vendor) then
+                InsertWHTCertificate(Rec, rec."Applies-to Doc. No.");
+
+    end;
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Apply", 'OnApplyVendorLedgerEntryOnBeforeModify', '', false, false)]
+    local procedure OnApplyVendorLedgerEntryOnBeforeModify(var GenJournalLine: Record "Gen. Journal Line")
+    var
+        VendLdgEntry: Record "Vendor Ledger Entry";
+        InvoiceNo: Text;
+    begin
+        if GenJournalLine."Document No." <> '' then begin
+            VendLdgEntry.reset();
+            VendLdgEntry.SetRange("Vendor No.", GenJournalLine."Account No.");
+            VendLdgEntry.SetRange("Applies-to ID", GenJournalLine."Document No.");
+            if VendLdgEntry.FindSet() then begin
+                repeat
+                    if StrPos(InvoiceNO, VendLdgEntry."Document No.") = 0 then begin
+                        if InvoiceNO <> '' then
+                            InvoiceNO := InvoiceNO + '|';
+                        InvoiceNO := InvoiceNO + VendLdgEntry."Document No.";
+                    end;
+                until VendLdgEntry.Next() = 0;
+                InsertWHTCertificate(GenJournalLine, InvoiceNo);
+            end;
+        end;
+    end;
+
+    procedure InsertWHTCertificate(var rec: Record "Gen. Journal Line"; pInvoiceNo: text)
+    var
+        GeneralSetup: Record "General Ledger Setup";
+        ltGenJournalLine: Record "Gen. Journal Line";
+        WHTHeader: Record "WHT Header";
+        NosMgt: Codeunit NoSeriesManagement;
+        Vendor: Record Vendor;
+        WHTBusiness: Record "WHT Business Posting Group";
+        NoSeriesMgt: Codeunit NoSeriesManagement;
+        ltWHTAppliedEntry: Record "WHT Applied Entry";
+        ltWHTEntry: Record "WHT Line";
+        ltLineNo: Integer;
+
+    begin
+
+
+        ltWHTAppliedEntry.reset();
+        ltWHTAppliedEntry.SetFilter("Document No.", pInvoiceNo);
+        if ltWHTAppliedEntry.FindFirst() then begin
+
+            GeneralSetup.GET();
+            GeneralSetup.TESTFIELD("WHT Document Nos.");
+            IF Rec."WHT Document No." = '' THEN BEGIN
+                WHTHeader.reset();
+                WHTHeader.setrange("Gen. Journal Template Code", Rec."Journal Template Name");
+                WHTHeader.setrange("Gen. Journal Batch Code", Rec."Journal Batch Name");
+                WHTHeader.setrange("Gen. Journal Document No.", Rec."Document No.");
+                if WHTHeader.FindFirst() then begin
+                    if ltGenJournalLine.GET(WHTHeader."Gen. Journal Template Code", WHTHeader."Gen. Journal Batch Code", WHTHeader."Gen. Journal Line No.") then
+                        ltGenJournalLine.Delete(true);
+                    WHTHeader.DeleteAll();
+                end;
+
+                Vendor.GET(rec."Account No.");
+
+                WHTHeader.INIT();
+                WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."WHT Document Nos.", Rec."Posting Date", TRUE);
+                WHTHeader."Gen. Journal Template Code" := Rec."Journal Template Name";
+                WHTHeader."Gen. Journal Batch Code" := Rec."Journal Batch Name";
+                WHTHeader."Gen. Journal Document No." := Rec."Document No.";
+                WHTHeader."WHT Date" := Rec."Document Date";
+                WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Vendor;
+                WHTHeader.validate("WHT Source No.", Vendor."No.");
+                WHTHeader.INSERT();
+                WHTBusiness.GET(WHTHeader."WHT Business Posting Group");
+                WHTBusiness.TestField("WHT Certificate No. Series");
+                WHTHeader."WHT Type" := WHTBusiness."WHT Type";
+                WHTheader."WHT Certificate No." := NoSeriesMgt.GetNextNo(WHTBusiness."WHT Certificate No. Series", WorkDate(), true);
+                WHTHeader."WHT Option" := ltWHTAppliedEntry."WHT Option";
+                WHTHeader.Modify();
+
+
+                ltWHTEntry.reset();
+                ltWHTEntry.SetRange("WHT No.", WHTHeader."WHT No.");
+                ltWHTEntry.DeleteAll();
+
+                ltWHTAppliedEntry.reset();
+                ltWHTAppliedEntry.SetFilter("Document No.", pInvoiceNo);
+                if ltWHTAppliedEntry.FindSet() then begin
+                    repeat
+                        ltWHTEntry.reset();
+                        ltWHTEntry.SetRange("WHT No.", WHTHeader."WHT No.");
+                        ltWHTEntry.SetRange("WHT Business Posting Group", ltWHTAppliedEntry."WHT Bus. Posting Group");
+                        ltWHTEntry.SetRange("WHT Product Posting Group", ltWHTAppliedEntry."WHT Prod. Posting Group");
+                        if not ltWHTEntry.FindFirst() then begin
+                            ltLineNo := ltLineNo + 10000;
+                            ltWHTEntry.init();
+                            ltWHTEntry."WHT No." := WHTHeader."WHT No.";
+                            ltWHTEntry."WHT Line No." := ltLineNo;
+                            ltWHTEntry."WHT Certificate No." := WHTHeader."WHT Certificate No.";
+                            ltWHTEntry."WHT Date" := WHTHeader."WHT Date";
+                            ltWHTEntry."WHT Business Posting Group" := ltWHTAppliedEntry."WHT Bus. Posting Group";
+                            ltWHTEntry."WHT Product Posting Group" := ltWHTAppliedEntry."WHT Prod. Posting Group";
+                            ltWHTEntry."WHT Base" := ltWHTAppliedEntry."WHT Base";
+                            ltWHTEntry."WHT %" := ltWHTAppliedEntry."WHT %";
+                            ltWHTEntry."WHT Amount" := ltWHTAppliedEntry."WHT Amount";
+                            ltWHTEntry."WHT Name" := ltWHTAppliedEntry."WHT Name";
+                            ltWHTEntry."WHT Post Code" := ltWHTAppliedEntry."WHT Post Code";
+                            if ltWHTEntry.Insert() then;
+                        end else begin
+                            ltWHTEntry."WHT Amount" := ltWHTEntry."WHT Amount" + ltWHTAppliedEntry."WHT Amount";
+                            ltWHTEntry."WHT Base" := ltWHTEntry."WHT Base" + ltWHTAppliedEntry."WHT Base";
+                            ltWHTEntry.Modify();
+                        end;
+                    until ltWHTAppliedEntry.Next() = 0;
+                    CreateWHTCertificate(WHTHeader, rec);
+                end;
+
+            end;
+        end;
+    end;
+
+    procedure CreateWHTCertificate(var rec: Record "WHT Header"; pGenJournalLine: Record "Gen. Journal Line")
+    var
+        GenJnlLine: Record "Gen. Journal Line";
+        CurrLine: Integer;
+        LastLine: Integer;
+        WHTSetup: Record "WHT Business Posting Group";
+        WHTEntry: Record "WHT Line";
+        SumAmt: Decimal;
+    begin
+        if Rec."WHT Certificate No." <> '' then begin
+            Rec.TESTfield("WHT Business Posting Group");
+
+            Clear(CurrLine);
+
+            GenJnlLine.RESET();
+            GenJnlLine.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
+            GenJnlLine.SETRANGE("Journal Template Name", pGenJournalLine."Journal Template Name");
+            GenJnlLine.SETRANGE("Journal Batch Name", pGenJournalLine."Journal Batch Name");
+            GenJnlLine.SETRANGE("Document No.", pGenJournalLine."Document No.");
+            GenJnlLine.setrange("Account Type", GenJnlLine."Account Type"::Vendor);
+            IF GenJnlLine.FindLast() THEN
+                CurrLine := GenJnlLine."Line No.";
+
+
+
+            WHTSetup.GET(rec."WHT Business Posting Group");
+            WHTSetup.TESTfield("WHT Account No.");
+
+            GenJnlLine.RESET();
+            GenJnlLine.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
+            GenJnlLine.SETRANGE("Journal Template Name", pGenJournalLine."Journal Template Name");
+            GenJnlLine.SETRANGE("Journal Batch Name", pGenJournalLine."Journal Batch Name");
+            GenJnlLine.SETRANGE("Document No.", pGenJournalLine."Document No.");
+            GenJnlLine.SETFILTER("Line No.", '>%1', CurrLine);
+            IF GenJnlLine.FindFirst() THEN
+                LastLine := GenJnlLine."Line No.";
+            IF LastLine = 0 THEN
+                CurrLine += 10000
+            ELSE
+                CurrLine := ROUND((CurrLine + LastLine) / 2, 1);
+            GenJnlLine.INIT();
+            GenJnlLine."Journal Template Name" := Rec."Gen. Journal Template Code";
+            GenJnlLine."Journal Batch Name" := Rec."Gen. Journal Batch Code";
+            GenJnlLine."Source Code" := pGenJournalLine."Source Code";
+            GenJnlLine."Line No." := CurrLine;
+            GenJnlLine.INSERT();
+            GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
+            GenJnlLine.VALIDATE("Account No.", WHTSetup."WHT Account No.");
+            GenJnlLine."Posting Date" := pGenJournalLine."Posting Date";
+            GenJnlLine."Document Date" := Rec."WHT Date";
+            GenJnlLine."Document Type" := pGenJournalLine."Document Type";
+            GenJnlLine."Document No." := pGenJournalLine."Document No.";
+            GenJnlLine."External Document No." := Rec."WHT Certificate No.";
+            GenJnlLine."WHT Document No." := Rec."WHT No.";
+
+            WHTEntry.RESET();
+            WHTEntry.SETRANGE("WHT No.", Rec."WHT No.");
+            WHTEntry.CalcSums("WHT Amount");
+
+            SumAmt := WHTEntry."WHT Amount";
+            GenJnlLine.Amount := -SumAmt;
+            GenJnlLine."Amount (LCY)" := -SumAmt;
+            GenJnlLine."Balance (LCY)" := -SumAmt;
+            GenJnlLine."Credit Amount" := SumAmt;
+            GenJnlLine.MODIFY();
+            Rec."Gen. Journal Line No." := CurrLine;
+            Rec."Gen. Journal Document No." := GenJnlLine."Document No.";
+            Rec.MODIFY();
+        end;
+    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::ReportManagement, 'OnAfterSubstituteReport', '', true, true)]
     local procedure "OnAfterSubstituteReport"(ReportId: Integer; var NewReportId: Integer)
@@ -119,17 +314,11 @@ codeunit 50005 EventFunction
     var
         RecRef: RecordRef;
         TempErrorMessage: Record "Error Message" temporary;
-        GenLine: Record "Gen. Journal Line";
     begin
 
         ErrorMessageMgt.Activate(ErrorMessageHandler);
         BindSubscription(GenJnlPost);
-        GenLine.reset();
-        GenLine.copy(GenJournalLine);
-        GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
-        GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
-        GenLine.SetRange("Document No.", GenJournalLine."Document No.");
-        GenJnlPostPreview.SetContext(GenJnlPost, GenLine);
+        GenJnlPostPreview.SetContext(GenJnlPost, GenJournalLine);
         IF NOT GenJnlPostPreview.Run() AND GenJnlPostPreview.IsSuccess() THEN begin
             GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
             PostingPreviewEventHandler.GetEntries(Database::"G/L Entry", RecRef);

@@ -189,13 +189,13 @@ pageextension 80029 "General Journal" extends "General Journal"
                 ToolTip = 'Executes the Journal Voucher action.';
                 trigger OnAction()
                 var
-                    JournalVourcher: Report "Journal Voucher";
                     GenJournalLIne: Record "Gen. Journal Line";
                 begin
                     GenJournalLIne.reset();
-                    GenJournalLIne.Copy(Rec);
-                    JournalVourcher."SetGLEntry"(GenJournalLIne);
-                    JournalVourcher.RunModal();
+                    GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
+                    GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                    GenJournalLIne.SetRange("Document No.", rec."Document No.");
+                    REPORT.RunModal(REPORT::"Journal Voucher", true, false, GenJournalLIne);
                 end;
             }
         }
@@ -229,9 +229,7 @@ pageextension 80029 "General Journal" extends "General Journal"
         IF rec."WHT Document No." = '' THEN BEGIN
             IF NOT CONFIRM('Do you want to create wht certificated') THEN
                 EXIT;
-            WHTHeader.INIT();
-            WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."WHT Document Nos.", rec."Posting Date", TRUE);
-            WHTDocNo := WHTHeader."WHT No.";
+
             GenJnlLine.RESET();
             GenJnlLine.SETRANGE("Journal Template Name", rec."Journal Template Name");
             GenJnlLine.SETRANGE("Journal Batch Name", rec."Journal Batch Name");
@@ -239,48 +237,25 @@ pageextension 80029 "General Journal" extends "General Journal"
             GenJnlLine.SETFILTER("Account Type", '%1|%2', GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Customer);
             GenJnlLine.SETFILTER("Account No.", '<>%1', '');
             IF GenJnlLine.FindFirst() THEN BEGIN
+                WHTHeader.INIT();
+                WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."WHT Document Nos.", rec."Posting Date", TRUE);
+                WHTDocNo := WHTHeader."WHT No.";
                 WHTHeader."Gen. Journal Template Code" := rec."Journal Template Name";
                 WHTHeader."Gen. Journal Batch Code" := rec."Journal Batch Name";
                 WHTHeader."Gen. Journal Document No." := rec."Document No.";
                 WHTHeader."WHT Date" := rec."Document Date";
-                //     WHTHeader."Gen. Journal Line No." := "Line No.";
                 IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor THEN BEGIN
                     IF Vendor.GET(GenJnlLine."Account No.") THEN BEGIN
-                        if NOT whtBusPostingGroup.GET(Vendor."WHT Business Posting Group") then
-                            whtBusPostingGroup.init();
+
                         WHTHeader."WHT Business Posting Group" := Vendor."WHT Business Posting Group";
                         WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Vendor;
-                        WHTHeader."WHT Source No." := Vendor."No.";
-                        WHTHeader."WHT Name" := Vendor.Name;
-                        WHTHeader."WHT Name 2" := Vendor."Name 2";
-                        WHTHeader."WHT Address" := Vendor.Address;
-                        WHTHeader."WHT Address 2" := Vendor."Address 2";
-                        WHTHeader."VAT Registration No." := Vendor."VAT Registration No.";
-                        WHTHeader."Head Office" := Vendor."Head Office";
-                        WHTHeader."VAT Branch Code" := Vendor."Branch Code";
-                        WHTHeader."WHT Business Posting Group" := Vendor."WHT Business Posting Group";
-                        WHTHeader."WHT Type" := whtBusPostingGroup."WHT Type";
-                        WHTHeader."WHT City" := Vendor.City;
-                        WHTHeader."WHT Post Code" := Vendor."Post Code";
+                        WHTHeader.validate("WHT Source No.", Vendor."No.");
                     END;
                 END ELSE
                     IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN
                         IF Customer.GET(GenJnlLine."Account No.") THEN BEGIN
-                            if NOT whtBusPostingGroup.GET(Customer."WHT Business Posting Group") then
-                                whtBusPostingGroup.init();
                             WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Customer;
-                            WHTHeader."WHT Source No." := Customer."No.";
-                            WHTHeader."WHT Name" := Customer.Name;
-                            WHTHeader."WHT Name 2" := Customer."Name 2";
-                            WHTHeader."WHT Address" := Customer.Address;
-                            WHTHeader."WHT Address 2" := Customer."Address 2";
-                            WHTHeader."VAT Registration No." := Customer."VAT Registration No.";
-                            WHTHeader."Head Office" := Customer."Head Office";
-                            WHTHeader."VAT Branch Code" := Customer."Branch Code";
-                            WHTHeader."WHT Business Posting Group" := Customer."WHT Business Posting Group";
-                            WHTHeader."WHT Type" := whtBusPostingGroup."WHT Type";
-                            WHTHeader."WHT City" := Customer.City;
-                            WHTHeader."WHT Post Code" := Customer."Post Code";
+                            WHTHeader.validate("WHT Source No.", Customer."No.");
                         END;
             END;
             WHTHeader.INSERT();
@@ -291,9 +266,8 @@ pageextension 80029 "General Journal" extends "General Journal"
         commit();
         CLEAR(PageWHTCer);
         WHTHeader.reset();
-        WHTHeader.SetFilter("WHT No.", '%1', WHTDocNo);
+        WHTHeader.SetRange("WHT No.", WHTDocNo);
         PageWHTCer.SetTableView(WHTHeader);
-        PageWHTCer."SetGenJnlLine"(rec."Journal Template Name", rec."Journal Batch Name", rec."Document No.", rec."Line No.");
         if PageWHTCer.RunModal() IN [Action::OK] then
             CurrPage.Update();
         CLEAR(PageWHTCer);

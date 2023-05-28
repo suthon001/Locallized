@@ -132,9 +132,9 @@ report 50029 "Sales Return Receipt"
         PaymentTerm: Record "Payment Terms";
 
         ShipMethod: Record "Shipment Method";
-        ExchangeRate: Text[20];
+        ExchangeRate: Text[30];
         LineNo: Integer;
-        LotSeriesNo: Code[30];
+        LotSeriesNo: Code[50];
         CommentText: Array[99] of Text[250];
 
         FunctionCenter: Codeunit "Function Center";

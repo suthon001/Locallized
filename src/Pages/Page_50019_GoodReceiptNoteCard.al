@@ -1069,84 +1069,8 @@ page 50019 "Goods Receipt Note Card"
         }
         area(processing)
         {
-            group(Approval)
-            {
-                Caption = 'Approval';
-                action(Approve)
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Approve';
-                    Image = Approve;
-                    Promoted = true;
-                    PromotedCategory = Category4;
-                    PromotedIsBig = true;
-                    PromotedOnly = true;
-                    ToolTip = 'Approve the requested changes.';
-                    Visible = OpenApprovalEntriesExistForCurrUser;
 
-                    trigger OnAction()
-                    var
-                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-                    begin
-                        ApprovalsMgmt.ApproveRecordApprovalRequest(Rec.RecordId);
-                    end;
-                }
-                action(Reject)
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Reject';
-                    Image = Reject;
-                    Promoted = true;
-                    PromotedCategory = Category4;
-                    PromotedIsBig = true;
-                    PromotedOnly = true;
-                    ToolTip = 'Reject the requested changes.';
-                    Visible = OpenApprovalEntriesExistForCurrUser;
 
-                    trigger OnAction()
-                    var
-                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-                    begin
-                        ApprovalsMgmt.RejectRecordApprovalRequest(Rec.RecordId);
-                    end;
-                }
-                action(Delegate)
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Delegate';
-                    Image = Delegate;
-                    Promoted = true;
-                    PromotedCategory = Category4;
-                    PromotedOnly = true;
-                    ToolTip = 'Delegate the requested changes to the substitute approver.';
-                    Visible = OpenApprovalEntriesExistForCurrUser;
-
-                    trigger OnAction()
-                    var
-                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-                    begin
-                        ApprovalsMgmt.DelegateRecordApprovalRequest(Rec.RecordId);
-                    end;
-                }
-                action(Comment)
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Comments';
-                    Image = ViewComments;
-                    Promoted = true;
-                    PromotedCategory = Category4;
-                    PromotedOnly = true;
-                    ToolTip = 'View or add comments for the record.';
-                    Visible = OpenApprovalEntriesExistForCurrUser;
-
-                    trigger OnAction()
-                    var
-                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-                    begin
-                        ApprovalsMgmt.GetApprovalComment(Rec);
-                    end;
-                }
-            }
 
             group("F&unctions")
             {
@@ -1181,107 +1105,8 @@ page 50019 "Goods Receipt Note Card"
                         StdVendPurchCode.InsertPurchLines(Rec);
                     end;
                 }
-                action(CopyDocument)
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Copy Document';
-                    Ellipsis = true;
-                    Enabled = Rec."No." <> '';
-                    Image = CopyDocument;
-                    Promoted = true;
-                    PromotedCategory = Process;
-                    ToolTip = 'Copy document lines and header information from another purchase document to this document. You can copy a posted purchase invoice into a new purchase invoice to quickly create a similar document.';
 
-                    trigger OnAction()
-                    begin
-                        CopyPurchDoc.SetPurchHeader(Rec);
-                        CopyPurchDoc.RunModal();
-                        Clear(CopyPurchDoc);
-                        if Rec.Get(Rec."Document Type", Rec."No.") then;
-                    end;
-                }
-                action(MoveNegativeLines)
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Move Negative Lines';
-                    Ellipsis = true;
-                    Image = MoveNegativeLines;
-                    ToolTip = 'Prepare to create a replacement sales order in a sales return process.';
 
-                    trigger OnAction()
-                    begin
-                        Clear(MoveNegPurchLines);
-                        MoveNegPurchLines.SetPurchHeader(Rec);
-                        MoveNegPurchLines.RunModal();
-                        MoveNegPurchLines.ShowDocument();
-                    end;
-                }
-                group(Action225)
-                {
-                    Caption = 'Dr&op Shipment';
-                    Image = Delivery;
-                    action(Functions_GetSalesOrder)
-                    {
-                        ApplicationArea = Suite;
-                        Caption = 'Get &Sales Order';
-                        Image = "Order";
-                        RunObject = Codeunit "Purch.-Get Drop Shpt.";
-                        ToolTip = 'Select the sales order that must be linked to the purchase order, for drop shipment or special order. ';
-                    }
-                }
-                group(Action186)
-                {
-                    Caption = 'Speci&al Order';
-                    Image = SpecialOrder;
-                    action(Action187)
-                    {
-                        AccessByPermission = TableData "Sales Shipment Header" = R;
-                        ApplicationArea = Suite;
-                        Caption = 'Get &Sales Order';
-                        Image = "Order";
-                        ToolTip = 'Select the sales order that must be linked to the purchase order, for drop shipment or special order. ';
-
-                        trigger OnAction()
-                        var
-                            PurchHeader: Record "Purchase Header";
-                            DistIntegration: Codeunit "Dist. Integration";
-                        begin
-                            PurchHeader.Copy(Rec);
-                            DistIntegration.GetSpecialOrders(PurchHeader);
-                            Rec := PurchHeader;
-                        end;
-                    }
-                }
-                action("Archive Document")
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Archi&ve Document';
-                    Image = Archive;
-                    ToolTip = 'Send the document to the archive, for example because it is too soon to delete it. Later, you delete or reprocess the archived document.';
-
-                    trigger OnAction()
-                    begin
-                        ArchiveManagement.ArchivePurchDocument(Rec);
-                        CurrPage.Update(false);
-                    end;
-                }
-                action("Send Intercompany Purchase Order")
-                {
-                    AccessByPermission = TableData "IC G/L Account" = R;
-                    ApplicationArea = Intercompany;
-                    Caption = 'Send Intercompany Purchase Order';
-                    Image = IntercompanyOrder;
-                    ToolTip = 'Send the purchase order to the intercompany outbox or directly to the intercompany partner if automatic transaction sending is enabled.';
-
-                    trigger OnAction()
-                    var
-                        ICInOutboxMgt: Codeunit ICInboxOutboxMgt;
-                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-                    begin
-                        if ApprovalsMgmt.PrePostApprovalCheckPurch(Rec) then
-                            ICInOutboxMgt.SendPurchDoc(Rec, false);
-                    end;
-                }
                 group(IncomingDocument)
                 {
                     Caption = 'Incoming Document';
@@ -1444,19 +1269,7 @@ page 50019 "Goods Receipt Note Card"
                     end;
                 }
 
-                action("Remove From Job Queue")
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Remove From Job Queue';
-                    Image = RemoveLine;
-                    ToolTip = 'Remove the scheduled processing of this record from the job queue.';
-                    Visible = JobQueueVisible;
 
-                    trigger OnAction()
-                    begin
-                        Rec.CancelBackgroundPosting();
-                    end;
-                }
                 group("Prepa&yment")
                 {
                     Caption = 'Prepa&yment';
@@ -1612,26 +1425,6 @@ page 50019 "Goods Receipt Note Card"
                             REPORT.RunModal(REPORT::"Good Receipt Note", true, true, PurchaseRecripet);
                     end;
                 }
-                action("&Print")
-                {
-                    ApplicationArea = Suite;
-                    Caption = '&Print';
-                    Ellipsis = true;
-                    Image = Print;
-                    Promoted = true;
-                    PromotedCategory = Category10;
-                    Visible = false;
-                    ToolTip = 'Prepare to print the document. The report request window for the document opens where you can specify what to include on the print-out.';
-
-                    trigger OnAction()
-                    var
-                        PurchaseHeader: Record "Purchase Header";
-                    begin
-                        PurchaseHeader := Rec;
-                        CurrPage.SetSelectionFilter(PurchaseHeader);
-                        PurchaseHeader.PrintRecords(true);
-                    end;
-                }
                 action(SendCustom)
                 {
                     ApplicationArea = Basic, Suite;
@@ -1722,19 +1515,16 @@ page 50019 "Goods Receipt Note Card"
     end;
 
     var
-        CopyPurchDoc: Report "Copy Purchase Document";
-        MoveNegPurchLines: Report "Move Negative Purchase Lines";
+
         ReportPrint: Codeunit "Test Report-Print";
         UserMgt: Codeunit "User Setup Management";
-        ArchiveManagement: Codeunit ArchiveManagement;
+
         PurchCalcDiscByType: Codeunit "Purch - Calc Disc. By Type";
         FormatAddress: Codeunit "Format Address";
         ChangeExchangeRate: Page "Change Exchange Rate";
         ShipToOptions: Option "Default (Company Address)",Location,"Customer Address","Custom Address";
         PayToOptions: Option "Default (Vendor)","Another Vendor","Custom Address";
-        [InDataSet]
 
-        JobQueueVisible: Boolean;
         [InDataSet]
         HasIncomingDocument: Boolean;
         DocNoVisible: Boolean;
@@ -1868,7 +1658,7 @@ page 50019 "Goods Receipt Note Card"
         ApprovalsMgmt: Codeunit "Approvals Mgmt.";
         WorkflowWebhookManagement: Codeunit "Workflow Webhook Management";
     begin
-        JobQueueVisible := Rec."Job Queue Status" = Rec."Job Queue Status"::"Scheduled for Posting";
+
         HasIncomingDocument := Rec."Incoming Document Entry No." <> 0;
         SetExtDocNoMandatoryCondition();
 

@@ -46,6 +46,12 @@ page 50001 "WHT Business Posting Group"
                     Caption = 'WHT Certificate No. Series';
                     ToolTip = 'Specifies the value of the WHT Certificate No. Series field.';
                 }
+                field("WHT Account No."; Rec."WHT Account No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'WHT Account No.';
+                    ToolTip = 'Specifies the value of the WHT Account No. field.';
+                }
                 field("Type"; Rec."Type")
                 {
                     ApplicationArea = All;
@@ -94,12 +100,8 @@ page 50001 "WHT Business Posting Group"
                     Caption = 'VAT Registration No.';
                     ToolTip = 'Specifies the value of the VAT Registration No. field.';
                 }
-                field("G/L Account No."; Rec."G/L Account No.")
-                {
-                    ApplicationArea = All;
-                    Caption = 'G/L Account No.';
-                    ToolTip = 'Specifies the value of the G/L Account No. field.';
-                }
+
+
             }
         }
     }

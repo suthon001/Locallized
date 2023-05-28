@@ -1,6 +1,6 @@
-table 50010 "WHT Lines"
+table 50010 "WHT Line"
 {
-    Caption = 'WHT Lines';
+    Caption = 'WHT Line';
     DataClassification = CustomerContent;
     fields
     {
@@ -131,10 +131,9 @@ table 50010 "WHT Lines"
             Caption = 'Gen. Journal Document No.';
             DataClassification = SystemMetadata;
         }
-        field(21; "WHT Type"; Option)
+        field(21; "WHT Type"; Enum "WHT Type")
         {
-            OptionMembers = " ",PND01,PND2,PND3,PND53,PND54;
-            OptionCaption = ' ,PND01,PND2,PND3,PND53,PND54';
+
             Caption = 'WHT Type';
             DataClassification = SystemMetadata;
 
@@ -154,10 +153,9 @@ table 50010 "WHT Lines"
                 "WHT %" := WHTSetup."WHT %";
             end;
         }
-        field(23; "WHT Option"; Option)
+        field(23; "WHT Option"; Enum "WHT Option")
         {
-            OptionMembers = "1","2","3","4";
-            OptionCaption = '1,2,3,4';
+
             Caption = 'WHT Option';
             DataClassification = SystemMetadata;
         }
@@ -233,6 +231,7 @@ table 50010 "WHT Lines"
         {
             Clustered = true;
         }
+
     }
     /// <summary> 
     /// Description for GetWhtHeader.

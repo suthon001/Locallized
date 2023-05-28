@@ -150,7 +150,7 @@ report 50020 "Stock On Hand"
         var_ShowItems: Boolean;
         EndingDate: Date;
         var_ZeroStock: Boolean;
-        ItemLedgerEntryDateFilter: Text[500];
+        ItemLedgerEntryDateFilter: Text;
         _USERID: Text[250];
         Usersetup: Record user;
 }

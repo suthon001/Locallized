@@ -192,6 +192,7 @@ report 50027 "Report Sales Credit Memo"
                     field(CaptionOptionThai; CaptionOptionThai)
                     {
                         ApplicationArea = all;
+                        OptionCaption = 'ใบลดหนี้,ใบลดหนี้/ใบกำกับภาษี';
                         Caption = 'Caption';
                         ToolTip = 'Specifies the value of the Caption field.';
                         trigger OnValidate()
@@ -223,9 +224,10 @@ report 50027 "Report Sales Credit Memo"
 
         ShipMethod: Record "Shipment Method";
         var_RefDocumentDate: Date;
-        ExchangeRate: Text[20];
+        ExchangeRate: Text[30];
+
         LineNo: Integer;
-        LotSeriesNo, RefDocumentNo, var_RefDocumentNo : Code[30];
+        LotSeriesNo, RefDocumentNo, var_RefDocumentNo : Code[50];
         CommentText: Array[99] of Text[250];
 
         FunctionCenter: Codeunit "Function Center";

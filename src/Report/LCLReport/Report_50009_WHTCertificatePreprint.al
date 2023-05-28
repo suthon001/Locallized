@@ -13,7 +13,7 @@ report 50009 "WHT Certificate Preprint"
             var
                 Currcount: Integer;
                 DigitCount: Integer;
-                WHTEntry: Record "WHT Lines";
+                WHTEntry: Record "WHT Line";
                 WHTBus: Record "WHT Business Posting Group";
             begin
                 WHTBus.GET("WHT Business Posting Group");
@@ -52,13 +52,13 @@ report 50009 "WHT Certificate Preprint"
                             DigitCount += 1;
                         END;
                 UNTIL Currcount > STRLEN(VATRegID2);
-                IF "WHT Option" = "WHT Option"::"1" THEN
+                IF "WHT Option" = "WHT Option"::"(1) หักภาษี ณ ที่จ่าย" THEN
                     WHTOPtion[1] := 'X'
                 ELSE
-                    IF "WHT Option" = "WHT Option"::"2" THEN
+                    IF "WHT Option" = "WHT Option"::"(2) ออกภาษีให้ตลอดไป" THEN
                         WHTOPtion[2] := 'X'
                     ELSE
-                        IF "WHT Option" = "WHT Option"::"3" THEN
+                        IF "WHT Option" = "WHT Option"::"(3) ออกภาษีให้ครั้งเดียว" THEN
                             WHTOPtion[3] := 'X'
                         ELSE
                             WHTOPtion[4] := 'X';

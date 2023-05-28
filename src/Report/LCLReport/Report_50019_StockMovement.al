@@ -170,17 +170,13 @@ report 50019 "Stock Movement"
                     END;
             end;
 
-            trigger OnPreDataItem()
-            begin
-                LastFieldNo := FIELDNO("No.");
-            end;
+
         }
     }
 
 
     trigger OnPreReport()
-    var
-        POS: Integer;
+
     begin
         CompanyInfo.GET();
         CompanyInfo.CALCFIELDS(Picture);
@@ -197,15 +193,11 @@ report 50019 "Stock Movement"
         ItemFilter := Item.GETFILTERS();
 
 
-        _USERID := USERID;
-        POS := STRPOS(_USERID, '\');
-        WHILE POS > 0 DO BEGIN
-            _USERID := COPYSTR(_USERID, POS + 1);
-            POS := STRPOS(_USERID, '\')
-        END;
+        _USERID := FunctionCenter.GetName(COPYSTR(USERID, 1, 50));
     end;
 
     var
+        FunctionCenter: Codeunit "Function Center";
         var_Pos: Decimal;
         var_Neg: Decimal;
         var_OpeningBalance: Decimal;
@@ -213,14 +205,14 @@ report 50019 "Stock Movement"
         var_TotalQuantity: Decimal;
         var_TotalPos: Decimal;
         var_TotalNeg: Decimal;
-        var_ItemDateFilter: Text[60];
-        LastFieldNo: Integer;
+        var_ItemDateFilter: Text;
+
         CompanyInfo: Record "Company Information";
-        var_ItemNo: Code[200];
-        var_ItemLocationFilter: Code[10];
-        var_ItemProductGroupCode: Code[10];
-        var_ItemLedDocumentNo: Code[10];
-        var_ItemLedLocationCode: Code[10];
+        var_ItemNo: text;
+        var_ItemLocationFilter: text;
+        var_ItemProductGroupCode: text;
+        var_ItemLedDocumentNo: text;
+        var_ItemLedLocationCode: text;
         var_ItemLedEntryType: Text;
         _USERID: Text[100];
         ItemFilter: Text;

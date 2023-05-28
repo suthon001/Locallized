@@ -212,73 +212,18 @@ page 50008 "WHT Certificate"
                 end;
             }
         }
-        area(Processing)
-        {
-            action("Get WHT Line from Purch. Invoice")
-            {
-                ApplicationArea = All;
-                Caption = 'Get WHT Line from Purch. Invoice';
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                Visible = false;
-                Image = GetLines;
-                ToolTip = 'Executes the Get WHT Line from Purch. Invoice action.';
-                trigger OnAction()
-                var
-                    VendLedgEntry: Record "Vendor Ledger Entry";
-                    PurchInvLine: Record "Purch. Inv. Line";
-                    WHTLine: Record "WHT Lines";
-                    LastLineNo: Integer;
-                begin
-                    VendLedgEntry.reset();
-                    VendLedgEntry.SetRange("Applies-to ID", GDocNo);
-                    if VendLedgEntry.FindSet() then
-                        repeat
-                            PurchInvLine.reset();
-                            PurchInvLine.SetRange("Document No.", VendLedgEntry."Document No.");
-                            PurchInvLine.SetFilter("WHT Business Posting Group", '<>%1', '');
-                            if PurchInvLine.findset() then
-                                repeat
-                                    WHTLine.RESET();
-                                    WHTLine.SetRange("WHT No.", Rec."WHT No.");
-                                    WHTLine.SetRange("WHT Product Posting Group", '%1', PurchInvLine."WHT Product Posting Group");
-                                    if WHTLine.FindFirst() then begin
-                                        WHTLine.Validate("WHT Base", WHTLine."WHT Base" + PurchInvLine."Line Amount");
-                                        WHTLine.Modify();
-                                    end else begin
-                                        WHTLine.reset();
-                                        WHTLine.SetRange("WHT No.", Rec."WHT No.");
-                                        if WHTLine.FindLast() then
-                                            LastLineNo := WHTLine."WHT Line No." + 10000
-                                        else
-                                            LastLineNo := 10000;
-                                        WHTLine.Reset();
-                                        WHTLine.Init();
-                                        WHTLine."WHT No." := Rec."WHT No.";
-                                        WHTLine."WHT Line No." := LastLineNo;
-                                        WHTLine.Insert();
-                                        WHTLine.validate("WHT Product Posting Group", PurchInvLine."WHT Product Posting Group");
-                                        WHTLine.Validate("WHT Base", PurchInvLine."Line Amount");
-                                        WHTLine.modify();
-                                    end;
-                                until PurchInvLine.Next() = 0;
-                        until VendLedgEntry.Next() = 0;
-                end;
-            }
-        }
     }
     /// <summary> 
     /// Description for CreateWHTCertificate.
     /// </summary>
-    local procedure "CreateWHTCertificate"(): Boolean
+    local procedure CreateWHTCertificate(): Boolean
     var
         GenJnlLine: Record "Gen. Journal Line";
         GenJnlLine2: Record "Gen. Journal Line";
         CurrLine: Integer;
         LastLine: Integer;
         WHTSetup: Record "WHT Business Posting Group";
-        WHTEntry: Record "WHT Lines";
+        WHTEntry: Record "WHT Line";
         SumAmt: Decimal;
     begin
         IF Rec."WHT Certificate No." = '' THEN BEGIN
@@ -291,7 +236,7 @@ page 50008 "WHT Certificate"
                 GenJnlLine.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line NO.");
                 GenJnlLine.SETRANGE("Journal Template Name", Rec."Gen. Journal Template Code");
                 GenJnlLine.SETRANGE("Journal Batch Name", Rec."Gen. Journal Batch Code");
-                GenJnlLine.SETFILTER("Document No.", '%1', Rec."Gen. Journal Document No.");
+                GenJnlLine.SETRANGE("Document No.", Rec."Gen. Journal Document No.");
                 IF GenJnlLine.FindLast() THEN
                     CurrLine := GenJnlLine."Line No.";
 
@@ -299,7 +244,7 @@ page 50008 "WHT Certificate"
                 GenJnlLine2.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line NO.");
                 GenJnlLine2.SETRANGE("Journal Template Name", Rec."Gen. Journal Template Code");
                 GenJnlLine2.SETRANGE("Journal Batch Name", Rec."Gen. Journal Batch Code");
-                GenJnlLine2.SETFILTER("Document No.", '%1', Rec."Gen. Journal Document No.");
+                GenJnlLine2.SETRANGE("Document No.", Rec."Gen. Journal Document No.");
                 IF GenJnlLine2.FindLast() THEN;
 
                 GenJnlLine.RESET();
@@ -314,7 +259,7 @@ page 50008 "WHT Certificate"
                     CurrLine := ROUND((CurrLine + LastLine) / 2, 1);
 
                 WHTSetup.GET(Rec."WHT Business Posting Group");
-                WHTSetup.TESTfield("G/L Account No.");
+                WHTSetup.TESTfield("WHT Account No.");
 
                 GenJnlLine.INIT();
                 GenJnlLine."Journal Template Name" := Rec."Gen. Journal Template Code";
@@ -322,7 +267,7 @@ page 50008 "WHT Certificate"
                 GenJnlLine."Line No." := CurrLine;
                 GenJnlLine.INSERT();
                 GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
-                GenJnlLine.VALIDATE("Account No.", WHTSetup."G/L Account No.");
+                GenJnlLine.VALIDATE("Account No.", WHTSetup."WHT Account No.");
                 GenJnlLine."Posting Date" := GenJnlLine2."Posting Date";
                 GenJnlLine."Document Date" := Rec."WHT Date";
                 GenJnlLine."Document Type" := GenJnlLine2."Document Type";
@@ -333,7 +278,7 @@ page 50008 "WHT Certificate"
                 SumAmt := 0;
                 WHTEntry.RESET();
                 WHTEntry.SETRANGE("WHT No.", Rec."WHT No.");
-                IF WHTEntry.FIND('-') THEN begin
+                IF WHTEntry.FindFirst() THEN begin
 
                     WHTEntry.CalcSums("WHT Amount");
                     SumAmt := WHTEntry."WHT Amount";
@@ -350,7 +295,7 @@ page 50008 "WHT Certificate"
                 SumAmt := 0;
                 WHTEntry.RESET();
                 WHTEntry.SETRANGE("WHT No.", Rec."WHT No.");
-                IF WHTEntry.FIND('-') THEN begin
+                IF WHTEntry.FindFirst() THEN begin
 
                     WHTEntry.CalcSums("WHT Amount");
                     SumAmt := WHTEntry."WHT Amount";
@@ -373,27 +318,8 @@ page 50008 "WHT Certificate"
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
-        "CreateWHTCertificate"();
+        CreateWHTCertificate();
     end;
 
-    /// <summary> 
-    /// Description for SetGenJnlLine.
-    /// </summary>
-    /// <param name="LJnlTemplate">Parameter of type code[20].</param>
-    /// <param name="LJnlBatch">Parameter of type Code[20].</param>
-    /// <param name="LDocNo">Parameter of type Code[20].</param>
-    procedure "SetGenJnlLine"(LJnlTemplate: code[20]; LJnlBatch: Code[20]; LDocNo: Code[20]; plineNo: Integer)
-    begin
-        GJnlTemplate := LJnlTemplate;
-        GJnlBatch := LJnlBatch;
-        GDocNo := LDocNo;
-        MyLineNo := plineNo;
-    end;
-
-    var
-        GJnlTemplate: Code[20];
-        GJnlBatch: Code[20];
-        GDocNo: Code[20];
-        MyLineNo: Integer;
 
 }

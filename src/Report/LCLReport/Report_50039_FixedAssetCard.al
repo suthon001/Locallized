@@ -11,7 +11,7 @@ report 50039 "Fixed Asset Card"
     {
         dataitem("Fixed Asset"; "Fixed Asset")
         {
-            column(ImageStorageQRCode; ImageStorage."Image")
+            column(ImageStorageQRCode; barcode)
             {
             }
             column(CompanyInformationName; CompanyInformation.Name)
@@ -67,8 +67,9 @@ report 50039 "Fixed Asset Card"
             }
 
             trigger OnAfterGetRecord()
+            var
+                BarcodeSymbology: Enum "Barcode Symbology";
             begin
-                // "Fixed Asset".CALCFIELDS(Picture);
 
                 IF NOT Vendor.GET("Vendor No.") THEN
                     Vendor.INIT();
@@ -80,11 +81,7 @@ report 50039 "Fixed Asset Card"
                 IF NOT Employee.GET("Responsible Employee") THEN
                     Employee.init();
                 vgEmployeeName := Employee."First Name" + ' ' + Employee."Last Name";
-
-                IF NOT ImageStorage.GET(5600, 1, "No.", 0) then
-                    ImageStorage.init;
-
-                ImageStorage.CALCFIELDS("Image");
+                barcode := FunctionCenter.Generatebarcode(BarcodeSymbology::Code39, "No.");
             end;
         }
     }
@@ -98,14 +95,16 @@ report 50039 "Fixed Asset Card"
 
     var
         CompanyInformation: Record "Company Information";
-        ImageStorage: Record "Image Storage";
+
         CodeUnitFunction: Codeunit "Function Center";
         vgFALocationName: Text;
         vgFAClassName: Text;
         vgFASubClassName: Text;
-        vgVendorName: Text[50];
+        vgVendorName: Text[100];
         Vendor: Record Vendor;
-        vgEmployeeName: Text[50];
+        vgEmployeeName: Text[100];
         Employee: Record Employee;
+        FunctionCenter: Codeunit "Function Center";
+        barcode: Text;
 }
 

@@ -84,6 +84,6 @@ report 50046 "Bank Acc. Reconciliation"
 
     var
         BankStatementBlance: Decimal;
-        var_ShowFilter: Text[200];
+        var_ShowFilter: Text;
 }
 

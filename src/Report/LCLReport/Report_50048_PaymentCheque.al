@@ -3,7 +3,7 @@ report 50048 "Payment Cheque"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50048_PaymentCheque.rdl';
     PreviewMode = PrintLayout;
-    ApplicationArea = All;
+    UsageCategory = None;
 
     dataset
     {
@@ -66,7 +66,7 @@ report 50048 "Payment Cheque"
 
             trigger OnAfterGetRecord()
             begin
-                var_ChequeDate := "Cheque Date";
+
                 var_ChequeAmount := ABS(Amount);
                 var_ChequeVendor := Description;
 
@@ -131,6 +131,7 @@ report 50048 "Payment Cheque"
                     field(ChequeFormatOfBank; ChequeFormatOfBank)
                     {
                         Caption = 'Bank Type';
+                        OptionCaption = 'BBL,KB,TMB,SCB,BAY,CASH';
                         ToolTip = 'Specifies the value of the Bank Type field.';
                         ApplicationArea = All;
                     }
@@ -193,10 +194,10 @@ report 50048 "Payment Cheque"
     end;
 
     var
-        var_ChequeDate: Date;
+
         var_ChequeAmount: Decimal;
         var_ChequeVendor: Text[250];
-        var_ChequeAmountText: Text[250];
+        var_ChequeAmountText: Text;
         ChequeFormatOfBank: Option BBL,KB,TMB,SCB,BAY,CASH;
         "var_A/CPayee", Var_CO : Boolean;
         var_ShowPayee: Text[5];

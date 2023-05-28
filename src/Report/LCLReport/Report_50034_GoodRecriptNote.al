@@ -128,13 +128,13 @@ report 50034 "Good Receipt Note"
         FunctionCenter: Codeunit "Function Center";
 
         companyInfor: Record "Company Information";
-        ExchangeRate: Text[20];
+        ExchangeRate: Text[30];
         ComText: array[10] Of Text[250];
         VendText: array[10] Of Text[250];
         SplitDate: Array[3] of Text[20];
         CommentText: Array[100] of Text[250];
         LineNo: Integer;
-        LotSeriesNo: Code[30];
+        LotSeriesNo: Code[50];
         TotalQuantity: Decimal;
         PaymentTerm: Record "Payment Terms";
         PurchaseType: Enum "Purchase Comment Document Type";

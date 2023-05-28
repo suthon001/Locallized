@@ -15,7 +15,7 @@ table 50006 "WHT Business Posting Group"
             Caption = 'Code';
             DataClassification = CustomerContent;
         }
-        field(2; "Description"; Text[150])
+        field(2; "Description"; Text[100])
         {
             Caption = 'Description';
             DataClassification = CustomerContent;
@@ -93,16 +93,14 @@ table 50006 "WHT Business Posting Group"
             Description = 'VAT Registration No.';
             DataClassification = CustomerContent;
         }
-        field(13; "G/L Account No."; Code[10])
+        field(13; "WHT Account No."; code[20])
         {
-            Description = 'G/L Account No.';
-            TableRelation = "G/L Account"."No.";
+            Caption = 'WHT Account No.';
             DataClassification = CustomerContent;
+            TableRelation = "G/L Account"."No." where("Account Type" = const(Posting), Blocked = const(false));
         }
-        field(14; "WHT Type"; Option)
+        field(14; "WHT Type"; Enum "WHT Type")
         {
-            OptionMembers = " ",PND01,PND2,PND3,PND53,PND54;
-            OptionCaption = ' ,PND01,PND2,PND3,PND53,PND54';
             Caption = 'WHT Type';
             DataClassification = CustomerContent;
 

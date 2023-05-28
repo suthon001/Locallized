@@ -149,7 +149,7 @@ report 50038 "Recript to CashReceipt"
                     GenJnlLine.VALIDATE("Document Date", BillingHeader."Cheque Date");
                 IF BillingHeader."Cheque No." <> '' THEN
                     GenJnlLine.VALIDATE("External Document No.", BillingHeader."Cheque No.");
-                GenJnlLine.Description := COPYSTR(STRSUBSTNO('Receive From %1', BillingHeader."Bill/Pay-to Cus/Vend Name2"), 1, 100);
+                GenJnlLine.Description := COPYSTR('Receive From ' + BillingHeader."Bill/Pay-to Cust/Vend Name", 1, 100);
                 GenJnlLine.VALIDATE("Amount (LCY)", BillingHeader."Receive Amount");
                 GenJnlLine.MODIFY();
 
@@ -192,7 +192,7 @@ report 50038 "Recript to CashReceipt"
     end;
 
     var
-        EarlierPostingDateErr: Label 'You cannot apply and post an entry to an entry with an earlier posting date.\\Instead, post the document of type %1 with the number %2 and then apply it to the document of type %3 with the number %4.';
+        EarlierPostingDateErr: Label 'You cannot apply and post an entry to an entry with an earlier posting date.\\Instead, post the document of type %1 with the number %2 and then apply it to the document of type %3 with the number %4.', Locked = true;
         BillingHeader: Record "Billing Receipt Header";
         DocumentNo: Code[20];
         TemplateName: Code[20];

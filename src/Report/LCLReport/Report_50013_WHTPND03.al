@@ -182,7 +182,7 @@ report 50013 "WHT PND 03"
                 TaxReportLine.SETFILTER("Document No.", '%1', "Document No.");
                 if DateFilter <> '' then
                     TaxReportLine.SETFILTER("Posting Date", DateFilter);
-                IF TaxReportLine.FIND('-') THEN
+                IF TaxReportLine.FindFirst() THEN
                     REPEAT
 
                         var_Amount := var_Amount + TaxReportLine."Base Amount";
@@ -197,7 +197,7 @@ report 50013 "WHT PND 03"
                 TaxReportLine.SETFILTER("Document No.", '%1', "Document No.");
                 if DateFilter <> '' then
                     TaxReportLine.SETFILTER("Posting Date", DateFilter);
-                IF TaxReportLine.FIND('-') THEN
+                IF TaxReportLine.FindFirst() THEN
                     REPEAT
                         IF (var_WHTRegisNo = '') THEN
                             var_CountVend := var_CountVend + 1
@@ -304,7 +304,7 @@ report 50013 "WHT PND 03"
         var_Send_Type: array[3] of Text;
         var_Send_Option: array[2] of Text;
         var_CountVend: Integer;
-        var_CompnayName: Text[50];
+        var_CompnayName: Text[100];
         DateFilter: Text[100];
 }
 

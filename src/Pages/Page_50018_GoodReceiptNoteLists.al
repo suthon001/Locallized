@@ -536,43 +536,7 @@ page 50018 "Goods Receipt Note List"
                     ToolTip = 'Delete orders that were not automatically deleted after completion. For example, when several sales orders were completed by a single invoice.';
                 }
             }
-            group("Request Approval")
-            {
-                Caption = 'Request Approval';
-                action(SendApprovalRequest)
-                {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Send A&pproval Request';
-                    Enabled = NOT OpenApprovalEntriesExist AND CanRequestApprovalForFlow;
-                    Image = SendApprovalRequest;
-                    ToolTip = 'Request approval of the document.';
 
-                    trigger OnAction()
-                    var
-                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-                    begin
-                        if ApprovalsMgmt.CheckPurchaseApprovalPossible(Rec) then
-                            ApprovalsMgmt.OnSendPurchaseDocForApproval(Rec);
-                    end;
-                }
-                action(CancelApprovalRequest)
-                {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Cancel Approval Re&quest';
-                    Enabled = CanCancelApprovalForRecord OR CanCancelApprovalForFlow;
-                    Image = CancelApprovalRequest;
-                    ToolTip = 'Cancel the approval request.';
-
-                    trigger OnAction()
-                    var
-                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-                        WorkflowWebhookManagement: Codeunit "Workflow Webhook Management";
-                    begin
-                        ApprovalsMgmt.OnCancelPurchaseApprovalRequest(Rec);
-                        WorkflowWebhookManagement.FindAndCancel(Rec.RecordId);
-                    end;
-                }
-            }
             group(Action12)
             {
                 Caption = 'Warehouse';
@@ -670,20 +634,6 @@ page 50018 "Goods Receipt Note List"
                         PurchPostYesNo.Preview(Rec);
                     end;
                 }
-
-                action(RemoveFromJobQueue)
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Remove From Job Queue';
-                    Image = RemoveLine;
-                    ToolTip = 'Remove the scheduled processing of this record from the job queue.';
-                    Visible = JobQueueActive;
-
-                    trigger OnAction()
-                    begin
-                        Rec.CancelBackgroundPosting();
-                    end;
-                }
             }
         }
     }
@@ -744,8 +694,7 @@ page 50018 "Goods Receipt Note List"
         TestReportPrint: Codeunit "Test Report-Print";
         [InDataSet]
         JobQueueActive: Boolean;
-        OpenApprovalEntriesExist: Boolean;
-        CanCancelApprovalForRecord: Boolean;
+
         SkipLinesWithoutVAT: Boolean;
 
         CanRequestApprovalForFlow: Boolean;
@@ -753,12 +702,10 @@ page 50018 "Goods Receipt Note List"
 
     local procedure SetControlAppearance()
     var
-        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+
         WorkflowWebhookManagement: Codeunit "Workflow Webhook Management";
     begin
-        OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(Rec.RecordId);
 
-        CanCancelApprovalForRecord := ApprovalsMgmt.CanCancelApprovalForRecord(Rec.RecordId);
 
         WorkflowWebhookManagement.GetCanRequestAndCanCancel(Rec.RecordId, CanRequestApprovalForFlow, CanCancelApprovalForFlow);
     end;

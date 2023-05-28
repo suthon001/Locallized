@@ -302,7 +302,7 @@ report 50014 "WHT PND 53"
         var_Send_Type: array[3] of Text;
         var_Send_Option: array[2] of Text;
         var_CountVend: Integer;
-        var_CompanyName: Text[50];
+        var_CompanyName: Text[100];
         DateFilter: Text;
 }
 

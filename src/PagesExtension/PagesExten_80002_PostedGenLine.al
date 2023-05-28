@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension ExtenPostGenJournalLine (ID 80002) extends Record Posted General Journal.
+/// PageExtension ExtenPostPostedGenLine (ID 80002) extends Record Posted General Journal.
 /// </summary>
-pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
+pageextension 80002 "ExtenPostPostedGenLine" extends "Posted General Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Navigate,Show Detail';
     layout
@@ -37,19 +37,14 @@ pageextension 80002 "ExtenPostGenJournalLine" extends "Posted General Journal"
                 ToolTip = 'Executes the Posted Voucher action.';
                 trigger OnAction()
                 var
-                    PostedVoucher: Report "Posted Voucher";
                     PostedGenLine: Record "Posted Gen. Journal Line";
-                    GLEntry: Record "G/L Entry";
+
                 begin
                     PostedGenLine.reset();
-                    PostedGenLine.copy(rec);
-                    GLEntry.reset();
-                    GLEntry.SetRange("Journal Batch Name", rec."Journal Batch Name");
-                    GLEntry.SetRange("Document No.", rec."Document No.");
-                    GLEntry.SetRange("Posting Date", rec."Posting Date");
-                    PostedVoucher.SetTableView(GLEntry);
-                    PostedVoucher.SetDataPosting(PostedGenLine);
-                    PostedVoucher.RunModal();
+                    PostedGenLine.SetRange("Journal Template Name", rec."Journal Template Name");
+                    PostedGenLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                    PostedGenLine.SetRange("Document No.", rec."Document No.");
+                    REPORT.RunModal(REPORT::"Posted Voucher", true, false, PostedGenLine);
                 end;
             }
         }

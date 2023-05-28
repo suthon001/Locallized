@@ -5,43 +5,6 @@ codeunit 50000 "Journal Function"
 {
     EventSubscriberInstance = StaticAutomatic;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterVendLedgEntryInsert', '', false, false)]
-    local procedure OnAfterVendLedgEntryInsert(var VendorLedgerEntry: Record "Vendor Ledger Entry")
-    var
-        WHTAppEntry: Record "WHT Applied Entry";
-        PurchInvLine: Record "Purch. Inv. Line";
-        TempPurchLine: Record "Purchase Line" temporary;
-        LastLineNo: Integer;
-    begin
-        LastLineNo := 0;
-        if (VendorLedgerEntry."Document Type" = VendorLedgerEntry."Document Type"::Invoice) then begin
-            PurchInvLine.reset();
-            PurchInvLine.SetFilter("Document No.", VendorLedgerEntry."Document No.");
-            PurchInvLine.SetFilter("WHT %", '<>%1', 0);
-            IF PurchInvLine.FindSet() then
-                repeat
-                    TempPurchLine.reset();
-                    TempPurchLine.SetFilter("WHT Business Posting Group", '%1', PurchInvLine."WHT Business Posting Group");
-                    TempPurchLine.SetFilter("WHT Product Posting Group", '%1', PurchInvLine."WHT Product Posting Group");
-                    if not TempPurchLine.FindFirst() then begin
-                        LastLineNo := LastLineNo + 10000;
-                        TempPurchLine.init();
-                        TempPurchLine."Line No." := LastLineNo;
-                        TempPurchLine."WHT Product Posting Group" := PurchInvLine."WHT Business Posting Group";
-                        TempPurchLine."WHT Product Posting Group" := PurchInvLine."WHT Product Posting Group";
-                        TempPurchLine."WHT %" := PurchInvLine."WHT %";
-                        TempPurchLine."WHT Option" := PurchInvLine."WHT Option";
-                        TempPurchLine."WHT Base" := PurchInvLine.Amount;
-                        TempPurchLine."WHT Amount" := ROUND(PurchInvLine.Amount * PurchInvLine."WHT %" / 100, 0.01);
-                        TempPurchLine.Insert();
-                    end else begin
-                        TempPurchLine."WHT Base" += PurchInvLine.Amount;
-                        TempPurchLine."WHT Amount" += ROUND(PurchInvLine.Amount * PurchInvLine."WHT %" / 100, 0.01);
-                        TempPurchLine.Modify();
-                    end;
-                until PurchInvLine.Next() = 0;
-        end;
-    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforePostGenJnlLine', '', true, true)]
     /// <summary> 
@@ -127,37 +90,35 @@ codeunit 50000 "Journal Function"
     var
         VATProPostingGroup: Record "VAT Product Posting Group";
     begin
-        // with VATEntry do begin
-        if not VATEntry.IsTemporary() then begin
-            VATEntry."Head Office" := GenJournalLine."Head Office";
-            VATEntry."Branch Code" := GenJournalLine."Branch Code";
-            VATEntry."Tax Invoice No." := GenJournalLine."Tax Invoice No.";
-            VATEntry."Tax Invoice Name" := GenJournalLine."Tax Invoice Name";
-            VATEntry."Tax Invoice Name 2" := GenJournalLine."Tax Invoice Name 2";
-            VATEntry."Tax Vendor No." := GenJournalLine."Tax Vendor No.";
-            VATEntry."Tax Invoice Base" := GenJournalLine."Tax Invoice Base";
-            VATEntry."Tax Invoice Date" := GenJournalLine."Tax Invoice Date";
-            VATEntry."Tax Invoice Amount" := GenJournalLine."Tax Invoice Amount";
-            VATEntry."VAT Registration No." := GenJournalLine."VAT Registration No.";
-            VATEntry."Tax Invoice Address" := GenJournalLine."Tax Invoice Address";
-            VATEntry."Tax Invoice Address 2" := GenJournalLine."Tax Invoice Address 2";
-            VATEntry."Tax Invoice City" := GenJournalLine."Tax Invoice City";
-            VATEntry."Tax Invoice Post Code" := GenJournalLine."Tax Invoice Post Code";
-            VATEntry."External Document No." := GenJournalLine."External Document No.";
-            if GenJournalLine."Document Line No." <> 0 then
-                VATEntry."Document Line No." := GenJournalLine."Document Line No."
-            else
-                VATEntry."Document Line No." := GenJournalLine."Line No.";
-            if NOT VATProPostingGroup.get(VATEntry."VAT Prod. Posting Group") then
-                VATProPostingGroup.init();
-            IF VATProPostingGroup."Direct VAT" then
-                VATEntry."Tax Invoice Amount" := GenJournalLine.Amount
-            ELSE BEGIN
-                IF VATEntry."Tax Invoice Base" = 0 THEN
-                    VATEntry."Tax Invoice Base" := VATEntry.Base;
-                IF VATEntry."Tax Invoice Amount" = 0 THEN
-                    VATEntry."Tax Invoice Amount" := VATEntry.Amount;
-            END;
+
+        VATEntry."Head Office" := GenJournalLine."Head Office";
+        VATEntry."Branch Code" := GenJournalLine."Branch Code";
+        VATEntry."Tax Invoice No." := GenJournalLine."Tax Invoice No.";
+        VATEntry."Tax Invoice Name" := GenJournalLine."Tax Invoice Name";
+        VATEntry."Tax Invoice Name 2" := GenJournalLine."Tax Invoice Name 2";
+        VATEntry."Tax Vendor No." := GenJournalLine."Tax Vendor No.";
+        VATEntry."Tax Invoice Base" := GenJournalLine."Tax Invoice Base";
+        VATEntry."Tax Invoice Date" := GenJournalLine."Tax Invoice Date";
+        VATEntry."Tax Invoice Amount" := GenJournalLine."Tax Invoice Amount";
+        VATEntry."VAT Registration No." := GenJournalLine."VAT Registration No.";
+        VATEntry."Tax Invoice Address" := GenJournalLine."Tax Invoice Address";
+        VATEntry."Tax Invoice Address 2" := GenJournalLine."Tax Invoice Address 2";
+        VATEntry."Tax Invoice City" := GenJournalLine."Tax Invoice City";
+        VATEntry."Tax Invoice Post Code" := GenJournalLine."Tax Invoice Post Code";
+        VATEntry."External Document No." := GenJournalLine."External Document No.";
+        if GenJournalLine."Document Line No." <> 0 then
+            VATEntry."Document Line No." := GenJournalLine."Document Line No."
+        else
+            VATEntry."Document Line No." := GenJournalLine."Line No.";
+        if NOT VATProPostingGroup.get(VATEntry."VAT Prod. Posting Group") then
+            VATProPostingGroup.init();
+        IF VATProPostingGroup."Direct VAT" then
+            VATEntry."Tax Invoice Amount" := GenJournalLine.Amount
+        ELSE BEGIN
+            IF VATEntry."Tax Invoice Base" = 0 THEN
+                VATEntry."Tax Invoice Base" := VATEntry.Base;
+            IF VATEntry."Tax Invoice Amount" = 0 THEN
+                VATEntry."Tax Invoice Amount" := VATEntry.Amount;
         END;
         //   end;
     end;
@@ -219,11 +180,9 @@ codeunit 50000 "Journal Function"
     var
         VATEntryReport: Record "VAT Transections";
     begin
-        if RunTrigger then begin
-            VATEntryReport.INIT();
-            VATEntryReport.TRANSFERFIELDS(Rec);
-            VATEntryReport.Insert();
-        END;
+        VATEntryReport.INIT();
+        VATEntryReport.TRANSFERFIELDS(Rec);
+        VATEntryReport.Insert();
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"G/L Entry", 'OnAfterCopyGLEntryFromGenJnlLine', '', false, false)]

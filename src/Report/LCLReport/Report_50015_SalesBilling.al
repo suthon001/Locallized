@@ -65,7 +65,7 @@ report 50015 "Sales Billing"
             begin
                 FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
-                FunctionCenterII."SalesBillingReceiptInformation"(CustVend, "Document Type", "No.");
+                FunctionCenter."SalesBillingReceiptInformation"(CustVend, "Document Type", "No.");
                 NewDate := DT2Date("Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
@@ -84,11 +84,10 @@ report 50015 "Sales Billing"
         ComText: array[10] of Text[250];
         CustVend: array[10] of Text[250];
         FunctionCenter: Codeunit "Function Center";
-        FunctionCenterII: Codeunit "Function Center";
         companyInfor: Record "Company Information";
-        ExchangeRate: Text[20];
+        ExchangeRate: Text[30];
         SplitDate: Array[3] of Text[20];
-        AmtText: Text[1024];
+        AmtText: Text;
         PaymentTerm: Record "Payment Terms";
 
 }

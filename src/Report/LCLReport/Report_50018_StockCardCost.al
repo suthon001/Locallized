@@ -209,7 +209,7 @@ report 50018 "Report Stock Card Cost"
                 ItemLedgerEntry: Record "Item Ledger Entry";
             begin
 
-                var_Description := STRSUBSTNO('%1 %2 Base Unit of Measure : ', Description, "Description 2", "Base Unit of Measure");
+                var_Description := Description + ' ' + "Description 2" + ' Base Unit of Measure ' + "Base Unit of Measure";
 
 
                 var_TotalQuantity := 0;
@@ -260,10 +260,7 @@ report 50018 "Report Stock Card Cost"
                 var_UnitCost := var_UnitCost2;
             end;
 
-            trigger OnPreDataItem()
-            begin
-                LastFieldNo := FIELDNO("No.");
-            end;
+
         }
     }
 
@@ -296,8 +293,7 @@ report 50018 "Report Stock Card Cost"
 
 
     trigger OnPreReport()
-    var
-        POS: Integer;
+
     begin
         CompanyInfo.GET();
         var_OpeningBalance2 := 0;
@@ -312,16 +308,12 @@ report 50018 "Report Stock Card Cost"
 
         ItemFilter := Item.GETFILTERS();
 
-        _USERID := USERID;
-        POS := STRPOS(_USERID, '\');
-        WHILE POS > 0 DO BEGIN
-            _USERID := COPYSTR(_USERID, POS + 1);
-            POS := STRPOS(_USERID, '\')
-        END;
+        _USERID := FunctionCenter.GetName(COPYSTR(USERID, 1, 50));
     end;
 
     var
-        var_Description: Text[1024];
+        FunctionCenter: Codeunit "Function Center";
+        var_Description: Text;
         var_Pos: Decimal;
         var_Neg: Decimal;
         var_UnitCostPos: Decimal;
@@ -333,15 +325,15 @@ report 50018 "Report Stock Card Cost"
         var_TotalQuantity: Decimal;
         var_TotalPos: Decimal;
         var_TotalNeg: Decimal;
-        var_ItemDateFilter: Text[60];
+        var_ItemDateFilter: Text;
         var_flightno: Text[30];
-        LastFieldNo: Integer;
+
         CompanyInfo: Record 79;
-        var_ItemNo: Code[20];
-        var_ItemLocationFilter: Code[10];
-        var_ItemProductGroupCode: Code[10];
-        var_ItemLedDocumentNo: Code[10];
-        var_ItemLedLocationCode: Code[10];
+        var_ItemNo: Text;
+        var_ItemLocationFilter: Text;
+        var_ItemProductGroupCode: Text;
+        var_ItemLedDocumentNo: Text;
+        var_ItemLedLocationCode: Text;
         var_ItemLedEntryType: Text;
         _USERID: Text[100];
         var_Amount2: Decimal;

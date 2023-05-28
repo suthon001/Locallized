@@ -142,8 +142,6 @@ report 50010 "Withholding"
                 }
 
                 trigger OnAfterGetRecord()
-                var
-                    i: Integer;
                 begin
                     IF Show_DocumentNo THEN BEGIN
                         DocumentNo := "Vendor No.";
@@ -162,7 +160,7 @@ report 50010 "Withholding"
                     CLEAR(BaseAmount);
                     CLEAR(VATAmount);
 
-                    i := 0;
+
                     WHTPercent[1] := "WHT %";
                     if not WHTProductPostingGroup.GET("WHT Product Posting Group") then
                         WHTProductPostingGroup.init();
@@ -219,6 +217,7 @@ report 50010 "Withholding"
                     {
                         ApplicationArea = all;
                         ToolTip = 'Specifies the value of the Show_DocumentNo field.';
+                        Caption = 'Show Document No.';
                     }
                 }
             }
@@ -259,11 +258,11 @@ report 50010 "Withholding"
         Rec_WHTBusinessPostingGroup: Record "WHT Business Posting Group";
         WHTProductPostingGroup: Record "WHT Product Posting Group";
         Show_DocumentNo: Boolean;
-        WHTProduct: Code[20];
+        WHTProduct: text[100];
         DocumentNo: Code[20];
         WHTDocumentNo: Code[20];
         WHTPercent: array[2] of Decimal;
-        TaxType: array[2] of Text[30];
+        TaxType: array[2] of Text[100];
         BaseAmount: array[2] of Decimal;
         VATAmount: array[2] of Decimal;
         TaxReportLineFind: Record "Tax Report Line";

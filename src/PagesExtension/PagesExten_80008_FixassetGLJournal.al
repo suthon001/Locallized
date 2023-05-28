@@ -71,13 +71,13 @@ pageextension 80008 "Asset G/L Journal" extends "Fixed Asset G/L Journal"
                 ToolTip = 'Executes the FA G/L Voucher action.';
                 trigger OnAction()
                 var
-                    FAGLVoucher: Report "FA G/L Journal Voucher";
                     GenJournalLIne: Record "Gen. Journal Line";
                 begin
                     GenJournalLIne.reset();
-                    GenJournalLIne.copy(rec);
-                    FAGLVoucher."SetGLEntry"(GenJournalLIne);
-                    FAGLVoucher.RunModal();
+                    GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
+                    GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                    GenJournalLIne.SetRange("Document No.", rec."Document No.");
+                    REPORT.RunModal(REPORT::"FA G/L Journal Voucher", true, false, GenJournalLIne);
                 end;
             }
         }

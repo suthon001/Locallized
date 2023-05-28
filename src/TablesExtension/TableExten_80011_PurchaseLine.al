@@ -237,26 +237,24 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
         }
         field(80024; "WHT %"; Decimal)
         {
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
             Caption = 'WHT %';
 
         }
         field(80025; "WHT Base"; Decimal)
         {
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
             Caption = 'WHT Base';
 
 
         }
         field(80026; "WHT Amount"; Decimal)
         {
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
             Caption = 'WHT Amount';
         }
-        field(80027; "WHT Option"; Option)
+        field(80027; "WHT Option"; Enum "WHT Option")
         {
-            OptionMembers = "1","2","3","4";
-            OptionCaption = '1:หัก ณ ที่จ่าย,2:ออกให้ตลอดไป,3:ออกให้ครั้งเดียว,4:อื่นๆ';
             Caption = 'WHT Option';
             DataClassification = CustomerContent;
         }
@@ -374,21 +372,6 @@ tableextension 80011 "ExtenPurchase Line" extends "Purchase Line"
 
     end;
 
-    // local procedure CalWhtAmount()
-    // var
-    //     WHTPostingSetup: Record "WHT Posting Setup";
-    // begin
-    //     IF WHTPostingSetup.GET("WHT Business Posting Group", "WHT Product Posting Group") THEN BEGIN
-    //         "WHT %" := WHTPostingSetup."WHT %";
-    //         "WHT Amount" := ROUND(("WHT Base") * (WHTPostingSetup."WHT %" / 100), 0.01);
-    //         Validate(Amount, Abs("WHT Amount"));
-    //     END
-    //     ELSE BEGIN
-    //         "WHT %" := 0;
-    //         "WHT Amount" := 0;
-    //         VALIDATE(Amount, 0);
-    //     END;
-    // end;
 
 
     /// <summary>

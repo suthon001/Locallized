@@ -38,6 +38,6 @@ report 50049 "GL Journal Report"
     }
     var
         CompanyInfor: Record "Company Information";
-        FilterDescription: Text[1024];
+        FilterDescription: Text;
 
 }

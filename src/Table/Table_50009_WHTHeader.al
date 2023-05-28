@@ -48,7 +48,7 @@ table 50009 "WHT Header"
             var
                 Vendor: Record Vendor;
                 Customer: Record Customer;
-
+                whtBusPostingGroup: Record "WHT Business Posting Group";
             begin
                 IF "WHT Source Type" = "WHT Source Type"::Vendor THEN BEGIN
                     IF Vendor.GET("WHT Source No.") THEN BEGIN
@@ -60,8 +60,10 @@ table 50009 "WHT Header"
                         "VAT Registration No." := Vendor."VAT Registration No.";
                         "Head Office" := Vendor."Head Office";
                         "Vat Branch Code" := Vendor."Branch Code";
-                        if Vendor."WHT Business Posting Group" <> '' then
-                            "WHT Business Posting Group" := Vendor."WHT Business Posting Group";
+                        "WHT Business Posting Group" := Vendor."WHT Business Posting Group";
+                        if NOT whtBusPostingGroup.GET(Vendor."WHT Business Posting Group") then
+                            whtBusPostingGroup.init();
+                        "WHT Type" := whtBusPostingGroup."WHT Type";
                         "WHT City" := Vendor.City;
                         "WHT Post Code" := Vendor."Post Code";
                     END;
@@ -75,8 +77,10 @@ table 50009 "WHT Header"
                         "VAT Registration No." := Customer."VAT Registration No.";
                         "Head Office" := Customer."Head Office";
                         "Vat Branch Code" := Customer."Branch Code";
-                        if Customer."WHT Business Posting Group" <> '' then
-                            "WHT Business Posting Group" := Customer."WHT Business Posting Group";
+                        "WHT Business Posting Group" := Customer."WHT Business Posting Group";
+                        if NOT whtBusPostingGroup.GET(Customer."WHT Business Posting Group") then
+                            whtBusPostingGroup.init();
+                        "WHT Type" := whtBusPostingGroup."WHT Type";
                         "WHT City" := Customer.City;
                         "WHT Post Code" := Customer."Post Code";
                     END;
@@ -149,13 +153,13 @@ table 50009 "WHT Header"
             end;
 
         }
-        field(16; "Gen. Journal Template Code"; Code[20])
+        field(16; "Gen. Journal Template Code"; Code[10])
         {
             Caption = 'Gen. Journal Template Code';
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(17; "Gen. Journal Batch Code"; Code[20])
+        field(17; "Gen. Journal Batch Code"; Code[10])
         {
             Caption = 'Gen. Journal Batch Code';
             DataClassification = CustomerContent;
@@ -173,10 +177,8 @@ table 50009 "WHT Header"
             Editable = false;
             DataClassification = CustomerContent;
         }
-        field(20; "WHT Type"; Option)
+        field(20; "WHT Type"; Enum "WHT Type")
         {
-            OptionMembers = " ",PND01,PND2,PND3,PND53,PND54;
-            OptionCaption = ' ,PND01,PND2,PND3,PND53,PND54';
             Caption = 'WHT Type';
             DataClassification = CustomerContent;
 
@@ -191,7 +193,7 @@ table 50009 "WHT Header"
             Caption = 'WHT Base';
             Editable = false;
             FieldClass = FlowField;
-            CalcFormula = sum("WHT Lines"."WHT Base" where("WHT No." = field("WHT No.")));
+            CalcFormula = sum("WHT Line"."WHT Base" where("WHT No." = field("WHT No.")));
 
         }
         field(23; "WHT Amount"; Decimal)
@@ -199,7 +201,7 @@ table 50009 "WHT Header"
             Caption = 'WHT Amount';
             Editable = false;
             FieldClass = FlowField;
-            CalcFormula = sum("WHT Lines"."WHT Amount" where("WHT No." = field("WHT No.")));
+            CalcFormula = sum("WHT Line"."WHT Amount" where("WHT No." = field("WHT No.")));
 
         }
         field(24; "No. Series"; Code[20])
@@ -211,7 +213,7 @@ table 50009 "WHT Header"
         field(25; "Posted"; Boolean)
         {
             Caption = 'Posted';
-            // Editable = false;
+            Editable = false;
             DataClassification = SystemMetadata;
         }
         field(26; "Wht Post Code"; Text[20])
@@ -267,13 +269,16 @@ table 50009 "WHT Header"
 
     trigger OnDelete()
     var
-        WHTLine: Record "WHT Lines";
+        WHTLine: Record "WHT Line";
+        ltGenJournalLine: Record "Gen. Journal Line";
     begin
 
         WHTLine.RESET();
         WHTLine.SETRANGE("WHT No.", "WHT No.");
-        IF WHTLine.FindSet() THEN
+        IF WHTLine.FindFirst() THEN
             WHTLine.DELETEALL(TRUE);
+        if ltGenJournalLine.GET(rec."Gen. Journal Template Code", rec."Gen. Journal Batch Code", rec."Gen. Journal Line No.") then
+            ltGenJournalLine.Delete(true);
     end;
 
     var

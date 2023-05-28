@@ -153,14 +153,14 @@ report 50060 "Aged Accounts Payable (new)"
                     VendorLedgEntry.SetRange("Closed by Entry No.", "Entry No.");
                     VendorLedgEntry.SetRange("Posting Date", 0D, EndingDate);
                     CopyDimFiltersFromVendor(VendorLedgEntry);
-                    if VendorLedgEntry.FindSet(false, false) then
+                    if VendorLedgEntry.FindSet() then
                         repeat
                             InsertTemp(VendorLedgEntry);
                         until VendorLedgEntry.Next() = 0;
 
                     if "Closed by Entry No." <> 0 then begin
                         VendorLedgEntry.SetRange("Closed by Entry No.", "Closed by Entry No.");
-                        if VendorLedgEntry.FindSet(false, false) then
+                        if VendorLedgEntry.FindSet() then
                             repeat
                                 InsertTemp(VendorLedgEntry);
                             until VendorLedgEntry.Next() = 0;
@@ -170,7 +170,7 @@ report 50060 "Aged Accounts Payable (new)"
                     VendorLedgEntry.SetRange("Entry No.", "Closed by Entry No.");
                     VendorLedgEntry.SetRange("Posting Date", 0D, EndingDate);
                     CopyDimFiltersFromVendor(VendorLedgEntry);
-                    if VendorLedgEntry.FindSet(false, false) then
+                    if VendorLedgEntry.FindSet() then
                         repeat
                             InsertTemp(VendorLedgEntry);
                         until VendorLedgEntry.Next() = 0;
@@ -317,7 +317,7 @@ report 50060 "Aged Accounts Payable (new)"
                         PeriodIndex: Integer;
                     begin
                         if Number = 1 then begin
-                            if not TempVendorLedgEntry.FindSet(false, false) then
+                            if not TempVendorLedgEntry.FindSet() then
                                 CurrReport.Break();
                         end else
                             if TempVendorLedgEntry.Next() = 0 then
@@ -325,7 +325,7 @@ report 50060 "Aged Accounts Payable (new)"
 
                         VendorLedgEntryEndingDate := TempVendorLedgEntry;
                         DetailedVendorLedgerEntry.SetRange("Vendor Ledger Entry No.", VendorLedgEntryEndingDate."Entry No.");
-                        if DetailedVendorLedgerEntry.FindSet(false, false) then
+                        if DetailedVendorLedgerEntry.FindSet() then
                             repeat
                                 if (DetailedVendorLedgerEntry."Entry Type" =
                                     DetailedVendorLedgerEntry."Entry Type"::"Initial Entry") and
@@ -429,7 +429,7 @@ report 50060 "Aged Accounts Payable (new)"
                     Clear(TotalVendorLedgEntry);
 
                     if Number = 1 then begin
-                        if not TempCurrency.FindSet(false, false) then
+                        if not TempCurrency.FindSet() then
                             CurrReport.Break();
                     end else
                         if TempCurrency.Next() = 0 then
@@ -518,7 +518,7 @@ report 50060 "Aged Accounts Payable (new)"
             trigger OnAfterGetRecord()
             begin
                 if Number = 1 then begin
-                    if not TempCurrency2.FindSet(false, false) then
+                    if not TempCurrency2.FindSet() then
                         CurrReport.Break();
                 end else
                     if TempCurrency2.Next() = 0 then
@@ -526,7 +526,7 @@ report 50060 "Aged Accounts Payable (new)"
 
                 Clear(AgedVendorLedgEntry);
                 TempCurrencyAmount.SetRange("Currency Code", TempCurrency2.Code);
-                if TempCurrencyAmount.FindSet(false, false) then
+                if TempCurrencyAmount.FindSet() then
                     repeat
                         if TempCurrencyAmount.Date <> DMY2Date(31, 12, 9999) then
                             AgedVendorLedgEntry[GetPeriodIndex(TempCurrencyAmount.Date)]."Remaining Amount" :=

@@ -42,7 +42,7 @@ codeunit 50020 "Record Deletion Mgt."
     TableData "Warehouse Entry" = rimd,
     TableData "VAT Transections" = rimd, TableData "Posted Gen. Journal Line" = rimd, TableData "Posted ItemJournal Lines" = rimd,
     TableData "Tax Report Header" = rimd, TableData "Tax Report Line" = rimd, TableData "WHT Header" = rimd,
-    TableData "WHT Lines" = rimd, TableData "Billing Receipt Header" = rimd, TableData "Billing Receipt Line" = rimd,
+    TableData "WHT Line" = rimd, TableData "Billing Receipt Header" = rimd, TableData "Billing Receipt Line" = rimd,
     tabledata "Record Deletion Table" = rimd,
     tabledata "g/l entry - vat Entry link" = rimd,
     tabledata "Change Log Entry" = ridm,

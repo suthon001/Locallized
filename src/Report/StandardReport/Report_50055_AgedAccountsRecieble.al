@@ -194,7 +194,7 @@ report 50055 "Aged Accounts Receivable (new)"
                             CustLedgEntry.SetRange("Closed by Entry No.", "Entry No.");
                         CustLedgEntry.SetRange("Posting Date", 0D, EndingDate);
                         CopyDimFiltersFromCustomer(CustLedgEntry);
-                        if CustLedgEntry.FindSet(false, false) then
+                        if CustLedgEntry.FindSet() then
                             repeat
                                 InsertTemp(CustLedgEntry);
                             until CustLedgEntry.Next() = 0;
@@ -203,7 +203,7 @@ report 50055 "Aged Accounts Receivable (new)"
                         CustLedgEntry.SetRange("Entry No.", "Closed by Entry No.");
                         CustLedgEntry.SetRange("Posting Date", 0D, EndingDate);
                         CopyDimFiltersFromCustomer(CustLedgEntry);
-                        if CustLedgEntry.FindSet(false, false) then
+                        if CustLedgEntry.FindSet() then
                             repeat
                                 InsertTemp(CustLedgEntry);
                             until CustLedgEntry.Next() = 0;
@@ -399,7 +399,7 @@ report 50055 "Aged Accounts Receivable (new)"
                             PeriodIndex: Integer;
                         begin
                             if Number = 1 then begin
-                                if not TempCustLedgEntry.FindSet(false, false) then
+                                if not TempCustLedgEntry.FindSet() then
                                     CurrReport.Break();
                             end else
                                 if TempCustLedgEntry.Next() = 0 then
@@ -407,7 +407,7 @@ report 50055 "Aged Accounts Receivable (new)"
 
                             CustLedgEntryEndingDate := TempCustLedgEntry;
                             DetailedCustomerLedgerEntry.SetRange("Cust. Ledger Entry No.", CustLedgEntryEndingDate."Entry No.");
-                            if DetailedCustomerLedgerEntry.FindSet(false, false) then
+                            if DetailedCustomerLedgerEntry.FindSet() then
                                 repeat
                                     if (DetailedCustomerLedgerEntry."Entry Type" =
                                         DetailedCustomerLedgerEntry."Entry Type"::"Initial Entry") and
@@ -513,7 +513,7 @@ report 50055 "Aged Accounts Receivable (new)"
                         Clear(TotalCustLedgEntry);
 
                         if Number = 1 then begin
-                            if not TempCurrency.FindSet(false, false) then
+                            if not TempCurrency.FindSet() then
                                 CurrReport.Break();
                         end else
                             if TempCurrency.Next() = 0 then
@@ -603,7 +603,7 @@ report 50055 "Aged Accounts Receivable (new)"
                 trigger OnAfterGetRecord()
                 begin
                     if Number = 1 then begin
-                        if not TempCurrency2.FindSet(false, false) then
+                        if not TempCurrency2.FindSet() then
                             CurrReport.Break();
                     end else
                         if TempCurrency2.Next() = 0 then
@@ -611,7 +611,7 @@ report 50055 "Aged Accounts Receivable (new)"
 
                     Clear(AgedCustLedgEntry);
                     TempCurrencyAmount.SetRange("Currency Code", TempCurrency2.Code);
-                    if TempCurrencyAmount.FindSet(false, false) then
+                    if TempCurrencyAmount.FindSet() then
                         repeat
                             if TempCurrencyAmount.Date <> DMY2Date(31, 12, 9999) then
                                 AgedCustLedgEntry[GetPeriodIndex(TempCurrencyAmount.Date)]."Remaining Amount" :=

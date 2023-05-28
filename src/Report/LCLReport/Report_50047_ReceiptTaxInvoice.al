@@ -4,7 +4,7 @@ report 50047 "Receipt Tax Invoice"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_50047_ReceiptTaxInvoice.rdl';
     PreviewMode = PrintLayout;
-    ApplicationArea = All;
+    UsageCategory = None;
     dataset
     {
         dataitem(CustLedgerEntry; "Cust. Ledger Entry")
@@ -120,7 +120,7 @@ report 50047 "Receipt Tax Invoice"
         salesInvoiceLine: Record "Sales Invoice Line";
         SalesCreditMemoLine: record "Sales Cr.Memo Line";
         EntryNo: Integer;
-        TempVat: Record "VAT Amount Line" temporary;
+        TempVat: text[30];
     begin
         CLEAR(TotalAmt);
         if NOT TempSalesLine.IsTemporary then
@@ -130,7 +130,7 @@ report 50047 "Receipt Tax Invoice"
         salesInvoiceLine.SetRange("Document No.", DocNo);
         salesInvoiceLine.SetFilter("No.", '<>%1', '');
         if salesInvoiceLine.FindFirst() then begin
-            CUFunction."SalesInvoiceStatistics"(salesInvoiceLine."Document No.", TotalAmt, TempVat);
+            CUFunction.PostedSalesInvoiceStatistics(salesInvoiceLine."Document No.", TotalAmt, TempVat);
             GrandTotalAmt[1] += TotalAmt[1];
             GrandTotalAmt[2] += TotalAmt[2];
             GrandTotalAmt[3] += TotalAmt[3];
@@ -149,7 +149,7 @@ report 50047 "Receipt Tax Invoice"
         SalesCreditMemoLine.SetRange("Document No.", DocNo);
         SalesCreditMemoLine.SetFilter("No.", '<>%1', '');
         if SalesCreditMemoLine.FindFirst() then begin
-            CUFunction."SalesCrMemoStatistics"(SalesCreditMemoLine."Document No.", TotalAmt, TempVat);
+            CUFunction.PostedSalesCrMemoStatistics(SalesCreditMemoLine."Document No.", TotalAmt, TempVat);
             GrandTotalAmt[1] += (TotalAmt[1]) * -1;
             GrandTotalAmt[2] += (TotalAmt[2]) * -1;
             GrandTotalAmt[3] += (TotalAmt[3]) * -1;
@@ -175,7 +175,7 @@ report 50047 "Receipt Tax Invoice"
 
         RecCustLedgEntry: Record "Cust. Ledger Entry";
         SumTotalAmount: Decimal;
-        SumTotalAmountText: Text[250];
+        SumTotalAmountText: Text;
         PostingDate: Date;
         RecSalesInvoiceHeader: Record "Sales Invoice Header";
         SalesPersonCode: Code[20];
@@ -186,7 +186,7 @@ report 50047 "Receipt Tax Invoice"
         LineNo: Integer;
         TotalAmt: array[100] of Decimal;
         GrandTotalAmt: array[100] of Decimal;
-        CurrencyCode: code[20];
+        CurrencyCode: code[10];
 
 
 }

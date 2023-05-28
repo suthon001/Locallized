@@ -115,13 +115,13 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                 ToolTip = 'Executes the Receipt Voucher action.';
                 trigger OnAction()
                 var
-                    ReceiptVourcher: Report "Receive Voucher";
                     GenJournalLIne: Record "Gen. Journal Line";
                 begin
                     GenJournalLIne.reset();
-                    GenJournalLIne.copy(rec);
-                    ReceiptVourcher."SetGLEntry"(GenJournalLIne);
-                    ReceiptVourcher.RunModal();
+                    GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
+                    GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                    GenJournalLIne.SetRange("Document No.", rec."Document No.");
+                    REPORT.RunModal(REPORT::"Receive Voucher", true, false, GenJournalLIne);
                 end;
             }
             action("Print_Receipt_Tax")

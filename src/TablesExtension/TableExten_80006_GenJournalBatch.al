@@ -12,17 +12,5 @@ tableextension 80006 "ExtenGen.Journal Batch" extends "Gen. Journal Batch"
             DataClassification = CustomerContent;
 
         }
-        field(80001; "Description TH Voucher"; Text[100])
-        {
-            Caption = 'Description TH Voucher';
-            DataClassification = CustomerContent;
-
-
-        }
-        field(80002; "Description EN Voucher"; Text[100])
-        {
-            Caption = 'Description EN Voucher';
-            DataClassification = CustomerContent;
-        }
     }
 }

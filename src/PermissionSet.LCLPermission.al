@@ -5,8 +5,8 @@ permissionset 50000 LCLPermission
     Permissions =
         table "VAT Transections" = X,
         tabledata "VAT Transections" = RMID,
-        table "WHT Lines" = X,
-        tabledata "WHT Lines" = RMID,
+        table "WHT Line" = X,
+        tabledata "WHT Line" = RMID,
         table "WHT Header" = X,
         tabledata "WHT Header" = RMID,
         table "WHT Product Posting Group" = X,

@@ -4,15 +4,53 @@
 codeunit 50001 "Purchase Function"
 {
     EventSubscriberInstance = StaticAutomatic;
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeDeleteAfterPosting', '', false, false)]
+    local procedure OnBeforeDeleteAfterPostingPurchase(var PurchaseHeader: Record "Purchase Header")
+    var
+        PurchaseLine: Record "Purchase Line";
+        WHTAppEntry: Record "WHT Applied Entry";
+        LastLineNo: Integer;
+    begin
+        LastLineNo := 0;
+        if PurchaseHeader."Document Type" in [PurchaseHeader."Document Type"::Invoice, PurchaseHeader."Document Type"::"Credit Memo"] then begin
+            PurchaseLine.reset();
+            PurchaseLine.SetRange("Document Type", PurchaseHeader."Document Type");
+            PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+            PurchaseLine.SetFilter("WHT %", '<>%1', 0);
+            if PurchaseLine.FindSet() then
+                repeat
+                    LastLineNo := LastLineNo + 10000;
+                    WHTAppEntry.init();
+                    WHTAppEntry."Document No." := PurchaseLine."Document No.";
+                    WHTAppEntry."Document Line No." := PurchaseLine."Line No.";
+                    WHTAppEntry."Entry Type" := WHTAppEntry."Entry Type"::Initial;
+                    WHTAppEntry."Line No." := LastLineNo;
+                    WHTAppEntry."WHT Bus. Posting Group" := PurchaseLine."WHT Business Posting Group";
+                    WHTAppEntry."WHT Prod. Posting Group" := PurchaseLine."WHT Product Posting Group";
+                    WHTAppEntry.Description := PurchaseLine.Description;
+                    WHTAppEntry."WHT %" := PurchaseLine."WHT %";
+                    WHTAppEntry."WHT Base" := PurchaseLine."WHT Base";
+                    WHTAppEntry."WHT Amount" := PurchaseLine."WHT Amount";
+                    WHTAppEntry."WHT Name" := PurchaseHeader."Buy-from Vendor Name";
+                    WHTAppEntry."WHT Name 2" := PurchaseHeader."Buy-from Vendor Name 2";
+                    WHTAppEntry."WHT Address" := PurchaseHeader."Buy-from Address";
+                    WHTAppEntry."WHT Address 2" := PurchaseHeader."Buy-from Address 2";
+                    WHTAppEntry."WHT City" := PurchaseHeader."Buy-from City";
+                    WHTAppEntry."VAT Registration No." := PurchaseHeader."VAT Registration No.";
+                    WHTAppEntry."WHT Option" := PurchaseLine."WHT Option";
+                    WHTAppEntry."Branch Code" := PurchaseHeader."Branch Code";
+                    WHTAppEntry."Head Office" := PurchaseHeader."Head Office";
+                    WHTAppEntry."WHT Post Code" := PurchaseHeader."Buy-from Post Code";
+                    WHTAppEntry.Insert();
+                until PurchaseLine.Next() = 0;
+        end;
+    end;
 
     [EventSubscriber(ObjectType::Table, Database::"Purch. Inv. Line", 'OnAfterInitFromPurchLine', '', True, True)]
     local procedure "OnAfterInitFromPurchaseLine"(PurchLine: Record "Purchase Line"; PurchInvHeader: Record "Purch. Inv. Header"; var PurchInvLine: Record "Purch. Inv. Line")
     var
         FaDepBook: Record "FA Depreciation Book";
     begin
-        // if PurchInvLine."Deposit Entry No." <> 0 then begin
-        //     PurchInvLine."CalculateDeposit"();
-        // end;
         if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
             FaDepBook.reset();
             FaDepBook.SetRange("FA No.", PurchLine."No.");

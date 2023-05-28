@@ -93,12 +93,12 @@ Report 50021 "ItemJournal"
     var
         LotSeriesCaption: Text[50];
         LineLotSeries: Integer;
-        LotAndSeries: Code[30];
+        LotAndSeries: Code[50];
         LineNo: Integer;
         ComText: array[10] of Text[250];
         CompanyInfor: Record "Company Information";
         FunctionCenter: Codeunit "Function Center";
-        FilterDescription: Text[1024];
+        FilterDescription: Text;
         SplitDate: array[3] of Text[50];
         ItemJournalBatch: Record "Item Journal Batch";
 

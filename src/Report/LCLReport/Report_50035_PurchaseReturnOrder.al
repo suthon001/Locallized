@@ -135,15 +135,15 @@ report 50035 "PurchaseReturnOrder"
         FunctionCenter: Codeunit "Function Center";
 
         companyInfor: Record "Company Information";
-        ExchangeRate: Text[20];
+        ExchangeRate: Text[30];
         ComText: array[10] Of Text[250];
         VendText: array[10] Of Text[250];
         SplitDate: Array[3] of Text[20];
         AmtText: Text[1024];
         TotalAmt: array[100] of Decimal;
         CommentText: Array[100] of Text[250];
-        VatText: Text[50];
+        VatText: Text[30];
         LineNo: Integer;
-        LotSeriesNo: Code[30];
+        LotSeriesNo: Code[50];
         PaymentTerm: Record "Payment Terms";
 }

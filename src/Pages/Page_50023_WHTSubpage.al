@@ -173,7 +173,7 @@ page 50023 "WHT Subpage"
     /// </summary>
     /// <param name="BaseAmount">Parameter of type Decimal.</param>
     /// <param name="VatAmount">Parameter of type Decimal.</param>
-    procedure "SumAmount"(var BaseAmount: Decimal; var VatAmount: Decimal)
+    procedure SumAmount(var BaseAmount: Decimal; var VatAmount: Decimal)
     var
         TaxReportLine: Record "Tax Report Line";
     begin
@@ -192,7 +192,7 @@ page 50023 "WHT Subpage"
     /// <summary> 
     /// Description for ExportPND.
     /// </summary>
-    procedure "ExportPND"()
+    procedure ExportPND()
     var
         Instrm: InStream;
         OutStrm: OutStream;
@@ -277,7 +277,7 @@ page 50023 "WHT Subpage"
     trigger OnDeleteRecord(): Boolean
     var
         WHTHeader: Record "WHT Header";
-        WHTLines: Record "WHT Lines";
+        WHTLines: Record "WHT Line";
     begin
         if WHTLines.GET(Rec."WHT Document No.", Rec."Ref. Wht Line") then begin
             WHTHeader.GET(Rec."WHT Document No.");

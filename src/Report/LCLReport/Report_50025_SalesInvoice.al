@@ -138,6 +138,7 @@ report 50025 "Report Sales Invoice"
                     field(CaptionOptionThai; CaptionOptionThai)
                     {
                         ApplicationArea = all;
+                        OptionCaption = 'ใบแจ้งหนี้,ใบแจ้งหนี้/ใบกำกับภาษี';
                         Caption = 'Caption';
                         ToolTip = 'Specifies the value of the Caption field.';
                         trigger OnValidate()
@@ -168,9 +169,9 @@ report 50025 "Report Sales Invoice"
         PaymentTerm: Record "Payment Terms";
 
         ShipMethod: Record "Shipment Method";
-        ExchangeRate: Text[20];
+        ExchangeRate: Text[30];
         LineNo: Integer;
-        LotSeriesNo: Code[30];
+        LotSeriesNo: Code[50];
         CommentText: Array[99] of Text[250];
 
         FunctionCenter: Codeunit "Function Center";

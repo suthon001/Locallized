@@ -440,7 +440,7 @@ table 50005 "Tax Report Line"
     var
         TaxReportHeader: Record "Tax Report Header";
         TaxReportLineFind: Record "Tax Report Line";
-        WHTLine: Record "WHT Lines";
+        WHTLine: Record "WHT Line";
     begin
 
         TaxReportHeader.get("Tax Type", "Document No.");
