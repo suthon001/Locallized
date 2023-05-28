@@ -2,19 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "GB_Sandbox009",
-            "request": "launch", //
+            "name": "Your own server",
+            "request": "launch",
             "type": "al",
-            "environmentType": "Sandbox",
-            "environmentName": "GB_Sandbox009",
-            "tenant": "66a9e82f-5426-4c71-a0c9-d46f56865828",
-            "startupObjectId": 36,
+            "environmentType": "OnPrem",
+            "server": "http://192.168.4.22",
+            "serverInstance": "BC220_AE",
+            "port": 34004,
+            "authentication": "UserPassword",
+            "startupObjectId": 22,
             "startupObjectType": "Page",
-            "breakOnError": true,
+            "breakOnError": "All",
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,
-            "schemaUpdateMode": "Synchronize"
+            "tenant": "default",
+            "usePublicURLFromServer": true
         }
     ]
 }
