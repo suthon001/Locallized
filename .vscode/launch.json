@@ -6,7 +6,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "OnPrem",
-            "server": "http://192.168.4.22",
+            "server": "http://office.triplepcloud.com/",
             "serverInstance": "BC220_AE",
             "port": 34004,
             "authentication": "UserPassword",
