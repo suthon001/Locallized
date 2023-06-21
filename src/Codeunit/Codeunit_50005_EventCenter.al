@@ -188,12 +188,8 @@ codeunit 50005 EventFunction
             WHTEntry.RESET();
             WHTEntry.SETRANGE("WHT No.", Rec."WHT No.");
             WHTEntry.CalcSums("WHT Amount");
-
             SumAmt := WHTEntry."WHT Amount";
-            GenJnlLine.Amount := -SumAmt;
-            GenJnlLine."Amount (LCY)" := -SumAmt;
-            GenJnlLine."Balance (LCY)" := -SumAmt;
-            GenJnlLine."Credit Amount" := SumAmt;
+            GenJnlLine.Validate(Amount, -SumAmt);
             GenJnlLine.MODIFY();
             Rec."Gen. Journal Line No." := CurrLine;
             Rec."Gen. Journal Document No." := GenJnlLine."Document No.";

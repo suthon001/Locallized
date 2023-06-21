@@ -104,20 +104,7 @@ page 50017 "WHT Card"
         area(Reporting)
         {
 
-            action("Export PND")
-            {
-                Caption = 'Export PND';
-                ApplicationArea = all;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                Image = ExportFile;
-                ToolTip = 'Executes the Export PND action.';
-                trigger OnAction()
-                begin
-                    CurrPage."WHTSubpage".Page."ExportPND"();
-                end;
-            }
+
             action("Wighholding Report")
             {
                 Caption = 'รายงานใบต่อ ภ.ง.ด.';

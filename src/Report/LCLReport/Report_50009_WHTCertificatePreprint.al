@@ -1,3 +1,6 @@
+/// <summary>
+/// Report WHT Certificate Preprint (ID 50009).
+/// </summary>
 report 50009 "WHT Certificate Preprint"
 {
     DefaultLayout = RDLC;
@@ -5,6 +8,7 @@ report 50009 "WHT Certificate Preprint"
     Caption = 'WHT Certificate (Preprint)';
     PreviewMode = PrintLayout;
     ApplicationArea = All;
+    UsageCategory = None;
     dataset
     {
         dataitem("WHT Header"; "WHT Header")
@@ -313,8 +317,8 @@ report 50009 "WHT Certificate Preprint"
         WHTLineAmt: array[100] of Decimal;
         WHTSumBase: Decimal;
         WHTSumAmt: Decimal;
-        WHT4Description: Text[50];
-        WHT5Description: Text[50];
+        WHT4Description: Text[100];
+        WHT5Description: Text[100];
         WHT52Description: Text[250];
         WHT53Description: Text[250];
         WHT6Description: Text[250];

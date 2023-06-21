@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Sales Order Subpage (ID 80064) extends Record Sales Order Subform.
+/// </summary>
 pageextension 80064 "Sales Order Subpage" extends "Sales Order Subform"
 {
     layout

@@ -1,3 +1,6 @@
+/// <summary>
+/// Report Fixed Asset Write off (ID 50042).
+/// </summary>
 report 50042 "Fixed Asset Write off"
 {
     DefaultLayout = RDLC;

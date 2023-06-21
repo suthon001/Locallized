@@ -109,10 +109,6 @@ report 50011 "Sales Vat"
                         Var_EstablishmentLine := '/'
                     else
                         Var_Branch := "Branch Code";
-
-
-
-
                 end;
 
 

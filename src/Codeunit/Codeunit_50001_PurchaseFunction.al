@@ -46,6 +46,13 @@ codeunit 50001 "Purchase Function"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Line", 'OnAfterInitOutstandingAmount', '', false, false)]
+    local procedure OnAfterUpdateAmounts(var PurchLine: Record "Purchase Line")
+    begin
+        PurchLine."WHT Base" := PurchLine.Amount;
+        PurchLine.Validate("WHT %");
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Purch. Inv. Line", 'OnAfterInitFromPurchLine', '', True, True)]
     local procedure "OnAfterInitFromPurchaseLine"(PurchLine: Record "Purchase Line"; PurchInvHeader: Record "Purch. Inv. Header"; var PurchInvLine: Record "Purch. Inv. Line")
     var

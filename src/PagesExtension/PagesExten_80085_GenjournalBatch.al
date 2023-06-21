@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension GenjournalBatch (ID 80085) extends Record General Journal Batches.
+/// </summary>
 pageextension 80085 GenjournalBatch extends "General Journal Batches"
 {
     layout

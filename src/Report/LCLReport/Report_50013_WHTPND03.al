@@ -1,3 +1,6 @@
+/// <summary>
+/// Report WHT PND 03 (ID 50013).
+/// </summary>
 report 50013 "WHT PND 03"
 {
     DefaultLayout = RDLC;

@@ -1,3 +1,6 @@
+/// <summary>
+/// Report WHT Certificate (ID 50008).
+/// </summary>
 report 50008 "WHT Certificate"
 {
     DefaultLayout = RDLC;
@@ -5,6 +8,7 @@ report 50008 "WHT Certificate"
     Caption = 'WHT Certificate';
     PreviewMode = PrintLayout;
     ApplicationArea = All;
+    UsageCategory = None;
     dataset
     {
         dataitem("WHT Header"; "WHT Header")
@@ -315,8 +319,8 @@ report 50008 "WHT Certificate"
         WHTLineAmt: array[100] of Decimal;
         WHTSumBase: Decimal;
         WHTSumAmt: Decimal;
-        WHT4Description: Text[50];
-        WHT5Description: Text[50];
+        WHT4Description: Text[100];
+        WHT5Description: Text[100];
         WHT52Description: Text[250];
         WHT53Description: Text[250];
         WHT6Description: Text[250];

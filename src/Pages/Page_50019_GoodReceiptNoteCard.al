@@ -141,12 +141,6 @@ page 50019 "Goods Receipt Note Card"
                     ToolTip = 'Specifies the name of the person to contact about an order from this vendor.';
 
                 }
-                field("Document Date"; Rec."Document Date")
-                {
-                    ApplicationArea = Suite;
-                    ToolTip = 'Specifies the date when the related document was created.';
-                    Editable = false;
-                }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = Suite;
@@ -159,6 +153,21 @@ page 50019 "Goods Receipt Note Card"
                         SaveInvoiceDiscountAmount();
                     end;
                 }
+                field("VAT Reporting Date"; Rec."VAT Reporting Date")
+                {
+                    ApplicationArea = VAT;
+                    Importance = Additional;
+                    Editable = VATDateEnabled;
+                    Visible = false;
+                    ToolTip = 'Specifies the date used to include entries on VAT reports in a VAT period. This is either the date that the document was created or posted, depending on your setting on the General Ledger Setup page.';
+                }
+                field("Document Date"; Rec."Document Date")
+                {
+                    ApplicationArea = Suite;
+                    ToolTip = 'Specifies the date when the related document was created.';
+                    Editable = false;
+                }
+
                 field("Due Date"; Rec."Due Date")
                 {
                     ApplicationArea = Suite;
@@ -1488,19 +1497,17 @@ page 50019 "Goods Receipt Note Card"
     end;
 
     trigger OnOpenPage()
+    var
+        ICInboxOutboxMgt: Codeunit ICInboxOutboxMgt;
+        VATReportingDateMgt: Codeunit "VAT Reporting Date Mgt";
     begin
-        SetDocNoVisible();
-
-
-        if UserMgt.GetPurchasesFilter() <> '' then begin
-            Rec.FilterGroup(2);
-            Rec.SetRange("Responsibility Center", UserMgt.GetPurchasesFilter());
-            Rec.FilterGroup(0);
-        end;
-        if (Rec."No." <> '') and (Rec."Buy-from Vendor No." = '') then
-            DocumentIsPosted := (not Rec.Get(Rec."Document Type", Rec."No."));
+        SetOpenPage();
 
         ActivateFields();
+
+        CheckShowBackgrValidationNotification();
+        RejectICPurchaseOrderEnabled := ICInboxOutboxMgt.IsPurchaseHeaderFromIncomingIC(Rec);
+        VATDateEnabled := VATReportingDateMgt.IsVATDateEnabled();
     end;
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
@@ -1512,6 +1519,14 @@ page 50019 "Goods Receipt Note Card"
                 exit(false);
         if not DocumentIsPosted then
             exit(Rec.ConfirmCloseUnposted());
+    end;
+
+    local procedure CheckShowBackgrValidationNotification()
+    var
+        DocumentErrorsMgt: Codeunit "Document Errors Mgt.";
+    begin
+        if DocumentErrorsMgt.CheckShowEnableBackgrValidationNotification() then
+            SetControlAppearance();
     end;
 
     var
@@ -1528,7 +1543,7 @@ page 50019 "Goods Receipt Note Card"
         [InDataSet]
         HasIncomingDocument: Boolean;
         DocNoVisible: Boolean;
-        VendorInvoiceNoMandatory: Boolean;
+        VendorInvoiceNoMandatory, RejectICPurchaseOrderEnabled : Boolean;
         OpenApprovalEntriesExistForCurrUser: Boolean;
 
         ShowWorkflowStatus: Boolean;
@@ -1542,12 +1557,26 @@ page 50019 "Goods Receipt Note Card"
 
         IsPayToCountyVisible: Boolean;
         IsShipToCountyVisible: Boolean;
+        VATDateEnabled: Boolean;
 
     local procedure ActivateFields()
     begin
 
         IsPayToCountyVisible := FormatAddress.UseCounty(Rec."Pay-to Country/Region Code");
         IsShipToCountyVisible := FormatAddress.UseCounty(Rec."Ship-to Country/Region Code");
+    end;
+
+    local procedure SetOpenPage()
+    begin
+        SetDocNoVisible();
+
+        Rec.SetSecurityFilterOnRespCenter();
+
+        if (Rec."No." <> '') and (Rec."Buy-from Vendor No." = '') then
+            DocumentIsPosted := (not Rec.Get(Rec."Document Type", Rec."No."));
+
+        Rec.SetRange("Date Filter", 0D, WorkDate());
+
     end;
 
     local procedure PostDocument(PostingCodeunitID: Integer)
@@ -1754,4 +1783,6 @@ page 50019 "Goods Receipt Note Card"
     local procedure OnAfterCalculateCurrentShippingAndPayToOption(var ShipToOptions: Option "Default (Company Address)",Location,"Customer Address","Custom Address"; var PayToOptions: Option "Default (Vendor)","Another Vendor","Custom Address"; PurchaseHeader: Record "Purchase Header")
     begin
     end;
+
+
 }

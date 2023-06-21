@@ -72,6 +72,11 @@ pageextension 80069 "Purchase Order Card" extends "Purchase Order"
         moveafter("Purchaser Code"; "Currency Code")
         moveafter("Currency Code"; "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code")
         movebefore(Status; "Expected Receipt Date", "Location Code")
+        modify("VAT Reporting Date")
+        {
+            Visible = false;
+        }
+        moveafter("Posting Date"; "Document Date", "Due Date")
 
     }
     actions

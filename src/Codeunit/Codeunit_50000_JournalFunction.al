@@ -180,9 +180,11 @@ codeunit 50000 "Journal Function"
     var
         VATEntryReport: Record "VAT Transections";
     begin
-        VATEntryReport.INIT();
-        VATEntryReport.TRANSFERFIELDS(Rec);
-        VATEntryReport.Insert();
+        if not Rec.IsTemporary then begin
+            VATEntryReport.INIT();
+            VATEntryReport.TRANSFERFIELDS(Rec);
+            VATEntryReport.Insert();
+        end;
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"G/L Entry", 'OnAfterCopyGLEntryFromGenJnlLine', '', false, false)]

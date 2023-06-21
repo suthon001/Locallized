@@ -411,6 +411,7 @@ codeunit 50004 "Function Center"
     /// </summary>
     /// <param name="TDecimal">Parameter of type Decimal.</param>
     /// <param name="CurrencyCode">Parameter of type Code[30].</param>
+    /// <returns>Return variable TText of type Text.</returns>
     procedure "NumberEngToText"(TDecimal: Decimal; CurrencyCode: Code[10]) TText: Text
     var
         TLow: Decimal;

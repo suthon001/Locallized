@@ -122,7 +122,10 @@ report 50032 "PurchaseQuotes"
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
                 FunctionCenter."PurchStatistic"("Document Type", "No.", TotalAmt, VatText);
                 FunctionCenter."GetPurchaseComment"("Document Type", "No.", 0, CommentText);
-                AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')';
+                if "Currency Code" = '' then
+                    AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')'
+                else
+                    AmtText := '(' + FunctionCenter.NumberEngToText(TotalAmt[5], "Currency Code") + ')';
                 NewDate := DT2Date("Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
