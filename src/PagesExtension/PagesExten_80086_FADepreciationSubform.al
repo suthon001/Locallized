@@ -1,4 +1,7 @@
-pageextension 80086 "Depreciation Books Subform" extends "FA Depreciation Books Subform"
+/// <summary>
+/// PageExtension NCT Depreciation Books Subform (ID 80086) extends Record FA Depreciation Books Subform.
+/// </summary>
+pageextension 80086 "NCT Depreciation Books Subform" extends "FA Depreciation Books Subform"
 {
     layout
     {

@@ -1,4 +1,7 @@
-pageextension 80071 "Purchase Invoice Card" extends "Purchase Invoice"
+/// <summary>
+/// PageExtension NCT Purchase Invoice Card (ID 80071) extends Record Purchase Invoice.
+/// </summary>
+pageextension 80071 "NCT Purchase Invoice Card" extends "Purchase Invoice"
 {
     PromotedActionCategories = 'New,Process,Print,Approve,Invoice,Posting,View,Request Approval,Incoming Document,Release,Navigate';
     layout
@@ -12,13 +15,13 @@ pageextension 80071 "Purchase Invoice Card" extends "Purchase Invoice"
                 ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
 
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
@@ -99,7 +102,7 @@ pageextension 80071 "Purchase Invoice Card" extends "Purchase Invoice"
                 ToolTip = 'Executes the AP Voucher action.';
                 trigger OnAction()
                 var
-                    APVoucher: Report "AP Voucher";
+                    APVoucher: Report "NCT AP Voucher";
                     PurchaseHeader: Record "Purchase Header";
                 begin
                     PurchaseHeader.reset();

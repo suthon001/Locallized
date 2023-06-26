@@ -1,19 +1,19 @@
 /// <summary>
 /// PageExtension Purchase Quote Card (ID 80012) extends Record Purchase Quote.
 /// </summary>
-pageextension 80012 "Purchase Quote Card" extends "Purchase Quote"
+pageextension 80012 "NCT Purchase Quote Card" extends "Purchase Quote"
 {
     layout
     {
         addbefore(Status)
         {
 
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Tax Branch Code field.';
@@ -24,12 +24,12 @@ pageextension 80012 "Purchase Quote Card" extends "Purchase Quote"
                 Caption = 'VAT Registration No.';
                 ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
-            field("Purchase Order No."; rec."Purchase Order No.")
+            field("Purchase Order No."; rec."NCT Purchase Order No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Purchase Order No. field.';
             }
-            field("Make PO No.Series No."; rec."Make PO No.Series No.")
+            field("Make PO No.Series No."; rec."NCT Make PO No.Series No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Make PO No.Series No. field.';
@@ -86,7 +86,7 @@ pageextension 80012 "Purchase Quote Card" extends "Purchase Quote"
                     PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"PurchaseQuotes", true, true, PurchaseHeader);
+                    REPORT.RunModal(REPORT::"NCT PurchaseQuotes", true, true, PurchaseHeader);
                 end;
             }
         }

@@ -1,4 +1,7 @@
-pageextension 80044 "PurchaseReturnOrderLists" extends "Purchase Return Order List"
+/// <summary>
+/// PageExtension NCT PurchaseReturnOrderLists (ID 80044) extends Record Purchase Return Order List.
+/// </summary>
+pageextension 80044 "NCT PurchaseReturnOrderLists" extends "Purchase Return Order List"
 
 {
     layout
@@ -52,12 +55,12 @@ pageextension 80044 "PurchaseReturnOrderLists" extends "Purchase Return Order Li
         "Assigned User ID", "Purchaser Code", "Currency Code", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", Amount, "Amount Including VAT")
         addafter("Amount Including VAT")
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Tax Branch Code field.';
@@ -91,7 +94,7 @@ pageextension 80044 "PurchaseReturnOrderLists" extends "Purchase Return Order Li
                     PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"PurchaseReturnOrder", true, true, PurchaseHeader);
+                    REPORT.RunModal(REPORT::"NCT PurchaseReturnOrder", true, true, PurchaseHeader);
                 end;
             }
         }

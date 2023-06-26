@@ -1,4 +1,7 @@
-pageextension 80033 "SalesOrderLists" extends "Sales Return Order List"
+/// <summary>
+/// PageExtension NCT SalesOrderLists (ID 80033) extends Record Sales Return Order List.
+/// </summary>
+pageextension 80033 "NCT SalesOrderLists" extends "Sales Return Order List"
 
 {
     layout
@@ -67,12 +70,12 @@ pageextension 80033 "SalesOrderLists" extends "Sales Return Order List"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the VAT specification of the involved customer or vendor to link transactions made for this record with the appropriate general ledger account according to the VAT posting setup.';
             }
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -106,7 +109,7 @@ pageextension 80033 "SalesOrderLists" extends "Sales Return Order List"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Sales Return Order", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Sales Return Order", TRUE, TRUE, RecSalesHeader);
                 end;
             }
 

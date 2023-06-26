@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension ChartOfAccount (ID 80026) extends Record Chart of Accounts.
 /// </summary>
-pageextension 80026 "ChartOfAccount" extends "Chart of Accounts"
+pageextension 80026 "NCT ChartOfAccount" extends "Chart of Accounts"
 {
     layout
     {

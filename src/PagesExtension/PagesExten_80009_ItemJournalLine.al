@@ -16,7 +16,7 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
         }
         addafter(Description)
         {
-            field("Description 2"; Rec."Description 2")
+            field("Description 2"; Rec."NCT Description 2")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Description 2 field.';
@@ -24,7 +24,7 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
         }
         addbefore("Document No.")
         {
-            field("Status"; Rec."Status")
+            field("Status"; Rec."NCT Status")
             {
                 ApplicationArea = all;
                 Editable = false;
@@ -68,7 +68,7 @@ pageextension 80009 "Item Journal Line" extends "Item Journal"
                     ItemJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     ItemJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     ItemJournalLine.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"ItemJournal", true, true, ItemJournalLine);
+                    REPORT.RunModal(REPORT::"NCT ItemJournal", true, true, ItemJournalLine);
                 end;
             }
         }

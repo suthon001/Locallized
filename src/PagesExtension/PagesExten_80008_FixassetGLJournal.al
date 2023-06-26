@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension Asset G/L Journal (ID 80008) extends Record Fixed Asset G/L Journal.
 /// </summary>
-pageextension 80008 "Asset G/L Journal" extends "Fixed Asset G/L Journal"
+pageextension 80008 "NCT Asset G/L Journal" extends "Fixed Asset G/L Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Page';
     layout
@@ -16,7 +16,7 @@ pageextension 80008 "Asset G/L Journal" extends "Fixed Asset G/L Journal"
         }
         addafter(Description)
         {
-            field("Journal Description"; Rec."Journal Description")
+            field("Journal Description"; Rec."NCT Journal Description")
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Journal Description field.';
@@ -77,7 +77,7 @@ pageextension 80008 "Asset G/L Journal" extends "Fixed Asset G/L Journal"
                     GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLIne.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"FA G/L Journal Voucher", true, false, GenJournalLIne);
+                    REPORT.RunModal(REPORT::"NCT FA G/L Journal Voucher", true, false, GenJournalLIne);
                 end;
             }
         }

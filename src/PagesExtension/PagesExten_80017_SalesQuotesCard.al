@@ -1,18 +1,18 @@
 /// <summary>
-/// PageExtension Sales Quote Card (ID 80017) extends Record Sales Quote.
+/// PageExtension NCT Sales Quote Card (ID 80017) extends Record Sales Quote.
 /// </summary>
-pageextension 80017 "Sales Quote Card" extends "Sales Quote"
+pageextension 80017 "NCT Sales Quote Card" extends "Sales Quote"
 {
     layout
     {
         addbefore(Status)
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -23,12 +23,12 @@ pageextension 80017 "Sales Quote Card" extends "Sales Quote"
                 Caption = 'VAT Registration No.';
                 ToolTip = 'Specifies the customer''s VAT registration number for customers.';
             }
-            field("Sales Order No."; Rec."Sales Order No.")
+            field("Sales Order No."; Rec."NCT Sales Order No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Make Order No. Series"; Rec."Make Order No. Series")
+            field("Make Order No. Series"; Rec."NCT Make Order No. Series")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Make Order No. Series field.';
@@ -39,7 +39,7 @@ pageextension 80017 "Sales Quote Card" extends "Sales Quote"
                 begin
                     SalesSetup.get();
                     SalesSetup.TestField("Order Nos.");
-                    Noseriesmgt.SelectSeries(SalesSetup."Order Nos.", Rec."No. Series", Rec."Make Order No. Series");
+                    Noseriesmgt.SelectSeries(SalesSetup."Order Nos.", Rec."No. Series", Rec."NCT Make Order No. Series");
                 end;
             }
         }
@@ -118,7 +118,7 @@ pageextension 80017 "Sales Quote Card" extends "Sales Quote"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Report Sales Quotes", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Report Sales Quotes", TRUE, TRUE, RecSalesHeader);
                 end;
             }
 
@@ -129,15 +129,17 @@ pageextension 80017 "Sales Quote Card" extends "Sales Quote"
     var
         Handled: Boolean;
     begin
-        //20201216 By Louis จะมีลูกค้าบางราย ต้องการลบเอกสารได้ จึงเพิ่มเป็น Event
         "OnBeforeDeleteRecord"(Rec, Handled);
         if not Handled then
             ERROR('Cannot Delete Record');
     end;
 
 
-
-    //20201216 By Louis จะมีลูกค้าบางราย ต้องการลบเอกสารได้ จึงเพิ่มเป็น Event
+    /// <summary>
+    /// OnBeforeDeleteRecord.
+    /// </summary>
+    /// <param name="SalesHeader">VAR Record "Sales Header".</param>
+    /// <param name="Handled">VAR Boolean.</param>
     [IntegrationEvent(false, false)]
     procedure "OnBeforeDeleteRecord"(var SalesHeader: Record "Sales Header"; var Handled: Boolean)
     begin

@@ -1,4 +1,7 @@
-pageextension 80059 "SalesReturnOrder" extends "Sales Return Order"
+/// <summary>
+/// PageExtension NCT SalesReturnOrder (ID 80059) extends Record Sales Return Order.
+/// </summary>
+pageextension 80059 "NCT SalesReturnOrder" extends "Sales Return Order"
 {
     layout
     {
@@ -43,7 +46,7 @@ pageextension 80059 "SalesReturnOrder" extends "Sales Return Order"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Sales Return Order", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Sales Return Order", TRUE, TRUE, RecSalesHeader);
                 end;
             }
 

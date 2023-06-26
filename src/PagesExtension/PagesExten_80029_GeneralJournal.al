@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension General Journal (ID 80029) extends Record General Journal.
 /// </summary>
-pageextension 80029 "General Journal" extends "General Journal"
+pageextension 80029 "NCT General Journal" extends "General Journal"
 {
     layout
     {
@@ -15,7 +15,7 @@ pageextension 80029 "General Journal" extends "General Journal"
         }
         addafter("VAT Amount")
         {
-            field("Require Screen Detail"; Rec."Require Screen Detail")
+            field("Require Screen Detail"; Rec."NCT Require Screen Detail")
             {
                 ApplicationArea = all;
                 Caption = 'Require Screen Detail';
@@ -37,7 +37,7 @@ pageextension 80029 "General Journal" extends "General Journal"
         }
         addafter(Description)
         {
-            field("Journal Description"; Rec."Journal Description")
+            field("Journal Description"; Rec."NCT Journal Description")
             {
                 ApplicationArea = All;
                 Caption = 'Journal Description';
@@ -112,39 +112,39 @@ pageextension 80029 "General Journal" extends "General Journal"
                 ToolTip = 'Executes the Show Detail Vat & Cheque & WHT action.';
                 trigger OnAction()
                 var
-                    ShowDetailCheque: Page "ShowDetail Cheque";
-                    ShowDetailVAT: Page "ShowDetail Vat";
+                    ShowDetailCheque: Page "NCT ShowDetail Cheque";
+                    ShowDetailVAT: Page "NCT ShowDetail Vat";
                     GenLineDetail: Record "Gen. Journal Line";
                     GenLine2: Record "Gen. Journal Line";
-                    ShowDetailWHT: Page "ShowDetailWHT";
+                    ShowDetailWHT: Page "NCT ShowDetailWHT";
                     Cust: Record Customer;
                 begin
-                    Rec.TestField("Require Screen Detail");
+                    Rec.TestField("NCT Require Screen Detail");
                     Rec.TestField("Document No.");
                     CLEAR(ShowDetailVAT);
                     CLEAR(ShowDetailCheque);
-                    if Rec."Require Screen Detail" IN [Rec."Require Screen Detail"::VAT, Rec."Require Screen Detail"::WHT] then begin
+                    if Rec."NCT Require Screen Detail" IN [Rec."NCT Require Screen Detail"::VAT, Rec."NCT Require Screen Detail"::WHT] then begin
                         GenLineDetail.reset();
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
-                        case rec."Require Screen Detail" OF
-                            rec."Require Screen Detail"::CHEQUE:
+                        case rec."NCT Require Screen Detail" OF
+                            rec."NCT Require Screen Detail"::CHEQUE:
                                 begin
                                     ShowDetailCheque.SetTableView(GenLineDetail);
                                     ShowDetailCheque.RunModal();
                                     CLEAR(ShowDetailCheque);
                                 end;
 
-                            rec."Require Screen Detail"::VAT:
+                            rec."NCT Require Screen Detail"::VAT:
                                 begin
                                     ShowDetailVAT.SetTableView(GenLineDetail);
                                     ShowDetailVAT.RunModal();
                                     CLEAR(ShowDetailVAT);
                                 end;
-                            rec."Require Screen Detail"::WHT:
+                            rec."NCT Require Screen Detail"::WHT:
                                 begin
-                                    if Rec."WHT Cust/Vend No." = '' then begin
+                                    if Rec."NCT WHT Cust/Vend No." = '' then begin
                                         GenLine2.reset();
                                         GenLine2.SetRange("Journal Template Name", Rec."Journal Template Name");
                                         GenLine2.SetRange("Journal Batch Name", Rec."Journal Batch Name");
@@ -152,15 +152,15 @@ pageextension 80029 "General Journal" extends "General Journal"
                                         GenLine2.SetRange("Account Type", GenLine2."Account Type"::Customer);
                                         if GenLine2.FindFirst() then
                                             if Cust.get(GenLine2."Account No.") then begin
-                                                Rec."WHT Cust/Vend No." := Cust."No.";
-                                                Rec."WHT Name" := Cust.Name;
-                                                Rec."WHT Name 2" := Cust."Name 2";
-                                                Rec."WHT Address" := Cust.Address;
-                                                Rec."WHT Address 2" := Cust."Address 2";
-                                                Rec."WHT Registration No." := Cust."VAT Registration No.";
-                                                Rec."WHT Post Code" := Cust."Post Code";
-                                                Rec."WHT City" := Cust.City;
-                                                Rec."WHT County" := Cust.County;
+                                                Rec."NCT WHT Cust/Vend No." := Cust."No.";
+                                                Rec."NCT WHT Name" := Cust.Name;
+                                                Rec."NCT WHT Name 2" := Cust."Name 2";
+                                                Rec."NCT WHT Address" := Cust.Address;
+                                                Rec."NCT WHT Address 2" := Cust."Address 2";
+                                                Rec."NCT WHT Registration No." := Cust."VAT Registration No.";
+                                                Rec."NCT WHT Post Code" := Cust."Post Code";
+                                                Rec."NCT WHT City" := Cust.City;
+                                                Rec."NCT WHT County" := Cust.County;
                                                 Rec.Modify();
                                                 Commit();
                                             end;
@@ -195,38 +195,40 @@ pageextension 80029 "General Journal" extends "General Journal"
                     GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLIne.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"Journal Voucher", true, false, GenJournalLIne);
+                    REPORT.RunModal(REPORT::"NCT Journal Voucher", true, false, GenJournalLIne);
                 end;
             }
         }
 
     }
+    /// <summary>
+    /// InsertWHTCertificate.
+    /// </summary>
     procedure "InsertWHTCertificate"()
     var
         GeneralSetup: Record "General Ledger Setup";
-        WHTHeader: Record "WHT Header";
+        WHTHeader: Record "NCT WHT Header";
         NosMgt: Codeunit NoSeriesManagement;
         GenJnlLine: Record "Gen. Journal Line";
         Vendor: Record Vendor;
         Customer: Record Customer;
         WHTDocNo: Code[30];
-        PageWHTCer: Page "WHT Certificate";
-        whtBusPostingGroup: Record "WHT Business Posting Group";
+        PageWHTCer: Page "NCT WHT Certificate";
         GenJnlLine3: Record "Gen. Journal Line";
     begin
-        if rec."WHT Document No." = '' then begin
+        if rec."NCT WHT Document No." = '' then begin
             GenJnlLine3.Reset();
             GenJnlLine3.SetRange("Journal Template Name", rec."Journal Template Name");
             GenJnlLine3.SetRange("Journal Batch Name", rec."Journal Batch Name");
             GenJnlLine3.SetRange("Document No.", rec."Document No.");
-            GenJnlLine3.SetFilter("WHT Document No.", '<>%1', '');
+            GenJnlLine3.SetFilter("NCT WHT Document No.", '<>%1', '');
             if not GenJnlLine3.IsEmpty then
                 if not Confirm('This document already have wht certificate do you want to create more wht certificate ?') then
                     exit;
         end;
         GeneralSetup.GET();
-        GeneralSetup.TESTFIELD("WHT Document Nos.");
-        IF rec."WHT Document No." = '' THEN BEGIN
+        GeneralSetup.TESTFIELD("NCT WHT Document Nos.");
+        IF rec."NCT WHT Document No." = '' THEN BEGIN
             IF NOT CONFIRM('Do you want to create wht certificated') THEN
                 EXIT;
 
@@ -238,7 +240,7 @@ pageextension 80029 "General Journal" extends "General Journal"
             GenJnlLine.SETFILTER("Account No.", '<>%1', '');
             IF GenJnlLine.FindFirst() THEN BEGIN
                 WHTHeader.INIT();
-                WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."WHT Document Nos.", rec."Posting Date", TRUE);
+                WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."NCT WHT Document Nos.", rec."Posting Date", TRUE);
                 WHTDocNo := WHTHeader."WHT No.";
                 WHTHeader."Gen. Journal Template Code" := rec."Journal Template Name";
                 WHTHeader."Gen. Journal Batch Code" := rec."Journal Batch Name";
@@ -261,7 +263,7 @@ pageextension 80029 "General Journal" extends "General Journal"
             WHTHeader.INSERT();
             rec.Modify();
         END ELSE
-            WHTDocNo := rec."WHT Document No.";
+            WHTDocNo := rec."NCT WHT Document No.";
 
         commit();
         CLEAR(PageWHTCer);
@@ -275,7 +277,7 @@ pageextension 80029 "General Journal" extends "General Journal"
 
     trigger OnDeleteRecord(): Boolean
     var
-        WHTEader: Record "WHT Header";
+        WHTEader: Record "NCT WHT Header";
     begin
         WHTEader.reset();
         WHTEader.SetRange("Gen. Journal Template Code", rec."Journal Template Name");

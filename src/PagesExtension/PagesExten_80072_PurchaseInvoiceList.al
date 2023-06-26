@@ -1,4 +1,7 @@
-pageextension 80072 "Purchase Invoice Lists" extends "Purchase Invoices"
+/// <summary>
+/// PageExtension NCT Purchase Invoice Lists (ID 80072) extends Record Purchase Invoices.
+/// </summary>
+pageextension 80072 "NCT Purchase Invoice Lists" extends "Purchase Invoices"
 {
     PromotedActionCategories = 'New,Process,Print,Request Approval,Credit Memo,Release,Posting,Navigate';
     layout
@@ -49,13 +52,13 @@ pageextension 80072 "Purchase Invoice Lists" extends "Purchase Invoices"
         }
         addafter("Assigned User ID")
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
@@ -84,7 +87,7 @@ pageextension 80072 "Purchase Invoice Lists" extends "Purchase Invoices"
                 ToolTip = 'Executes the AP Voucher action.';
                 trigger OnAction()
                 var
-                    APVoucher: Report "AP Voucher";
+                    APVoucher: Report "NCT AP Voucher";
                     PurchaseHeader: Record "Purchase Header";
                 begin
                     PurchaseHeader.reset();

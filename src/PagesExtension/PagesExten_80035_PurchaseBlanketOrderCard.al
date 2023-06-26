@@ -1,4 +1,7 @@
-pageextension 80035 "PurchaseBlnketCard" extends "Blanket Purchase Order"
+/// <summary>
+/// PageExtension NCT PurchaseBlnketCard (ID 80035) extends Record Blanket Purchase Order.
+/// </summary>
+pageextension 80035 "NCT PurchaseBlnketCard" extends "Blanket Purchase Order"
 {
 
     trigger OnDeleteRecord(): Boolean

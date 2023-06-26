@@ -1,4 +1,7 @@
-pageextension 80088 "BankAccountLists" extends "Bank Account List"
+/// <summary>
+/// PageExtension NCT BankAccountLists (ID 80088) extends Record Bank Account List.
+/// </summary>
+pageextension 80088 "NCT BankAccountLists" extends "Bank Account List"
 {
     layout
     {

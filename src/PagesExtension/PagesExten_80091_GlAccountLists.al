@@ -1,4 +1,7 @@
-pageextension 80091 "GLAccountLists" extends "G/L Account List"
+/// <summary>
+/// PageExtension GLAccountLists (ID 80091) extends Record G/L Account List.
+/// </summary>
+pageextension 80091 "NCT GLAccountLists" extends "G/L Account List"
 {
     layout
     {

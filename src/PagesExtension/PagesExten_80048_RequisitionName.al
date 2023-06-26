@@ -1,10 +1,13 @@
-pageextension 80048 "Requisition Name" extends "Req. Wksh. Names"
+/// <summary>
+/// PageExtension NCT Requisition Name (ID 80048) extends Record Req. Wksh. Names.
+/// </summary>
+pageextension 80048 "NCT Requisition Name" extends "Req. Wksh. Names"
 {
     layout
     {
         addafter(Description)
         {
-            field("Document No. Series"; Rec."Document No. Series")
+            field("Document No. Series"; Rec."NCT Document No. Series")
             {
                 ApplicationArea = all;
                 Caption = 'Document No. Series';

@@ -1,4 +1,7 @@
-pageextension 80036 "PostedReceiptList" extends "Posted Purchase Receipts"
+/// <summary>
+/// PageExtension PostedReceiptList (ID 80036) extends Record Posted Purchase Receipts.
+/// </summary>
+pageextension 80036 "NCT PostedReceiptList" extends "Posted Purchase Receipts"
 {
 
     layout
@@ -55,7 +58,7 @@ pageextension 80036 "PostedReceiptList" extends "Posted Purchase Receipts"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Your Reference field.';
             }
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Head Office field.';
@@ -86,7 +89,7 @@ pageextension 80036 "PostedReceiptList" extends "Posted Purchase Receipts"
                 begin
                     PurchaseRecripet.reset();
                     PurchaseRecripet.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"Good Receipt Note", true, true, PurchaseRecripet);
+                    REPORT.RunModal(REPORT::"NCT Good Receipt Note", true, true, PurchaseRecripet);
                 end;
             }
         }

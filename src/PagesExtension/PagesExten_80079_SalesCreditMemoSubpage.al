@@ -1,4 +1,7 @@
-pageextension 80079 "Sales Credit Memo Subpage" extends "Sales Cr. Memo Subform"
+/// <summary>
+/// PageExtension NCT Sales Credit Memo Subpage (ID 80079) extends Record Sales Cr. Memo Subform.
+/// </summary>
+pageextension 80079 "NCT Sales Credit Memo Subpage" extends "Sales Cr. Memo Subform"
 {
     layout
     {
@@ -34,12 +37,12 @@ pageextension 80079 "Sales Credit Memo Subpage" extends "Sales Cr. Memo Subform"
         moveafter("Location Code"; "Gen. Bus. Posting Group", "Gen. Prod. Posting Group", "VAT Bus. Posting Group", "VAT Prod. Posting Group")
         addafter("VAT Prod. Posting Group")
         {
-            field("WHT Business Posting Group"; Rec."WHT Business Posting Group")
+            field("WHT Business Posting Group"; Rec."NCT WHT Business Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("WHT Product Posting Group"; rec."WHT Product Posting Group")
+            field("WHT Product Posting Group"; rec."NCT WHT Product Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

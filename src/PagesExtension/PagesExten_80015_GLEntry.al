@@ -1,13 +1,13 @@
 /// <summary>
 /// PageExtension GLEntry (ID 80015) extends Record General Ledger Entries.
 /// </summary>
-pageextension 80015 "GLEntry" extends "General Ledger Entries"
+pageextension 80015 "NCT GLEntry" extends "General Ledger Entries"
 {
     layout
     {
         addafter(Description)
         {
-            field("Journal Description"; Rec."Journal Description")
+            field("Journal Description"; Rec."NCT Journal Description")
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies value of the field.';

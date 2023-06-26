@@ -1,103 +1,106 @@
-tableextension 80052 "ExtenInvoice Posting Buffer" extends "Invoice Posting Buffer"
+/// <summary>
+/// TableExtension ExtenInvoice Posting Buffer (ID 80052) extends Record Invoice Posting Buffer.
+/// </summary>
+tableextension 80052 "NCT Invoice Posting Buffer" extends "Invoice Posting Buffer"
 {
     fields
     {
-        field(80000; "Tax Invoice No."; Code[20])
+        field(80000; "NCT Tax Invoice No."; Code[20])
         {
             Caption = 'Tax Invoice No.';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80001; "Tax Invoice Date"; Date)
+        field(80001; "NCT Tax Invoice Date"; Date)
         {
             Caption = 'Tax Invoice Date';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80002; "Tax Invoice Base"; Decimal)
+        field(80002; "NCT Tax Invoice Base"; Decimal)
         {
             Caption = 'Tax Invoice Base';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
 
         }
-        field(80003; "Tax Invoice Amount"; Decimal)
+        field(80003; "NCT Tax Invoice Amount"; Decimal)
         {
             Caption = 'Tax Invoice Amount';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80004; "Tax Vendor No."; Code[20])
+        field(80004; "NCT Tax Vendor No."; Code[20])
         {
             Caption = 'Tax Vendor No.';
             DataClassification = CustomerContent;
             TableRelation = Vendor."No.";
         }
-        field(80005; "Tax Invoice Name"; Text[100])
+        field(80005; "NCT Tax Invoice Name"; Text[100])
         {
             Caption = 'Tax Invoice Name';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80006; "Description Line"; Text[150])
+        field(80006; "NCT Description Line"; Text[150])
         {
             Caption = 'Description Line';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
             Editable = false;
         }
-        field(80007; "Head Office"; Boolean)
+        field(80007; "NCT Head Office"; Boolean)
         {
             Caption = 'Head Office';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
 
         }
-        field(80008; "Branch Code"; Code[5])
+        field(80008; "NCT Branch Code"; Code[5])
         {
             Caption = 'Tax Branch No.';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
 
         }
-        field(80009; "Vat Registration No."; Text[20])
+        field(80009; "NCT Vat Registration No."; Text[20])
         {
             Caption = 'Tax Branch No.';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
 
         }
-        field(80010; "Line No."; Integer)
+        field(80010; "NCT Line No."; Integer)
         {
             Caption = 'Tax Line No.';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
 
         }
-        field(80011; "Address"; Text[100])
+        field(80011; "NCT Address"; Text[100])
         {
             Caption = 'Address';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80012; "City"; Text[50])
+        field(80012; "NCT City"; Text[50])
         {
             Caption = 'City';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80013; "Post Code"; Code[30])
+        field(80013; "NCT Post Code"; Code[30])
         {
             Caption = 'Post Code';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80014; "Document Line No."; Integer)
+        field(80014; "NCT Document Line No."; Integer)
         {
             Caption = 'Document Line No.';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80015; "Vendor Invoice No."; Code[35])
+        field(80015; "NCT Vendor Invoice No."; Code[35])
         {
             Caption = 'Vendor Invoice No.';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
-        field(80016; "Tax Invoice Name 2"; Text[50])
+        field(80016; "NCT Tax Invoice Name 2"; Text[50])
         {
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
-        field(80017; "Address 2"; Text[50])
+        field(80017; "NCT Address 2"; Text[50])
         {
             Caption = 'Address 2';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
 
         }
 

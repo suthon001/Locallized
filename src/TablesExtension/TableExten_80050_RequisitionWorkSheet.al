@@ -1,29 +1,29 @@
 /// <summary>
-/// TableExtension Requisition WorkSheet (ID 80049) extends Record Requisition Line.
+/// TableExtension NCT Requisition WorkSheet (ID 80049) extends Record Requisition Line.
 /// </summary>
-tableextension 80049 "Requisition WorkSheet" extends "Requisition Line"
+tableextension 80049 "NCT Requisition WorkSheet" extends "Requisition Line"
 {
     fields
     {
-        field(80000; "Document No."; Code[20])
+        field(80000; "NCT Document No."; Code[20])
         {
             Caption = 'Document No.';
             DataClassification = CustomerContent;
         }
 
-        field(80002; "Create By"; Code[50])
+        field(80002; "NCT Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80003; "Create DateTime"; DateTime)
+        field(80003; "NCT Create DateTime"; DateTime)
         {
             Caption = 'Create DateTime';
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80004; "PR No. Series"; Code[20])
+        field(80004; "NCT PR No. Series"; Code[20])
         {
             Caption = 'PR No. Series';
             DataClassification = CustomerContent;
@@ -44,9 +44,9 @@ tableextension 80049 "Requisition WorkSheet" extends "Requisition Line"
         //  with RequsitionLine do begin
         RequsitionLine.Copy(Rec);
         ReqWhs.GET(RequsitionLine."Worksheet Template Name", RequsitionLine."Journal Batch Name");
-        ReqWhs.TestField("Document No. Series");
-        IF NoSeriesMgt.SelectSeries(ReqWhs."Document No. Series", OldReqLines."No. Series", RequsitionLine."No. Series") THEN BEGIN
-            NoSeriesMgt.SetSeries(RequsitionLine."Document No.");
+        ReqWhs.TestField("NCT Document No. Series");
+        IF NoSeriesMgt.SelectSeries(ReqWhs."NCT Document No. Series", OldReqLines."No. Series", RequsitionLine."No. Series") THEN BEGIN
+            NoSeriesMgt.SetSeries(RequsitionLine."NCT Document No.");
             rec := RequsitionLine;
             EXIT(TRUE);
         END;
@@ -56,7 +56,7 @@ tableextension 80049 "Requisition WorkSheet" extends "Requisition Line"
     trigger OnInsert()
     begin
         TestField("No.");
-        "Create By" := COPYSTR(UserId, 1, 50);
-        "Create DateTime" := CurrentDateTime();
+        "NCT Create By" := COPYSTR(UserId, 1, 50);
+        "NCT Create DateTime" := CurrentDateTime();
     end;
 }

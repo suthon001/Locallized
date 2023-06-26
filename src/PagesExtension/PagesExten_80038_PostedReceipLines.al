@@ -1,4 +1,7 @@
-pageextension 80038 "PostedReceiptLines" extends "Posted Purchase Rcpt. Subform"
+/// <summary>
+/// PageExtension NCT PostedReceiptLines (ID 80038) extends Record Posted Purchase Rcpt. Subform.
+/// </summary>
+pageextension 80038 "NCT PostedReceiptLines" extends "Posted Purchase Rcpt. Subform"
 {
     layout
     {

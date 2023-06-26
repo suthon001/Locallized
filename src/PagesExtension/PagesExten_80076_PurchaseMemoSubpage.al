@@ -1,4 +1,7 @@
-pageextension 80076 "Purch. Credit Memo Subpage" extends "Purch. Cr. Memo Subform"
+/// <summary>
+/// PageExtension NCT Purch. Credit Memo Subpage (ID 80076) extends Record Purch. Cr. Memo Subform.
+/// </summary>
+pageextension 80076 "NCT Purch. Credit Memo Subpage" extends "Purch. Cr. Memo Subform"
 {
     layout
     {
@@ -32,7 +35,7 @@ pageextension 80076 "Purch. Credit Memo Subpage" extends "Purch. Cr. Memo Subfor
 
         addafter("VAT Prod. Posting Group")
         {
-            field("WHT Product Posting Group"; Rec."WHT Product Posting Group")
+            field("WHT Product Posting Group"; Rec."NCT WHT Product Posting Group")
             {
                 ApplicationArea = All;
                 Caption = 'WHT Product Posting Group';

@@ -1,54 +1,54 @@
 /// <summary>
-/// TableExtension ExtenItem Journal Line (ID 80015) extends Record Item Journal Line.
+/// TableExtension NCT ExtenItem Journal Line (ID 80015) extends Record Item Journal Line.
 /// </summary>
-tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
+tableextension 80015 "NCT ExtenItem Journal Line" extends "Item Journal Line"
 {
     fields
     {
 
-        field(80000; "Status"; Enum "Purchase Document Status")
+        field(80000; "NCT Status"; Enum "Purchase Document Status")
         {
             DataClassification = CustomerContent;
             Editable = false;
             Caption = 'Status';
         }
 
-        field(80001; "ID"; GUID)
+        field(80001; "NCT ID"; GUID)
         {
             Caption = 'ID';
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80002; "Document No. Series"; code[20])
+        field(80002; "NCT Document No. Series"; code[20])
         {
             Caption = 'Document No. Series';
             TableRelation = "No. Series".Code;
             DataClassification = SystemMetadata;
         }
-        field(80003; "Description 2"; Text[100])
+        field(80003; "NCT Description 2"; Text[50])
         {
             Caption = 'Description 2';
             DataClassification = CustomerContent;
         }
-        field(80004; "Vat Bus. Posting Group"; Code[20])
+        field(80004; "NCT Vat Bus. Posting Group"; Code[20])
         {
             Caption = 'Vat Bus. Posting Group';
             TableRelation = "VAT Business Posting Group";
             DataClassification = SystemMetadata;
         }
-        field(80005; "Vendor/Customer Name"; Text[100])
+        field(80005; "NCT Vendor/Customer Name"; Text[100])
         {
             DataClassification = CustomerContent;
             Editable = false;
             Caption = 'Vendor/Customer Name';
         }
-        field(80006; "Create By"; Code[50])
+        field(80006; "NCT Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80007; "Create DateTime"; DateTime)
+        field(80007; "NCT Create DateTime"; DateTime)
         {
             Caption = 'Create DateTime';
             DataClassification = SystemMetadata;
@@ -60,8 +60,8 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
 
     trigger OnInsert()
     begin
-        "Create By" := COPYSTR(USERID, 1, 50);
-        "Create DateTime" := CurrentDateTime;
+        "NCT Create By" := COPYSTR(USERID, 1, 50);
+        "NCT Create DateTime" := CurrentDateTime;
     end;
 
     /// <summary>
@@ -78,9 +78,9 @@ tableextension 80015 "ExtenItem Journal Line" extends "Item Journal Line"
 
         ItemJournalLine.COPY(Rec);
         ItemJournalBatch.GET(ItemJournalLine."Journal Template Name", ItemJournalLine."Journal Batch Name");
-        ItemJournalBatch.TESTFIELD("Document No. Series");
-        IF NoSeriesMgt.SelectSeries(ItemJournalBatch."Document No. Series", OldItemJournalLine."Document No. Series",
-            ItemJournalLine."Document No. Series") THEN BEGIN
+        ItemJournalBatch.TESTFIELD("NCT Document No. Series");
+        IF NoSeriesMgt.SelectSeries(ItemJournalBatch."NCT Document No. Series", OldItemJournalLine."NCT Document No. Series",
+            ItemJournalLine."NCT Document No. Series") THEN BEGIN
             NoSeriesMgt.SetSeries(ItemJournalLine."Document No.");
             Rec := ItemJournalLine;
             EXIT(TRUE);

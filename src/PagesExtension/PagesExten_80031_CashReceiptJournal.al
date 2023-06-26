@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension Receipt Journal (ID 80031) extends Record Cash Receipt Journal.
 /// </summary>
-pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
+pageextension 80031 "NCT Receipt Journal" extends "Cash Receipt Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Approve,Page,Post/Print,Line,Account';
     layout
@@ -16,7 +16,7 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
         }
         addafter("VAT Amount")
         {
-            field("Require Screen Detail"; Rec."Require Screen Detail")
+            field("Require Screen Detail"; Rec."NCT Require Screen Detail")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Require Screen Detail field.';
@@ -25,14 +25,14 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
         }
         addafter(Description)
         {
-            field("Journal Description"; Rec."Journal Description")
+            field("Journal Description"; Rec."NCT Journal Description")
             {
                 ApplicationArea = all;
                 Caption = 'Journal Description';
                 ToolTip = 'Specifies the value of the Journal Description field.';
             }
 
-            field("Pay Name"; Rec."Pay Name")
+            field("Pay Name"; Rec."NCT Pay Name")
             {
                 ApplicationArea = all;
                 Caption = 'Pay Name';
@@ -121,7 +121,7 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                     GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLIne.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"Receive Voucher", true, false, GenJournalLIne);
+                    REPORT.RunModal(REPORT::"NCT Receive Voucher", true, false, GenJournalLIne);
                 end;
             }
             action("Print_Receipt_Tax")
@@ -139,27 +139,7 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                 begin
                     RecCustLedgEntry.RESET();
                     RecCustLedgEntry.SETFILTER("Applies-to ID", rec."Document No.");
-                    REPORT.RUN(REPORT::"Receipt Tax Invoice", TRUE, TRUE, RecCustLedgEntry);
-                end;
-            }
-            action("Print_Receipt")
-            {
-                ApplicationArea = All;
-                Caption = 'Receipt Invoice';
-                Image = PrintReport;
-                Promoted = true;
-                PromotedIsBig = true;
-                PromotedCategory = Report;
-                ToolTip = 'Executes the Receipt Invoice action.';
-                trigger OnAction()
-                var
-                    GenJournalLine: Record "Gen. Journal Line";
-                begin
-                    GenJournalLine.RESET();
-                    GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
-                    GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
-                    GenJournalLine.SetRange("Document No.", rec."Document No.");
-                    REPORT.RUN(REPORT::"Receipt Ducument", TRUE, TRUE, GenJournalLine);
+                    REPORT.RUN(REPORT::"NCT Receipt Tax Invoice", TRUE, TRUE, RecCustLedgEntry);
                 end;
             }
         }
@@ -178,39 +158,39 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                 ToolTip = 'Executes the Show Detail Vat & Cheque & WHT action.';
                 trigger OnAction()
                 var
-                    ShowDetailCheque: Page "ShowDetail Cheque";
-                    ShowDetailVAT: Page "ShowDetail Vat";
+                    ShowDetailCheque: Page "NCT ShowDetail Cheque";
+                    ShowDetailVAT: Page "NCT ShowDetail Vat";
                     GenLineDetail: Record "Gen. Journal Line";
                     GenLine2: Record "Gen. Journal Line";
-                    ShowDetailWHT: Page "ShowDetailWHT";
+                    ShowDetailWHT: Page "NCT ShowDetailWHT";
                     Cust: Record Customer;
                 begin
-                    Rec.TestField("Require Screen Detail");
+                    Rec.TestField("NCT Require Screen Detail");
                     Rec.TestField("Document No.");
                     CLEAR(ShowDetailVAT);
                     CLEAR(ShowDetailCheque);
-                    if Rec."Require Screen Detail" IN [Rec."Require Screen Detail"::VAT, Rec."Require Screen Detail"::CHEQUE, Rec."Require Screen Detail"::WHT] then begin
+                    if Rec."NCT Require Screen Detail" IN [Rec."NCT Require Screen Detail"::VAT, Rec."NCT Require Screen Detail"::CHEQUE, Rec."NCT Require Screen Detail"::WHT] then begin
                         GenLineDetail.reset();
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
-                        case rec."Require Screen Detail" OF
-                            rec."Require Screen Detail"::CHEQUE:
+                        case rec."NCT Require Screen Detail" OF
+                            rec."NCT Require Screen Detail"::CHEQUE:
                                 begin
                                     ShowDetailCheque.SetTableView(GenLineDetail);
                                     ShowDetailCheque.RunModal();
                                     CLEAR(ShowDetailCheque);
                                 end;
 
-                            rec."Require Screen Detail"::VAT:
+                            rec."NCT Require Screen Detail"::VAT:
                                 begin
                                     ShowDetailVAT.SetTableView(GenLineDetail);
                                     ShowDetailVAT.RunModal();
                                     CLEAR(ShowDetailVAT);
                                 end;
-                            rec."Require Screen Detail"::WHT:
+                            rec."NCT Require Screen Detail"::WHT:
                                 begin
-                                    if Rec."WHT Cust/Vend No." = '' then begin
+                                    if Rec."NCT WHT Cust/Vend No." = '' then begin
                                         GenLine2.reset();
                                         GenLine2.SetRange("Journal Template Name", Rec."Journal Template Name");
                                         GenLine2.SetRange("Journal Batch Name", Rec."Journal Batch Name");
@@ -218,15 +198,15 @@ pageextension 80031 "Receipt Journal" extends "Cash Receipt Journal"
                                         GenLine2.SetRange("Account Type", GenLine2."Account Type"::Customer);
                                         if GenLine2.FindFirst() then
                                             if Cust.get(GenLine2."Account No.") then begin
-                                                Rec."WHT Cust/Vend No." := Cust."No.";
-                                                Rec."WHT Name" := Cust.Name;
-                                                Rec."WHT Name 2" := Cust."Name 2";
-                                                Rec."WHT Address" := Cust.Address;
-                                                Rec."WHT Address 2" := Cust."Address 2";
-                                                Rec."WHT Registration No." := Cust."VAT Registration No.";
-                                                Rec."WHT Post Code" := Cust."Post Code";
-                                                Rec."WHT City" := Cust.City;
-                                                Rec."WHT County" := Cust.County;
+                                                Rec."NCT WHT Cust/Vend No." := Cust."No.";
+                                                Rec."NCT WHT Name" := Cust.Name;
+                                                Rec."NCT WHT Name 2" := Cust."Name 2";
+                                                Rec."NCT WHT Address" := Cust.Address;
+                                                Rec."NCT WHT Address 2" := Cust."Address 2";
+                                                Rec."NCT WHT Registration No." := Cust."VAT Registration No.";
+                                                Rec."NCT WHT Post Code" := Cust."Post Code";
+                                                Rec."NCT WHT City" := Cust.City;
+                                                Rec."NCT WHT County" := Cust.County;
                                                 Rec.Modify();
                                                 Commit();
                                             end;

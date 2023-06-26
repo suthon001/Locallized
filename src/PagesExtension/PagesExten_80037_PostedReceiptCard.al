@@ -1,4 +1,7 @@
-pageextension 80037 "PostedReceiptCard" extends "Posted Purchase Receipt"
+/// <summary>
+/// PageExtension NCT PostedReceiptCard (ID 80037) extends Record Posted Purchase Receipt.
+/// </summary>
+pageextension 80037 "NCT PostedReceiptCard" extends "Posted Purchase Receipt"
 {
 
     layout
@@ -36,7 +39,7 @@ pageextension 80037 "PostedReceiptCard" extends "Posted Purchase Receipt"
                 begin
                     PurchaseRecripet.reset();
                     PurchaseRecripet.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"Good Receipt Note", true, true, PurchaseRecripet);
+                    REPORT.RunModal(REPORT::"NCT Good Receipt Note", true, true, PurchaseRecripet);
                 end;
             }
         }

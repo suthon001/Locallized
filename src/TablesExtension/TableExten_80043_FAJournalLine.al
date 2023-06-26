@@ -1,45 +1,45 @@
 /// <summary>
-/// TableExtension FAJournalLine (ID 80043) extends Record FA Journal Line.
+/// TableExtension NCT FAJournalLine (ID 80043) extends Record FA Journal Line.
 /// </summary>
-tableextension 80043 "FAJournalLine" extends "FA Journal Line"
+tableextension 80043 "NCT FAJournalLine" extends "FA Journal Line"
 {
     fields
     {
-        field(80000; "Document No. Series"; code[20])
+        field(80000; "NCT Document No. Series"; code[20])
         {
             Caption = 'Document No. Series';
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
-        field(80001; "Qty. Calculated"; Integer)
+        field(80001; "NCT Qty. Calculated"; Integer)
         {
             Caption = 'Qty. Calculated';
             DataClassification = CustomerContent;
         }
-        field(80002; "Qty. Phys. Inventory"; Integer)
+        field(80002; "NCT Qty. Phys. Inventory"; Integer)
         {
             Caption = 'Qty. Phys. Inventory';
             DataClassification = CustomerContent;
         }
-        field(80003; "Posted"; Boolean)
+        field(80003; "NCT Posted"; Boolean)
         {
             Caption = 'Posted';
             Editable = false;
             DataClassification = SystemMetadata;
         }
-        field(80004; "FA Phys. Location Code"; Code[20])
+        field(80004; "NCT FA Phys. Location Code"; Code[20])
         {
 
             Caption = 'FA Phys. Location Code';
             DataClassification = CustomerContent;
         }
-        field(80005; "FA Location Code"; Code[20])
+        field(80005; "NCT FA Location Code"; Code[20])
         {
 
             Caption = 'FA Location Code';
             DataClassification = CustomerContent;
         }
-        field(80006; "Phys. Count Status"; Enum "Phys. Count Status")
+        field(80006; "NCT Phys. Count Status"; Enum "NCT Phys. Count Status")
         {
 
             Caption = 'Phys. Count Status';
@@ -65,9 +65,9 @@ tableextension 80043 "FAJournalLine" extends "FA Journal Line"
         // WITH FAJournalLine DO BEGIN
         FAJournalLine.COPY(Rec);
         FaJournalBatch.GET(FAJournalLine."Journal Template Name", FAJournalLine."Journal Batch Name");
-        FaJournalBatch.TESTFIELD("Document No. Series");
-        IF NoSeriesMgt.SelectSeries(FaJournalBatch."Document No. Series", OldFaJournalLine."Document No. Series",
-            FAJournalLine."Document No. Series") THEN BEGIN
+        FaJournalBatch.TESTFIELD("NCT Document No. Series");
+        IF NoSeriesMgt.SelectSeries(FaJournalBatch."NCT Document No. Series", OldFaJournalLine."NCT Document No. Series",
+            FAJournalLine."NCT Document No. Series") THEN BEGIN
             NoSeriesMgt.SetSeries(FAJournalLine."Document No.");
             Rec := FAJournalLine;
             EXIT(TRUE);

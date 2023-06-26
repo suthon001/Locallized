@@ -1,5 +1,3 @@
 {
-    "mandatoryPrefix": "LCL",
-    "supportedcountries":["US","TH"]
-    
+    "mandatoryPrefix": "NCT "    
 }

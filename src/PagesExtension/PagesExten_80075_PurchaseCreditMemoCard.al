@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension Purchase Credit Memo Card (ID 80075) extends Record Purchase Credit Memo.
+/// </summary>
 pageextension 80075 "Purchase Credit Memo Card" extends "Purchase Credit Memo"
 {
     PromotedActionCategories = 'New,Process,Print,Approve,Request Approval,Credit Memo,Release,Posting,Navigate';
@@ -5,13 +8,13 @@ pageextension 80075 "Purchase Credit Memo Card" extends "Purchase Credit Memo"
     {
         addbefore(Status)
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
@@ -70,7 +73,7 @@ pageextension 80075 "Purchase Credit Memo Card" extends "Purchase Credit Memo"
                 ToolTip = 'Executes the AP CN Voucher action.';
                 trigger OnAction()
                 var
-                    APCNVoucher: Report "AP CN Voucher";
+                    APCNVoucher: Report "NCT AP CN Voucher";
                     PurchaseHeader: Record "Purchase Header";
                 begin
                     PurchaseHeader.reset();

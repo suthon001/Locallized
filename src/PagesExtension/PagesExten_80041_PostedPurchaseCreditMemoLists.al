@@ -1,4 +1,7 @@
-pageextension 80041 "ExtenPostPurchCreditLists" extends "Posted Purchase Credit Memos"
+/// <summary>
+/// PageExtension NCT ExtenPostPurchCreditLists (ID 80041) extends Record Posted Purchase Credit Memos.
+/// </summary>
+pageextension 80041 "NCT ExtenPostPurchCreditLists" extends "Posted Purchase Credit Memos"
 {
     layout
     {

@@ -5,156 +5,136 @@ tableextension 80031 "ExtenPurchase Inv. Line" extends "Purch. Inv. Line"
 {
     fields
     {
-
-        field(80000; "Qty. to Cancel"; Decimal)
+        field(80000; "NCT Qty. to Cancel"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Qty. to Cancel';
-            Editable = false;
+
         }
-        field(80001; "Qty. to Cancel (Base)"; Decimal)
+        field(80001; "NCT Qty. to Cancel (Base)"; Decimal)
         {
             Editable = false;
             DataClassification = SystemMetadata;
             Caption = 'Qty. to Cancel (Base)';
         }
-        field(80002; "Make Order By"; Code[30])
+        field(80002; "NCT Make Order By"; Code[50])
         {
             Caption = 'Make Order By';
             Editable = false;
             DataClassification = SystemMetadata;
         }
-        field(80003; "Make Order DateTime"; DateTime)
+        field(80003; "NCT Make Order DateTime"; DateTime)
         {
             Caption = 'Make Order DateTime';
             Editable = false;
             DataClassification = SystemMetadata;
         }
 
-        field(80004; "Ref. PQ No."; Code[30])
+        field(80004; "NCT Ref. PQ No."; Code[30])
         {
             Caption = 'Ref. PR No.';
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80005; "Ref. PQ Line No."; Integer)
+        field(80005; "NCT Ref. PQ Line No."; Integer)
         {
             Caption = 'Ref. PR Line No.';
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80006; "WHT Business Posting Group"; Code[10])
+        field(80006; "NCT WHT Business Posting Group"; Code[10])
         {
             Caption = 'WHT Business Posting Group';
-            TableRelation = "WHT Business Posting Group"."Code";
+            TableRelation = "NCT WHT Business Posting Group"."Code";
             DataClassification = CustomerContent;
+
         }
-        field(80007; "Tax Invoice No."; Code[20])
+        field(80007; "NCT Tax Invoice No."; Code[20])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = CustomerContent;
         }
-        field(80008; "Tax Invoice Date"; Date)
+        field(80008; "NCT Tax Invoice Date"; Date)
         {
             Caption = 'Tax Invoice Date';
             DataClassification = CustomerContent;
         }
-        field(80009; "Tax Invoice Base"; Decimal)
+        field(80009; "NCT Tax Invoice Base"; Decimal)
         {
             Caption = 'Tax Invoice Base';
             DataClassification = CustomerContent;
 
 
         }
-        field(80010; "Tax Invoice Amount"; Decimal)
+        field(80010; "NCT Tax Invoice Amount"; Decimal)
         {
             Caption = 'Tax Invoice Amount';
             Editable = false;
             DataClassification = CustomerContent;
         }
-        field(80011; "Tax Vendor No."; Code[20])
+        field(80011; "NCT Tax Vendor No."; Code[20])
         {
             Caption = 'Tax Vendor No.';
             DataClassification = CustomerContent;
             TableRelation = Vendor."No.";
 
         }
-        field(80012; "Tax Invoice Name"; Text[150])
+        field(80012; "NCT Tax Invoice Name"; Text[100])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;
         }
-        field(80013; "Head Office"; Boolean)
+        field(80013; "NCT Head Office"; Boolean)
         {
             Caption = 'Tax Head Office';
             DataClassification = CustomerContent;
 
-
-
         }
-        field(80014; "Branch Code"; Code[5])
+        field(80014; "NCT Branch Code"; Code[5])
         {
             Caption = 'Tax Branch Code';
             DataClassification = CustomerContent;
 
+
         }
-        field(80015; "Vat Registration No."; Text[20])
+        field(80015; "NCT Vat Registration No."; Text[20])
         {
             Caption = 'Vat Registration No.';
             DataClassification = CustomerContent;
         }
-        field(80016; "WHT Product Posting Group"; Code[10])
+        field(80016; "NCT WHT Product Posting Group"; Code[10])
         {
             Caption = 'WHT Product Posting Group';
-            TableRelation = "WHT Product Posting Group"."Code";
-            DataClassification = CustomerContent;
-        }
-        field(80019; "Select Vendor No."; Code[20])
-        {
-            Caption = 'Select Vendor No.';
-            DataClassification = CustomerContent;
-            TableRelation = Vendor."No.";
-        }
-        field(80020; "Select By"; Code[30])
-        {
-            Caption = 'Select By';
-            DataClassification = CustomerContent;
-            Editable = false;
-        }
-        field(80021; "Make to PO Qty."; Decimal)
-        {
-            Caption = 'Make to PO Qty.';
+            TableRelation = "NCT WHT Product Posting Group"."Code";
             DataClassification = CustomerContent;
 
         }
-        field(80023; "Tax Invoice Name 2"; Text[50])
+
+        field(80018; "NCT Tax Invoice Name 2"; Text[50])
         {
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
-        field(80024; "WHT %"; Decimal)
+        field(80019; "NCT WHT %"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'WHT %';
-
         }
-        field(80025; "WHT Base"; Decimal)
+        field(80020; "NCT WHT Base"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'WHT Base';
-
         }
-        field(80026; "WHT Amount"; Decimal)
+        field(80021; "NCT WHT Amount"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'WHT Amount';
         }
-        field(80027; "WHT Option"; Enum "WHT Option")
+        field(80022; "NCT WHT Option"; Enum "NCT WHT Option")
         {
-
             Caption = 'WHT Option';
             DataClassification = CustomerContent;
         }
-    }
 
+    }
 }

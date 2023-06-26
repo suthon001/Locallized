@@ -1,17 +1,20 @@
-pageextension 80065 "Sales Invoice Lists" extends "Sales Invoice List"
+/// <summary>
+/// PageExtension NCT Sales Invoice Lists (ID 80065) extends Record Sales Invoice List.
+/// </summary>
+pageextension 80065 "NCT Sales Invoice Lists" extends "Sales Invoice List"
 {
     PromotedActionCategories = 'New,Process,Print,Request Approval,Credit Memo,Release,Posting,Navigate';
     layout
     {
         addbefore(Status)
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
@@ -46,7 +49,7 @@ pageextension 80065 "Sales Invoice Lists" extends "Sales Invoice List"
                 ToolTip = 'Executes the AR Voucher action.';
                 trigger OnAction()
                 var
-                    ARVoucher: Report "AR Voucher";
+                    ARVoucher: Report "NCT AR Voucher";
                     SalesHeader: Record "Sales Header";
                 begin
                     SalesHeader.reset();
@@ -71,7 +74,7 @@ pageextension 80065 "Sales Invoice Lists" extends "Sales Invoice List"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Report Sales Invoice", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Report Sales Invoice", TRUE, TRUE, RecSalesHeader);
                 end;
             }
             action("Print_DebitNote")
@@ -90,7 +93,7 @@ pageextension 80065 "Sales Invoice Lists" extends "Sales Invoice List"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Debit Note", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Debit Note", TRUE, TRUE, RecSalesHeader);
                 end;
             }
         }

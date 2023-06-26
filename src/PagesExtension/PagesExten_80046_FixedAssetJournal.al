@@ -1,4 +1,7 @@
-pageextension 80046 "FixedJournalLIne" extends "Fixed Asset Journal"
+/// <summary>
+/// PageExtension NCT FixedJournalLIne (ID 80046) extends Record Fixed Asset Journal.
+/// </summary>
+pageextension 80046 "NCT FixedJournalLIne" extends "Fixed Asset Journal"
 {
     layout
     {

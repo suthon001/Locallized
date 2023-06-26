@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension Sales Order Subpage (ID 80064) extends Record Sales Order Subform.
 /// </summary>
-pageextension 80064 "Sales Order Subpage" extends "Sales Order Subform"
+pageextension 80064 "NCT Sales Order Subpage" extends "Sales Order Subform"
 {
     layout
     {
@@ -64,12 +64,12 @@ pageextension 80064 "Sales Order Subpage" extends "Sales Order Subform"
         moveafter("Location Code"; "Gen. Bus. Posting Group", "Gen. Prod. Posting Group", "VAT Bus. Posting Group", "VAT Prod. Posting Group")
         addafter("VAT Prod. Posting Group")
         {
-            field("WHT Business Posting Group"; Rec."WHT Business Posting Group")
+            field("WHT Business Posting Group"; Rec."NCT WHT Business Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("WHT Product Posting Group"; rec."WHT Product Posting Group")
+            field("WHT Product Posting Group"; rec."NCT WHT Product Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

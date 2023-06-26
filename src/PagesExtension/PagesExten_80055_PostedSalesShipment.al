@@ -1,4 +1,7 @@
-pageextension 80055 "PostedSalesShipment" extends "Posted Sales Shipment"
+/// <summary>
+/// PageExtension NCT PostedSalesShipment (ID 80055) extends Record Posted Sales Shipment.
+/// </summary>
+pageextension 80055 "NCT PostedSalesShipment" extends "Posted Sales Shipment"
 {
     PromotedActionCategories = 'New,Process,Report,Print/Send,Shipment';
     actions
@@ -21,7 +24,7 @@ pageextension 80055 "PostedSalesShipment" extends "Posted Sales Shipment"
                 begin
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Sales Shipment", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Sales Shipment", TRUE, TRUE, RecSalesHeader);
                 end;
             }
 

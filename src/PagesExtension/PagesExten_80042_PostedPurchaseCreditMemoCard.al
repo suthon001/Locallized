@@ -1,5 +1,7 @@
-pageextension 80042 "PostedPurchCreditMemoCard" extends "Posted Purchase Credit Memo"
-
+/// <summary>
+/// PageExtension PostedPurchCreditMemoCard (ID 80042) extends Record Posted Purchase Credit Memo.
+/// </summary>
+pageextension 80042 "NCT PostedPurchCreditMemoCard" extends "Posted Purchase Credit Memo"
 {
     layout
     {
@@ -12,13 +14,13 @@ pageextension 80042 "PostedPurchCreditMemoCard" extends "Posted Purchase Credit 
                 ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
 
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';

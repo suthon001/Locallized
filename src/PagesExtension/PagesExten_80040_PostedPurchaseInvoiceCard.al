@@ -1,4 +1,7 @@
-pageextension 80040 "PostedInvoiceCard" extends "Posted Purchase Invoice"
+/// <summary>
+/// PageExtension PostedInvoiceCard (ID 80040) extends Record Posted Purchase Invoice.
+/// </summary>
+pageextension 80040 "NCT PostedInvoiceCard" extends "Posted Purchase Invoice"
 {
     layout
     {
@@ -11,13 +14,13 @@ pageextension 80040 "PostedInvoiceCard" extends "Posted Purchase Invoice"
                 ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
 
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';

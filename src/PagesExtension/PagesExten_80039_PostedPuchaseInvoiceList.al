@@ -1,4 +1,7 @@
-pageextension 80039 "PostedInvoiceList" extends "Posted Purchase Invoices"
+/// <summary>
+/// PageExtension PostedInvoiceList (ID 80039) extends Record Posted Purchase Invoices.
+/// </summary>
+pageextension 80039 "NCT PostedInvoiceList" extends "Posted Purchase Invoices"
 {
     layout
     {
@@ -47,12 +50,12 @@ pageextension 80039 "PostedInvoiceList" extends "Posted Purchase Invoices"
         "Currency Code", "Location Code", "Payment Method Code", "Payment Terms Code", Amount, "Amount Including VAT", "Remaining Amount")
         addafter("Remaining Amount")
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Tax Branch Code field.';

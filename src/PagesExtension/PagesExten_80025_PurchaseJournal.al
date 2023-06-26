@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension PurchaseJournal (ID 80025) extends Record Purchase Journal.
 /// </summary>
-pageextension 80025 "PurchaseJournal" extends "Purchase Journal"
+pageextension 80025 "NCT PurchaseJournal" extends "Purchase Journal"
 {
     layout
     {
@@ -15,7 +15,7 @@ pageextension 80025 "PurchaseJournal" extends "Purchase Journal"
         }
         addafter(Description)
         {
-            field("Journal Description"; Rec."Journal Description")
+            field("Journal Description"; Rec."NCT Journal Description")
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Journal Description field.';

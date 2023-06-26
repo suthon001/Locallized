@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension CustomerStaticFacbox (ID 80027) extends Record Customer Statistics FactBox.
 /// </summary>
-pageextension 80027 "CustomerStaticFacbox" extends "Customer Statistics FactBox"
+pageextension 80027 "NCT CustomerStaticFacbox" extends "Customer Statistics FactBox"
 {
 
     layout

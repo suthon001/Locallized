@@ -1,16 +1,19 @@
-pageextension 80078 "Sales Credit Memo Card" extends "Sales Credit Memo"
+/// <summary>
+/// PageExtension NCT Sales Credit Memo Card (ID 80078) extends Record Sales Credit Memo.
+/// </summary>
+pageextension 80078 "NCT Sales Credit Memo Card" extends "Sales Credit Memo"
 {
     PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Credit Memo,Request Approval,Navigate';
     layout
     {
         addbefore(Status)
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -48,7 +51,7 @@ pageextension 80078 "Sales Credit Memo Card" extends "Sales Credit Memo"
                 ToolTip = 'Show Report';
                 trigger OnAction()
                 var
-                    ARCNVoucher: Report "AR CN Voucher";
+                    ARCNVoucher: Report "NCT AR CN Voucher";
                     SalesHeader: Record "Sales Header";
                 begin
                     SalesHeader.RESET();
@@ -73,7 +76,7 @@ pageextension 80078 "Sales Credit Memo Card" extends "Sales Credit Memo"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Report Sales Credit Memo", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Report Sales Credit Memo", TRUE, TRUE, RecSalesHeader);
                 end;
             }
         }

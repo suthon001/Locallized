@@ -1,19 +1,19 @@
 /// <summary>
 /// PageExtension Purchase Quotes Lists (ID 80011) extends Record Purchase Quotes.
 /// </summary>
-pageextension 80011 "Purchase Quotes Lists" extends "Purchase Quotes"
+pageextension 80011 "NCT Purchase Quotes Lists" extends "Purchase Quotes"
 {
 
     layout
     {
         addlast(Control1)
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Tax Branch Code field.';
@@ -24,7 +24,7 @@ pageextension 80011 "Purchase Quotes Lists" extends "Purchase Quotes"
                 Caption = 'VAT Registration No.';
                 ToolTip = 'Specifies the value of the VAT Registration No. field.';
             }
-            field("Purchase Order No."; rec."Purchase Order No.")
+            field("Purchase Order No."; rec."NCT Purchase Order No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Purchase Order No. field.';
@@ -65,7 +65,7 @@ pageextension 80011 "Purchase Quotes Lists" extends "Purchase Quotes"
                     PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"PurchaseQuotes", true, true, PurchaseHeader);
+                    REPORT.RunModal(REPORT::"NCT PurchaseQuotes", true, true, PurchaseHeader);
                 end;
             }
         }

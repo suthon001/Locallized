@@ -1,4 +1,7 @@
-pageextension 80058 "PostedReturnReceiptCard" extends "Posted Return Receipt"
+/// <summary>
+/// PageExtension NCT PostedReturnReceiptCard (ID 80058) extends Record Posted Return Receipt.
+/// </summary>
+pageextension 80058 "NCT PostedReturnReceiptCard" extends "Posted Return Receipt"
 {
 
     actions
@@ -22,7 +25,7 @@ pageextension 80058 "PostedReturnReceiptCard" extends "Posted Return Receipt"
                 begin
                     ReturnHeader.RESET();
                     ReturnHeader.SetRange("Return Order No.", rec."No.");
-                    Report.Run(Report::"Sales Return Receipt", TRUE, TRUE, ReturnHeader);
+                    Report.Run(Report::"NCT Sales Return Receipt", TRUE, TRUE, ReturnHeader);
                 end;
             }
         }

@@ -1,4 +1,7 @@
-pageextension 80087 "ItemsLookup" extends "Item Lookup"
+/// <summary>
+/// PageExtension NCT ItemsLookup (ID 80087) extends Record Item Lookup.
+/// </summary>
+pageextension 80087 "NCT ItemsLookup" extends "Item Lookup"
 {
     layout
     {

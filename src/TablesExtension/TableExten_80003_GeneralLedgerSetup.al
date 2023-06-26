@@ -1,43 +1,43 @@
 /// <summary>
-/// TableExtension ExtenGeneral Ledger Setup (ID 80003) extends Record General Ledger Setup.
+/// TableExtension NCT ExtenGeneral Ledger Setup (ID 80003) extends Record General Ledger Setup.
 /// </summary>
-tableextension 80003 "ExtenGeneral Ledger Setup" extends "General Ledger Setup"
+tableextension 80003 "NCT ExtenGeneral Ledger Setup" extends "General Ledger Setup"
 {
     fields
     {
-        field(80000; "No. of Copy WHT Cert."; Integer)
+        field(80000; "NCT No. of Copy WHT Cert."; Integer)
         {
             Caption = 'No. of Copy WHT Cert.';
             MinValue = 0;
             DataClassification = CustomerContent;
         }
-        field(80001; "No. of Perpage"; Integer)
+        field(80001; "NCT No. of Perpage"; Integer)
         {
             Caption = 'No. of Perpage';
             MinValue = 0;
             DataClassification = CustomerContent;
         }
-        field(80002; "WHT Certificate Caption 1"; Text[1024])
+        field(80002; "NCT WHT Certificate Caption 1"; Text[1024])
         {
             Caption = 'WHT Certificate Caption 1';
             DataClassification = CustomerContent;
         }
-        field(80003; "WHT Certificate Caption 2"; Text[1024])
+        field(80003; "NCT WHT Certificate Caption 2"; Text[1024])
         {
             Caption = 'WHT Certificate Caption 2';
             DataClassification = CustomerContent;
         }
-        field(80004; "WHT Certificate Caption 3"; Text[1024])
+        field(80004; "NCT WHT Certificate Caption 3"; Text[1024])
         {
             Caption = 'WHT Certificate Caption 3';
             DataClassification = CustomerContent;
         }
-        field(80005; "WHT Certificate Caption 4"; Text[1024])
+        field(80005; "NCT WHT Certificate Caption 4"; Text[1024])
         {
             Caption = 'WHT Certificate Caption 4';
             DataClassification = CustomerContent;
         }
-        field(80006; "WHT Document Nos."; Code[20])
+        field(80006; "NCT WHT Document Nos."; Code[20])
         {
             Caption = 'WHT Document Nos.';
             TableRelation = "No. Series";

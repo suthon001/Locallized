@@ -1,4 +1,7 @@
-pageextension 80068 "Purchase Order Lists" extends "Purchase Order List"
+/// <summary>
+/// PageExtension NCT Purchase Order Lists (ID 80068) extends Record Purchase Order List.
+/// </summary>
+pageextension 80068 "NCT Purchase Order Lists" extends "Purchase Order List"
 {
     layout
     {
@@ -8,13 +11,13 @@ pageextension 80068 "Purchase Order Lists" extends "Purchase Order List"
         }
         addlast(Control1)
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
@@ -70,7 +73,7 @@ pageextension 80068 "Purchase Order Lists" extends "Purchase Order List"
                     PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"PurchaseOrder", true, true, PurchaseHeader);
+                    REPORT.RunModal(REPORT::"NCT PurchaseOrder", true, true, PurchaseHeader);
                 end;
             }
         }

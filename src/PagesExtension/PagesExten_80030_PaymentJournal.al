@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension Payment Journal (ID 80030) extends Record Payment Journal.
+/// PageExtension NCT Payment Journal (ID 80030) extends Record Payment Journal.
 /// </summary>
-pageextension 80030 "Payment Journal" extends "Payment Journal"
+pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Bank,Prepare,Approve,Page,Post/Print,Line,Account,Check';
     layout
@@ -16,7 +16,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
         }
         addafter("VAT Amount")
         {
-            field("Require Screen Detail"; Rec."Require Screen Detail")
+            field("Require Screen Detail"; Rec."NCT Require Screen Detail")
             {
                 ApplicationArea = all;
                 Caption = 'Require Screen Detail';
@@ -26,13 +26,13 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
         addafter(Description)
         {
 
-            field("Pay Name"; Rec."Pay Name")
+            field("Pay Name"; Rec."NCT Pay Name")
             {
                 ApplicationArea = all;
                 Caption = 'Pay Name';
                 ToolTip = 'Specifies the value of the Pay Name field.';
             }
-            field("Journal Description"; Rec."Journal Description")
+            field("Journal Description"; Rec."NCT Journal Description")
             {
                 ApplicationArea = all;
                 Caption = 'Journal Description';
@@ -94,21 +94,21 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 ToolTip = 'Executes the Show Detail Vat & Cheque action.';
                 trigger OnAction()
                 var
-                    ShowDetailCheque: Page "ShowDetail Cheque";
-                    ShowDetailVAT: Page "ShowDetail Vat";
+                    ShowDetailCheque: Page "NCT ShowDetail Cheque";
+                    ShowDetailVAT: Page "NCT ShowDetail Vat";
                     GenLineDetail: Record "Gen. Journal Line";
 
                 begin
-                    Rec.TestField("Require Screen Detail");
+                    Rec.TestField("NCT Require Screen Detail");
                     Rec.TestField("Document No.");
                     CLEAR(ShowDetailVAT);
                     CLEAR(ShowDetailCheque);
-                    if Rec."Require Screen Detail" IN [Rec."Require Screen Detail"::VAT, Rec."Require Screen Detail"::CHEQUE] then begin
+                    if Rec."NCT Require Screen Detail" IN [Rec."NCT Require Screen Detail"::VAT, Rec."NCT Require Screen Detail"::CHEQUE] then begin
                         GenLineDetail.reset();
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
-                        if Rec."Require Screen Detail" = Rec."Require Screen Detail"::CHEQUE then begin
+                        if Rec."NCT Require Screen Detail" = Rec."NCT Require Screen Detail"::CHEQUE then begin
                             ShowDetailCheque.SetTableView(GenLineDetail);
                             ShowDetailCheque.RunModal();
                             CLEAR(ShowDetailCheque);
@@ -141,7 +141,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                     GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLIne.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"Payment Voucher", true, false, GenJournalLIne);
+                    REPORT.RunModal(REPORT::"NCT Payment Voucher", true, false, GenJournalLIne);
 
                 end;
             }
@@ -158,12 +158,12 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
                 var
                     GenLines: Record "Gen. Journal Line";
                 begin
-                    rec.TestField("Require Screen Detail", rec."Require Screen Detail"::CHEQUE);
+                    rec.TestField("NCT Require Screen Detail", rec."NCT Require Screen Detail"::CHEQUE);
                     GenLines.reset();
                     GenLines.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenLines.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenLines.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"Payment Cheque", true, true, GenLines);
+                    REPORT.RunModal(REPORT::"NCT Payment Cheque", true, true, GenLines);
                 end;
             }
         }
@@ -212,29 +212,29 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
     procedure InsertWHTCertificate()
     var
         GeneralSetup: Record "General Ledger Setup";
-        WHTHeader: Record "WHT Header";
+        WHTHeader: Record "NCT WHT Header";
         NosMgt: Codeunit NoSeriesManagement;
         GenJnlLine: Record "Gen. Journal Line";
         Vendor: Record Vendor;
         Customer: Record Customer;
         WHTDocNo: Code[30];
-        PageWHTCer: Page "WHT Certificate";
-        whtBusPostingGroup: Record "WHT Business Posting Group";
+        PageWHTCer: Page "NCT WHT Certificate";
+        whtBusPostingGroup: Record "NCT WHT Business Posting Group";
         GenJnlLine3: Record "Gen. Journal Line";
     begin
-        if Rec."WHT Document No." = '' then begin
+        if Rec."NCT WHT Document No." = '' then begin
             GenJnlLine3.Reset();
             GenJnlLine3.SetRange("Journal Template Name", Rec."Journal Template Name");
             GenJnlLine3.SetRange("Journal Batch Name", Rec."Journal Batch Name");
             GenJnlLine3.SetRange("Document No.", Rec."Document No.");
-            GenJnlLine3.SetFilter("WHT Document No.", '<>%1', '');
+            GenJnlLine3.SetFilter("NCT WHT Document No.", '<>%1', '');
             if not GenJnlLine3.IsEmpty() then
                 if not Confirm('This document already have wht certificate do you want to create more wht certificate ?') then
                     exit;
         end;
         GeneralSetup.GET();
-        GeneralSetup.TESTFIELD("WHT Document Nos.");
-        IF Rec."WHT Document No." = '' THEN BEGIN
+        GeneralSetup.TESTFIELD("NCT WHT Document Nos.");
+        IF Rec."NCT WHT Document No." = '' THEN BEGIN
             IF NOT CONFIRM('Do you want to create wht certificated') THEN
                 EXIT;
 
@@ -242,12 +242,12 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
             GenJnlLine.SETRANGE("Journal Template Name", Rec."Journal Template Name");
             GenJnlLine.SETRANGE("Journal Batch Name", Rec."Journal Batch Name");
             GenJnlLine.SETRANGE("Document No.", Rec."Document No.");
-            GenJnlLine.SETRANGE("Require Screen Detail", GenJnlLine."Require Screen Detail"::WHT);
+            GenJnlLine.SETRANGE("NCT Require Screen Detail", GenJnlLine."NCT Require Screen Detail"::WHT);
             GenJnlLine.SETFILTER("Account Type", '%1|%2|%3', GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Customer, GenJnlLine."Account Type"::"G/L Account");
             GenJnlLine.SETFILTER("Account No.", '<>%1', '');
             IF GenJnlLine.FindFirst() THEN BEGIN
                 WHTHeader.INIT();
-                WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."WHT Document Nos.", Rec."Posting Date", TRUE);
+                WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."NCT WHT Document Nos.", Rec."Posting Date", TRUE);
                 WHTDocNo := WHTHeader."WHT No.";
                 WHTHeader."Gen. Journal Template Code" := Rec."Journal Template Name";
                 WHTHeader."Gen. Journal Batch Code" := Rec."Journal Batch Name";
@@ -274,7 +274,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
             WHTHeader.INSERT();
             Rec.Modify();
         END ELSE
-            WHTDocNo := Rec."WHT Document No.";
+            WHTDocNo := Rec."NCT WHT Document No.";
         commit();
         CLEAR(PageWHTCer);
         WHTHeader.reset();
@@ -287,7 +287,7 @@ pageextension 80030 "Payment Journal" extends "Payment Journal"
 
     trigger OnDeleteRecord(): Boolean
     var
-        WHTEader: Record "WHT Header";
+        WHTEader: Record "NCT WHT Header";
     begin
         WHTEader.reset();
         WHTEader.SetRange("Gen. Journal Template Code", Rec."Journal Template Name");

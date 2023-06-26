@@ -1,4 +1,7 @@
-pageextension 80056 "SalesBlanketCard" extends "Blanket Sales Order"
+/// <summary>
+/// PageExtension NCT SalesBlanketCard (ID 80056) extends Record Blanket Sales Order.
+/// </summary>
+pageextension 80056 "NCT SalesBlanketCard" extends "Blanket Sales Order"
 {
     actions
     {
@@ -21,7 +24,7 @@ pageextension 80056 "SalesBlanketCard" extends "Blanket Sales Order"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Report Sales Blanket", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Report Sales Blanket", TRUE, TRUE, RecSalesHeader);
                 end;
             }
 

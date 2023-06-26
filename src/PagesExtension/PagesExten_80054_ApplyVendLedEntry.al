@@ -1,4 +1,7 @@
-pageextension 80054 "ApplyVendLedgEntry" extends "Apply Vendor Entries"
+/// <summary>
+/// PageExtension ApplyVendLedgEntry (ID 80054) extends Record Apply Vendor Entries.
+/// </summary>
+pageextension 80054 "NCT ApplyVendLedgEntry" extends "Apply Vendor Entries"
 {
     layout
     {
@@ -9,13 +12,14 @@ pageextension 80054 "ApplyVendLedgEntry" extends "Apply Vendor Entries"
                 ApplicationArea = All;
                 Editable = false;
                 ToolTip = 'Specifies the value of the PurchBillingDocNo field.';
+                Caption = 'Purchase Billing No.';
             }
         }
     }
 
     trigger OnAfterGetRecord()
     var
-        PurchBillingLine: Record "Billing Receipt Line";
+        PurchBillingLine: Record "NCT Billing Receipt Line";
     begin
         PurchBillingDocNo := '';
         PurchBillingLine.reset();

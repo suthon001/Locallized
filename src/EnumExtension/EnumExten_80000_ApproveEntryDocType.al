@@ -1,21 +1,21 @@
 /// <summary>
-/// EnumExtension ApproveEntryDocType (ID 80000) extends Record Approval Document Type.
+/// EnumExtension NCT ApproveEntryDocType (ID 80000) extends Record Approval Document Type.
 /// </summary>
-enumextension 80000 "ApproveEntryDocType" extends "Approval Document Type"
+enumextension 80000 "NCT ApproveEntryDocType" extends "Approval Document Type"
 {
-    value(80000; "Item Journal")
+    value(80000; "NCT Item Journal")
     {
         Caption = 'Item Journal';
     }
-    value(80001; "Sales Billing")
+    value(80001; "NCT Sales Billing")
     {
         Caption = 'Sales Billing';
     }
-    value(80002; "Sales Receipt")
+    value(80002; "NCT Sales Receipt")
     {
         Caption = 'Sales Receipt';
     }
-    value(80003; "Purchase Billing")
+    value(80003; "NCT Purchase Billing")
     {
         Caption = 'Purchase Billing';
     }

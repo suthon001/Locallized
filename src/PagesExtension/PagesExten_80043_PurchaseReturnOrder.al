@@ -1,4 +1,7 @@
-pageextension 80043 "PurchaseReturnOrderCard" extends "Purchase Return Order"
+/// <summary>
+/// PageExtension NCT PurchaseReturnOrderCard (ID 80043) extends Record Purchase Return Order.
+/// </summary>
+pageextension 80043 "NCT PurchaseReturnOrderCard" extends "Purchase Return Order"
 
 {
     layout
@@ -54,7 +57,7 @@ pageextension 80043 "PurchaseReturnOrderCard" extends "Purchase Return Order"
                     PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"PurchaseReturnOrder", true, true, PurchaseHeader);
+                    REPORT.RunModal(REPORT::"NCT PurchaseReturnOrder", true, true, PurchaseHeader);
                 end;
             }
         }

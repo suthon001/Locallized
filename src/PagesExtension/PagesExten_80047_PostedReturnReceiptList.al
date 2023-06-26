@@ -1,4 +1,7 @@
-pageextension 80047 "PostedReturnReceipt" extends "Posted Return Receipts"
+/// <summary>
+/// PageExtension NCT PostedReturnReceipt (ID 80047) extends Record Posted Return Receipts.
+/// </summary>
+pageextension 80047 "NCT PostedReturnReceipt" extends "Posted Return Receipts"
 {
     PromotedActionCategories = 'New,Process,Print';
     actions
@@ -21,7 +24,7 @@ pageextension 80047 "PostedReturnReceipt" extends "Posted Return Receipts"
                 begin
                     ReturnHeader.RESET();
                     ReturnHeader.SetRange("Return Order No.", rec."No.");
-                    Report.Run(Report::"Sales Return Receipt", TRUE, TRUE, ReturnHeader);
+                    Report.Run(Report::"NCT Sales Return Receipt", TRUE, TRUE, ReturnHeader);
                 end;
             }
         }

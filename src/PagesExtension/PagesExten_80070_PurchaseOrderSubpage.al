@@ -1,15 +1,18 @@
-pageextension 80070 "Purchase Order Subpage" extends "Purchase Order Subform"
+/// <summary>
+/// PageExtension NCT Purchase Order Subpage (ID 80070) extends Record Purchase Order Subform.
+/// </summary>
+pageextension 80070 "NCT Purchase Order Subpage" extends "Purchase Order Subform"
 {
     layout
     {
         addfirst(Control1)
         {
-            field("Ref. PQ No."; rec."Ref. PQ No.")
+            field("Ref. PQ No."; rec."NCT Ref. PQ No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Ref. PR No. field.';
             }
-            field("Ref. PQ Line No."; rec."Ref. PQ Line No.")
+            field("Ref. PQ Line No."; rec."NCT Ref. PQ Line No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Ref. PR Line No. field.';
@@ -68,13 +71,11 @@ pageextension 80070 "Purchase Order Subpage" extends "Purchase Order Subform"
     var
         PQLine: Record "Purchase Line";
     begin
-        if rec."Ref. PQ No." <> '' then
-            if PQLine.GET(PQLine."Document Type"::Quote, rec."Ref. PQ No.", rec."Ref. PQ Line No.") then begin
+        if rec."NCT Ref. PQ No." <> '' then
+            if PQLine.GET(PQLine."Document Type"::Quote, rec."NCT Ref. PQ No.", rec."NCT Ref. PQ Line No.") then begin
                 PQLine."Outstanding Quantity" := PQLine."Outstanding Quantity" + rec.Quantity;
                 PQLine."Outstanding Qty. (Base)" := PQLine."Outstanding Qty. (Base)" + rec."Quantity (Base)";
                 PQLine."Completely Received" := PQLine."Outstanding Quantity" = 0;
-                PQLine."Make to PO Qty." := PQLine."Outstanding Quantity";
-                PQLine."Make to PO Qty. (Base)" := PQLine."Outstanding Qty. (Base)";
                 PQLine.Modify();
             end;
     end;

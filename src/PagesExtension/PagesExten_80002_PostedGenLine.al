@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension ExtenPostPostedGenLine (ID 80002) extends Record Posted General Journal.
 /// </summary>
-pageextension 80002 "ExtenPostPostedGenLine" extends "Posted General Journal"
+pageextension 80002 "NCT ExtenPostPostedGenLine" extends "Posted General Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Navigate,Show Detail';
     layout
@@ -13,7 +13,7 @@ pageextension 80002 "ExtenPostPostedGenLine" extends "Posted General Journal"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the External Document No. field.';
             }
-            field("Require Screen Detail"; Rec."Require Screen Detail")
+            field("Require Screen Detail"; Rec."NCT Require Screen Detail")
             {
                 ApplicationArea = all;
                 Caption = 'Require Screen Detail';
@@ -44,7 +44,7 @@ pageextension 80002 "ExtenPostPostedGenLine" extends "Posted General Journal"
                     PostedGenLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     PostedGenLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     PostedGenLine.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"Posted Voucher", true, false, PostedGenLine);
+                    REPORT.RunModal(REPORT::"NCT Posted Voucher", true, false, PostedGenLine);
                 end;
             }
         }
@@ -63,43 +63,43 @@ pageextension 80002 "ExtenPostPostedGenLine" extends "Posted General Journal"
                 ToolTip = 'Executes the Show Details action.';
                 trigger OnAction()
                 var
-                    ShowDetailCheque: Page "Posted ShowDetail Cheque";
-                    ShowDetailVAT: Page "Posted ShowDetail Vat";
-                    ShowDetailWHT: Page "PostedShowDetailWHT";
+                    ShowDetailCheque: Page "NCT Posted ShowDetail Cheque";
+                    ShowDetailVAT: Page "NCT Posted ShowDetail Vat";
+                    ShowDetailWHT: Page "NCT PostedShowDetailWHT";
                     GenLineDetail: Record "Posted Gen. Journal Line";
-                    WHTCertificates: Page "WHT Certificate";
-                    WHTCertificate: Record "WHT Header";
+                    WHTCertificates: Page "NCT WHT Certificate";
+                    WHTCertificate: Record "NCT WHT Header";
 
                 begin
-                    Rec.TestField("Require Screen Detail");
+                    Rec.TestField("NCT Require Screen Detail");
                     Rec.TestField("Document No.");
                     CLEAR(ShowDetailVAT);
                     CLEAR(ShowDetailCheque);
                     CLEAR(WHTCertificates);
-                    if Rec."Require Screen Detail" IN [Rec."Require Screen Detail"::VAT, Rec."Require Screen Detail"::CHEQUE] then begin
+                    if Rec."NCT Require Screen Detail" IN [Rec."NCT Require Screen Detail"::VAT, Rec."NCT Require Screen Detail"::CHEQUE] then begin
                         GenLineDetail.reset();
                         GenLineDetail.SetRange("Journal Template Name", Rec."Journal Template Name");
                         GenLineDetail.SetRange("Journal Batch Name", Rec."Journal Batch Name");
                         GenLineDetail.SetRange("Line No.", Rec."Line No.");
-                        if Rec."Require Screen Detail" = Rec."Require Screen Detail"::CHEQUE then begin
+                        if Rec."NCT Require Screen Detail" = Rec."NCT Require Screen Detail"::CHEQUE then begin
                             ShowDetailCheque.SetTableView(GenLineDetail);
                             ShowDetailCheque.RunModal();
                             CLEAR(ShowDetailCheque);
                         end else
-                            if Rec."Require Screen Detail" = Rec."Require Screen Detail"::VAT then begin
+                            if Rec."NCT Require Screen Detail" = Rec."NCT Require Screen Detail"::VAT then begin
                                 ShowDetailVAT.SetTableView(GenLineDetail);
                                 ShowDetailVAT.RunModal();
                                 CLEAR(ShowDetailVAT);
                             end;
                     end else
-                        if Rec."Require Screen Detail" = Rec."Require Screen Detail"::WHT then begin
-                            if rec."Template Source Type" = rec."Template Source Type"::"Cash Receipts" then begin
+                        if Rec."NCT Require Screen Detail" = Rec."NCT Require Screen Detail"::WHT then begin
+                            if rec."NCT Template Source Type" = rec."NCT Template Source Type"::"Cash Receipts" then begin
                                 ShowDetailWHT.SetTableView(GenLineDetail);
                                 ShowDetailWHT.RunModal();
                                 Clear(ShowDetailWHT);
                             end else begin
                                 WHTCertificate.reset();
-                                WHTCertificate.SetRange("WHT No.", Rec."WHT Document No.");
+                                WHTCertificate.SetRange("WHT No.", Rec."NCT WHT Document No.");
                                 WHTCertificate.SetRange("Posted", true);
                                 WHTCertificates.SetTableView(WHTCertificate);
                                 WHTCertificates.Editable := false;

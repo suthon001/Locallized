@@ -1,20 +1,23 @@
-pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
+/// <summary>
+/// PageExtension NCT FixedAssetList (ID 80060) extends Record Fixed Asset List.
+/// </summary>
+pageextension 80060 "NCT FixedAssetList" extends "Fixed Asset List"
 {
     layout
     {
         addlast(Control1)
         {
-            field("Quantity"; rec."Quantity")
+            field("Quantity"; rec."NCT Quantity")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Quantity field.';
             }
-            field("Price per Unit"; rec."Price per Unit")
+            field("Price per Unit"; rec."NCT Price per Unit")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Price per Unit field.';
             }
-            field("Remark Real Location"; rec."Remark Real Location")
+            field("Remark Real Location"; rec."NCT Remark Real Location")
             {
                 ApplicationArea = all;
                 Caption = 'Location Detail';
@@ -23,7 +26,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
         }
         addafter("Search Description")
         {
-            field("Acq. Date"; rec."Acq. Date")
+            field("Acq. Date"; rec."NCT Acq. Date")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Acq. Date field.';
@@ -66,7 +69,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                     Commit();
                     fixsset.RESET();
                     fixsset.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Fixed Asset Card", TRUE, TRUE, fixsset);
+                    Report.Run(Report::"NCT Fixed Asset Card", TRUE, TRUE, fixsset);
                 end;
             }
 
@@ -132,7 +135,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedCategory = Report;
                 PromotedIsBig = true;
                 Image = PrintReport;
-                RunObject = Report "Fixed Asset Purchase";
+                RunObject = Report "NCT Fixed Asset Purchase";
                 ToolTip = 'Executes the Fixed Asset Purchase action.';
             }
             action("Fixed Asset Write off")
@@ -143,7 +146,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedCategory = Report;
                 PromotedIsBig = true;
                 Image = PrintReport;
-                RunObject = Report "Fixed Asset Write off";
+                RunObject = Report "NCT Fixed Asset Write off";
                 ToolTip = 'Executes the Fixed Asset Write off action.';
             }
             action("Fixed Asset Sales")
@@ -154,7 +157,7 @@ pageextension 80060 "FixedAssetList" extends "Fixed Asset List"
                 PromotedCategory = Report;
                 PromotedIsBig = true;
                 Image = PrintReport;
-                RunObject = Report "Fixed Asset Sales";
+                RunObject = Report "NCT Fixed Asset Sales";
                 ToolTip = 'Executes the Fixed Asset Sales action.';
             }
 

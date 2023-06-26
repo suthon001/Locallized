@@ -1,4 +1,7 @@
-pageextension 80067 "Sales Invoice Subpage" extends "Sales Invoice Subform"
+/// <summary>
+/// PageExtension Sales Invoice Subpage (ID 80067) extends Record Sales Invoice Subform.
+/// </summary>
+pageextension 80067 "NCT Sales Invoice Subpage" extends "Sales Invoice Subform"
 {
     layout
     {
@@ -27,12 +30,12 @@ pageextension 80067 "Sales Invoice Subpage" extends "Sales Invoice Subform"
         moveafter("Location Code"; "Gen. Bus. Posting Group", "Gen. Prod. Posting Group", "VAT Bus. Posting Group", "VAT Prod. Posting Group")
         addafter("VAT Prod. Posting Group")
         {
-            field("WHT Business Posting Group"; Rec."WHT Business Posting Group")
+            field("WHT Business Posting Group"; Rec."NCT WHT Business Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("WHT Product Posting Group"; rec."WHT Product Posting Group")
+            field("WHT Product Posting Group"; rec."NCT WHT Product Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

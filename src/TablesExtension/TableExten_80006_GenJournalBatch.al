@@ -1,11 +1,11 @@
 /// <summary>
-/// TableExtension ExtenGen.Journal Batch (ID 80006) extends Record Gen. Journal Batch.
+/// TableExtension NCT ExtenGen.Journal Batch (ID 80006) extends Record Gen. Journal Batch.
 /// </summary>
-tableextension 80006 "ExtenGen.Journal Batch" extends "Gen. Journal Batch"
+tableextension 80006 "NCT ExtenGen.Journal Batch" extends "Gen. Journal Batch"
 {
     fields
     {
-        field(80000; "Document No. Series"; Code[20])
+        field(80000; "NCT Document No. Series"; Code[20])
         {
             Caption = 'Document No. Series';
             TableRelation = "No. Series".Code;

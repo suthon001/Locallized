@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension itemLists (ID 80032) extends Record Item List.
 /// </summary>
-pageextension 80032 "itemLists" extends "Item List"
+pageextension 80032 "NCT itemLists" extends "Item List"
 
 {
     layout

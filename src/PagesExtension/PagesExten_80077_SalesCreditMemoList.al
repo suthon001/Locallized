@@ -1,17 +1,20 @@
-pageextension 80077 "Sales Creidt Lists" extends "Sales Credit Memos"
+/// <summary>
+/// PageExtension Sales Creidt Lists (ID 80077) extends Record Sales Credit Memos.
+/// </summary>
+pageextension 80077 "NCT Sales Creidt Lists" extends "Sales Credit Memos"
 {
     PromotedActionCategories = 'New,Process,Print,Release,Posting,Credit Memo,Request Approval,Navigate';
     layout
     {
         addbefore(Status)
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
@@ -45,7 +48,7 @@ pageextension 80077 "Sales Creidt Lists" extends "Sales Credit Memos"
                 ToolTip = 'Executes the AR CN Voucher action.';
                 trigger OnAction()
                 var
-                    ARCNVoucher: Report "AR CN Voucher";
+                    ARCNVoucher: Report "NCT AR CN Voucher";
                     SalesHeader: Record "Sales Header";
                 begin
                     SalesHeader.reset();
@@ -70,7 +73,7 @@ pageextension 80077 "Sales Creidt Lists" extends "Sales Credit Memos"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Report Sales Credit Memo", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Report Sales Credit Memo", TRUE, TRUE, RecSalesHeader);
                 end;
             }
         }

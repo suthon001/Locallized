@@ -1,4 +1,7 @@
-pageextension 80090 "BankAccountCard" extends "Bank Account Card"
+/// <summary>
+/// PageExtension BankAccountCard (ID 80090) extends Record Bank Account Card.
+/// </summary>
+pageextension 80090 "NCT BankAccountCard" extends "Bank Account Card"
 {
     layout
     {

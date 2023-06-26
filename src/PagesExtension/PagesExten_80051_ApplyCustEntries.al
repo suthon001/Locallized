@@ -1,4 +1,7 @@
-pageextension 80051 "ApplyCustEntries" extends "Apply Customer Entries"
+/// <summary>
+/// PageExtension NCT ApplyCustEntries (ID 80051) extends Record Apply Customer Entries.
+/// </summary>
+pageextension 80051 "NCT ApplyCustEntries" extends "Apply Customer Entries"
 {
     layout
     {
@@ -20,7 +23,7 @@ pageextension 80051 "ApplyCustEntries" extends "Apply Customer Entries"
     }
     trigger OnAfterGetRecord()
     var
-        BillingReceiptLine: Record "Billing Receipt Line";
+        BillingReceiptLine: Record "NCT Billing Receipt Line";
     begin
         SalesBillingDocNo := '';
         BillingReceiptLine.reset();

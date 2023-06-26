@@ -36,7 +36,7 @@ pageextension 80010 "Item Reclass. Journal" extends "Item Reclass. Journal"
                     ItemJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     ItemJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     ItemJournalLine.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"ItemReclass", true, true, ItemJournalLine);
+                    REPORT.RunModal(REPORT::"NCT ItemReclass", true, true, ItemJournalLine);
                 end;
             }
         }

@@ -1,57 +1,57 @@
 /// <summary>
-/// TableExtension ExtenVendor (ID 80001) extends Record Vendor.
+/// TableExtension NCT ExtenVendor (ID 80001) extends Record Vendor.
 /// </summary>
-tableextension 80001 "ExtenVendor" extends Vendor
+tableextension 80001 "NCT ExtenVendor" extends Vendor
 {
     fields
     {
-        field(80000; "Head Office"; Boolean)
+        field(80000; "NCT Head Office"; Boolean)
         {
             Caption = 'Head Office';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "Head Office" then
-                    "Branch Code" := '';
+                if "NCT Head Office" then
+                    "NCT Branch Code" := '';
 
             end;
 
         }
-        field(80001; "Branch Code"; code[5])
+        field(80001; "NCT Branch Code"; code[5])
         {
             Caption = 'Branch Code';
-            TableRelation = "Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("No."));
+            TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("No."));
             ValidateTableRelation = true;
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
 
-                CustVendBarch: Record "Customer & Vendor Branch";
+                CustVendBarch: Record "NCT Customer & Vendor Branch";
             begin
                 CustVendBarch.reset();
                 CustVendBarch.SetRange("Source Type", CustVendBarch."Source Type"::Vendor);
                 CustVendBarch.SetRange("Source No.", "No.");
-                CustVendBarch.SetRange("Branch Code", "Branch Code");
+                CustVendBarch.SetRange("Branch Code", "NCT Branch Code");
                 if CustVendBarch.FindFirst() then begin
                     "VAT Registration No." := CustVendBarch."Vat Registration No.";
                     if CustVendBarch."Head Office" then
-                        "Branch Code" := '00000';
+                        "NCT Branch Code" := '00000';
                 end;
-                if "Branch Code" <> '' then begin
-                    if StrLen("Branch Code") < 5 then
+                if "NCT Branch Code" <> '' then begin
+                    if StrLen("NCT Branch Code") < 5 then
                         Error('Branch Code must be 5 characters');
-                    "Head Office" := false;
+                    "NCT Head Office" := false;
                 end;
-                if "Branch Code" = '00000' then begin
-                    "Head Office" := TRUE;
-                    "Branch Code" := '';
+                if "NCT Branch Code" = '00000' then begin
+                    "NCT Head Office" := TRUE;
+                    "NCT Branch Code" := '';
                 end;
             end;
         }
         field(80002; "WHT Business Posting Group"; Code[10])
         {
             Caption = 'WHT Business Posting Group';
-            TableRelation = "WHT Business Posting Group"."Code";
+            TableRelation = "NCT WHT Business Posting Group"."Code";
             DataClassification = CustomerContent;
         }
         modify(Name)
@@ -131,7 +131,7 @@ tableextension 80001 "ExtenVendor" extends Vendor
     }
     local procedure UpdateVendorCustBranch(FiledsNo: Integer; WHTResult: Text[250]; FieldsBranch: Boolean)
     var
-        VendorCustBranch: Record "Customer & Vendor Branch";
+        VendorCustBranch: Record "NCT Customer & Vendor Branch";
         VenCust: RecordRef;
         MyFieldRef: FieldRef;
         tempHeadOffice: Boolean;
@@ -194,12 +194,12 @@ tableextension 80001 "ExtenVendor" extends Vendor
 
     trigger OnInsert()
     begin
-        "Head Office" := true;
+        "NCT Head Office" := true;
     end;
 
     trigger OnDelete()
     var
-        VendorCustBranch: Record "Customer & Vendor Branch";
+        VendorCustBranch: Record "NCT Customer & Vendor Branch";
     begin
         VendorCustBranch.reset();
         VendorCustBranch.SetRange("Source Type", VendorCustBranch."Source Type"::Vendor);

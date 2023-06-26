@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension Sales Quotes Lists (ID 80016) extends Record Sales Quotes.
+/// PageExtension NCT Sales Quotes Lists (ID 80016) extends Record Sales Quotes.
 /// </summary>
-pageextension 80016 "Sales Quotes Lists" extends "Sales Quotes"
+pageextension 80016 "NCT Sales Quotes Lists" extends "Sales Quotes"
 {
     layout
     {
@@ -46,12 +46,12 @@ pageextension 80016 "Sales Quotes Lists" extends "Sales Quotes"
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -62,7 +62,7 @@ pageextension 80016 "Sales Quotes Lists" extends "Sales Quotes"
                 ToolTip = 'Specifies value of the field.';
 
             }
-            field("Sales Order No."; rec."Sales Order No.")
+            field("Sales Order No."; rec."NCT Sales Order No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -95,7 +95,7 @@ pageextension 80016 "Sales Quotes Lists" extends "Sales Quotes"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Report Sales Quotes", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Report Sales Quotes", TRUE, TRUE, RecSalesHeader);
                 end;
             }
 

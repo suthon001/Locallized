@@ -1,14 +1,14 @@
 /// <summary>
-/// TableExtension ExtenItems (ID 80002) extends Record Item.
+/// TableExtension NCT ExtenItems (ID 80002) extends Record Item.
 /// </summary>
-tableextension 80002 "ExtenItems" extends Item
+tableextension 80002 "NCT ExtenItems" extends Item
 {
     fields
     {
-        field(80000; "WHT Product Posting Group"; Code[10])
+        field(80000; "NCT WHT Product Posting Group"; Code[10])
         {
             Caption = 'WHT Product Posting Group';
-            TableRelation = "WHT Product Posting Group"."Code";
+            TableRelation = "NCT WHT Product Posting Group"."Code";
             DataClassification = CustomerContent;
         }
     }

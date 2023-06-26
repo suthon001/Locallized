@@ -1,4 +1,7 @@
-pageextension 80073 "Purchase Invoice Subpage" extends "Purch. Invoice Subform"
+/// <summary>
+/// PageExtension NCT Purchase Invoice Subpage (ID 80073) extends Record Purch. Invoice Subform.
+/// </summary>
+pageextension 80073 "NCT Purchase Invoice Subpage" extends "Purch. Invoice Subform"
 {
     layout
     {
@@ -28,12 +31,12 @@ pageextension 80073 "Purchase Invoice Subpage" extends "Purch. Invoice Subform"
         moveafter("Location Code"; "Gen. Bus. Posting Group", "Gen. Prod. Posting Group", "VAT Bus. Posting Group", "VAT Prod. Posting Group")
         addafter("VAT Prod. Posting Group")
         {
-            field("WHT Business Posting Group"; Rec."WHT Business Posting Group")
+            field("WHT Business Posting Group"; Rec."NCT WHT Business Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("WHT Product Posting Group"; rec."WHT Product Posting Group")
+            field("WHT Product Posting Group"; rec."NCT WHT Product Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -42,43 +45,43 @@ pageextension 80073 "Purchase Invoice Subpage" extends "Purch. Invoice Subform"
 
         addlast(PurchDetailLine)
         {
-            field("Tax Invoice Date"; Rec."Tax Invoice Date")
+            field("Tax Invoice Date"; Rec."NCT Tax Invoice Date")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Tax Invoice No."; Rec."Tax Invoice No.")
+            field("Tax Invoice No."; Rec."NCT Tax Invoice No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Tax Vendor No."; Rec."Tax Vendor No.")
+            field("Tax Vendor No."; Rec."NCT Tax Vendor No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Tax Invoice Name"; Rec."Tax Invoice Name")
+            field("Tax Invoice Name"; Rec."NCT Tax Invoice Name")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Tax Invoice Base"; Rec."Tax Invoice Base")
+            field("Tax Invoice Base"; Rec."NCT Tax Invoice Base")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
 
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Vat Registration No."; Rec."Vat Registration No.")
+            field("Vat Registration No."; Rec."NCT Vat Registration No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

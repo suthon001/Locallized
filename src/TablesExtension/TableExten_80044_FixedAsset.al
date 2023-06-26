@@ -1,64 +1,64 @@
 /// <summary>
-/// TableExtension FixedAsset (ID 80044) extends Record Fixed Asset.
+/// TableExtension NCT FixedAsset (ID 80044) extends Record Fixed Asset.
 /// </summary>
-tableextension 80044 "FixedAsset" extends "Fixed Asset"
+tableextension 80044 "NCT FixedAsset" extends "Fixed Asset"
 {
     fields
     {
-        field(80000; "WHT Product Posting Group"; Code[10])
+        field(80000; "NCT WHT Product Posting Group"; Code[10])
         {
             Caption = 'WHT Product Posting Group';
             DataClassification = CustomerContent;
-            TableRelation = "WHT Product Posting Group";
+            TableRelation = "NCT WHT Product Posting Group";
         }
-        field(80001; "Purchase Order No."; Code[30])
+        field(80001; "NCT Purchase Order No."; Code[30])
         {
             Caption = 'Purchase Order No.';
             DataClassification = CustomerContent;
         }
-        field(80002; "Purchase Invoice No."; Code[30])
+        field(80002; "NCT Purchase Invoice No."; Code[30])
         {
             Caption = 'Purchase Invoice No.';
             DataClassification = CustomerContent;
         }
-        field(80003; "Tax Invoice No."; Code[30])
+        field(80003; "NCT Tax Invoice No."; Code[30])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = CustomerContent;
         }
-        field(80004; "Sale Invoice No."; Code[30])
+        field(80004; "NCT Sale Invoice No."; Code[30])
         {
             Caption = 'Sale Invoice No.';
             DataClassification = CustomerContent;
         }
-        field(80005; "Price Exclude Vat"; Decimal)
+        field(80005; "NCT Price Exclude Vat"; Decimal)
         {
             Caption = 'Price Exclude Vat';
             DataClassification = CustomerContent;
 
         }
-        field(80006; "Acq. Date"; Code[30])
+        field(80006; "NCT Acq. Date"; Code[30])
         {
             Caption = 'Acq. Date';
             DataClassification = CustomerContent;
         }
-        field(80007; "Ref. Image Entry No."; Integer)
+        field(80007; "NCT Ref. Image Entry No."; Integer)
         {
             Caption = 'Ref. Image Entry No.';
             DataClassification = CustomerContent;
         }
 
-        field(80008; "Quantity"; Decimal)
+        field(80008; "NCT Quantity"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Quantity';
         }
-        field(80009; "Price per Unit"; Decimal)
+        field(80009; "NCT Price per Unit"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Price per Unit';
         }
-        field(80010; "Remark Real Location"; Text[250])
+        field(80010; "NCT Remark Real Location"; Text[250])
         {
 
             //  CalcFormula = lookup ("FA Location"."Location Detail" where(Code = field("FA Location Code")));
@@ -73,7 +73,7 @@ tableextension 80044 "FixedAsset" extends "Fixed Asset"
             begin
                 if not Falocation.GET("FA Location Code") then
                     Falocation.init();
-                "Remark Real Location" := Falocation."Location Detail";
+                "NCT Remark Real Location" := Falocation."NCT Location Detail";
             end;
         }
     }

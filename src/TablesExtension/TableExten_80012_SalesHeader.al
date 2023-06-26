@@ -1,54 +1,54 @@
 /// <summary>
-/// TableExtension ExtenSales Header (ID 80012) extends Record Sales Header.
+/// TableExtension NCT ExtenSales Header (ID 80012) extends Record Sales Header.
 /// </summary>
-tableextension 80012 "ExtenSales Header" extends "Sales Header"
+tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
 {
     fields
     {
 
-        field(80000; "WHT Business Posting Group"; Code[10])
+        field(80000; "NCT WHT Business Posting Group"; Code[10])
         {
             Caption = 'WHT Business Posting Group';
-            TableRelation = "WHT Business Posting Group"."Code";
+            TableRelation = "NCT WHT Business Posting Group"."Code";
             DataClassification = CustomerContent;
         }
-        field(80001; "Head Office"; Boolean)
+        field(80001; "NCT Head Office"; Boolean)
         {
             Caption = 'Head Office';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "Head Office" then
-                    "Branch Code" := '';
+                if "NCT Head Office" then
+                    "NCT Branch Code" := '';
             end;
 
 
         }
-        field(80002; "Branch Code"; Code[5])
+        field(80002; "NCT Branch Code"; Code[5])
         {
             Caption = 'Tax Branch Code';
-            TableRelation = "Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Sell-to Customer No."));
+            TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Sell-to Customer No."));
             DataClassification = CustomerContent;
             trigger OnValidate()
 
             begin
-                if "Branch Code" <> '' then begin
-                    if StrLen("Branch Code") <> 5 then
+                if "NCT Branch Code" <> '' then begin
+                    if StrLen("NCT Branch Code") <> 5 then
                         Error('Branch Code must be 5 characters');
-                    "Head Office" := false;
+                    "NCT Head Office" := false;
 
                 end;
-                if ("Branch Code" = '00000') OR ("Branch Code" = '') then begin
-                    "Head Office" := TRUE;
-                    "Branch Code" := '';
+                if ("NCT Branch Code" = '00000') OR ("NCT Branch Code" = '') then begin
+                    "NCT Head Office" := TRUE;
+                    "NCT Branch Code" := '';
 
                 end;
             end;
 
             trigger OnLookup()
             var
-                VendCustBranch: Record "Customer & Vendor Branch";
-                VendCustPage: Page "Cust. & Vendor BranchLists";
+                VendCustBranch: Record "NCT Customer & Vendor Branch";
+                VendCustPage: Page "NCT Cust. & Vendor BranchLists";
             begin
                 clear(VendCustPage);
                 VendCustBranch.reset();
@@ -60,13 +60,13 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
                 if VendCustPage.RunModal() IN [Action::LookupOK, Action::OK] then begin
                     VendCustPage.GetRecord(VendCustBranch);
                     if VendCustBranch."Head Office" then begin
-                        "Head Office" := true;
-                        "Branch Code" := '';
+                        "NCT Head Office" := true;
+                        "NCT Branch Code" := '';
                         "VAT Registration No." := VendCustBranch."Vat Registration No.";
                     end else
                         if VendCustBranch."Branch Code" <> '' then begin
-                            "Branch Code" := VendCustBranch."Branch Code";
-                            "Head Office" := false;
+                            "NCT Branch Code" := VendCustBranch."Branch Code";
+                            "NCT Head Office" := false;
                             "VAT Registration No." := VendCustBranch."Vat Registration No.";
                         end;
                 end;
@@ -75,41 +75,41 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
             end;
 
         }
-        field(80003; "Ref. Tax Invoice Date"; Date)
+        field(80003; "NCT Ref. Tax Invoice Date"; Date)
         {
             Caption = 'Ref. Tax Invoice Date';
             DataClassification = CustomerContent;
         }
-        field(80004; "Ref. Tax Invoice No."; Code[20])
+        field(80004; "NCT Ref. Tax Invoice No."; Code[20])
         {
             Caption = 'Ref. Tax Invoice No.';
             DataClassification = CustomerContent;
         }
-        field(80005; "Ref. Tax Invoice Amount"; Decimal)
+        field(80005; "NCT Ref. Tax Invoice Amount"; Decimal)
         {
             Caption = 'Ref. Tax Invoice Amount';
             DataClassification = CustomerContent;
         }
 
-        field(80006; "Create By"; Code[50])
+        field(80006; "NCT Create By"; Code[50])
         {
             Caption = 'Create By';
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80007; "Create DateTime"; DateTime)
+        field(80007; "NCT Create DateTime"; DateTime)
         {
             Caption = 'Create DateTime';
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80008; "Make Order No. Series"; Code[20])
+        field(80008; "NCT Make Order No. Series"; Code[20])
         {
             Caption = 'Make Order No. Series';
             DataClassification = CustomerContent;
             TableRelation = "No. Series".Code;
         }
-        field(80009; "Sales Order No."; Code[20])
+        field(80009; "NCT Sales Order No."; Code[20])
         {
             Caption = 'Sales Order No.';
             DataClassification = SystemMetadata;
@@ -125,10 +125,10 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
                 if not Cust.get("Sell-to Customer No.") then
                     Cust.init();
 
-                "Head Office" := Cust."Head Office";
-                "Branch Code" := Cust."Branch Code";
-                if (NOT "Head Office") AND ("Branch Code" = '') then
-                    "Head Office" := true;
+                "NCT Head Office" := Cust."NCT Head Office";
+                "NCT Branch Code" := Cust."NCT Branch Code";
+                if (NOT "NCT Head Office") AND ("NCT Branch Code" = '') then
+                    "NCT Head Office" := true;
             end;
         }
 
@@ -137,8 +137,8 @@ tableextension 80012 "ExtenSales Header" extends "Sales Header"
     trigger OnInsert()
     begin
         TestField("No.");
-        "Create By" := COPYSTR(UserId, 1, 50);
-        "Create DateTime" := CurrentDateTime;
+        "NCT Create By" := COPYSTR(UserId, 1, 50);
+        "NCT Create DateTime" := CurrentDateTime;
         if "Document Type" IN ["Document Type"::Invoice, "Document Type"::"Credit Memo"] then
             "Posting No." := "No.";
     end;

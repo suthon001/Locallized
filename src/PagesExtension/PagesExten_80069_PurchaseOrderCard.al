@@ -1,17 +1,20 @@
-pageextension 80069 "Purchase Order Card" extends "Purchase Order"
+/// <summary>
+/// PageExtension NCT Purchase Order Card (ID 80069) extends Record Purchase Order.
+/// </summary>
+pageextension 80069 "NCT Purchase Order Card" extends "Purchase Order"
 {
 
     layout
     {
         addbefore(Status)
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 Caption = 'Head Office';
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 Caption = 'Branch Code';
@@ -114,7 +117,7 @@ pageextension 80069 "Purchase Order Card" extends "Purchase Order"
                     PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"PurchaseOrder", true, true, PurchaseHeader);
+                    REPORT.RunModal(REPORT::"NCT PurchaseOrder", true, true, PurchaseHeader);
                 end;
             }
         }

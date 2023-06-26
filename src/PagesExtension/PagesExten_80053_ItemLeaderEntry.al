@@ -1,10 +1,13 @@
-pageextension 80053 "ItemLedgerEntry" extends "Item Ledger Entries"
+/// <summary>
+/// PageExtension ItemLedgerEntry (ID 80053) extends Record Item Ledger Entries.
+/// </summary>
+pageextension 80053 "NCT ItemLedgerEntry" extends "Item Ledger Entries"
 {
     layout
     {
         addafter(Description)
         {
-            field("Vendor/Customer Name"; Rec."Vendor/Customer Name")
+            field("Vendor/Customer Name"; Rec."NCT Vendor/Customer Name")
             {
                 ApplicationArea = all;
                 Editable = false;
@@ -13,7 +16,7 @@ pageextension 80053 "ItemLedgerEntry" extends "Item Ledger Entries"
         }
         addafter("Lot No.")
         {
-            field("Bin Code"; Rec."Bin Code")
+            field("Bin Code"; Rec."NCT Bin Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Bin Code field.';

@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension ExtenCustomerLists (ID 80028) extends Record Customer List.
+/// PageExtension NCT ExtenCustomerLists (ID 80028) extends Record Customer List.
 /// </summary>
-pageextension 80028 "ExtenCustomerLists" extends "Customer List"
+pageextension 80028 "NCT ExtenCustomerLists" extends "Customer List"
 {
 
     layout
@@ -76,12 +76,12 @@ pageextension 80028 "ExtenCustomerLists" extends "Customer List"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the customer''s VAT registration number for customers in EU countries/regions.';
             }
-            field("Branch Code"; rec."Branch Code")
+            field("Branch Code"; rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Branch Code field.';
             }
-            field("Head Office"; rec."Head Office")
+            field("Head Office"; rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Head Office field.';

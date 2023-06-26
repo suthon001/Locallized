@@ -1,4 +1,7 @@
-pageextension 80034 "SalesReturnOrder Lines" extends "Sales Return Order Subform"
+/// <summary>
+/// PageExtension SalesReturnOrder Lines (ID 80034) extends Record Sales Return Order Subform.
+/// </summary>
+pageextension 80034 "NCT SalesReturnOrder Lines" extends "Sales Return Order Subform"
 {
     layout
     {
@@ -44,7 +47,7 @@ pageextension 80034 "SalesReturnOrder Lines" extends "Sales Return Order Subform
 
         addafter("Line Amount")
         {
-            field("Qty. to Cancel"; Rec."Qty. to Cancel")
+            field("Qty. to Cancel"; Rec."NCT Qty. to Cancel")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

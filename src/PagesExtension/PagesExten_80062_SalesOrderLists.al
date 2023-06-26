@@ -1,4 +1,7 @@
-pageextension 80062 "Sales Order Lists" extends "Sales Order List"
+/// <summary>
+/// PageExtension NCT Sales Order Lists (ID 80062) extends Record Sales Order List.
+/// </summary>
+pageextension 80062 "NCT Sales Order Lists" extends "Sales Order List"
 {
 
     layout
@@ -57,12 +60,12 @@ pageextension 80062 "Sales Order Lists" extends "Sales Order List"
 
         addafter("Amount Including VAT")
         {
-            field("Head Office"; Rec."Head Office")
+            field("Head Office"; Rec."NCT Head Office")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."Branch Code")
+            field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -98,7 +101,7 @@ pageextension 80062 "Sales Order Lists" extends "Sales Order List"
                     RecSalesHeader.RESET();
                     RecSalesHeader.SetRange("Document Type", rec."Document Type");
                     RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"Report Sales Order", TRUE, TRUE, RecSalesHeader);
+                    Report.Run(Report::"NCT Report Sales Order", TRUE, TRUE, RecSalesHeader);
                 end;
             }
             action("Sales Shipment")
@@ -118,7 +121,7 @@ pageextension 80062 "Sales Order Lists" extends "Sales Order List"
                     RecSalesHeader.SetCurrentKey("Order No.");
                     RecSalesHeader.SetRange("Order No.", rec."No.");
                     if RecSalesHeader.FindLast() then
-                        Report.Run(Report::"Sales Shipment", TRUE, TRUE, RecSalesHeader);
+                        Report.Run(Report::"NCT Sales Shipment", TRUE, TRUE, RecSalesHeader);
                 end;
             }
 

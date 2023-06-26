@@ -1,7 +1,7 @@
 /// <summary>
 /// PageExtension Accounting Periods (ID 80092) extends Record Accounting Periods.
 /// </summary>
-pageextension 80092 "Accounting Periods" extends "Accounting Periods"
+pageextension 80092 "NCT Accounting Periods" extends "Accounting Periods"
 {
     actions
     {
