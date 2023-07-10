@@ -51,7 +51,7 @@ codeunit 80000 "NCT Journal Function"
         VATEntry."NCT Tax Invoice Base" := VATEntry.Base;
         VATEntry."NCT Tax Invoice Amount" := VATEntry.Amount;
     end;
-    //OnAfterCopyGenJnlLineFromInvPostBuffer
+
     [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
     /// <summary> 
     /// Description for CopyHeaderFromInvoiceBuff.
@@ -76,6 +76,35 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine."NCT Tax Invoice City" := InvoicePostingBuffer."NCT City";
         GenJnlLine."NCT Tax Invoice Post Code" := InvoicePostingBuffer."NCT Post Code";
         GenJnlLine."NCT Document Line No." := InvoicePostingBuffer."NCT Document Line No.";
+
+        // end;
+    end;
+
+
+    [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
+    /// <summary> 
+    /// Description for CopyHeaderFromInvoiceBuff.
+    /// </summary>
+    local procedure OnAfterCopyToGenJnlLine(InvoicePostBuffer: Record "Invoice Post. Buffer" temporary; var GenJnlLine: Record "Gen. Journal Line")
+    begin
+        // with GenJournalLine do begin
+        GenJnlLine."NCT Tax Invoice No." := InvoicePostBuffer."NCT Tax Invoice No.";
+        GenJnlLine."NCT Tax Invoice Date" := InvoicePostBuffer."NCT Tax Invoice Date";
+        GenJnlLine."NCT Tax Invoice Base" := InvoicePostBuffer."NCT Tax Invoice Base";
+        GenJnlLine."NCT Tax Invoice Amount" := InvoicePostBuffer."NCT Tax Invoice Amount";
+        GenJnlLine."NCT Tax Vendor No." := InvoicePostBuffer."NCT Tax Vendor No.";
+        GenJnlLine."NCT Tax Invoice Name" := InvoicePostBuffer."NCT Tax Invoice Name";
+        GenJnlLine."NCT Tax Invoice Name 2" := InvoicePostBuffer."NCT Tax Invoice Name 2";
+        GenJnlLine."NCT Tax Invoice Address" := InvoicePostBuffer."NCT Address";
+        GenJnlLine."NCT Tax Invoice Address 2" := InvoicePostBuffer."NCT Address 2";
+        GenJnlLine."NCT Head Office" := InvoicePostBuffer."NCT Head Office";
+        GenJnlLine."NCT Branch Code" := InvoicePostBuffer."NCT Branch Code";
+        GenJnlLine."VAT Registration No." := InvoicePostBuffer."NCT VAT Registration No.";
+        GenJnlLine."NCT Description Line" := InvoicePostBuffer."NCT Description Line";
+        GenJnlLine."NCT Tax Invoice Address" := InvoicePostBuffer."NCT Address";
+        GenJnlLine."NCT Tax Invoice City" := InvoicePostBuffer."NCT City";
+        GenJnlLine."NCT Tax Invoice Post Code" := InvoicePostBuffer."NCT Post Code";
+        GenJnlLine."NCT Document Line No." := InvoicePostBuffer."NCT Document Line No.";
 
         // end;
     end;
@@ -180,11 +209,10 @@ codeunit 80000 "NCT Journal Function"
     var
         VATEntryReport: Record "NCT VAT Transections";
     begin
-        if not Rec.IsTemporary then begin
-            VATEntryReport.INIT();
-            VATEntryReport.TRANSFERFIELDS(Rec);
-            VATEntryReport.Insert();
-        end;
+        VATEntryReport.INIT();
+        VATEntryReport.TRANSFERFIELDS(Rec);
+        if VATEntryReport.Insert() then;
+
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"G/L Entry", 'OnAfterCopyGLEntryFromGenJnlLine', '', false, false)]

@@ -55,38 +55,38 @@ tableextension 80026 "NCT Vat Entry" extends "VAT Entry"
             DataClassification = CustomerContent;
 
         }
-        field(80010; "NCT Tax Invoice Address"; Text[100])
+        field(80011; "NCT Tax Invoice Address"; Text[100])
         {
             Caption = 'Tax Invoice Address';
-            DataClassification = CustomerContent;
+            DataClassification = SystemMetadata;
 
         }
-        field(80011; "NCT Tax Invoice City"; Text[50])
+        field(80012; "NCT Tax Invoice City"; Text[50])
         {
             Caption = 'Tax Invoice City';
-            DataClassification = CustomerContent;
+            DataClassification = SystemMetadata;
 
         }
-        field(80012; "NCT Tax Invoice Post Code"; Code[30])
+        field(80013; "NCT Tax Invoice Post Code"; Code[30])
         {
             Caption = 'Tax Invoice Post Code';
-            DataClassification = CustomerContent;
+            DataClassification = SystemMetadata;
 
         }
-        field(80013; "NCT Document Line No."; Integer)
+        field(80014; "NCT Document Line No."; Integer)
         {
             Caption = 'Document Line No.';
-            DataClassification = CustomerContent;
+            DataClassification = SystemMetadata;
         }
-        field(80014; "NCT Tax Invoice Name 2"; Text[50])
+        field(80015; "NCT Tax Invoice Name 2"; Text[50])
         {
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
-        field(80015; "NCT Tax Invoice Address 2"; Text[50])
+        field(80016; "NCT Tax Invoice Address 2"; Text[50])
         {
             Caption = 'Tax Invoice Address 2';
-            DataClassification = CustomerContent;
+            DataClassification = SystemMetadata;
 
         }
 

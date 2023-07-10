@@ -1,7 +1,7 @@
 /// <summary>
-/// TableExtension ExtenPurchase Rcpt. Line (ID 80029) extends Record Purch. Rcpt. Line.
+/// TableExtension NCT Purchase Rcpt. Line (ID 80029) extends Record Purch. Rcpt. Line.
 /// </summary>
-tableextension 80029 "ExtenPurchase Rcpt. Line" extends "Purch. Rcpt. Line"
+tableextension 80029 "NCT Purchase Rcpt. Line" extends "Purch. Rcpt. Line"
 {
     fields
     {

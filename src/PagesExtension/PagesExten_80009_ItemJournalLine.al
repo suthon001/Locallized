@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension Item Journal Line (ID 80009) extends Record Item Journal.
+/// PageExtension NCT Item Journal Line (ID 80009) extends Record Item Journal.
 /// </summary>
-pageextension 80009 "Item Journal Line" extends "Item Journal"
+pageextension 80009 "NCT Item Journal Line" extends "Item Journal"
 {
     PromotedActionCategories = 'New,Process,Print,Page,Post/Print,Line,Item,Request to Approval,Approval';
     layout

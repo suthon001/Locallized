@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension ExtenGLAccount (ID 80007) extends Record G/L Account Card.
+/// PageExtension NCT ExtenGLAccount (ID 80007) extends Record G/L Account Card.
 /// </summary>
-pageextension 80007 "ExtenGLAccount" extends "G/L Account Card"
+pageextension 80007 "NCT ExtenGLAccount" extends "G/L Account Card"
 {
     layout
     {

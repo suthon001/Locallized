@@ -112,7 +112,7 @@ codeunit 80002 "NCT Sales Function"
     /// Description for InvoiceBufferSales.
     /// </summary>
     /// <param name="SalesLine">Parameter of type Record "Sales Line".</param>
-    local procedure "InvoiceBufferSales"(var InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary; var SalesLine: Record "Sales Line")
+    local procedure OnAfterPrepareSales(var InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary; var SalesLine: Record "Sales Line")
     var
         SalesHeader: Record "Sales Header";
         VendCust: Record "NCT Customer & Vendor Branch";
@@ -144,6 +144,44 @@ codeunit 80002 "NCT Sales Function"
 
         IF (InvoicePostingBuffer.Type = InvoicePostingBuffer.Type::"G/L Account") OR (InvoicePostingBuffer.Type = InvoicePostingBuffer.Type::"Fixed Asset") THEN
             InvoicePostingBuffer."NCT Line No." := SalesLine."Line No.";
+
+    end;
+
+
+    [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterInvPostBufferPrepareSales', '', TRUE, TRUE)]
+
+    local procedure "OnAfterInvPostBufferPrepareSales"(var InvoicePostBuffer: Record "Invoice Post. Buffer" temporary; var SalesLine: Record "Sales Line")
+    var
+        SalesHeader: Record "Sales Header";
+        VendCust: Record "NCT Customer & Vendor Branch";
+    begin
+        IF SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.") THEN BEGIN
+            InvoicePostBuffer."NCT Head Office" := SalesHeader."NCT Head Office";
+            InvoicePostBuffer."NCT Branch Code" := SalesHeader."NCT Branch Code";
+            InvoicePostBuffer."NCT VAT Registration No." := SalesHeader."VAT Registration No.";
+            InvoicePostBuffer."NCT Tax Invoice Date" := SalesHeader."Document Date";
+            InvoicePostBuffer."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
+            InvoicePostBuffer."NCT Tax Invoice Name 2" := SalesHeader."Sell-to Customer Name 2";
+            InvoicePostBuffer."NCT Address" := SalesHeader."Sell-to Address";
+            InvoicePostBuffer."NCT Address 2" := SalesHeader."Sell-to Address 2";
+            InvoicePostBuffer."NCT City" := SalesHeader."Sell-to city";
+            InvoicePostBuffer."NCT Post Code" := SalesHeader."Sell-to Post Code";
+            if SalesHeader."NCT Branch Code" <> '' then
+                if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT Branch Code") then begin
+                    InvoicePostBuffer."NCT Tax Invoice Name" := VendCust."Name";
+                    InvoicePostBuffer."NCT Address" := VendCust."Address";
+                    InvoicePostBuffer."NCT Address 2" := VendCust."Address 2";
+                    InvoicePostBuffer."NCT city" := VendCust."Province";
+                    InvoicePostBuffer."NCT Post Code" := VendCust."Post Code";
+                end;
+
+
+        END;
+        InvoicePostBuffer."NCT Description Line" := SalesLine.Description;
+        InvoicePostBuffer."NCT Document Line No." := SalesLine."Line No.";
+
+        IF (InvoicePostBuffer.Type = InvoicePostBuffer.Type::"G/L Account") OR (InvoicePostBuffer.Type = InvoicePostBuffer.Type::"Fixed Asset") THEN
+            InvoicePostBuffer."NCT Line No." := SalesLine."Line No.";
 
     end;
 

@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension Purchase Credit Memo Card (ID 80075) extends Record Purchase Credit Memo.
+/// PageExtension NCT Purchase Credit Memo Card (ID 80075) extends Record Purchase Credit Memo.
 /// </summary>
-pageextension 80075 "Purchase Credit Memo Card" extends "Purchase Credit Memo"
+pageextension 80075 "NCT Purchase Credit Memo Card" extends "Purchase Credit Memo"
 {
     PromotedActionCategories = 'New,Process,Print,Approve,Request Approval,Credit Memo,Release,Posting,Navigate';
     layout

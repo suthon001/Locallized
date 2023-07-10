@@ -1,7 +1,7 @@
 /// <summary>
-/// TableExtension ExtenGenJournal Lines (ID 80014) extends Record Gen. Journal Line.
+/// TableExtension NCT GenJournal Lines (ID 80014) extends Record Gen. Journal Line.
 /// </summary>
-tableextension 80014 "ExtenGenJournal Lines" extends "Gen. Journal Line"
+tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
 {
     fields
     {

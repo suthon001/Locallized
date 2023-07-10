@@ -1,7 +1,7 @@
 /// <summary>
-/// TableExtension GLAccount (ID 80034) extends Record G/L Account.
+/// TableExtension NCT GLAccount (ID 80034) extends Record G/L Account.
 /// </summary>
-tableextension 80034 "GLAccount" extends "G/L Account"
+tableextension 80034 "NCT GLAccount" extends "G/L Account"
 {
     fields
     {

@@ -1,7 +1,7 @@
 /// <summary>
-/// TableExtension Approve Entry (ID 80035) extends Record Approval Entry.
+/// TableExtension NCT Approve Entry (ID 80035) extends Record Approval Entry.
 /// </summary>
-tableextension 80035 "Approve Entry" extends "Approval Entry"
+tableextension 80035 "NCT Approve Entry" extends "Approval Entry"
 {
     fields
     {
