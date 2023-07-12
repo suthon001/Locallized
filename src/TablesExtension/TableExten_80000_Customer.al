@@ -43,6 +43,7 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
                     if StrLen("NCT Branch Code") < 5 then
                         Error('Branch Code must be 5 characters');
                     "NCT Head Office" := false;
+                    UpdateVendorCustBranch(4, "NCT Branch Code", false);
                 end;
                 if "NCT Branch Code" = '00000' then begin
                     "NCT Head Office" := TRUE;
@@ -120,14 +121,14 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
         {
             trigger OnAfterValidate()
             begin
-                UpdateVendorCustBranch(21, '00000', TRUE);
+                UpdateVendorCustBranch(21, "Phone No.", TRUE);
             end;
         }
         modify("Fax No.")
         {
             trigger OnAfterValidate()
             begin
-                UpdateVendorCustBranch(22, '00000', TRUE);
+                UpdateVendorCustBranch(22, "Fax No.", TRUE);
             end;
         }
 
@@ -160,9 +161,9 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
             VenCust.Get(VendorCustBranch.RecordId);
             MyFieldRef := VenCust.Field(FiledsNo);
             if FiledsNo = 3 then
-                MyFieldRef.Value := tempHeadOffice
+                MyFieldRef.validate(tempHeadOffice)
             else
-                MyFieldRef.Value := WHTResult;
+                MyFieldRef.validate(WHTResult);
             VenCust.Modify();
         end else begin
             VendorCustBranch.reset();
@@ -173,9 +174,9 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
                 VenCust.Get(VendorCustBranch.RecordId);
                 MyFieldRef := VenCust.Field(FiledsNo);
                 if FiledsNo = 3 then
-                    MyFieldRef.Value := tempHeadOffice
+                    MyFieldRef.validate(tempHeadOffice)
                 else
-                    MyFieldRef.Value := WHTResult;
+                    MyFieldRef.validate(WHTResult);
                 VenCust.Modify();
             end else begin
                 VendorCustBranch.init();
@@ -187,9 +188,9 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
                 VenCust.Get(VendorCustBranch.RecordId);
                 MyFieldRef := VenCust.Field(FiledsNo);
                 if FiledsNo = 3 then
-                    MyFieldRef.Value := tempHeadOffice
+                    MyFieldRef.validate(tempHeadOffice)
                 else
-                    MyFieldRef.Value := WHTResult;
+                    MyFieldRef.validate(WHTResult);
                 VenCust.Modify();
             end;
         END;

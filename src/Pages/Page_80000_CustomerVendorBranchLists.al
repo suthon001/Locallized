@@ -127,8 +127,6 @@ page 80000 "NCT Cust. & Vendor BranchLists"
                     Caption = 'Contact';
                     ToolTip = 'Specifies the value of the Contact field.';
                 }
-
-
                 field("Head Office"; Rec."Head Office")
                 {
                     ApplicationArea = All;
@@ -150,5 +148,4 @@ page 80000 "NCT Cust. & Vendor BranchLists"
             }
         }
     }
-
 }

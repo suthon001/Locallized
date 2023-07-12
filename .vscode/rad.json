@@ -1,1 +1,1 @@
-﻿{"Added":[],"Modified":[{"Id":80001,"Kind":11,"Name":"NCT Purchase Function","PackagePath":"/src/src/Codeunit/Codeunit_80001_PurchaseFunction.al"}],"Removed":[]}
+﻿{"Added":[],"Modified":[{"Id":80000,"Kind":12,"Name":"NCT Cust. & Vendor BranchLists","PackagePath":"/src/src/Pages/Page_80000_CustomerVendorBranchLists.al"}],"Removed":[]}
