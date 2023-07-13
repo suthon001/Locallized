@@ -1212,7 +1212,7 @@ codeunit 80004 "NCT Function Center"
         SalesHeader: Record "Sales Header";
         DocumentTotals: Codeunit "Document Totals";
         VATAmount, InvoiceDiscountAmount, InvoiceDiscountPct : Decimal;
-        TotalSalesLine: Record "Sales Line";
+        TotalSalesLine, TotalSalesLine2 : Record "Sales Line";
 
     begin
         CLEAR(TotalAmt);
@@ -1224,8 +1224,14 @@ codeunit 80004 "NCT Function Center"
         TotalAmt[3] := TotalSalesLine.Amount;
         TotalAmt[4] := VATAmount;
         TotalAmt[5] := TotalSalesLine."Amount Including VAT";
-        if VATAmount <> 0 then
-            VATText := STRSUBSTNO(Text002Msg, TotalSalesLine."VAT %");
+        if VATAmount <> 0 then begin
+            TotalSalesLine2.reset();
+            TotalSalesLine2.SetRange("Document Type", DocumentType);
+            TotalSalesLine2.SetRange("Document No.", DocumentNo);
+            TotalSalesLine2.SetFilter("VAT %", '<>%1', 0);
+            if TotalSalesLine2.FindFirst() then
+                VATText := STRSUBSTNO(Text002Msg, TotalSalesLine2."VAT %");
+        end;
     end;
 
     /// <summary> 
@@ -1307,7 +1313,7 @@ codeunit 80004 "NCT Function Center"
         PurchaseHeader: Record "Purchase Header";
         DocumentTotals: Codeunit "Document Totals";
         VATAmount, InvoiceDiscountAmount, InvoiceDiscountPct : Decimal;
-        TotalPurchaseLine: Record "Purchase Line";
+        TotalPurchaseLine, TotalPurchaseLine2 : Record "Purchase Line";
 
     begin
         CLEAR(TotalAmt);
@@ -1319,8 +1325,14 @@ codeunit 80004 "NCT Function Center"
         TotalAmt[3] := TotalPurchaseLine.Amount;
         TotalAmt[4] := VATAmount;
         TotalAmt[5] := TotalPurchaseLine."Amount Including VAT";
-        if VATAmount <> 0 then
-            VATText := STRSUBSTNO(Text002Msg, TotalPurchaseLine."VAT %");
+        if VATAmount <> 0 then begin
+            TotalPurchaseLine2.reset();
+            TotalPurchaseLine2.SetRange("Document Type", DocumentType);
+            TotalPurchaseLine2.SetRange("Document No.", DocumentNo);
+            TotalPurchaseLine2.SetFilter("VAT %", '<>%1', 0);
+            if TotalPurchaseLine2.FindFirst() then
+                VATText := STRSUBSTNO(Text002Msg, TotalPurchaseLine2."VAT %");
+        end;
     end;
 
     /// <summary>

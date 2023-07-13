@@ -42,8 +42,42 @@ pageextension 80070 "NCT Purchase Order Subpage" extends "Purchase Order Subform
         {
             Visible = true;
         }
+        modify("Line Discount Amount")
+        {
+            Visible = true;
+        }
+        modify(FilteredTypeField)
+        {
+            Visible = false;
+        }
+        modify(Type)
+        {
+            ApplicationArea = all;
+        }
         moveafter(Quantity; "Over-Receipt Code", "Over-Receipt Quantity")
+        modify("Bin Code") { Visible = false; }
+        modify("Qty. to Assign") { Visible = false; }
+        modify("Qty. Assigned") { Visible = false; }
+        modify("Promised Receipt Date") { Visible = false; }
+        modify("Item Charge Qty. to Handle") { Visible = false; }
+        modify("Planned Receipt Date") { Visible = false; }
+        modify("Expected Receipt Date") { Visible = false; }
 
+        modify("Item Reference No.") { Visible = false; }
+        modify("VAT Bus. Posting Group") { Visible = true; }
+        modify("VAT Prod. Posting Group") { Visible = true; }
+        modify("Gen. Bus. Posting Group") { Visible = true; }
+        modify("Gen. Prod. Posting Group") { Visible = true; }
+        movefirst(Control1; Type, "No.", Description, "Description 2", "Location Code", "Gen. Bus. Posting Group", "Gen. Prod. Posting Group", "VAT Bus. Posting Group", "VAT Prod. Posting Group", Quantity, "Unit of Measure Code", "Direct Unit Cost", "Line Discount %", "Line Discount Amount", "Line Amount",
+        "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", ShortcutDimCode3, ShortcutDimCode4, ShortcutDimCode5, ShortcutDimCode6, ShortcutDimCode7, ShortcutDimCode8, "Qty. to Receive", "Quantity Received", "Qty. to Invoice", "Quantity Invoiced")
+        addafter("Qty. to Receive")
+        {
+            field("NCT Qty. to Cancel"; rec."NCT Qty. to Cancel")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Qty. to Cancel field.';
+            }
+        }
 
     }
     actions

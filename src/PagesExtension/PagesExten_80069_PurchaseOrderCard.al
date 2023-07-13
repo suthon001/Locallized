@@ -6,6 +6,30 @@ pageextension 80069 "NCT Purchase Order Card" extends "Purchase Order"
 
     layout
     {
+        modify("Payment Discount %")
+        {
+            Visible = false;
+        }
+        modify("Pmt. Discount Date")
+        {
+            Visible = false;
+        }
+        modify("Promised Receipt Date")
+        {
+            Visible = false;
+        }
+        modify("VAT Reporting Date")
+        {
+            Visible = false;
+        }
+        modify("Responsibility Center")
+        {
+            Visible = false;
+        }
+        modify("Order Address Code")
+        {
+            Visible = false;
+        }
         addbefore(Status)
         {
             field("Head Office"; Rec."NCT Head Office")
@@ -75,10 +99,6 @@ pageextension 80069 "NCT Purchase Order Card" extends "Purchase Order"
         moveafter("Purchaser Code"; "Currency Code")
         moveafter("Currency Code"; "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code")
         movebefore(Status; "Expected Receipt Date", "Location Code")
-        modify("VAT Reporting Date")
-        {
-            Visible = false;
-        }
         moveafter("Posting Date"; "Document Date", "Due Date")
 
     }
