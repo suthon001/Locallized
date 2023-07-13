@@ -422,6 +422,7 @@ table 80005 "NCT Tax Report Line"
                                 TaxReportLine."Base Amount" += VatBase;
                                 TaxReportLine."VAT Amount" += VatAmt;
                             end;
+                        TaxReportLine.Modify();
                     end;
                     VatTransection."Ref. Tax Type" := "Tax Type";
                     VatTransection."Ref. Tax No." := "Document No.";
@@ -491,9 +492,6 @@ table 80005 "NCT Tax Report Line"
                         if (NOT TaxReportLineFind."Head Office") AND (TaxReportLineFind."Branch Code" = '') then
                             TaxReportLineFind."Head Office" := true;
                         TaxReportLineFind.INSERT();
-
-                        // PostedGenJournalLine."Get to WHT" := true;
-                        // PostedGenJournalLine.MODIFY;
                         WHTLine."Get to WHT" := true;
                         WHTLine.Modify();
                     UNTIL WHTLine.NEXT() = 0;
