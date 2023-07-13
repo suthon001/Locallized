@@ -25,7 +25,7 @@ report 80006 "NCT Journal Voucher"
                 column(Journal_Batch_Name; "Journal Batch Name") { }
                 column(JournalDescriptionThai; JournalDescriptionThai) { }
                 column(G_L_Account_No_; "G/L Account No.") { }
-                column(G_L_Account_Name; "G/L Account Name") { }
+                column(G_L_Account_Name; glName) { }
                 column(Debit_Amount; "Debit Amount") { }
                 column(Credit_Amount; "Credit Amount") { }
                 column(Global_Dimension_1_Code; "Global Dimension 1 Code") { }
@@ -52,7 +52,13 @@ report 80006 "NCT Journal Voucher"
                 column(HaveItemVAT; HaveItemVAT) { }
                 column(GenjournalTemplate_DescThai; JournalDescriptionThai) { }
                 column(GenJournalBatchName_Desc; GenJournalBatchName.Description) { }
-
+                trigger OnAfterGetRecord()
+                var
+                    glAccount: Record "G/L Account";
+                begin
+                    glAccount.GET("G/L Account No.");
+                    glName := glAccount.Name;
+                end;
 
 
             }
@@ -207,5 +213,6 @@ report 80006 "NCT Journal Voucher"
         JournalDescriptionEng: Text[250];
         GenJournalBatchName: Record "Gen. Journal Batch";
         HaveItemVAT, groupping : Boolean;
+        glName: Text;
 
 }

@@ -61,6 +61,13 @@ report 80004 "NCT Payment Voucher"
                 column(HaveItemVAT; HaveItemVAT) { }
                 column(HaveBankAccount; HaveBankAccount) { }
                 column(GenjournalTemplate_DescThai; GenJournalBatchName.Description) { }
+                trigger OnAfterGetRecord()
+                var
+                    glAccount: Record "G/L Account";
+                begin
+                    glAccount.GET("G/L Account No.");
+                    glName := glAccount.Name;
+                end;
             }
             dataitem(ApplyEntry; Integer)
             {
@@ -361,6 +368,7 @@ report 80004 "NCT Payment Voucher"
         HaveApply: Boolean;
         haveCheque: Boolean;
         groupping: Boolean;
+        glName: Text;
 
 
 }

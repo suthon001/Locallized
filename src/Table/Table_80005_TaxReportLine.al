@@ -320,7 +320,7 @@ table 80005 "NCT Tax Report Line"
             VatTransection.SetRange("Allow Generate to Purch. Vat", true)
         else
             VatTransection.SetRange("Allow Generate to Sale Vat", true);
-        VatTransection.SetFilter("Ref. Tax No.", '<>%1', '');
+        VatTransection.SetFilter("Ref. Tax No.", '%1', '');
         if VatTransection.FindSet() then
             repeat
                 var_Skip := false;
