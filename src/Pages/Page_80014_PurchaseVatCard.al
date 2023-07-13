@@ -5,7 +5,7 @@ page 80014 "NCT Purchase Vat Card"
 {
 
     PageType = Document;
-    SourceTable = "NCT Tax Report Header";
+    SourceTable = "NCT Tax & WHT Header";
     Caption = 'Purchase Vat Card';
     RefreshOnActivate = true;
     PromotedActionCategories = 'New,Process,Print';
@@ -148,7 +148,7 @@ page 80014 "NCT Purchase Vat Card"
                 ToolTip = 'Executes the รายงานภาษีซื้อ action.';
                 trigger OnAction()
                 var
-                    TaxReportHeader: Record "NCT Tax Report Header";
+                    TaxReportHeader: Record "NCT Tax & WHT Header";
                     ReportPurchaseVat: Report "NCT Purchase Vat Report";
 
                 begin

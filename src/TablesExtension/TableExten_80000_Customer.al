@@ -54,7 +54,7 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
 
 
         }
-        field(80002; "WHT Business Posting Group"; Code[10])
+        field(80002; "NCT WHT Business Posting Group"; Code[10])
         {
             Caption = 'WHT Business Posting Group';
             TableRelation = "NCT WHT Business Posting Group"."Code";
@@ -64,30 +64,17 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
         {
             trigger OnAfterValidate()
             begin
-                UpdateVendorCustBranch(5, Name + ' ' + "Name 2", false);
-            end;
-        }
-        modify("Name 2")
-        {
-            trigger OnAfterValidate()
-            begin
-                UpdateVendorCustBranch(5, Name + ' ' + "Name 2", false);
+                UpdateVendorCustBranch(5, rec.Name, false);
             end;
         }
         modify(Address)
         {
             trigger OnAfterValidate()
             begin
-                UpdateVendorCustBranch(6, Address + ' ' + "Address 2", false);
+                UpdateVendorCustBranch(6, Address, false);
             end;
         }
-        modify("Address 2")
-        {
-            trigger OnAfterValidate()
-            begin
-                UpdateVendorCustBranch(6, Address + ' ' + "Address 2", false);
-            end;
-        }
+
         modify(City)
         {
             trigger OnAfterValidate()

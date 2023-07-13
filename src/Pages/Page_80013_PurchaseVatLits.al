@@ -5,7 +5,7 @@ page 80013 "NCT Purchase Vat Lists"
 {
 
     PageType = List;
-    SourceTable = "NCT Tax Report Header";
+    SourceTable = "NCT Tax & WHT Header";
     Caption = 'Purchase Vat';
     CardPageId = "NCT Purchase Vat Card";
     UsageCategory = Lists;

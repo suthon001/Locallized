@@ -11,7 +11,7 @@ report 80014 "NCT WHT PND 53"
     UsageCategory = None;
     dataset
     {
-        dataitem("Tax Report Header"; "NCT Tax Report Header")
+        dataitem("Tax Report Header"; "NCT Tax & WHT Header")
         {
             column(WHTTypeFilter; WHTTypeFilter)
             {
@@ -297,7 +297,7 @@ report 80014 "NCT WHT PND 53"
         var_Amount: Decimal;
         var_WHTAmount: Decimal;
         var_WHTTotalAmount: Decimal;
-        TaxReportLine: Record "NCT Tax Report Line";
+        TaxReportLine: Record "NCT Tax & WHT Line";
         Send_Type: Option "3 เตรส","65 จัตวา","69 ทวิ";
         Send_Option: Option "ยื่นปกติ","ยื่นเพิ่มเติม";
         Additional_No: Integer;

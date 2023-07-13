@@ -11,7 +11,7 @@ report 80011 "NCT Sales Vat"
     UsageCategory = None;
     dataset
     {
-        dataitem("Tax Report Header"; "NCT Tax Report Header")
+        dataitem("Tax Report Header"; "NCT Tax & WHT Header")
         {
             DataItemTableView = sorting("Tax Type", "Document NO.") where("Tax type" = filter(Sale));
 
@@ -43,7 +43,7 @@ report 80011 "NCT Sales Vat"
             column(var_BrandName; var_BrandName)
             {
             }
-            dataitem("Tax Report Line"; "NCT Tax Report Line")
+            dataitem("Tax Report Line"; "NCT Tax & WHT Line")
             {
                 DataItemTableView = sorting("Tax Type", "Document No.", "Entry No.") where("Send to Report" = const(true));
                 DataItemLink = "Tax Type" = field("Tax Type"), "Document No." = field("Document No.");

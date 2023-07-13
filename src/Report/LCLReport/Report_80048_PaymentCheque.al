@@ -13,7 +13,7 @@ report 80048 "NCT Payment Cheque"
     {
         dataitem("Gen. Journal Line"; "Gen. Journal Line")
         {
-            DataItemTableView = SORTING("Journal Template Name", "Journal Batch Name", "Line No.") where("NCT Require Screen Detail" = filter('CHEQUE'));
+            DataItemTableView = SORTING("Journal Template Name", "Journal Batch Name", "Line No.") where("NCT Require Screen Detail" = filter(CHEQUE));
             RequestFilterFields = "Journal Template Name", "Journal Batch Name", "Document No.";
             column(var_ChequeAmount; var_ChequeAmount)
             {

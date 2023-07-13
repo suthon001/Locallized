@@ -53,13 +53,13 @@ table 80003 "NCT Customer & Vendor Branch"
                 end;
             end;
         }
-        field(5; "Name"; Text[150])
+        field(5; "Name"; Text[100])
         {
             Caption = 'Name';
             DataClassification = CustomerContent;
         }
 
-        field(6; "Address"; Text[150])
+        field(6; "Address"; Text[100])
         {
             Caption = 'Address';
             DataClassification = CustomerContent;

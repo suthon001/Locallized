@@ -3,7 +3,7 @@
 /// </summary>
 page 80021 "NCT Tax Move Month"
 {
-    SourceTable = "NCT Tax Report Header";
+    SourceTable = "NCT Tax & WHT Header";
     InsertAllowed = false;
     ModifyAllowed = false;
     DelayedInsert = false;
@@ -47,7 +47,7 @@ page 80021 "NCT Tax Move Month"
     /// </summary>
     local procedure MoveLine()
     var
-        TaxReportLine: Record "NCT Tax Report Line";
+        TaxReportLine: Record "NCT Tax & WHT Line";
     begin
 
 
@@ -71,10 +71,10 @@ page 80021 "NCT Tax Move Month"
     /// </summary>
     /// <param name="EntryType">Parameter of type Option Purchase,Sale,WHT.</param>
     /// <param name="EndOfWork">Parameter of type Date.</param>
-    /// <param name="OldTaxLine">Parameter of type Record "Tax Report Line".</param>
-    procedure "SetData"(EntryType: Enum "NCT Tax Type"; EndOfWork: Date; var OldTaxLine: Record "NCT Tax Report Line")
+    /// <param name="OldTaxLine">Parameter of type Record "NCT Tax WHT Line".</param>
+    procedure "SetData"(EntryType: Enum "NCT Tax Type"; EndOfWork: Date; var OldTaxLine: Record "NCT Tax & WHT Line")
     var
-        TaxHeader: Record "NCT Tax Report Header";
+        TaxHeader: Record "NCT Tax & WHT Header";
 
     begin
 
@@ -95,5 +95,5 @@ page 80021 "NCT Tax Move Month"
 
     var
 
-        TaxLine: Record "NCT Tax Report Line";
+        TaxLine: Record "NCT Tax & WHT Line";
 }

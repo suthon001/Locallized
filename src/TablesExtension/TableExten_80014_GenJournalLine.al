@@ -15,7 +15,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             Caption = 'Sales Receipt No.';
             DataClassification = CustomerContent;
         }
-        field(80003; "NCT Tax Invoice No."; Code[20])
+        field(80003; "NCT Tax Invoice No."; Code[35])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = CustomerContent;
@@ -91,7 +91,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             end;
 
         }
-        field(80008; "NCT Tax Invoice Name"; Text[100])
+        field(80008; "NCT Tax Invoice Name"; Text[120])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;
@@ -263,6 +263,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
         {
             Caption = 'Bank Code';
             DataClassification = CustomerContent;
+            TableRelation = "Bank Account"."No.";
             trigger OnValidate()
             var
                 BankAcc: Record "Bank Account";

@@ -5,7 +5,7 @@ tableextension 80016 "NCT Invoice Post. Buffer" extends "Invoice Post. Buffer"
 {
     fields
     {
-        field(80000; "NCT Tax Invoice No."; Code[20])
+        field(80000; "NCT Tax Invoice No."; Code[35])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = SystemMetadata;
@@ -32,7 +32,7 @@ tableextension 80016 "NCT Invoice Post. Buffer" extends "Invoice Post. Buffer"
             DataClassification = CustomerContent;
             TableRelation = Vendor."No.";
         }
-        field(80005; "NCT Tax Invoice Name"; Text[100])
+        field(80005; "NCT Tax Invoice Name"; Text[120])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = SystemMetadata;
@@ -87,17 +87,13 @@ tableextension 80016 "NCT Invoice Post. Buffer" extends "Invoice Post. Buffer"
             Caption = 'Document Line No.';
             DataClassification = SystemMetadata;
         }
-        field(80015; "NCT Vendor Invoice No."; Code[30])
-        {
-            Caption = 'Vendor Invoice No.';
-            DataClassification = SystemMetadata;
-        }
-        field(80016; "NCT Tax Invoice Name 2"; Text[50])
+
+        field(80015; "NCT Tax Invoice Name 2"; Text[50])
         {
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
-        field(80017; "NCT Address 2"; Text[50])
+        field(80016; "NCT Address 2"; Text[50])
         {
             Caption = 'Address 2';
             DataClassification = SystemMetadata;

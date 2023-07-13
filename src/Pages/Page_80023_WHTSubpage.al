@@ -5,7 +5,7 @@ page 80023 "NCT WHT Subpage"
 {
 
     PageType = ListPart;
-    SourceTable = "NCT Tax Report Line";
+    SourceTable = "NCT Tax & WHT Line";
     Caption = 'Withholding tax Subpage';
     InsertAllowed = false;
     layout
@@ -149,8 +149,8 @@ page 80023 "NCT WHT Subpage"
                     trigger OnAction()
                     var
                         MoveMonthPage: Page "NCT Tax Move Month";
-                        TaxReportHeader: Record "NCT Tax Report Header";
-                        TaxReportLine: Record "NCT Tax Report Line";
+                        TaxReportHeader: Record "NCT Tax & WHT Header";
+                        TaxReportLine: Record "NCT Tax & WHT Line";
 
                     begin
                         TaxReportHeader.get(Rec."Tax Type", Rec."Document No.");
@@ -175,7 +175,7 @@ page 80023 "NCT WHT Subpage"
     /// <param name="VatAmount">Parameter of type Decimal.</param>
     procedure SumAmount(var BaseAmount: Decimal; var VatAmount: Decimal)
     var
-        TaxReportLine: Record "NCT Tax Report Line";
+        TaxReportLine: Record "NCT Tax & WHT Line";
     begin
         TaxReportLine.reset();
         TaxReportLine.CopyFilters(rec);
@@ -198,10 +198,10 @@ page 80023 "NCT WHT Subpage"
         OutStrm: OutStream;
         TempBlob: Codeunit "Temp Blob";
         FileName: Text;
-        TaxReportLine: Record "NCT Tax Report Line";
+        TaxReportLine: Record "NCT Tax & WHT Line";
         TempTaxt: Text;
         LineNo: Integer;
-        TaxReportHeader: Record "NCT Tax Report Header";
+        TaxReportHeader: Record "NCT Tax & WHT Header";
         ltFileNameLbl: Label '%1_%2%3', Locked = true;
     begin
 

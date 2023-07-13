@@ -15,7 +15,7 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
             Caption = 'Sales Receipt No.';
             DataClassification = CustomerContent;
         }
-        field(80003; "NCT Tax Invoice No."; Code[20])
+        field(80003; "NCT Tax Invoice No."; Code[35])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = CustomerContent;
@@ -53,7 +53,7 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
 
 
         }
-        field(80008; "NCT Tax Invoice Name"; Text[100])
+        field(80008; "NCT Tax Invoice Name"; Text[120])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;

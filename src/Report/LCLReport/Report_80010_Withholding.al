@@ -11,7 +11,7 @@ report 80010 "NCT Withholding"
     UsageCategory = none;
     dataset
     {
-        dataitem("Tax Report Header"; "NCT Tax Report Header")
+        dataitem("Tax Report Header"; "NCT Tax & WHT Header")
         {
             column(WHTTypeFilter; Rec_WHTBusinessPostingGroup."Description")
             {
@@ -38,7 +38,7 @@ report 80010 "NCT Withholding"
             {
 
             }
-            dataitem("Tax Report Line"; "NCT Tax Report Line")
+            dataitem("Tax Report Line"; "NCT Tax & WHT Line")
             {
                 DataItemTableView = sorting("Tax Type", "Document No.", "Entry No.");
                 DataItemLink = "Tax Type" = FIELD("Tax Type"),
@@ -267,7 +267,7 @@ report 80010 "NCT Withholding"
         TaxType: array[2] of Text[100];
         BaseAmount: array[2] of Decimal;
         VATAmount: array[2] of Decimal;
-        TaxReportLineFind: Record "NCT Tax Report Line";
+        TaxReportLineFind: Record "NCT Tax & WHT Line";
         GeneralLedgerSetup: Record "General Ledger Setup";
         WHTBus: Code[100];
         WHTDate: Text;

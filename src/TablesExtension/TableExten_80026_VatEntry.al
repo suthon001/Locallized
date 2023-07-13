@@ -5,7 +5,7 @@ tableextension 80026 "NCT Vat Entry" extends "VAT Entry"
 {
     fields
     {
-        field(80001; "NCT Tax Invoice No."; Code[20])
+        field(80001; "NCT Tax Invoice No."; Code[35])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = CustomerContent;
@@ -32,7 +32,7 @@ tableextension 80026 "NCT Vat Entry" extends "VAT Entry"
             DataClassification = CustomerContent;
             //TableRelation = Vendor."No.";
         }
-        field(80006; "NCT Tax Invoice Name"; Text[100])
+        field(80006; "NCT Tax Invoice Name"; Text[120])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;

@@ -5,7 +5,7 @@ page 80011 "NCT Sales Vat Card"
 {
 
     PageType = Document;
-    SourceTable = "NCT Tax Report Header";
+    SourceTable = "NCT Tax & WHT Header";
     Caption = 'Sales Vat Card';
     RefreshOnActivate = true;
     UsageCategory = None;
@@ -149,7 +149,7 @@ page 80011 "NCT Sales Vat Card"
                 ToolTip = 'Executes the รายงานภาษีขาย action.';
                 trigger OnAction()
                 var
-                    TaxReportHeader: Record "NCT Tax Report Header";
+                    TaxReportHeader: Record "NCT Tax & WHT Header";
                     ReportSalesVat: Report "NCT Sales Vat";
                 begin
 

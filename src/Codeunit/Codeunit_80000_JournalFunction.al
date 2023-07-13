@@ -141,36 +141,16 @@ codeunit 80000 "NCT Journal Function"
             VATEntry."NCT Document Line No." := GenJournalLine."Line No.";
         if NOT VATProPostingGroup.get(VATEntry."VAT Prod. Posting Group") then
             VATProPostingGroup.init();
-        IF VATProPostingGroup."NCT Direct VAT" then
-            VATEntry."NCT Tax Invoice Amount" := GenJournalLine.Amount
-        ELSE BEGIN
-            IF VATEntry."NCT Tax Invoice Base" = 0 THEN
-                VATEntry."NCT Tax Invoice Base" := VATEntry.Base;
-            IF VATEntry."NCT Tax Invoice Amount" = 0 THEN
-                VATEntry."NCT Tax Invoice Amount" := VATEntry.Amount;
+        IF VATProPostingGroup."NCT Direct VAT" then begin
+            VATEntry.Base := VATEntry."NCT Tax Invoice Base";
+            VATEntry.Amount := VATEntry."NCT Tax Invoice Amount";
+        end ELSE BEGIN
+            VATEntry."NCT Tax Invoice Base" := VATEntry.Base;
+            VATEntry."NCT Tax Invoice Amount" := VATEntry.Amount;
         END;
-        //   end;
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"VAT Entry", 'OnBeforeInsertEvent', '', true, true)]
-    /// <summary> 
-    /// Description for SetVatLocalize.
-    /// </summary>
-    /// <param name="Rec">Parameter of type Record "VAT Entry".</param>
-    /// <param name="RunTrigger">Parameter of type Boolean.</param>
-    local procedure "SetVatLocalize"(var Rec: Record "VAT Entry"; RunTrigger: Boolean)
-    var
-        vatPostingGroup: Record "VAT Product Posting Group";
-    begin
-        if RunTrigger then
-            // with Rec do begin
-            IF vatPostingGroup.GET(Rec."VAT Prod. Posting Group") then
-                IF NOT vatPostingGroup."NCT Direct VAT" THEN BEGIN
-                    Rec."NCT Tax Invoice Base" := Rec.Base;
-                    Rec."NCT Tax Invoice Amount" := Rec.Amount;
-                END;
-        // end;
-    end;
+
 
 
     [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromPurchHeader', '', true, true)]
@@ -180,10 +160,27 @@ codeunit 80000 "NCT Journal Function"
     /// <param name="PurchaseHeader">Parameter of type Record "Purchase Header".</param>
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     local procedure "CopyHeaderFromPurchaseHeader"(PurchaseHeader: Record "Purchase Header"; var GenJournalLine: Record "Gen. Journal Line")
+    var
+        VendCust: Record "NCT Customer & Vendor Branch";
     begin
-        //  with GenJournalLine do begin
+
         GenJournalLine."NCT Description Line" := PurchaseHeader."Posting Description";
-        // end;
+        GenJournalLine."NCT Head Office" := PurchaseHeader."NCT Head Office";
+        GenJournalLine."NCT Branch Code" := PurchaseHeader."NCT Branch Code";
+        if VendCust.Get(VendCust."Source Type"::Vendor, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."NCT Head Office", PurchaseHeader."NCT Branch Code") then
+            if VendCust."Title Name" <> VendCust."Title Name"::" " then
+                GenJournalLine."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
+            else
+                GenJournalLine."NCT Tax Invoice Name" := VendCust."Name";
+
+        if GenJournalLine."NCT Tax Invoice Name" = '' then
+            GenJournalLine."NCT Tax Invoice Name" := PurchaseHeader."Pay-to Name";
+        if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::"Credit Memo" then
+            if PurchaseHeader."Vendor Cr. Memo No." <> '' then
+                GenJournalLine."NCT Tax Invoice No." := PurchaseHeader."Vendor Cr. Memo No.";
+        if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Invoice then
+            if PurchaseHeader."Vendor Cr. Memo No." <> '' then
+                GenJournalLine."NCT Tax Invoice No." := PurchaseHeader."Vendor Invoice No.";
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromSalesHeader', '', true, true)]
@@ -194,9 +191,11 @@ codeunit 80000 "NCT Journal Function"
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     local procedure "CopyHeaderFromSalesHeader"(SalesHeader: Record "Sales Header"; var GenJournalLine: Record "Gen. Journal Line")
     begin
-        // with GenJournalLine do begin
+
         GenJournalLine."NCT Description Line" := SalesHeader."Posting Description";
-        //  end;
+        GenJournalLine."NCT Head Office" := SalesHeader."NCT Head Office";
+        GenJournalLine."NCT Branch Code" := SalesHeader."NCT Branch Code";
+
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"VAT Entry", 'OnAfterInsertEvent', '', true, true)]

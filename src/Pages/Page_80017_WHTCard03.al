@@ -5,7 +5,7 @@ page 80017 "NCT WHT Card"
 {
 
     PageType = Document;
-    SourceTable = "NCT Tax Report Header";
+    SourceTable = "NCT Tax & WHT Header";
     Caption = 'Withholding tax Card';
     RefreshOnActivate = true;
     SourceTableView = sorting("Tax Type", "Document No.") where("Tax Type" = filter(WHT03));
@@ -119,7 +119,7 @@ page 80017 "NCT WHT Card"
                 ToolTip = 'Executes the รายงานใบต่อ ภ.ง.ด. action.';
                 trigger OnAction()
                 var
-                    TaxReportHeader: Record "NCT Tax Report Header";
+                    TaxReportHeader: Record "NCT Tax & WHT Header";
                     WithholdingReport: Report "NCT Withholding";
                 begin
                     Clear(WithholdingReport);
@@ -144,7 +144,7 @@ page 80017 "NCT WHT Card"
                 ToolTip = 'Executes the PND 03 action.';
                 trigger OnAction()
                 var
-                    TaxReportHeader: Record "NCT Tax Report Header";
+                    TaxReportHeader: Record "NCT Tax & WHT Header";
                     PND03Report: Report "NCT WHT PND 03";
                 begin
                     Clear(PND03Report);

@@ -61,15 +61,7 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
         {
             trigger OnAfterValidate()
             begin
-                UpdateVendorCustBranch(5, Name + ' ' + "Name 2", false);
-
-            end;
-        }
-        modify("Name 2")
-        {
-            trigger OnAfterValidate()
-            begin
-                UpdateVendorCustBranch(5, Name + ' ' + "Name 2", false);
+                UpdateVendorCustBranch(5, Name, false);
 
             end;
         }
@@ -77,14 +69,7 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
         {
             trigger OnAfterValidate()
             begin
-                UpdateVendorCustBranch(6, Address + ' ' + "Address 2", false);
-            end;
-        }
-        modify("Address 2")
-        {
-            trigger OnAfterValidate()
-            begin
-                UpdateVendorCustBranch(6, Address + ' ' + "Address 2", false);
+                UpdateVendorCustBranch(6, Address, false);
             end;
         }
         modify(City)

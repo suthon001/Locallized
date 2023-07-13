@@ -77,8 +77,8 @@ table 80009 "NCT WHT Header"
                         "VAT Registration No." := Customer."VAT Registration No.";
                         "Head Office" := Customer."NCT Head Office";
                         "Vat Branch Code" := Customer."NCT Branch Code";
-                        "WHT Business Posting Group" := Customer."WHT Business Posting Group";
-                        if NOT whtBusPostingGroup.GET(Customer."WHT Business Posting Group") then
+                        "WHT Business Posting Group" := Customer."NCT WHT Business Posting Group";
+                        if NOT whtBusPostingGroup.GET(Customer."NCT WHT Business Posting Group") then
                             whtBusPostingGroup.init();
                         "WHT Type" := whtBusPostingGroup."WHT Type";
                         "WHT City" := Customer.City;

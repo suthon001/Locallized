@@ -18,7 +18,7 @@ pageextension 80000 "NCT ExtenCustomer Card" extends "Customer Card"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Global Dimension 2 Code field.';
             }
-            field("WHT Business Posting Group"; rec."WHT Business Posting Group")
+            field("NCT WHT Business Posting Group"; rec."NCT WHT Business Posting Group")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the WHT Business Posting Group field.';

@@ -5,7 +5,7 @@ tableextension 80052 "NCT Invoice Posting Buffer" extends "Invoice Posting Buffe
 {
     fields
     {
-        field(80000; "NCT Tax Invoice No."; Code[20])
+        field(80000; "NCT Tax Invoice No."; Code[35])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = CustomerContent;
@@ -32,7 +32,7 @@ tableextension 80052 "NCT Invoice Posting Buffer" extends "Invoice Posting Buffe
             DataClassification = CustomerContent;
             TableRelation = Vendor."No.";
         }
-        field(80005; "NCT Tax Invoice Name"; Text[100])
+        field(80005; "NCT Tax Invoice Name"; Text[120])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;
@@ -87,17 +87,13 @@ tableextension 80052 "NCT Invoice Posting Buffer" extends "Invoice Posting Buffe
             Caption = 'Document Line No.';
             DataClassification = CustomerContent;
         }
-        field(80015; "NCT Vendor Invoice No."; Code[35])
-        {
-            Caption = 'Vendor Invoice No.';
-            DataClassification = CustomerContent;
-        }
-        field(80016; "NCT Tax Invoice Name 2"; Text[50])
+
+        field(80015; "NCT Tax Invoice Name 2"; Text[50])
         {
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
-        field(80017; "NCT Address 2"; Text[50])
+        field(80016; "NCT Address 2"; Text[50])
         {
             Caption = 'Address 2';
             DataClassification = CustomerContent;

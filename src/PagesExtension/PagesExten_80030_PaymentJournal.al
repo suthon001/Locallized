@@ -264,7 +264,7 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
                 END ELSE
                     IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN
                         IF Customer.GET(GenJnlLine."Account No.") THEN BEGIN
-                            if NOT whtBusPostingGroup.GET(Customer."WHT Business Posting Group") then
+                            if NOT whtBusPostingGroup.GET(Customer."NCT WHT Business Posting Group") then
                                 whtBusPostingGroup.init();
                             WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Customer;
                             WHTHeader."WHT Source No." := Customer."No.";

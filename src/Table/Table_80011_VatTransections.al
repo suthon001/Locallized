@@ -435,7 +435,7 @@ table 80011 "NCT VAT Transections"
             Caption = 'VAT Date';
 
         }
-        field(80001; "Tax Invoice No."; Code[20])
+        field(80001; "Tax Invoice No."; Code[35])
         {
             Caption = 'Tax Invoice No.';
             DataClassification = CustomerContent;
@@ -462,7 +462,7 @@ table 80011 "NCT VAT Transections"
             DataClassification = CustomerContent;
             //TableRelation = Vendor."No.";
         }
-        field(80006; "Tax Invoice Name"; Text[100])
+        field(80006; "Tax Invoice Name"; Text[120])
         {
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;

@@ -5,7 +5,7 @@ page 80015 "NCT Purchase Vat Subpage"
 {
 
     PageType = ListPart;
-    SourceTable = "NCT Tax Report Line";
+    SourceTable = "NCT Tax & WHT Line";
     Caption = 'Purchase Vat Subpage';
     InsertAllowed = false;
     ApplicationArea = All;
@@ -151,8 +151,8 @@ page 80015 "NCT Purchase Vat Subpage"
                     trigger OnAction()
                     var
                         MoveMonthPage: Page "NCT Tax Move Month";
-                        TaxReportHeader: Record "NCT Tax Report Header";
-                        TaxReportLine: Record "NCT Tax Report Line";
+                        TaxReportHeader: Record "NCT Tax & WHT Header";
+                        TaxReportLine: Record "NCT Tax & WHT Line";
 
                     begin
                         TaxReportHeader.get(Rec."Tax Type", Rec."Document No.");
@@ -193,7 +193,7 @@ page 80015 "NCT Purchase Vat Subpage"
     /// <param name="VatAmount">Parameter of type Decimal.</param>
     procedure "SumAmount"(var BaseAmount: Decimal; var VatAmount: Decimal)
     var
-        TaxReportLine: Record "NCT Tax Report Line";
+        TaxReportLine: Record "NCT Tax & WHT Line";
     begin
         TaxReportLine.reset();
         TaxReportLine.CopyFilters(rec);
