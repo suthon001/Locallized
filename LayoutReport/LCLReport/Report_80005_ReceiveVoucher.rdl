@@ -922,7 +922,7 @@
                 <TablixMember>
                   <Group Name="Details2" />
                   <Visibility>
-                    <Hidden>=Fields!BW_Tax_Invoice_No_.Value = ""</Hidden>
+                    <Hidden>=Fields!Tax_Invoice_No_.Value = ""</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
@@ -2787,7 +2787,7 @@
                 <TablixMember>
                   <Group Name="Details3" />
                   <Visibility>
-                    <Hidden>=Fields!BW_WHT_Document_No_.Value = ""</Hidden>
+                    <Hidden>=Fields!WHT_Document_No_.Value = ""</Hidden>
                   </Visibility>
                 </TablixMember>
               </TablixMembers>
@@ -3872,7 +3872,7 @@
                 <TablixMember>
                   <Group Name="Details5" />
                   <Visibility>
-                    <Hidden>=Fields!BW_CQ_Cheque_No_.Value = ""</Hidden>
+                    <Hidden>=Fields!CQ_Cheque_No_.Value = ""</Hidden>
                   </Visibility>
                 </TablixMember>
               </TablixMembers>

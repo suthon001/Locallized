@@ -1906,7 +1906,7 @@
                 <TablixMember>
                   <Group Name="Details2" />
                   <Visibility>
-                    <Hidden>=Fields!BW_Tax_Invoice_No_.Value = ""</Hidden>
+                    <Hidden>=Fields!Tax_Invoice_No_.Value = ""</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
@@ -3151,7 +3151,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Left</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                             <Paragraph>
@@ -3166,7 +3166,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Left</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -4496,7 +4496,7 @@
             <Top>3.96944in</Top>
             <Left>0.16047in</Left>
             <Height>0.88413in</Height>
-            <Width>7.65988in</Width>
+            <Width>7.65989in</Width>
             <ZIndex>4</ZIndex>
             <Visibility>
               <Hidden>=First(Fields!HAVEWHT.Value, "DataSet_Result")="FALSE"</Hidden>

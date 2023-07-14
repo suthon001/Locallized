@@ -183,7 +183,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Left</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                             <Paragraph>
@@ -198,7 +198,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Left</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -2836,7 +2836,7 @@
                 <TablixMember>
                   <Group Name="Details2" />
                   <Visibility>
-                    <Hidden>=Fields!BW_Tax_Invoice_No_.Value = ""</Hidden>
+                    <Hidden>=Fields!Tax_Invoice_No_.Value = ""</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>

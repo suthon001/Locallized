@@ -42,7 +42,7 @@ codeunit 80004 "NCT Function Center"
                     if not TempltGLEntry.FindFirst() then begin
                         EntryNo += 1;
                         TempltGLEntry.init();
-                        TempltGLEntry.TransferFields(TempGLEntry);
+                        TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := GenLine."Document No.";
                         TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
                         TempltGLEntry."Entry No." := EntryNo;
@@ -61,7 +61,7 @@ codeunit 80004 "NCT Function Center"
                 end else begin
                     EntryNo += 1;
                     TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry);
+                    TempltGLEntry.TransferFields(TempGLEntry, false);
                     TempltGLEntry."Document No." := GenLine."Document No.";
                     TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
                     TempltGLEntry."Entry No." := EntryNo;
@@ -84,7 +84,7 @@ codeunit 80004 "NCT Function Center"
                     if not TempltGLEntry.FindFirst() then begin
                         EntryNo += 1;
                         TempltGLEntry.init();
-                        TempltGLEntry.TransferFields(TempGLEntry);
+                        TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := GenLine."Document No.";
                         TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
                         TempltGLEntry."Entry No." := EntryNo;
@@ -103,7 +103,7 @@ codeunit 80004 "NCT Function Center"
                 end else begin
                     EntryNo += 1;
                     TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry);
+                    TempltGLEntry.TransferFields(TempGLEntry, false);
                     TempltGLEntry."Document No." := GenLine."Document No.";
                     TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
                     TempltGLEntry."Entry No." := EntryNo;
@@ -111,6 +111,7 @@ codeunit 80004 "NCT Function Center"
                 end;
                 pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
             until TempGLEntry.next() = 0;
+        TempltGLEntry.reset();
         pTempGLEntry.Copy(TempltGLEntry, true);
     end;
 
@@ -138,7 +139,7 @@ codeunit 80004 "NCT Function Center"
                     if not TempltGLEntry.FindFirst() then begin
                         EntryNo += 1;
                         TempltGLEntry.init();
-                        TempltGLEntry.TransferFields(TempGLEntry);
+                        TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := PurHeader."No.";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
@@ -156,7 +157,7 @@ codeunit 80004 "NCT Function Center"
                 end else begin
                     EntryNo += 1;
                     TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry);
+                    TempltGLEntry.TransferFields(TempGLEntry, false);
                     TempltGLEntry."Document No." := PurHeader."No.";
                     TempltGLEntry."Entry No." := EntryNo;
                     TempltGLEntry.Insert();
@@ -176,7 +177,7 @@ codeunit 80004 "NCT Function Center"
                     if not TempltGLEntry.FindFirst() then begin
                         EntryNo += 1;
                         TempltGLEntry.init();
-                        TempltGLEntry.TransferFields(TempGLEntry);
+                        TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := PurHeader."No.";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
@@ -194,13 +195,14 @@ codeunit 80004 "NCT Function Center"
                 end else begin
                     EntryNo += 1;
                     TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry);
+                    TempltGLEntry.TransferFields(TempGLEntry, false);
                     TempltGLEntry."Document No." := PurHeader."No.";
                     TempltGLEntry."Entry No." := EntryNo;
                     TempltGLEntry.Insert();
                 end;
                 pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
             until TempGLEntry.next() = 0;
+        TempltGLEntry.reset();
         pTempGLEntry.Copy(TempltGLEntry, true);
     end;
 
@@ -228,7 +230,7 @@ codeunit 80004 "NCT Function Center"
                     if not TempltGLEntry.FindFirst() then begin
                         EntryNo += 1;
                         TempltGLEntry.init();
-                        TempltGLEntry.TransferFields(TempGLEntry);
+                        TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := SalesHeader."No.";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
@@ -246,7 +248,7 @@ codeunit 80004 "NCT Function Center"
                 end else begin
                     EntryNo += 1;
                     TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry);
+                    TempltGLEntry.TransferFields(TempGLEntry, false);
                     TempltGLEntry."Document No." := SalesHeader."No.";
                     TempltGLEntry."Entry No." := EntryNo;
                     TempltGLEntry.Insert();
@@ -266,7 +268,7 @@ codeunit 80004 "NCT Function Center"
                     if not TempltGLEntry.FindFirst() then begin
                         EntryNo += 1;
                         TempltGLEntry.init();
-                        TempltGLEntry.TransferFields(TempGLEntry);
+                        TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := SalesHeader."No.";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
@@ -284,13 +286,14 @@ codeunit 80004 "NCT Function Center"
                 end else begin
                     EntryNo += 1;
                     TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry);
+                    TempltGLEntry.TransferFields(TempGLEntry, false);
                     TempltGLEntry."Document No." := SalesHeader."No.";
                     TempltGLEntry."Entry No." := EntryNo;
                     TempltGLEntry.Insert();
                 end;
                 pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
             until TempGLEntry.next() = 0;
+        TempltGLEntry.reset();
         pTempGLEntry.Copy(TempltGLEntry, true);
     end;
 
