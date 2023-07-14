@@ -17,6 +17,7 @@ page 80031 "NCT Purchase Billing Card"
         {
             group(General)
             {
+                Editable = rec.Status = rec.Status::Open;
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -141,6 +142,66 @@ page 80031 "NCT Purchase Billing Card"
                 SubPageLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
                 UpdatePropagation = Both;
                 ApplicationArea = all;
+                Editable = rec.Status = rec.Status::Open;
+            }
+            group(ReceiveInfor)
+            {
+                Caption = 'Receive Information';
+                field("Account Type"; Rec."Account Type")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Account Type field.';
+                    Caption = 'Payment Account Type';
+                }
+                field("Account No."; Rec."Account No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Account No. field.';
+                    Caption = 'Payment Account No.';
+                }
+                field("Journal Date"; Rec."Journal Date")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Payment Date field.';
+                    Caption = 'Payment Date';
+                }
+                field("Journal Template Name"; rec."Journal Template Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Template Name field.';
+                }
+                field("Journal Batch Name"; Rec."Journal Batch Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Batch Name field.';
+                }
+                field("Journal No. Series"; Rec."Journal No. Series")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the RV No. Series field.';
+                }
+
+                field("Journal Document No."; Rec."Journal Document No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Journal Document No. field.';
+                    trigger OnAssistEdit()
+                    var
+                        GenJournalLine: Record "Gen. Journal Line";
+                        PaymentJournal: Page "Payment Journal";
+                    begin
+                        rec.TestField("Journal Document No.");
+                        rec.TestField("Status", rec."Status"::"Created to Journal");
+                        CLEAR(PaymentJournal);
+                        GenJournalLine.reset();
+                        GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
+                        GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                        PaymentJournal.SetRecord(GenJournalLine);
+                        PaymentJournal.SetDocumnet(rec."Journal Document No.");
+                        PaymentJournal.Run();
+                        CLEAR(PaymentJournal);
+                    end;
+                }
             }
         }
 
@@ -175,6 +236,31 @@ page 80031 "NCT Purchase Billing Card"
         }
         area(Processing)
         {
+            action(CreatePaymentJournal)
+            {
+                Caption = 'Create Payment Journal';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                ToolTip = 'Executes the Create Payment Journal action.';
+                Image = GetEntries;
+                ApplicationArea = all;
+                trigger OnAction()
+                begin
+                    rec.TestField("Status", rec."Status"::Released);
+                    if rec."Create to Journal" then begin
+                        message('This record already create payment journal');
+                        exit;
+                    end;
+
+                    if not Confirm('Do you want Create to Payment Journal ?') then
+                        exit;
+
+                    rec.CreateToPayment();
+
+                end;
+            }
             group("GetLines")
             {
                 Caption = 'GetLine';
@@ -191,7 +277,6 @@ page 80031 "NCT Purchase Billing Card"
                     trigger OnAction()
                     begin
                         CODEUNIT.RUN(Codeunit::"NCT Get Cust/Vend Ledger Entry", Rec);
-
                     end;
                 }
             }

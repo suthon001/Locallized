@@ -107,11 +107,7 @@ page 80012 "NCT Sales Vat Subpage"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Cust. Amount field.';
                 }
-                field("Consession Fee"; Rec."Consession Fee")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Consession Fee field.';
-                }
+
 
 
 

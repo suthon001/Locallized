@@ -67,13 +67,13 @@ report 80006 "NCT Journal Voucher"
             {
                 DataItemTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.") where("NCT Require Screen Detail" = filter(VAT));
 
-                column(BW_Tax_Invoice_Date; format("NCT Tax Invoice Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                column(BW_Tax_Invoice_No_; "NCT Tax Invoice No.") { }
-                column(BW_Tax_Invoice_Name; "NCT Tax Invoice Name") { }
-                column(BW_Tax_Invoice_Amount; "NCT Tax Invoice Amount") { }
-                column(BW_Tax_Invoice_Base; "NCT Tax Invoice Base") { }
+                column(Tax_Invoice_Date; format("NCT Tax Invoice Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+                column(Tax_Invoice_No_; "NCT Tax Invoice No.") { }
+                column(Tax_Invoice_Name; "NCT Tax Invoice Name") { }
+                column(Tax_Invoice_Amount; "NCT Tax Invoice Amount") { }
+                column(Tax_Invoice_Base; "NCT Tax Invoice Base") { }
                 column(BranchCode; BranchCode) { }
-                column(BW_Vat_Registration_No_; "VAT Registration No.") { }
+                column(Vat_Registration_No_; "VAT Registration No.") { }
                 trigger OnPreDataItem()
                 begin
                     SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
@@ -136,7 +136,7 @@ report 80006 "NCT Journal Voucher"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Grouping data';
-                    Caption = 'Grouping';
+                    Caption = 'Grouping G/L Account';
                 }
             }
         }

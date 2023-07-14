@@ -52,7 +52,7 @@ report 80003 "NCT AR Voucher"
             var
                 NewDate: Date;
             begin
-
+                FunctionCenter.SetReportGLEntrySales(SalesHeader, GLEntry, TempAmt, groupping);
                 companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyinformationByVat"(ComText, SalesHeader."VAT Bus. Posting Group", false);
@@ -144,50 +144,33 @@ report 80003 "NCT AR Voucher"
         }
     }
 
-
+    requestpage
+    {
+        layout
+        {
+            area(Content)
+            {
+                field(gvgroupping; groupping)
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Grouping data';
+                    Caption = 'Grouping G/L Account';
+                }
+            }
+        }
+        trigger OnInit()
+        begin
+            groupping := true;
+        end;
+    }
 
     /// <summary> 
     /// Description for SetGLEntry.
     /// </summary>
     /// <param name="SalesHrd">Parameter of type Record "Sales Header".</param>
     procedure "SetGLEntry"(SalesHrd: Record "Sales Header")
-    var
-        GLTemp: Record "G/L Entry" temporary;
-        PreviewPost: Codeunit "NCT EventFunction";
-        EntryNo: Integer;
     begin
-        TempAmt := 0;
         SalesHeader.GET(SalesHrd."Document Type", SalesHrd."No.");
-        PreviewPost."SalesPreviewVourcher"(SalesHeader, GLTemp);
-
-        if GLTemp.FindFirst() then begin
-            repeat
-                GLEntry.reset();
-                GLEntry.SetRange("G/L Account No.", GLTemp."G/L Account No.");
-                GLEntry.SetRange("Global Dimension 1 Code", GLTemp."Global Dimension 1 Code");
-                GLEntry.SetRange("Global Dimension 2 Code", GLTemp."Global Dimension 2 Code");
-                if not GLEntry.FindFirst() then begin
-                    EntryNo += 1;
-                    GLEntry.init();
-                    GLEntry.TransferFields(GLTemp);
-                    GLEntry."Entry No." := EntryNo;
-                    GLEntry.Insert();
-                    TempAmt += GLEntry."Debit Amount";
-                end else begin
-                    GLEntry.Amount += GLTemp.Amount;
-                    if GLEntry.Amount > 0 then begin
-                        GLEntry."Debit Amount" := GLEntry.Amount;
-                        GLEntry."Credit Amount" := 0;
-                    end else begin
-                        GLEntry."Credit Amount" := ABS(GLEntry.Amount);
-                        GLEntry."Debit Amount" := 0;
-                    end;
-                    TempAmt += GLEntry."Debit Amount";
-                    GLEntry.Modify();
-                end;
-            until GLTemp.next() = 0;
-            GLEntry.reset();
-        end;
     end;
 
     /// <summary> 
@@ -221,6 +204,7 @@ report 80003 "NCT AR Voucher"
         TempAmt: Decimal;
         HaveItemLine: Boolean;
         HaveItemCharge: Boolean;
+        groupping: Boolean;
 
 
 }

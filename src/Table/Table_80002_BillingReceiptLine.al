@@ -119,36 +119,38 @@ table 80002 "NCT Billing Receipt Line"
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
-                BillingReceiptLine: Record "NCT Billing Receipt Line";
-                SumBillAmt: Decimal;
-                CurrencyFactor: Decimal;
+                VendorLedger: Record "Vendor Ledger Entry";
+                PurchaseBilling: Record "NCT Billing Receipt Line";
+                PurchaseBillingHeader: Record "NCT Billing Receipt Header";
+                TOtalAmt: Decimal;
             begin
-                TestOpenStatus();
-                CurrencyFactor := "Source Amount" / "Source Amount (LCY)";
-                "Amount (LCY)" := "Amount" * CurrencyFactor;
+                PurchaseBillingHeader.GET(rec."Document Type", rec."Document No.");
+                PurchaseBillingHeader.TestField("Status", PurchaseBillingHeader."Status"::Open);
+                if not VendorLedger.GET("Source Ledger Entry No.") then
+                    VendorLedger.Init();
+                VendorLedger.CalcFields("Remaining Amount");
+                PurchaseBilling.reset();
+                PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
+                PurchaseBilling.SetRange("Document No.", rec."Document No.");
+                PurchaseBilling.SetFilter("Line No.", '<>%1', rec."Line No.");
+                PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
 
-                CLEAR(SumBillAmt);
-                BillingReceiptLine.RESET();
-                BillingReceiptLine.SETRANGE("Document Type", "Document Type");
-                BillingReceiptLine.SETRANGE("Source Ledger Entry No.", "Source Ledger Entry No.");
-                BillingReceiptLine.SETFILTER("Document No.", '<>%1', "Document No.");
-                IF BillingReceiptLine.FIND('-') THEN begin
-                    BillingReceiptLine.CalcSums("Amount");
-                    SumBillAmt := BillingReceiptLine."Amount";
-                end;
+                PurchaseBilling.CalcSums("Amount");
 
-                CASE "Document Type" OF
-                    "Document Type"::"Sales Billing", "Document Type"::"Sales Receipt":
-                        IF ((SumBillAmt + "Amount") > "Source Amount") OR ("Amount" <= 0) THEN
-                            ERROR(Text001Txt, "Source Amount" - SumBillAmt, "Source Document No.", "Source Posting Date", "Source Amount", SumBillAmt);
-                    "Document Type"::"Purchase Billing":
-                        IF ((SumBillAmt + "Amount") > "Source Amount") OR ("Amount" <= 0) THEN
-                            ERROR(Text001Txt, "Source Amount" - SumBillAmt, "Source Document No.", "Source Posting Date", "Source Amount", SumBillAmt);
+                TOtalAmt := PurchaseBilling."Amount";
 
-                END;
-                SumBillAmt += "Amount";
+                PurchaseBilling.reset();
+                PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
+                PurchaseBilling.SetFilter("Document No.", '<>%1', rec."Document No.");
+                PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
+                PurchaseBilling.SetFilter("Status", '<>%1', PurchaseBilling."Status"::"Posted");
+                PurchaseBilling.CalcSums("Amount");
+                TOtalAmt := TOtalAmt + rec."Amount" + PurchaseBilling."Amount";
 
-                UpdateCustVendLedgStatus(SumBillAmt);
+
+                if (ABS(VendorLedger."Remaining Amount") - TOtalAmt) < 0 then
+                    VendorLedger.FieldError("Remaining Amount", strsubstno('remaining amount is %1', ABS(VendorLedger."Remaining Amount")));
+
             end;
         }
         field(20; "Amount (LCY)"; Decimal)
@@ -167,6 +169,15 @@ table 80002 "NCT Billing Receipt Line"
             Editable = false;
             DataClassification = SystemMetadata;
         }
+        field(23; "Status"; Enum "NCT Billing Receipt Status")
+        {
+
+            Caption = 'Status';
+            FieldClass = FlowField;
+            CalcFormula = lookup("NCT Billing Receipt Header"."Status" where("Document Type" = field("Document Type"), "No." = field("Document No.")));
+            Editable = false;
+
+        }
 
 
     }
@@ -177,37 +188,10 @@ table 80002 "NCT Billing Receipt Line"
             Clustered = true;
         }
     }
-    /// <summary> 
-    /// Description for UpdateCustVendLedgStatus.
-    /// </summary>
-    /// <param name="SumAmount">Parameter of type Decimal.</param>
-    local procedure UpdateCustVendLedgStatus(SumAmount: Decimal)
-
-    begin
-        CASE "Document Type" OF
-            "Document Type"::"Sales Billing", "Document Type"::"Sales Receipt":
-                IF CustLedgEntry.GET("Source Ledger Entry No.") THEN BEGIN
-                    CustLedgEntry.CALCFIELDS("Original Amount", "Original Amt. (LCY)", "NCT Billing Amount", "Billing Amount (LCY)", "NCT Receipt Amount", "NCT Receipt Amount (LCY)");
-                    IF "Document Type" = "Document Type"::"Sales Billing" THEN BEGIN
-                        CustLedgEntry."NCT Completed Billing" := (CustLedgEntry."Original Amount" - SumAmount) = 0;
-                        CustLedgEntry.MODIFY();
-                    END ELSE BEGIN
-                        CustLedgEntry."NCT Completed Receipt" := (CustLedgEntry."Original Amount" - SumAmount) = 0;
-                        CustLedgEntry.MODIFY();
-                    END;
-                END;
-            "Document Type"::"Purchase Billing":
-                IF VendLedgEntry.GET("Source Ledger Entry No.") THEN BEGIN
-                    VendLedgEntry.CALCFIELDS("Original Amount", "Original Amt. (LCY)");
-                    VendLedgEntry."NCT Completed Billing" := (VendLedgEntry."Original Amount" - SumAmount) = 0;
-                    VendLedgEntry.MODIFY();
-                END;
-        END;
-    end;
 
     trigger OnDelete()
     begin
-        "TestOpenStatus"();
+        TestOpenStatus();
         CASE "Document Type" OF
             "Document Type"::"Sales Billing":
 
@@ -233,14 +217,14 @@ table 80002 "NCT Billing Receipt Line"
 
     trigger OnModify()
     begin
-        "TestOpenStatus"();
+        TestOpenStatus();
     end;
 
 
     /// <summary> 
     /// Description for TestOpenStatus.
     /// </summary>
-    local procedure "TestOpenStatus"()
+    local procedure TestOpenStatus()
     var
         BillingReceiptHrd: Record "NCT Billing Receipt Header";
     begin
@@ -269,5 +253,5 @@ table 80002 "NCT Billing Receipt Line"
     var
         CustLedgEntry: Record "Cust. Ledger Entry";
         VendLedgEntry: Record "Vendor Ledger Entry";
-        Text001Txt: Label 'You cannot issue more than %1.\Source Document No. %2 (%3)   \Amount %4   \Issued Amount %5.', Locked = true;
+
 }

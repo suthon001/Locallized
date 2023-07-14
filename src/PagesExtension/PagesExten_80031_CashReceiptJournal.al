@@ -222,5 +222,30 @@ pageextension 80031 "NCT Receipt Journal" extends "Cash Receipt Journal"
                 end;
             }
         }
+
     }
+    trigger OnDeleteRecord(): Boolean
+    var
+        PurchaseBilling: Record "NCT Billing Receipt Header";
+    begin
+        if PurchaseBilling.GET(PurchaseBilling."Document Type"::"Sales Receipt", rec."Ref. Billing & Receipt No.") then begin
+            PurchaseBilling."Status" := PurchaseBilling."Status"::Released;
+            PurchaseBilling."Create to Journal" := false;
+            PurchaseBilling.Modify();
+        end;
+    end;
+
+    trigger OnOpenPage()
+    begin
+        if gvDocument <> '' then
+            rec.SetRange("Document No.", gvDocument);
+    end;
+
+    procedure SetDocumnet(pDocument: code[20])
+    begin
+        gvDocument := pDocument;
+    end;
+
+    var
+        gvDocument: Code[20];
 }

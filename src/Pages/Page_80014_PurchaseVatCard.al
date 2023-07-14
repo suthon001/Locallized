@@ -8,7 +8,7 @@ page 80014 "NCT Purchase Vat Card"
     SourceTable = "NCT Tax & WHT Header";
     Caption = 'Purchase Vat Card';
     RefreshOnActivate = true;
-    PromotedActionCategories = 'New,Process,Print';
+    PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Request Approval,Approval,Print/Send,Navigate';
     UsageCategory = None;
     layout
     {
@@ -118,6 +118,11 @@ page 80014 "NCT Purchase Vat Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Total Vat Amount field.';
                 }
+                field(Status; rec.Status)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Status field.';
+                }
 
             }
             part("PurchaseVatSubpage"; "NCT Purchase Vat Subpage")
@@ -127,6 +132,7 @@ page 80014 "NCT Purchase Vat Card"
                 ApplicationArea = all;
                 UpdatePropagation = Both;
                 Caption = 'Purchase Vat Subpage';
+                Editable = rec.Status = rec.Status::Open;
 
             }
 
@@ -134,6 +140,50 @@ page 80014 "NCT Purchase Vat Card"
     }
     actions
     {
+        area(Processing)
+        {
+            group("ReleaseReOpen")
+            {
+                Caption = 'Release&ReOpen';
+                action("Release")
+                {
+                    Caption = 'Release';
+                    Image = ReleaseDoc;
+                    ApplicationArea = all;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Category5;
+                    ToolTip = 'Executes the Release action.';
+                    trigger OnAction()
+
+                    begin
+                        if rec.Status = rec.Status::Released then
+                            exit;
+                        rec.Status := rec.Status::Released;
+                        rec.Modify();
+                    end;
+                }
+                action("Open")
+                {
+                    Caption = 'Open';
+                    Image = ReOpen;
+                    ApplicationArea = all;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Category5;
+                    ToolTip = 'Executes the Open action.';
+                    trigger OnAction()
+                    var
+
+                    begin
+                        if rec.Status = rec.Status::Open then
+                            exit;
+                        rec.Status := rec.Status::Open;
+                        rec.Modify();
+                    end;
+                }
+            }
+        }
         area(Reporting)
         {
 
@@ -194,6 +244,7 @@ page 80014 "NCT Purchase Vat Card"
         TotalVatAmt: Decimal;
         VatBusFilter, VatProdFilter : Code[250];
         DateFilter: Text;
+
 
 
 

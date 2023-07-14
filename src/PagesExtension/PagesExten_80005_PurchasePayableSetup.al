@@ -12,11 +12,6 @@ pageextension 80005 "NCT ExtenPurchaPayablesSetup" extends "Purchases & Payables
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Purchase Billing Nos. field.';
             }
-            field("Purchase Receipt Nos."; Rec."NCT Purchase Receipt Nos.")
-            {
-                ApplicationArea = all;
-                ToolTip = 'Specifies the value of the Purchase Receipt Nos. field.';
-            }
             field("Purchase VAT Nos."; rec."NCT Purchase VAT Nos.")
             {
                 ApplicationArea = all;

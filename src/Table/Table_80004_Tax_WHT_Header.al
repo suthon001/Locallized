@@ -27,11 +27,11 @@ table 80004 "NCT Tax & WHT Header"
             var
                 FunctionCenter: Codeunit "NCT Function Center";
             begin
+                rec.TestField(Status, rec.Status::Open);
                 "Month No." := DATE2DMY("End date of Month", 2);
                 "Month Name" := FunctionCenter."Get ThaiMonth"("Month No.");
                 "Year No." := DATE2DMY("End date of Month", 3);
                 "Year-Month" := format("End date of Month", 0, '<Year4>-<Month,2>');
-
             end;
         }
         field(4; "Year-Month"; Code[7])
@@ -58,10 +58,13 @@ table 80004 "NCT Tax & WHT Header"
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(8; "Status Lock"; Boolean)
+        field(8; "Status"; Option)
         {
-            Caption = 'Status Lock';
+            Caption = 'Status';
+            OptionCaption = 'Open,Released';
+            OptionMembers = "Open","Released";
             DataClassification = SystemMetadata;
+            Editable = false;
         }
         field(9; "Total Base Amount"; Decimal)
         {
@@ -158,22 +161,19 @@ table 80004 "NCT Tax & WHT Header"
 
     trigger OnDelete()
     begin
-
+        rec.TestField(Status, Status::Open);
         TaxReportLine.RESET();
         TaxReportLine.SETRANGE("Tax Type", "Tax Type");
         TaxReportLine.SETRANGE("Document No.", "Document No.");
-        IF TaxReportLine.FindSet() THEN
+        IF TaxReportLine.FindFirst() THEN
             TaxReportLine.DELETEALL(TRUE);
     end;
 
     trigger OnRename()
     begin
 
-        TaxReportLine.RESET();
-        TaxReportLine.SETRANGE("Tax Type", xRec."Tax Type");
-        TaxReportLine.SETRANGE("Document No.", xRec."Document No.");
-        IF TaxReportLine.FindFirst() THEN
-            ERROR('Can not change!');
+
+        ERROR('Can not Rename!');
     end;
 
     trigger OnInsert()
@@ -181,17 +181,15 @@ table 80004 "NCT Tax & WHT Header"
         TestField("Document No.");
         "Create By" := COPYSTR(UserId(), 1, 50);
         "Create DateTime" := CurrentDateTime;
-
     end;
 
-    var
-        TaxReportLine: Record "NCT Tax & WHT Line";
+
 
 
     /// <summary> 
     /// Description for AssistEdit.
     /// </summary>
-    /// <param name="OldVatHeader">Parameter of type Record "NCT Tax & WHT Header".</param>
+    /// <param name="OldVatHeader">Parameter of type Record "NCT Tax WHT Header".</param>
     /// <returns>Return variable "Boolean".</returns>
     procedure AssistEdit(OldVatHeader: Record "NCT Tax & WHT Header"): Boolean
     var
@@ -244,6 +242,8 @@ table 80004 "NCT Tax & WHT Header"
             end;
         end;
     END;
-    //  end;
+
+    var
+        TaxReportLine: Record "NCT Tax & WHT Line";
 }
 

@@ -7,10 +7,21 @@ codeunit 80005 "NCT EventFunction"
 
     [EventSubscriber(ObjectType::Page, Page::"Payment Journal", 'OnAfterValidateEvent', 'AppliesToDocNo', false, false)]
     local procedure AppliesToDocNo(var Rec: Record "Gen. Journal Line"; var xRec: Record "Gen. Journal Line")
+    var
+        PurchaseBillingLine: Record "NCT Billing Receipt Line";
     begin
+
         if rec."Applies-to Doc. No." <> xRec."Applies-to Doc. No." then
-            if (rec."Applies-to Doc. No." <> '') and (rec."Account Type" = rec."Account Type"::Vendor) then
+            if (rec."Applies-to Doc. No." <> '') and (rec."Account Type" = rec."Account Type"::Vendor) then begin
+                if rec."Ref. Billing & Receipt No." = '' then begin
+                    PurchaseBillingLine.reset();
+                    PurchaseBillingLine.SetRange("Document Type", PurchaseBillingLine."Document Type"::"Purchase Billing");
+                    PurchaseBillingLine.SetRange("Source Document No.", rec."Applies-to Doc. No.");
+                    if not PurchaseBillingLine.IsEmpty then
+                        rec.FieldError("Applies-to Doc. No.", StrSubstNo('this record process by puchase billing'));
+                end;
                 InsertWHTCertificate(Rec, rec."Applies-to Doc. No.");
+            end;
 
     end;
 
@@ -19,14 +30,24 @@ codeunit 80005 "NCT EventFunction"
     local procedure OnApplyVendorLedgerEntryOnBeforeModify(var GenJournalLine: Record "Gen. Journal Line")
     var
         VendLdgEntry: Record "Vendor Ledger Entry";
+        PurchaseBillingLine: Record "NCT Billing Receipt Line";
         InvoiceNo: Text;
     begin
         if GenJournalLine."Document No." <> '' then begin
+
             VendLdgEntry.reset();
             VendLdgEntry.SetRange("Vendor No.", GenJournalLine."Account No.");
             VendLdgEntry.SetRange("Applies-to ID", GenJournalLine."Document No.");
             if VendLdgEntry.FindSet() then begin
                 repeat
+                    if GenJournalLine."Ref. Billing & Receipt No." = '' then begin
+
+                        PurchaseBillingLine.reset();
+                        PurchaseBillingLine.SetRange("Document Type", PurchaseBillingLine."Document Type"::"Purchase Billing");
+                        PurchaseBillingLine.SetRange("Source Document No.", VendLdgEntry."Document No.");
+                        if not PurchaseBillingLine.IsEmpty then
+                            VendLdgEntry.FieldError("Document No.", StrSubstNo('this record process by puchase billing'));
+                    end;
                     if StrPos(InvoiceNO, VendLdgEntry."Document No.") = 0 then begin
                         if InvoiceNO <> '' then
                             InvoiceNO := InvoiceNO + '|';
@@ -62,7 +83,6 @@ codeunit 80005 "NCT EventFunction"
         ltWHTAppliedEntry.reset();
         ltWHTAppliedEntry.SetFilter("Document No.", pInvoiceNo);
         if ltWHTAppliedEntry.FindFirst() then begin
-
             GeneralSetup.GET();
             GeneralSetup.TESTFIELD("NCT WHT Document Nos.");
             IF Rec."NCT WHT Document No." = '' THEN BEGIN
@@ -77,9 +97,14 @@ codeunit 80005 "NCT EventFunction"
                 end;
 
                 Vendor.GET(rec."Account No.");
+                WHTBusiness.GET(ltWHTAppliedEntry."WHT Bus. Posting Group");
+                WHTBusiness.TestField("WHT Certificate No. Series");
+                WHTBusiness.TESTfield("WHT Account No.");
+
 
                 WHTHeader.INIT();
                 WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."NCT WHT Document Nos.", Rec."Posting Date", TRUE);
+                WHTHeader."No. Series" := GeneralSetup."NCT WHT Document Nos.";
                 WHTHeader."Gen. Journal Template Code" := Rec."Journal Template Name";
                 WHTHeader."Gen. Journal Batch Code" := Rec."Journal Batch Name";
                 WHTHeader."Gen. Journal Document No." := Rec."Document No.";
@@ -87,11 +112,12 @@ codeunit 80005 "NCT EventFunction"
                 WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Vendor;
                 WHTHeader.validate("WHT Source No.", Vendor."No.");
                 WHTHeader.INSERT();
-                WHTBusiness.GET(WHTHeader."WHT Business Posting Group");
-                WHTBusiness.TestField("WHT Certificate No. Series");
+
                 WHTHeader."WHT Type" := WHTBusiness."WHT Type";
                 WHTheader."WHT Certificate No." := NoSeriesMgt.GetNextNo(WHTBusiness."WHT Certificate No. Series", WorkDate(), true);
                 WHTHeader."WHT Option" := ltWHTAppliedEntry."WHT Option";
+                if ltWHTAppliedEntry."WHT Bus. Posting Group" <> '' then
+                    WHTHeader."WHT Business Posting Group" := ltWHTAppliedEntry."WHT Bus. Posting Group";
                 WHTHeader.Modify();
 
 
@@ -138,9 +164,9 @@ codeunit 80005 "NCT EventFunction"
     /// <summary>
     /// CreateWHTCertificate.
     /// </summary>
-    /// <param name="rec">VAR Record "NCT WHT Header".</param>
+    /// <param name="rec">VAR WHTHeader "NCT WHT Header".</param>
     /// <param name="pGenJournalLine">Record "Gen. Journal Line".</param>
-    procedure CreateWHTCertificate(var rec: Record "NCT WHT Header"; pGenJournalLine: Record "Gen. Journal Line")
+    procedure CreateWHTCertificate(var WHTHeader: Record "NCT WHT Header"; pGenJournalLine: Record "Gen. Journal Line")
     var
         GenJnlLine: Record "Gen. Journal Line";
         CurrLine: Integer;
@@ -149,8 +175,8 @@ codeunit 80005 "NCT EventFunction"
         WHTEntry: Record "NCT WHT Line";
         SumAmt: Decimal;
     begin
-        if Rec."WHT Certificate No." <> '' then begin
-            Rec.TESTfield("WHT Business Posting Group");
+        if WHTHeader."WHT Certificate No." <> '' then begin
+            WHTHeader.TESTfield("WHT Business Posting Group");
 
             Clear(CurrLine);
 
@@ -165,7 +191,7 @@ codeunit 80005 "NCT EventFunction"
 
 
 
-            WHTSetup.GET(rec."WHT Business Posting Group");
+            WHTSetup.GET(WHTHeader."WHT Business Posting Group");
             WHTSetup.TESTfield("WHT Account No.");
 
             GenJnlLine.RESET();
@@ -181,29 +207,29 @@ codeunit 80005 "NCT EventFunction"
             ELSE
                 CurrLine := ROUND((CurrLine + LastLine) / 2, 1);
             GenJnlLine.INIT();
-            GenJnlLine."Journal Template Name" := Rec."Gen. Journal Template Code";
-            GenJnlLine."Journal Batch Name" := Rec."Gen. Journal Batch Code";
+            GenJnlLine."Journal Template Name" := WHTHeader."Gen. Journal Template Code";
+            GenJnlLine."Journal Batch Name" := WHTHeader."Gen. Journal Batch Code";
             GenJnlLine."Source Code" := pGenJournalLine."Source Code";
             GenJnlLine."Line No." := CurrLine;
             GenJnlLine.INSERT();
             GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
             GenJnlLine.VALIDATE("Account No.", WHTSetup."WHT Account No.");
             GenJnlLine."Posting Date" := pGenJournalLine."Posting Date";
-            GenJnlLine."Document Date" := Rec."WHT Date";
+            GenJnlLine."Document Date" := WHTHeader."WHT Date";
             GenJnlLine."Document Type" := pGenJournalLine."Document Type";
             GenJnlLine."Document No." := pGenJournalLine."Document No.";
-            GenJnlLine."External Document No." := Rec."WHT Certificate No.";
-            GenJnlLine."NCT WHT Document No." := Rec."WHT No.";
+            GenJnlLine."External Document No." := WHTHeader."WHT Certificate No.";
+            GenJnlLine."NCT WHT Document No." := WHTHeader."WHT No.";
 
             WHTEntry.RESET();
-            WHTEntry.SETRANGE("WHT No.", Rec."WHT No.");
+            WHTEntry.SETRANGE("WHT No.", WHTHeader."WHT No.");
             WHTEntry.CalcSums("WHT Amount");
             SumAmt := WHTEntry."WHT Amount";
             GenJnlLine.Validate(Amount, -SumAmt);
             GenJnlLine.MODIFY();
-            Rec."Gen. Journal Line No." := CurrLine;
-            Rec."Gen. Journal Document No." := GenJnlLine."Document No.";
-            Rec.MODIFY();
+            WHTHeader."Gen. Journal Line No." := CurrLine;
+            WHTHeader."Gen. Journal Document No." := GenJnlLine."Document No.";
+            WHTHeader.MODIFY();
         end;
     end;
 
@@ -583,40 +609,94 @@ codeunit 80005 "NCT EventFunction"
     local procedure "OnAfterInitWorkflowTemplates"()
     var
         Workflow: Record Workflow;
+        workflowSetup: Codeunit "Workflow Setup";
+        BillingReceiptHeader: Record "NCT Billing Receipt Header";
+        BillingReceiptLine: Record "NCT Billing Receipt Line";
+        ApprovalEntry: Record "Approval Entry";
+
     begin
+        Workflow.reset();
         Workflow.SetRange(Category, BillingReceiptCatLbl);
         Workflow.SetRange(Template, true);
-        if Workflow.IsEmpty then
-            InsertWorkflowBillingReceiptTemplate();
+        if Workflow.IsEmpty then begin
+            workflowSetup.InsertTableRelation(Database::"NCT Billing Receipt Header", 0, Database::"Approval Entry", ApprovalEntry.FieldNo("Record ID to Approve"));
+            workflowSetup.InsertTableRelation(Database::"NCT Billing Receipt Header", BillingReceiptHeader.FieldNo("Document Type"), DATABASE::"NCT Billing Receipt Line", BillingReceiptLine.FieldNo("Document Type"));
+            workflowSetup.InsertTableRelation(Database::"NCT Billing Receipt Header", BillingReceiptHeader.FieldNo("No."), DATABASE::"NCT Billing Receipt Line", BillingReceiptLine.FieldNo("Document No."));
+            InsertWorkflowBillingReceiptTemplateSalesBilling();
+            InsertWorkflowBillingReceiptTemplateSalesReceipt();
+            InsertWorkflowBillingReceiptTemplatePurchaseBilling();
+        end;
 
     end;
 
-    local procedure InsertWorkflowBillingReceiptTemplate()
+    local procedure InsertWorkflowBillingReceiptTemplateSalesBilling()
     var
 
-        ApprovalEntry: Record "Approval Entry";
+        Workflow: Record 1501;
+        workflowSetup: Codeunit "Workflow Setup";
+
+    begin
+        workflowSetup.InsertWorkflowTemplate(Workflow, 'SBILLING', 'Sales Billing Workflow', BillingReceiptCatLbl);
+        InsertBillingReceiptDetailWOrkflowSalesBilling(Workflow);
+        workflowSetup.MarkWorkflowAsTemplate(Workflow);
+    end;
+
+    local procedure InsertWorkflowBillingReceiptTemplateSalesReceipt()
+    var
+        Workflow: Record 1501;
+        workflowSetup: Codeunit "Workflow Setup";
+
+    begin
+        workflowSetup.InsertWorkflowTemplate(Workflow, 'SRECEIPT', 'Sales Receipt Workflow', BillingReceiptCatLbl);
+        InsertBillingReceiptDetailWOrkflowSalesReceipt(Workflow);
+        workflowSetup.MarkWorkflowAsTemplate(Workflow);
+    end;
+
+    local procedure InsertWorkflowBillingReceiptTemplatePurchaseBilling()
+    var
         Workflow: Record 1501;
         workflowSetup: Codeunit "Workflow Setup";
     begin
 
-        workflowSetup.InsertTableRelation(Database::"NCT Billing Receipt Header", 0, Database::"Approval Entry", ApprovalEntry.FieldNo("Record ID to Approve"));
-        workflowSetup.InsertWorkflowTemplate(Workflow, BillingReceiptCatLbl, 'Billing Receipt Workflow', BillingReceiptCatLbl);
-        InsertBillingReceiptDetailWOrkflow(Workflow);
+
+        workflowSetup.InsertWorkflowTemplate(Workflow, 'PBILLING', 'Purchase Billing Workflow', BillingReceiptCatLbl);
+        InsertBillingReceiptDetailWOrkflowPurchBilling(Workflow);
         workflowSetup.MarkWorkflowAsTemplate(Workflow);
     end;
 
-    local procedure InsertBillingReceiptDetailWOrkflow(var workflow: Record 1501)
+    local procedure InsertBillingReceiptDetailWOrkflowSalesBilling(var workflow: Record 1501)
     var
-        BillingReceiptHeader: Record "NCT Billing Receipt Header";
-        BillingReceiptLine: Record "NCT Billing Receipt Line";
+
         WorkflowSetpArgument: Record 1523;
         blankDateFormula: DateFormula;
         BillingReceipt: Record "NCT Billing Receipt Header";
         WorkflowSetup: Codeunit "Workflow Setup";
 
     begin
-        workflowSetup.InsertTableRelation(Database::"NCT Billing Receipt Header", BillingReceiptHeader.FieldNo("Document Type"), DATABASE::"NCT Billing Receipt Line", BillingReceiptLine.FieldNo("Document Type"));
-        workflowSetup.InsertTableRelation(Database::"NCT Billing Receipt Header", BillingReceiptHeader.FieldNo("No."), DATABASE::"NCT Billing Receipt Line", BillingReceiptLine.FieldNo("Document No."));
+        WorkflowSetup.InitWorkflowStepArgument(WorkflowSetpArgument,
+        WorkflowSetpArgument."Approver Type"::Approver, WorkflowSetpArgument."Approver Limit Type"::"Direct Approver",
+        0, '', blankDateFormula, TRUE);
+
+        WorkflowSetup.InsertDocApprovalWorkflowSteps(
+      workflow,
+      BuildBillingReceiptCondition(BillingReceipt."Status"::Open, BillingReceipt."Document Type"::"Sales Billing"),
+      RunWorkflowOnSendBillingReceiptApprovalCode(),
+       BuildBillingReceiptCondition(BillingReceipt."Status"::"Pending Approval", BillingReceipt."Document Type"::"Sales Billing"),
+       RunWorkflowOnCancelBillingReceiptApprovalCode(),
+        WorkflowSetpArgument,
+       TRUE
+       );
+    end;
+
+    local procedure InsertBillingReceiptDetailWOrkflowSalesReceipt(var workflow: Record 1501)
+    var
+
+        WorkflowSetpArgument: Record 1523;
+        blankDateFormula: DateFormula;
+        BillingReceipt: Record "NCT Billing Receipt Header";
+        WorkflowSetup: Codeunit "Workflow Setup";
+
+    begin
 
         WorkflowSetup.InitWorkflowStepArgument(WorkflowSetpArgument,
         WorkflowSetpArgument."Approver Type"::Approver, WorkflowSetpArgument."Approver Limit Type"::"Direct Approver",
@@ -624,9 +704,33 @@ codeunit 80005 "NCT EventFunction"
 
         WorkflowSetup.InsertDocApprovalWorkflowSteps(
       workflow,
-      BuildBillingReceiptCondition(BillingReceipt."Status"::Open),
+      BuildBillingReceiptCondition(BillingReceipt."Status"::Open, BillingReceipt."Document Type"::"Sales Receipt"),
       RunWorkflowOnSendBillingReceiptApprovalCode(),
-       BuildBillingReceiptCondition(BillingReceipt."Status"::"Pending Approval"),
+       BuildBillingReceiptCondition(BillingReceipt."Status"::"Pending Approval", BillingReceipt."Document Type"::"Sales Receipt"),
+       RunWorkflowOnCancelBillingReceiptApprovalCode(),
+        WorkflowSetpArgument,
+       TRUE
+       );
+    end;
+
+    local procedure InsertBillingReceiptDetailWOrkflowPurchBilling(var workflow: Record 1501)
+    var
+
+        WorkflowSetpArgument: Record 1523;
+        blankDateFormula: DateFormula;
+        BillingReceipt: Record "NCT Billing Receipt Header";
+        WorkflowSetup: Codeunit "Workflow Setup";
+
+    begin
+        WorkflowSetup.InitWorkflowStepArgument(WorkflowSetpArgument,
+        WorkflowSetpArgument."Approver Type"::Approver, WorkflowSetpArgument."Approver Limit Type"::"Direct Approver",
+        0, '', blankDateFormula, TRUE);
+
+        WorkflowSetup.InsertDocApprovalWorkflowSteps(
+      workflow,
+      BuildBillingReceiptCondition(BillingReceipt."Status"::Open, BillingReceipt."Document Type"::"Purchase Billing"),
+      RunWorkflowOnSendBillingReceiptApprovalCode(),
+       BuildBillingReceiptCondition(BillingReceipt."Status"::"Pending Approval", BillingReceipt."Document Type"::"Purchase Billing"),
        RunWorkflowOnCancelBillingReceiptApprovalCode(),
         WorkflowSetpArgument,
        TRUE
@@ -680,12 +784,13 @@ codeunit 80005 "NCT EventFunction"
 
     end;
 
-    local procedure BuildBillingReceiptCondition(Status: Enum "NCT Billing Receipt Status"): Text
+    local procedure BuildBillingReceiptCondition(Status: Enum "NCT Billing Receipt Status"; DocumentType: Enum "NCT Billing Document Type"): Text
     var
         BillingReceipt: Record "NCT Billing Receipt Header";
         BillingReceiptLine: Record "NCT Billing Receipt Line";
         workflowSetup: Codeunit "Workflow Setup";
     begin
+        BillingReceipt.SetRange("Document Type", DocumentType);
         BillingReceipt.SetRange("Status", Status);
         exit(StrSubstNo(BillingReceiptConditionTxt, workflowSetup.Encode(BillingReceipt.GetView(false)), workflowSetup.Encode(BillingReceiptLine.GetView(false))));
     end;

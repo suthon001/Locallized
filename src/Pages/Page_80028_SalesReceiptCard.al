@@ -17,6 +17,7 @@ page 80028 "NCT Sales Receipt Card"
         {
             group(General)
             {
+                Editable = rec.Status = rec.Status::Open;
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -130,52 +131,7 @@ page 80028 "NCT Sales Receipt Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Due Date field.';
                 }
-                field("Receive Type"; Rec."Receive Type")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Receive Type field.';
-                }
-                field("Receive Account No."; Rec."Receive Account No.")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Receive Account No. field.';
-                }
-                field("Receive Date"; Rec."Receive Date")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Receive Date field.';
-                }
-                field("Template Name"; Rec."Template Name")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Template Name field.';
-                }
-                field("Batch Name"; Rec."Batch Name")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Batch Name field.';
-                }
-                field("RV No. Series"; Rec."RV No. Series")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the RV No. Series field.';
-                }
-                field("Receive Status"; Rec."Receive Status")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Receive Status field.';
-                }
 
-                field("Journal Document No."; Rec."Journal Document No.")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Journal Document No. field.';
-                }
-                field("Posted Document No."; Rec."Posted Document No.")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Posted Document No. field.';
-                }
                 field("Status"; Rec."Status")
                 {
                     ApplicationArea = all;
@@ -188,18 +144,75 @@ page 80028 "NCT Sales Receipt Card"
                 SubPageLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
                 UpdatePropagation = Both;
                 ApplicationArea = all;
+                Editable = rec.Status = rec.Status::Open;
+            }
+            group(ReceiveInfor)
+            {
+                Caption = 'Receipt Information';
+                field("Account Type"; Rec."Account Type")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Receipt Type field.';
+                    Caption = 'Receipt Account Type';
+                }
+                field("Account No."; Rec."Account No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Receipt Account No. field.';
+                    Caption = 'Receipt Account No.';
+                }
+                field("Journal Date"; Rec."Journal Date")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Receipt Date field.';
+                    Caption = 'Receipt Date';
+                }
+                field("Journal Template Name"; rec."Journal Template Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Template Name field.';
+                }
+                field("Journal Batch Name"; Rec."Journal Batch Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Batch Name field.';
+                }
+                field("Journal No. Series"; Rec."Journal No. Series")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the RV No. Series field.';
+                }
+
+                field("Journal Document No."; Rec."Journal Document No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Journal Document No. field.';
+                    trigger OnAssistEdit()
+                    var
+                        GenJournalLine: Record "Gen. Journal Line";
+                        CashReceiptJournal: Page "Cash Receipt Journal";
+                    begin
+                        rec.TestField("Journal Document No.");
+                        rec.TestField("Status", rec."Status"::"Created to Journal");
+                        CLEAR(CashReceiptJournal);
+                        GenJournalLine.reset();
+                        GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
+                        GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                        CashReceiptJournal.SetRecord(GenJournalLine);
+                        CashReceiptJournal.SetDocumnet(rec."Journal Document No.");
+                        CashReceiptJournal.Run();
+                        CLEAR(CashReceiptJournal);
+                    end;
+                }
             }
             group("Information")
             {
                 Caption = 'Information';
+                Editable = rec.Status = rec.Status::Open;
                 group("Bank")
                 {
                     Caption = 'Bank';
 
-                    //   field("Bank Code"; "Bank Code") { ApplicationArea = all; }
-                    //  field("Bank Name"; "Bank Name") { ApplicationArea = all; }
-                    //  field("Bank Branch Code"; "Bank Branch Code") { ApplicationArea = all; }
-                    //                    field("Bank Branch Name"; "Bank Branch Name") { ApplicationArea = all; }
                     field("Cheque Date"; Rec."Cheque Date")
                     {
                         ApplicationArea = all;
@@ -214,6 +227,7 @@ page 80028 "NCT Sales Receipt Card"
                 group("Prepaid WHT")
                 {
                     Caption = 'Prepaid WHT';
+                    Editable = rec.Status = rec.Status::Open;
                     field("Prepaid WHT Date"; Rec."Prepaid WHT Date")
                     {
                         ApplicationArea = all;
@@ -230,10 +244,11 @@ page 80028 "NCT Sales Receipt Card"
                         ToolTip = 'Specifies the value of the Prepaid WHT Amount (LCY) field.';
                     }
                 }
-                field("Receive Amount"; Rec."Receive Amount")
+                field("Receive & Payment Amount"; rec."Receive & Payment Amount")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Receive Amount field.';
+                    Caption = 'Receive Amount';
                 }
                 field("Bank Fee Amount (LCY)"; Rec."Bank Fee Amount (LCY)")
                 {

@@ -2632,29 +2632,11 @@ End Function</Code>
         <Field Name="BaseAmount_TaxReportLineFormat">
           <DataField>BaseAmount_TaxReportLineFormat</DataField>
         </Field>
-        <Field Name="BaseAmountVAT7_TaxReportLine">
-          <DataField>BaseAmountVAT7_TaxReportLine</DataField>
-        </Field>
-        <Field Name="BaseAmountVAT7_TaxReportLineFormat">
-          <DataField>BaseAmountVAT7_TaxReportLineFormat</DataField>
-        </Field>
-        <Field Name="BaseAmountVAT0_TaxReportLine">
-          <DataField>BaseAmountVAT0_TaxReportLine</DataField>
-        </Field>
-        <Field Name="BaseAmountVAT0_TaxReportLineFormat">
-          <DataField>BaseAmountVAT0_TaxReportLineFormat</DataField>
-        </Field>
         <Field Name="VATAmount_TaxReportLine">
           <DataField>VATAmount_TaxReportLine</DataField>
         </Field>
         <Field Name="VATAmount_TaxReportLineFormat">
           <DataField>VATAmount_TaxReportLineFormat</DataField>
-        </Field>
-        <Field Name="CustAmountPusConcession_TaxReportLine">
-          <DataField>CustAmountPusConcession_TaxReportLine</DataField>
-        </Field>
-        <Field Name="CustAmountPusConcession_TaxReportLineFormat">
-          <DataField>CustAmountPusConcession_TaxReportLineFormat</DataField>
         </Field>
         <Field Name="AmountInclVAT_TaxReportLine">
           <DataField>AmountInclVAT_TaxReportLine</DataField>

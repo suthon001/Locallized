@@ -6,6 +6,7 @@ page 80041 "NCT WHT53 Card"
     PageType = Document;
     SourceTable = "NCT Tax & WHT Header";
     Caption = 'Withholding tax Card';
+    PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Request Approval,Approval,Print/Send,Navigate';
     RefreshOnActivate = true;
     SourceTableView = sorting("Tax Type", "Document No.") where("Tax Type" = filter(WHT53));
     UsageCategory = None;
@@ -87,6 +88,11 @@ page 80041 "NCT WHT53 Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Total WHT Amount field.';
                 }
+                field(Status; rec.Status)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Status field.';
+                }
 
             }
             part("WHTSubpage"; "NCT WHT Subpage")
@@ -96,12 +102,57 @@ page 80041 "NCT WHT53 Card"
                 ApplicationArea = all;
                 UpdatePropagation = Both;
                 Caption = 'WHT Subpage';
+                Editable = rec.Status = rec.Status::Open;
             }
 
         }
     }
     actions
     {
+        area(Processing)
+        {
+            group("ReleaseReOpen")
+            {
+                Caption = 'Release&ReOpen';
+                action("Release")
+                {
+                    Caption = 'Release';
+                    Image = ReleaseDoc;
+                    ApplicationArea = all;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Category5;
+                    ToolTip = 'Executes the Release action.';
+                    trigger OnAction()
+
+                    begin
+                        if rec.Status = rec.Status::Released then
+                            exit;
+                        rec.Status := rec.Status::Released;
+                        rec.Modify();
+                    end;
+                }
+                action("Open")
+                {
+                    Caption = 'Open';
+                    Image = ReOpen;
+                    ApplicationArea = all;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Category5;
+                    ToolTip = 'Executes the Open action.';
+                    trigger OnAction()
+                    var
+
+                    begin
+                        if rec.Status = rec.Status::Open then
+                            exit;
+                        rec.Status := rec.Status::Open;
+                        rec.Modify();
+                    end;
+                }
+            }
+        }
         area(Reporting)
         {
 
@@ -187,6 +238,7 @@ page 80041 "NCT WHT53 Card"
         TotaBaseAmt: Decimal;
         TotalVatAmt: Decimal;
         DateFilter: Text;
+
 
 
 }

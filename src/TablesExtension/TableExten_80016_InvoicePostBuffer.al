@@ -37,7 +37,7 @@ tableextension 80016 "NCT Invoice Post. Buffer" extends "Invoice Post. Buffer"
             Caption = 'Tax Invoice Name';
             DataClassification = SystemMetadata;
         }
-        field(80006; "NCT Description Line"; Text[250])
+        field(80006; "NCT Description Line"; Text[150])
         {
             Caption = 'Description Line';
             DataClassification = SystemMetadata;

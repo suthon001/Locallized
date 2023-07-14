@@ -21,11 +21,6 @@ page 80015 "NCT Purchase Vat Subpage"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Send to Report field.';
                 }
-                field("Check Status"; Rec."Check Status")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Check Status field.';
-                }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = All;

@@ -352,34 +352,27 @@ Table 80001 "NCT Billing Receipt Header"
             Caption = 'Diff Amount (LCY)';
             DataClassification = SystemMetadata;
         }
-        field(41; "Receive Status"; Option)
-        {
-            Caption = 'Receive Status';
-            OptionCaption = ' ,In used,Used';
-            OptionMembers = " ","In used",Used;
-            Editable = false;
-            DataClassification = SystemMetadata;
-        }
-        field(42; "Template Name"; Code[10])
+
+        field(42; "Journal Template Name"; Code[10])
         {
             Caption = 'Template Name';
             DataClassification = CustomerContent;
             TableRelation = "Gen. Journal Template".Name;
         }
-        field(43; "Batch Name"; Code[10])
+        field(43; "Journal Batch Name"; Code[10])
         {
 
             Caption = 'Batch Name';
             DataClassification = CustomerContent;
-            TableRelation = "Gen. Journal Batch".Name where("Journal Template Name" = field("Template Name"));
+            TableRelation = "Gen. Journal Batch".Name where("Journal Template Name" = field("Journal Template Name"));
             trigger OnValidate()
             begin
-                TestField("Template Name");
+                TestField("Journal Template Name");
             end;
         }
-        field(44; "RV No. Series"; Code[20])
+        field(44; "Journal No. Series"; Code[20])
         {
-            Caption = 'RV No. Series';
+            Caption = 'Journal No. Series';
             TableRelation = "No. Series".Code;
             DataClassification = CustomerContent;
         }
@@ -387,51 +380,31 @@ Table 80001 "NCT Billing Receipt Header"
         {
             Caption = 'Journal Document No.';
             DataClassification = SystemMetadata;
-            Editable = false;
-            trigger OnLookup()
-            var
-                GenJnlLine: Record "Gen. Journal Line";
-            begin
-                GenJnlLine.RESET();
-                GenJnlLine.FILTERGROUP := 2;
-                GenJnlLine.SETRANGE("Journal Template Name", "Template Name");
-                GenJnlLine.FILTERGROUP := 0;
-                GenJnlLine.SETRANGE("Journal Batch Name", "Batch Name");
-                GenJnlLine."Journal Template Name" := '';
-                GenJnlLine."Journal Batch Name" := "Batch Name";
-                GenJnlLine.SETFILTER("Document No.", '%1', "Journal Document No.");
-                PAGE.RUN(PAGE::"Cash Receipt Journal", GenJnlLine);
-            end;
         }
-        field(46; "Posted Document No."; Code[20])
+
+        field(47; "Account Type"; Enum "NCT Billing Receipt Type")
         {
-            Caption = 'Posted Document No.';
-            DataClassification = SystemMetadata;
-            Editable = false;
-        }
-        field(47; "Receive Type"; Enum "NCT Billing Receipt Type")
-        {
-            Caption = 'Receive Type';
+            Caption = 'Account Type';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
                 TestStatusOpen();
             end;
         }
-        field(48; "Receive Account No."; Code[20])
+        field(48; "Account No."; Code[20])
         {
-            Caption = 'Receive Account No.';
+            Caption = 'Account No.';
             DataClassification = CustomerContent;
-            TableRelation = IF ("Receive Type" = CONST("Bank Account")) "Bank Account" ELSE
-            IF ("Receive Type" = CONST("G/L Account")) "G/L Account";
+            TableRelation = IF ("Account Type" = CONST("Bank Account")) "Bank Account" ELSE
+            IF ("Account Type" = CONST("G/L Account")) "G/L Account";
             trigger OnValidate()
             begin
                 TestStatusOpen();
             end;
         }
-        field(49; "Receive Date"; Date)
+        field(49; "Journal Date"; Date)
         {
-            Caption = 'Receive Date';
+            Caption = 'Journal Date';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
@@ -443,9 +416,9 @@ Table 80001 "NCT Billing Receipt Header"
             Caption = 'Cheque No.';
             DataClassification = CustomerContent;
         }
-        field(51; "Receive Amount"; Decimal)
+        field(51; "Receive & Payment Amount"; Decimal)
         {
-            Caption = 'Receive Amount';
+            Caption = 'Receive & Payment Amount';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
@@ -458,7 +431,13 @@ Table 80001 "NCT Billing Receipt Header"
             Caption = 'Cheque Date';
             DataClassification = CustomerContent;
         }
+        field(53; "Create to Journal"; Boolean)
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+            Caption = 'Create to Journal';
 
+        }
     }
     keys
     {
@@ -469,11 +448,12 @@ Table 80001 "NCT Billing Receipt Header"
     }
     trigger OnInsert()
     begin
+        TestField("No.");
         "Create By User" := COPYSTR(UserId(), 1, 50);
         "Create DateTime" := CurrentDateTime;
         "Posting Date" := Today();
         "Document Date" := Today();
-        TestField("No.");
+
     end;
 
     trigger OnDelete()
@@ -661,6 +641,134 @@ Table 80001 "NCT Billing Receipt Header"
         exit(true);
     end;
 
+    /// <summary>
+    /// CreateToPayment.
+    /// </summary>
+    procedure CreateToPayment()
+    var
+        GenJournalLine: Record "Gen. Journal Line";
+        GenJournalTem: Record "Gen. Journal Template";
+        PurchaseBillingLine, PurchaseBillingLineInvoice : Record "NCT Billing Receipt Line";
+        ltVendorLedger: Record "Vendor Ledger Entry";
+        WHTAppliedFunc: codeunit "NCT EventFunction";
+        DocumentNo: code[20];
+        TotalAmt: Decimal;
+        InvoiceNo: Text;
+        whtBus: code[20];
+    begin
+        TotalAmt := 0;
+        InvoiceNO := '';
+        whtBus := '';
+        rec.TestField("Journal Template Name");
+        rec.TestField("Journal Batch Name");
+        rec.TestField("Account No.");
+        rec.TestField("Journal No. Series");
+        rec.TestField("Journal Date");
+        GenJournalTem.get(rec."Journal Template Name");
+        PurchaseBillingLine.reset();
+        PurchaseBillingLine.SetRange("Document Type", rec."Document Type");
+        PurchaseBillingLine.SetRange("Document No.", rec."No.");
+        PurchaseBillingLine.SetFilter("Amount", '<>%1', 0);
+        if PurchaseBillingLine.FindSet() then begin
+            if rec."Journal Document No." <> '' then
+                DocumentNo := rec."Journal Document No."
+            else
+                DocumentNo := NoSeriesMgt.GetNextNo(rec."Journal No. Series", WorkDate(), TRUE);
+            repeat
+                GenJournalLine.Init();
+                GenJournalLine."Journal Template Name" := rec."Journal Template Name";
+                GenJournalLine."Journal Batch Name" := rec."Journal Batch Name";
+                GenJournalLine."Document No." := DocumentNo;
+                GenJournalLine."NCT Document No. Series" := rec."Journal No. Series";
+                GenJournalLine."Posting Date" := rec."Journal Date";
+                GenJournalLine."Document Date" := rec."Journal Date";
+                GenJournalLine."Source Code" := GenJournalTem."Source Code";
+                GenJournalLine."Line No." := GenJournalLine.GetLastLine();
+                GenJournalLine."Account Type" := GenJournalLine."Account Type"::Vendor;
+                GenJournalLine.insert();
+                GenJournalLine.Validate("Account No.", rec."Bill/Pay-to Cust/Vend No.");
+                GenJournalLine."External Document No." := PurchaseBillingLine."Document No.";
+                GenJournalLine.Validate(Amount, PurchaseBillingLine."Amount");
+                GenJournalLine."Ref. Billing & Receipt No." := rec."No.";
+
+                if PurchaseBillingLine."Source Document Type" = PurchaseBillingLine."Source Document Type"::Invoice then
+                    GenJournalLine."Applies-to Doc. Type" := GenJournalLine."Applies-to Doc. Type"::Invoice
+                else
+                    GenJournalLine."Applies-to Doc. Type" := GenJournalLine."Applies-to Doc. Type"::"Credit Memo";
+                GenJournalLine.Validate("Applies-to Doc. No.", PurchaseBillingLine."Source Document No.");
+                GenJournalLine.Modify();
+
+                ltVendorLedger.reset();
+                ltVendorLedger.SetRange("Document No.", PurchaseBillingLine."Source Document No.");
+                if ltVendorLedger.FindFirst() then begin
+                    if PurchaseBillingLine."Source Document Type" = PurchaseBillingLine."Source Document Type"::Invoice then
+                        ltVendorLedger.Validate("Amount to Apply", -PurchaseBillingLine."Amount")
+                    else
+                        ltVendorLedger.Validate("Amount to Apply", abs(PurchaseBillingLine."Amount"));
+                    ltVendorLedger.Modify();
+                end;
+
+                PurchaseBillingLineInvoice.reset();
+                PurchaseBillingLineInvoice.SetRange("Document Type", PurchaseBillingLine."Document Type");
+                PurchaseBillingLineInvoice.SetFilter("Document No.", '<>%1', PurchaseBillingLine."Document No.");
+                PurchaseBillingLineInvoice.SetRange("Source Document No.", PurchaseBillingLine."Source Document No.");
+                PurchaseBillingLineInvoice.SetFilter(Status, '>%1', 2);
+                if PurchaseBillingLineInvoice.IsEmpty then
+                    if StrPos(InvoiceNO, PurchaseBillingLine."Source Document No.") = 0 then begin
+                        if InvoiceNO <> '' then
+                            InvoiceNO := InvoiceNO + '|';
+                        InvoiceNO := InvoiceNO + PurchaseBillingLine."Source Document No.";
+                    end;
+
+
+
+            until PurchaseBillingLine.Next() = 0;
+            if InvoiceNO <> '' then begin
+                GenJournalLine.reset();
+                GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
+                GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                GenJournalLine.SetRange("Document No.", DocumentNo);
+                if GenJournalLine.FindFirst() then
+                    WHTAppliedFunc.InsertWHTCertificate(GenJournalLine, InvoiceNO);
+            end;
+
+            GenJournalLine.reset();
+            GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
+            GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+            GenJournalLine.SetRange("Document No.", DocumentNo);
+            GenJournalLine.CalcSums(Amount);
+            TotalAmt := GenJournalLine.Amount;
+
+            GenJournalLine.Init();
+            GenJournalLine."Journal Template Name" := rec."Journal Template Name";
+            GenJournalLine."Journal Batch Name" := rec."Journal Batch Name";
+            GenJournalLine."Document No." := DocumentNo;
+            GenJournalLine."NCT Document No. Series" := rec."Journal No. Series";
+            GenJournalLine."Posting Date" := rec."Journal Date";
+            GenJournalLine."Document Date" := rec."Journal Date";
+            GenJournalLine."Source Code" := GenJournalTem."Source Code";
+            GenJournalLine."Line No." := GenJournalLine.GetLastLine();
+            if rec."Account Type" = rec."Account Type"::"Bank Account" then
+                GenJournalLine."Account Type" := GenJournalLine."Account Type"::"Bank Account"
+            else
+                GenJournalLine."Account Type" := GenJournalLine."Account Type"::"G/L Account";
+            GenJournalLine.insert();
+            GenJournalLine."Ref. Billing & Receipt No." := rec."No.";
+            GenJournalLine.Validate("Account No.", rec."Account No.");
+            GenJournalLine.Validate(Amount, -TotalAmt);
+            GenJournalLine.Modify();
+
+
+            rec."Receive & Payment Amount" := ABS(TotalAmt);
+            rec."Journal Document No." := DocumentNo;
+            rec."Create to Journal" := true;
+            rec.Status := rec.Status::"Created to Journal";
+            rec.Modify();
+            Message('Created Successfully');
+        end else
+            Message('Nothing to Create');
+
+    end;
 
     var
         NoSeriesMgt: Codeunit NoSeriesManagement;

@@ -86,18 +86,11 @@ report 80011 "NCT Sales Vat"
                 column(BaseAmount_TaxReportLine; "Base Amount")
                 {
                 }
-                column(BaseAmountVAT7_TaxReportLine; "Base Amount VAT7")
-                {
-                }
-                column(BaseAmountVAT0_TaxReportLine; "Base Amount VAT0")
-                {
-                }
+
                 column(VATAmount_TaxReportLine; "VAT Amount")
                 {
                 }
-                column(CustAmountPusConcession_TaxReportLine; "Cust. Amt. Pus Concession")
-                {
-                }
+
                 column(AmountInclVAT_TaxReportLine; "Amount Incl. VAT")
                 {
                 }

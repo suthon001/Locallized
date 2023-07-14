@@ -9,41 +9,39 @@ tableextension 80037 "NCT ExtenVendorLedger Entry" extends "Vendor Ledger Entry"
         {
             Editable = false;
             Caption = 'Completed Billing';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
         field(80001; "NCT Billing Amount"; Decimal)
         {
             FieldClass = FlowField;
             Caption = 'Billing Amount';
             Editable = false;
-            CalcFormula = Sum("NCT Billing Receipt Line"."Amount" WHERE("Document Type" = filter('Purchase Billing'),
-             "Source Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = Sum("NCT Billing Receipt Line"."Amount" WHERE("Document Type" = filter("Purchase Billing"), "Source Ledger Entry No." = FIELD("Entry No."), "Status" = filter(<> "Posted")));
         }
-        field(80002; "Billing Amount (LCY)"; Decimal)
+        field(80002; "NCT Billing Remaining Amt."; Decimal)
         {
-            FieldClass = FlowField;
-            Caption = 'Billing Amount (LCY)';
+            Caption = 'Billing Remaining Amt.';
             Editable = false;
-            CalcFormula = Sum("NCT Billing Receipt Line"."Amount (LCY)" WHERE("Document Type" = filter('Purchase Billing'),
-             "Source Ledger Entry No." = FIELD("Entry No.")));
+            DataClassification = CustomerContent;
+
         }
         field(80003; "NCT Aging Due Date"; Date)
         {
             Editable = false;
             Caption = 'Aging Due Date';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
         }
 
         field(80004; "NCT Head Office"; Boolean)
         {
             Caption = 'Header Office';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
             Editable = false;
         }
         field(80005; "NCT Branch Code"; Code[5])
         {
             Caption = 'Branch Code';
-            DataClassification = SystemMetadata;
+            DataClassification = CustomerContent;
             Editable = false;
         }
         field(80006; "NCT Customer/Vendor No."; code[20])

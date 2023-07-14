@@ -58,7 +58,6 @@ table 80003 "NCT Customer & Vendor Branch"
             Caption = 'Name';
             DataClassification = CustomerContent;
         }
-
         field(6; "Address"; Text[100])
         {
             Caption = 'Address';
@@ -66,12 +65,12 @@ table 80003 "NCT Customer & Vendor Branch"
         }
         field(7; "Title Name"; Enum "NCT Title Document Name")
         {
-            Caption = 'Title Name';
+            Caption = 'คำนำหน้า';
             DataClassification = CustomerContent;
         }
         field(8; "Building"; Text[100])
         {
-            Caption = 'Building';
+            Caption = 'ชื่ออาคาร/หมู่บ้าน';
             DataClassification = CustomerContent;
         }
         field(9; "Alley/Lane"; Text[100])
@@ -81,42 +80,42 @@ table 80003 "NCT Customer & Vendor Branch"
         }
         field(10; "Sub-district"; Text[100])
         {
-            Caption = 'Sub-district';
+            Caption = 'ตำบล/แขวง';
             DataClassification = CustomerContent;
         }
         field(11; "District"; Text[100])
         {
-            Caption = 'District';
+            Caption = 'อำเภอ/เขต';
             DataClassification = CustomerContent;
         }
         field(12; "Floor"; Text[10])
         {
-            Caption = 'Floor';
+            Caption = 'ชั้น';
             DataClassification = CustomerContent;
         }
         field(13; "House No."; Text[50])
         {
-            Caption = 'House No.';
+            Caption = 'เลขที่ห้อง';
             DataClassification = CustomerContent;
         }
         field(14; "Village No."; Text[15])
         {
-            Caption = 'Village No.';
+            Caption = 'หมู่ที่';
             DataClassification = CustomerContent;
         }
         field(15; "Street"; Text[50])
         {
-            Caption = 'Street';
+            Caption = 'ถนน';
             DataClassification = CustomerContent;
         }
         field(16; "Province"; Text[50])
         {
-            Caption = 'Province';
+            Caption = 'จังหวัด';
             DataClassification = CustomerContent;
         }
         field(17; "Post Code"; code[20])
         {
-            Caption = 'Post Code';
+            Caption = 'รหัสไปรษณีย์';
             DataClassification = CustomerContent;
         }
         field(18; "No."; code[20])

@@ -43,10 +43,10 @@ page 80010 "NCT Sales Vat Lists"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Year No field.';
                 }
-                field("Status Lock"; Rec."Status Lock")
+                field(Status; rec.Status)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Status Lock field.';
+                    ToolTip = 'Specifies the value of the Status field.';
                 }
                 field("Total Base Amount"; Rec."Total Base Amount")
                 {

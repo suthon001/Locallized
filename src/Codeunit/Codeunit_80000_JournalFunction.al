@@ -6,36 +6,45 @@ codeunit 80000 "NCT Journal Function"
     EventSubscriberInstance = StaticAutomatic;
 
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforePostGenJnlLine', '', true, true)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforeUpdateAndDeleteLines', '', true, true)]
     /// <summary> 
     /// Description for InsertPostedGenLine.
     /// </summary>
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
-    local procedure "OnBeforePostGenJnlLine"(var GenJournalLine: Record "Gen. Journal Line")
+    local procedure "OnBeforeUpdateAndDeleteLines"(var GenJournalLine: Record "Gen. Journal Line")
     var
         WHTHeader: Record "NCT WHT Header";
         BillingHeader: Record "NCT Billing Receipt Header";
-
+        GenJnlLine2, GenJnlLine3 : Record "Gen. Journal Line";
     begin
+        GenJnlLine2.Copy(GenJournalLine);
+        GenJnlLine2.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
+        GenJnlLine2.SetFilter("Account No.", '<>%1', '');
+        GenJnlLine2.SetFilter("NCT WHT Document No.", '<>%1', '');
+        if GenJnlLine2.FindSet() then
+            repeat
+                WHTHeader.reset();
+                WHTHeader.setrange("WHT No.", GenJnlLine2."NCT WHT Document No.");
+                if WHTHeader.FindFirst() then begin
+                    WHTHeader."Posted" := true;
+                    WHTHeader.Modify();
+                end;
+            until GenJnlLine2.Next() = 0;
 
-        WHTHeader.reset();
-        WHTHeader.setrange("Gen. Journal Template Code", GenJournalLine."Journal Template Name");
-        WHTHeader.setrange("Gen. Journal Batch Code", GenJournalLine."Journal Batch Name");
-        WHTHeader.setrange("Gen. Journal Line No.", GenJournalLine."Line No.");
-        if WHTHeader.FindFirst() then begin
-            WHTHeader."Posted" := true;
-            WHTHeader.Modify();
-        end;
-
-        BillingHeader.reset();
-        BillingHeader.SetRange("Template Name", GenJournalLine."Journal Template Name");
-        BillingHeader.SetRange("Batch Name", GenJournalLine."Journal Batch Name");
-        BillingHeader.SetRange("Journal Document No.", GenJournalLine."Document No.");
-        if BillingHeader.FindFirst() then begin
-            BillingHeader."Status" := BillingHeader."Status"::Posted;
-            BillingHeader."Posted Document No." := GenJournalLine."Document No.";
-            BillingHeader.Modify();
-        end;
+        GenJnlLine3.Copy(GenJournalLine);
+        GenJnlLine3.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
+        GenJnlLine3.SetFilter("Account No.", '<>%1', '');
+        GenJnlLine3.SetFilter("Ref. Billing & Receipt No.", '<>%1', '');
+        if GenJnlLine3.FindSet() then
+            repeat
+                BillingHeader.reset();
+                BillingHeader.SetRange("No.", GenJnlLine3."Ref. Billing & Receipt No.");
+                if BillingHeader.FindFirst() then begin
+                    BillingHeader."Status" := BillingHeader."Status"::Posted;
+                    BillingHeader."Journal Document No." := GenJnlLine3."Document No.";
+                    BillingHeader.Modify();
+                end;
+            until GenJnlLine3.Next() = 0;
     end;
 
 
@@ -139,6 +148,7 @@ codeunit 80000 "NCT Journal Function"
             VATEntry."NCT Document Line No." := GenJournalLine."NCT Document Line No."
         else
             VATEntry."NCT Document Line No." := GenJournalLine."Line No.";
+
         if NOT VATProPostingGroup.get(VATEntry."VAT Prod. Posting Group") then
             VATProPostingGroup.init();
         IF VATProPostingGroup."NCT Direct VAT" then begin
@@ -489,6 +499,5 @@ codeunit 80000 "NCT Journal Function"
         ItemJnlLine."Bin Code" := PurchLine."Bin Code";
         ItemJnlLine.Description := PurchLine.Description;
     end;
-
 
 }

@@ -2305,7 +2305,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_Date.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_Date.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2339,7 +2339,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_No_.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2373,7 +2373,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_Name.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_Name.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2407,7 +2407,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Vat_Registration_No_.Value</Value>
+                                  <Value>=Fields!Vat_Registration_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2476,7 +2476,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_Base.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_Base.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2519,7 +2519,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_Amount.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_Amount.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2710,7 +2710,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!BW_Tax_Invoice_Base.Value)</Value>
+                                  <Value>=Sum(Fields!Tax_Invoice_Base.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2766,7 +2766,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!BW_Tax_Invoice_Amount.Value)</Value>
+                                  <Value>=Sum(Fields!Tax_Invoice_Amount.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -5821,29 +5821,29 @@ End Function
         <Field Name="Return_Shipment_No_">
           <DataField>Return_Shipment_No_</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_No_">
-          <DataField>BW_Tax_Invoice_No_</DataField>
+        <Field Name="Tax_Invoice_No_">
+          <DataField>Tax_Invoice_No_</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_Date">
-          <DataField>BW_Tax_Invoice_Date</DataField>
+        <Field Name="Tax_Invoice_Date">
+          <DataField>Tax_Invoice_Date</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_Name">
-          <DataField>BW_Tax_Invoice_Name</DataField>
+        <Field Name="Tax_Invoice_Name">
+          <DataField>Tax_Invoice_Name</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_Amount">
-          <DataField>BW_Tax_Invoice_Amount</DataField>
+        <Field Name="Tax_Invoice_Amount">
+          <DataField>Tax_Invoice_Amount</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_AmountFormat">
-          <DataField>BW_Tax_Invoice_AmountFormat</DataField>
+        <Field Name="Tax_Invoice_AmountFormat">
+          <DataField>Tax_Invoice_AmountFormat</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_Base">
-          <DataField>BW_Tax_Invoice_Base</DataField>
+        <Field Name="Tax_Invoice_Base">
+          <DataField>Tax_Invoice_Base</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_BaseFormat">
-          <DataField>BW_Tax_Invoice_BaseFormat</DataField>
+        <Field Name="Tax_Invoice_BaseFormat">
+          <DataField>Tax_Invoice_BaseFormat</DataField>
         </Field>
-        <Field Name="BW_Vat_Registration_No_">
-          <DataField>BW_Vat_Registration_No_</DataField>
+        <Field Name="Vat_Registration_No_">
+          <DataField>Vat_Registration_No_</DataField>
         </Field>
         <Field Name="BranchCode">
           <DataField>BranchCode</DataField>

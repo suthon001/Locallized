@@ -100,13 +100,13 @@ report 80005 "NCT Receive Voucher"
             {
                 DataItemTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.") where("NCT Require Screen Detail" = filter(VAT));
 
-                column(BW_Tax_Invoice_Date; format("NCT Tax Invoice Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                column(BW_Tax_Invoice_No_; "NCT Tax Invoice No.") { }
-                column(BW_Tax_Invoice_Name; "NCT Tax Invoice Name") { }
-                column(BW_Tax_Invoice_Amount; ABS("NCT Tax Invoice Amount")) { }
-                column(BW_Tax_Invoice_Base; ABS("NCT Tax Invoice Base")) { }
+                column(Tax_Invoice_Date; format("NCT Tax Invoice Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+                column(Tax_Invoice_No_; "NCT Tax Invoice No.") { }
+                column(Tax_Invoice_Name; "NCT Tax Invoice Name") { }
+                column(Tax_Invoice_Amount; ABS("NCT Tax Invoice Amount")) { }
+                column(Tax_Invoice_Base; ABS("NCT Tax Invoice Base")) { }
                 column(BranchCode; BranchCode) { }
-                column(BW_Vat_Registration_No_; "VAT Registration No.") { }
+                column(Vat_Registration_No_; "VAT Registration No.") { }
                 trigger OnPreDataItem()
                 begin
                     SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
@@ -128,14 +128,14 @@ report 80005 "NCT Receive Voucher"
             {
                 DataItemTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.") where("NCT Require Screen Detail" = filter(WHT));
 
-                column(BW_WHT_Document_No_; "NCT WHT Document No.") { }
-                column(BW_WHT_Date; format("NCT WHT Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                column(BW_WHT_Name; "NCT WHT Name" + ' ' + "NCT WHT Name 2") { }
-                column(BW_WHT__; "NCT WHT %") { }
-                column(BW_WHT_Amount; "NCT WHT Amount") { }
-                column(BW_WHT_Base; "NCT WHT Base") { }
-                column(BW_WHT_Product_Posting_Group; "NCT WHT Product Posting Group") { }
-                column(BW_WHT_Business_Posting_Group; "NCT WHT Business Posting Group") { }
+                column(WHT_Document_No_; "NCT WHT Document No.") { }
+                column(WHT_Date; format("NCT WHT Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+                column(WHT_Name; "NCT WHT Name" + ' ' + "NCT WHT Name 2") { }
+                column(WHT__; "NCT WHT %") { }
+                column(WHT_Amount; "NCT WHT Amount") { }
+                column(WHT_Base; "NCT WHT Base") { }
+                column(WHT_Product_Posting_Group; "NCT WHT Product Posting Group") { }
+                column(WHT_Business_Posting_Group; "NCT WHT Business Posting Group") { }
                 trigger OnPreDataItem()
                 begin
                     SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
@@ -189,15 +189,15 @@ report 80005 "NCT Receive Voucher"
             {
                 DataItemTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.") where("NCT Require Screen Detail" = filter(Cheque));
 
-                column(BW_Pay_Name; "NCT Pay Name") { }
-                column(BW_CQ_Bank_Account_No_; "NCT Bank Account No.") { }
-                column(BW_CQ_Bank_Branch_No_; "NCT Bank Branch No.") { }
-                column(BW_CQ_Bank_Code; "NCT Bank Code") { }
-                column(BW_CQ_Bank_Name; "NCT Bank Name") { }
-                column(BW_CQ_Cheque_Date; format("NCT Cheque Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                column(BW_CQ_Cheque_No_; "NCT Cheque No.") { }
-                column(BW_CQ_Name; '') { }
-                column(BW_CQ_Customer_Vendor; "NCT Customer/Vendor No.") { }
+                column(Pay_Name; "NCT Pay Name") { }
+                column(CQ_Bank_Account_No_; "NCT Bank Account No.") { }
+                column(CQ_Bank_Branch_No_; "NCT Bank Branch No.") { }
+                column(CQ_Bank_Code; "NCT Bank Code") { }
+                column(CQ_Bank_Name; "NCT Bank Name") { }
+                column(CQ_Cheque_Date; format("NCT Cheque Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+                column(CQ_Cheque_No_; "NCT Cheque No.") { }
+                column(CQ_Name; '') { }
+                column(CQ_Customer_Vendor; "NCT Customer/Vendor No.") { }
                 column(Cheque_Amount__LCY_; ABS("Amount (LCY)")) { }
 
                 trigger OnPreDataItem()
@@ -259,7 +259,7 @@ report 80005 "NCT Receive Voucher"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Grouping data';
-                    Caption = 'Grouping';
+                    Caption = 'Grouping G/L Account';
                 }
             }
         }

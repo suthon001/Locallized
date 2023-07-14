@@ -80,6 +80,10 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             Caption = 'WHT Business Posting Group';
             TableRelation = "NCT WHT Business Posting Group"."Code";
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalWhtAmount();
+            end;
 
         }
         field(80007; "NCT Tax Invoice No."; Code[20])
@@ -174,6 +178,10 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             Caption = 'WHT Product Posting Group';
             TableRelation = "NCT WHT Product Posting Group"."Code";
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalWhtAmount();
+            end;
 
         }
         field(80017; "NCT Status"; Enum "Purchase Document Status")
@@ -231,6 +239,14 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             trigger OnAfterValidate()
             begin
                 CheckQtyPR();
+                CalWhtAmount();
+            end;
+        }
+        modify("Direct Unit Cost")
+        {
+            trigger OnAfterValidate()
+            begin
+                CalWhtAmount();
             end;
         }
 
@@ -315,14 +331,13 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             PRLine.GET(PRLine."Document Type"::Quote, "NCT Ref. PQ No.", "NCT Ref. PQ Line No.");
             if (TempQty + Quantity) > PRLine.Quantity then
                 FieldError(Quantity, StrSubstNo(PrRemainingErr, "NCT Ref. PQ No.", PRLine.Quantity - TempQty));
+
             PRLine."Outstanding Quantity" := PRLine.Quantity - (TempQty + Quantity);
             PRLine."Outstanding Qty. (Base)" := PRLine."Quantity (Base)" - (TempQtyBase + "Quantity (Base)");
             PRLine."Completely Received" := PRLine."Outstanding Quantity" = 0;
-            //   Validate("Make to PO Qty.", PRLine."Outstanding Quantity");
             PRLine.Modify();
         end;
-        // if ("Document Type" = "Document Type"::Quote) AND ("No." <> '') then
-        //     Validate("Make to PO Qty.", PRLine.Quantity);
+
 
 
     end;
@@ -338,7 +353,24 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
     begin
     end;
 
+
+    local procedure CalWhtAmount()
+    var
+        WHTPostingSetup: Record "NCT WHT Posting Setup";
+    begin
+        IF WHTPostingSetup.GET(rec."NCT WHT Business Posting Group", rec."NCT WHT Product Posting Group") THEN BEGIN
+            "NCT WHT Base" := rec."Line Amount";
+            "NCT WHT %" := WHTPostingSetup."WHT %";
+            "NCT WHT Amount" := ROUND(("NCT WHT Base") * (WHTPostingSetup."WHT %" / 100), 0.01);
+        END
+        ELSE BEGIN
+            "NCT WHT Base" := 0;
+            "NCT WHT %" := 0;
+            "NCT WHT Amount" := 0;
+        END;
+    end;
+
     var
         PrRemainingErr: Label 'PR No. %1 ,Remaining Quantity is %2', Locked = true;
-        PoQtyErr: label 'not more than %1', Locked = true;
+
 }

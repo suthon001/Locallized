@@ -287,8 +287,15 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
 
     trigger OnDeleteRecord(): Boolean
     var
+        PurchaseBilling: Record "NCT Billing Receipt Header";
         WHTEader: Record "NCT WHT Header";
     begin
+        if PurchaseBilling.GET(PurchaseBilling."Document Type"::"Purchase Billing", rec."Ref. Billing & Receipt No.") then begin
+            PurchaseBilling."Status" := PurchaseBilling."Status"::Released;
+            PurchaseBilling."Create to Journal" := false;
+            PurchaseBilling.Modify();
+        end;
+
         WHTEader.reset();
         WHTEader.SetRange("Gen. Journal Template Code", Rec."Journal Template Name");
         WHTEader.SetRange("Gen. Journal Batch Code", Rec."Journal Batch Name");
@@ -297,4 +304,19 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
             WHTEader.Delete(True);
     end;
 
+
+
+    trigger OnOpenPage()
+    begin
+        if gvDocument <> '' then
+            rec.SetRange("Document No.", gvDocument);
+    end;
+
+    procedure SetDocumnet(pDocument: code[20])
+    begin
+        gvDocument := pDocument;
+    end;
+
+    var
+        gvDocument: Code[20];
 }

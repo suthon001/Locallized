@@ -50,12 +50,13 @@ report 80001 "NCT AP Voucher"
             column(HaveItemLine; HaveItemLine) { }
             column(HaveItemCharge; HaveItemCharge) { }
             column(HaveItemVAT; HaveItemVAT) { }
+            column(HAVEWHT; HAVEWHT) { }
 
             trigger OnPreDataItem()
             var
                 NewDate: Date;
             begin
-
+                FunctionCenter.SetReportGLEntryPurchase(PurHeader, GLEntry, TempAmt, groupping);
                 companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", false);
@@ -92,16 +93,14 @@ report 80001 "NCT AP Voucher"
         }
         dataitem("PurchaseLineTaxInvoice"; "Purchase Line")
         {
-            DataItemTableView = sorting("DOcument Type", "Document No.", "Line No.")
-            where("NCT Tax Invoice No." = filter(<> ''));
+            DataItemTableView = sorting("DOcument Type", "Document No.", "Line No.") where("NCT Tax Invoice No." = filter(<> ''));
 
-
-            column(BW_Tax_Invoice_No_; "NCT Tax Invoice No.") { }
-            column(BW_Tax_Invoice_Date; format("NCT Tax Invoice Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-            column(BW_Tax_Invoice_Name; "NCT Tax Invoice Name") { }
-            column(BW_Tax_Invoice_Amount; "NCT Tax Invoice Amount") { }
-            column(BW_Tax_Invoice_Base; "NCT Tax Invoice Base") { }
-            column(BW_Vat_Registration_No_; "NCT Vat Registration No.") { }
+            column(Tax_Invoice_No_; "NCT Tax Invoice No.") { }
+            column(Tax_Invoice_Date; format("NCT Tax Invoice Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+            column(Tax_Invoice_Name; "NCT Tax Invoice Name") { }
+            column(Tax_Invoice_Amount; "NCT Tax Invoice Amount") { }
+            column(Tax_Invoice_Base; "NCT Tax Invoice Base") { }
+            column(Vat_Registration_No_; "NCT Vat Registration No.") { }
             column(BranchCode; BranchCode) { }
             trigger OnPreDataItem()
             begin
@@ -163,54 +162,45 @@ report 80001 "NCT AP Voucher"
                 SetRange("Document No.", PurHeader."No.");
             end;
         }
+        dataitem(WHTLINE; "Purchase Line")
+        {
+
+            DataItemTableView = SORTING("Document Type", "Document No.", "Line No.") where("NCT WHT Product Posting Group" = filter(<> ''));
+
+            column(NCT_WHT_Bus__Posting_Group; "NCT WHT Business Posting Group") { }
+            column(NCT_WHT_Product_Posting_Group; "NCT WHT Product Posting Group") { }
+            column(NCT_WHT_Option; format("NCT WHT Option")) { }
+            column(NCT_WHT_Base; "NCT WHT Base") { }
+            column(NCT_WHT_Amount; "NCT WHT Amount") { }
+            column(NCT_WHT__; "NCT WHT %") { }
+            trigger OnPreDataItem()
+            begin
+                SetRange("Document Type", PurHeader."Document Type");
+                SetRange("Document No.", PurHeader."No.");
+            end;
+        }
 
     }
 
-
-
-    /// <summary> 
-    /// Description for SetGLEntry.
-    /// </summary>
-    /// <param name="PurchaseHeader">Parameter of type Record "Purchase Header".</param>
-    procedure "SetGLEntry"(PurchaseHeader: Record "Purchase Header")
-    var
-        GLTemp: Record "G/L Entry" temporary;
-        PreviewPost: Codeunit "NCT EventFunction";
-        EntryNo: Integer;
-    begin
-        TempAmt := 0;
-        PurHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.");
-        PreviewPost."PurchasePreviewVourcher"(PurHeader, GLTemp);
-
-        if GLTemp.FindFirst() then begin
-            repeat
-                GLEntry.reset();
-                GLEntry.SetRange("G/L Account No.", GLTemp."G/L Account No.");
-                GLEntry.SetRange("Global Dimension 1 Code", GLTemp."Global Dimension 1 Code");
-                GLEntry.SetRange("Global Dimension 2 Code", GLTemp."Global Dimension 2 Code");
-                if not GLEntry.FindFirst() then begin
-                    EntryNo += 1;
-                    GLEntry.init();
-                    GLEntry.TransferFields(GLTemp);
-                    GLEntry."Entry No." := EntryNo;
-                    GLEntry.Insert();
-                    TempAmt += GLEntry."Debit Amount";
-                end else begin
-                    GLEntry.Amount += GLTemp.Amount;
-                    if GLEntry.Amount > 0 then begin
-                        GLEntry."Debit Amount" := GLEntry.Amount;
-                        GLEntry."Credit Amount" := 0;
-                    end else begin
-                        GLEntry."Credit Amount" := ABS(GLEntry.Amount);
-                        GLEntry."Debit Amount" := 0;
-                    end;
-                    TempAmt += GLEntry."Debit Amount";
-                    GLEntry.Modify();
-                end;
-            until GLTemp.next() = 0;
-            GLEntry.reset();
+    requestpage
+    {
+        layout
+        {
+            area(Content)
+            {
+                field(gvgroupping; groupping)
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Grouping data';
+                    Caption = 'Grouping G/L Account';
+                }
+            }
+        }
+        trigger OnInit()
+        begin
+            groupping := true;
         end;
-    end;
+    }
 
     /// <summary> 
     /// Description for CheckLineData.
@@ -235,7 +225,23 @@ report 80001 "NCT AP Voucher"
         HaveItemCharge := PurchaseLine.Count <> 0;
 
 
+        PurchaseLine.RESET();
+        PurchaseLine.SETRANGE("Document Type", PurHeader."Document Type");
+        PurchaseLine.SETRANGE("Document No.", PurHeader."No.");
+        PurchaseLine.SETFILTER("NCT WHT Product Posting Group", '<>%1', '');
+        HAVEWHT := PurchaseLine.Count <> 0;
 
+
+
+    end;
+
+    /// <summary> 
+    /// Description for SetGLEntry.
+    /// </summary>
+    /// <param name="PurchaseHeader">Parameter of type Record "Purchase Header".</param>
+    procedure "SetGLEntry"(PurchaseHeader: Record "Purchase Header")
+    begin
+        PurHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.");
     end;
 
     var
@@ -254,9 +260,7 @@ report 80001 "NCT AP Voucher"
         TempAmt: Decimal;
         HaveItemLine: Boolean;
         HaveItemCharge: Boolean;
-        HaveItemVAT: Boolean;
-
-
-
+        HaveItemVAT, HAVEWHT : Boolean;
+        groupping: Boolean;
 
 }

@@ -4,19 +4,22 @@
 codeunit 80001 "NCT Purchase Function"
 {
     EventSubscriberInstance = StaticAutomatic;
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeDeleteAfterPosting', '', false, false)]
-    local procedure OnBeforeDeleteAfterPostingPurchase(var PurchaseHeader: Record "Purchase Header")
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnFinalizePostingOnBeforeUpdateAfterPosting', '', false, false)]
+    local procedure OnFinalizePostingOnBeforeUpdateAfterPosting(var PurchHeader: Record "Purchase Header")
     var
         PurchaseLine: Record "Purchase Line";
         WHTAppEntry: Record "NCT WHT Applied Entry";
         LastLineNo: Integer;
     begin
         LastLineNo := 0;
-        if PurchaseHeader."Document Type" in [PurchaseHeader."Document Type"::Invoice, PurchaseHeader."Document Type"::"Credit Memo"] then begin
+
+        if PurchHeader."Document Type" in [PurchHeader."Document Type"::Invoice, PurchHeader."Document Type"::"Credit Memo"] then begin
+
             PurchaseLine.reset();
-            PurchaseLine.SetRange("Document Type", PurchaseHeader."Document Type");
-            PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+            PurchaseLine.SetRange("Document Type", PurchHeader."Document Type");
+            PurchaseLine.SetRange("Document No.", PurchHeader."No.");
             PurchaseLine.SetFilter("NCT WHT %", '<>%1', 0);
+            OnbeforInsertWHTAPPLY(PurchHeader, PurchaseLine);
             if PurchaseLine.FindSet() then
                 repeat
                     LastLineNo := LastLineNo + 10000;
@@ -31,27 +34,21 @@ codeunit 80001 "NCT Purchase Function"
                     WHTAppEntry."WHT %" := PurchaseLine."NCT WHT %";
                     WHTAppEntry."WHT Base" := PurchaseLine."NCT WHT Base";
                     WHTAppEntry."WHT Amount" := PurchaseLine."NCT WHT Amount";
-                    WHTAppEntry."WHT Name" := PurchaseHeader."Buy-from Vendor Name";
-                    WHTAppEntry."WHT Name 2" := PurchaseHeader."Buy-from Vendor Name 2";
-                    WHTAppEntry."WHT Address" := PurchaseHeader."Buy-from Address";
-                    WHTAppEntry."WHT Address 2" := PurchaseHeader."Buy-from Address 2";
-                    WHTAppEntry."WHT City" := PurchaseHeader."Buy-from City";
-                    WHTAppEntry."VAT Registration No." := PurchaseHeader."VAT Registration No.";
+                    WHTAppEntry."WHT Name" := PurchHeader."Buy-from Vendor Name";
+                    WHTAppEntry."WHT Name 2" := PurchHeader."Buy-from Vendor Name 2";
+                    WHTAppEntry."WHT Address" := PurchHeader."Buy-from Address";
+                    WHTAppEntry."WHT Address 2" := PurchHeader."Buy-from Address 2";
+                    WHTAppEntry."WHT City" := PurchHeader."Buy-from City";
+                    WHTAppEntry."VAT Registration No." := PurchHeader."VAT Registration No.";
                     WHTAppEntry."WHT Option" := PurchaseLine."NCT WHT Option";
-                    WHTAppEntry."Branch Code" := PurchaseHeader."NCT Branch Code";
-                    WHTAppEntry."Head Office" := PurchaseHeader."NCT Head Office";
-                    WHTAppEntry."WHT Post Code" := PurchaseHeader."Buy-from Post Code";
-                    WHTAppEntry.Insert();
+                    WHTAppEntry."Branch Code" := PurchHeader."NCT Branch Code";
+                    WHTAppEntry."Head Office" := PurchHeader."NCT Head Office";
+                    WHTAppEntry."WHT Post Code" := PurchHeader."Buy-from Post Code";
+                    WHTAppEntry.Insert(true);
                 until PurchaseLine.Next() = 0;
         end;
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Purchase Line", 'OnAfterInitOutstandingAmount', '', false, false)]
-    local procedure OnAfterUpdateAmounts(var PurchLine: Record "Purchase Line")
-    begin
-        PurchLine."NCT WHT Base" := PurchLine.Amount;
-        PurchLine.Validate("NCT WHT %");
-    end;
 
     [EventSubscriber(ObjectType::Table, Database::"Purch. Inv. Line", 'OnAfterInitFromPurchLine', '', True, True)]
     local procedure "OnAfterInitFromPurchaseLine"(PurchLine: Record "Purchase Line"; PurchInvHeader: Record "Purch. Inv. Header"; var PurchInvLine: Record "Purch. Inv. Line")
@@ -349,6 +346,10 @@ codeunit 80001 "NCT Purchase Function"
         end;
     end;
 
+    [BusinessEvent(false)]
+    local procedure OnbeforInsertWHTAPPLY(var PurchaseHeader: Record "Purchase Header"; var PurchaseLine: Record "Purchase Line")
+    begin
+    end;
 
 
 }

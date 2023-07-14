@@ -283,10 +283,7 @@ page 80008 "NCT WHT Certificate"
                     WHTEntry.CalcSums("WHT Amount");
                     SumAmt := WHTEntry."WHT Amount";
                 end;
-                GenJnlLine.Amount := -SumAmt;
-                GenJnlLine."Amount (LCY)" := -SumAmt;
-                GenJnlLine."Balance (LCY)" := -SumAmt; // 2016-12-06
-                GenJnlLine."Credit Amount" := SumAmt;
+                GenJnlLine.validate(Amount, -SumAmt);
                 GenJnlLine.MODIFY();
                 Rec."Gen. Journal Line No." := CurrLine;
                 Rec."Gen. Journal Document No." := GenJnlLine."Document No.";
@@ -301,11 +298,7 @@ page 80008 "NCT WHT Certificate"
                     SumAmt := WHTEntry."WHT Amount";
 
                 end;
-                GenJnlLine.Amount := -SumAmt;
-                GenJnlLine."Amount (LCY)" := -SumAmt;
-                GenJnlLine."Balance (LCY)" := -SumAmt; //
-                GenJnlLine."Credit Amount" := SumAmt;
-
+                GenJnlLine.validate(Amount, -SumAmt);
                 GenJnlLine.MODIFY();
                 IF Rec."Gen. Journal Line No." = 0 THEN
                     Rec."Gen. Journal Line No." := GenJnlLine."Line No.";

@@ -49,20 +49,10 @@ page 80032 "NCT Purchase Billing Subform"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Source Amount field.';
                 }
-                field("Source Amount (LCY)"; Rec."Source Amount (LCY)")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Source Amount (LCY) field.';
-                }
                 field("Amount"; Rec."Amount")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Amount field.';
-                }
-                field("Amount (LCY)"; Rec."Amount (LCY)")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Amount (LCY) field.';
                 }
             }
         }

@@ -25,10 +25,6 @@ page 80023 "NCT WHT Subpage"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Posting Date field.';
                 }
-                // field("WHT Date"; "WHT Date")
-                // {
-                //     ApplicationArea = All;
-                // }
                 field("Voucher No."; Rec."Voucher No.")
                 {
                     ApplicationArea = All;
@@ -91,15 +87,72 @@ page 80023 "NCT WHT Subpage"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Address 2 field.';
                 }
-                field("City"; Rec."City")
+                field("Building"; Rec."Building")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the City field.';
+                    Caption = 'ชื่ออาคาร/หมู่บ้าน';
+                    ToolTip = 'Specifies the value of the ชื่ออาคาร/หมู่บ้าน field.';
+                }
+                field("House No."; Rec."House No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'เลขที่บ้าน';
+                    ToolTip = 'Specifies the value of the เลขที่บ้าน field.';
+                }
+                field("No."; Rec."No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'เลขที่';
+                    ToolTip = 'Specifies the value of the เลขที่ field.';
+                }
+                field("Floor"; Rec."Floor")
+                {
+                    ApplicationArea = All;
+                    Caption = 'ชั้น';
+                    ToolTip = 'Specifies the value of the ชั้น field.';
+                }
+                field("Village No."; Rec."Village No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'หมู่ที่';
+                    ToolTip = 'Specifies the value of the หมู่ที่ field.';
+                }
+                field("Street"; Rec."Street")
+                {
+                    ApplicationArea = All;
+                    Caption = 'ถนน';
+                    ToolTip = 'Specifies the value of the ถนน field.';
+                }
+                field("Alley/Lane"; Rec."Alley/Lane")
+                {
+                    ApplicationArea = All;
+                    Caption = 'ตรอก/ซอย';
+                    ToolTip = 'Specifies the value of the ตรอก/ซอย field.';
+                }
+                field("Sub-district"; Rec."Sub-district")
+                {
+                    ApplicationArea = All;
+                    Caption = 'ตำบล/แขวง';
+                    ToolTip = 'Specifies the value of the ตำบล/แขวง field.';
+                }
+                field("District"; Rec."District")
+                {
+                    ApplicationArea = All;
+                    Caption = 'อำเภอ/เขต';
+                    ToolTip = 'Specifies the value of the อำเภอ/เขต field.';
+                }
+
+                field("Province"; Rec."Province")
+                {
+                    ApplicationArea = All;
+                    Caption = 'จังหวัด';
+                    ToolTip = 'Specifies the value of the จังหวัด field.';
                 }
                 field("Post Code"; Rec."Post Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Post Code field.';
+                    Caption = 'รหัสไปร์ษณีย์';
                 }
                 field("Head Office"; Rec."Head Office")
                 {
@@ -220,28 +273,23 @@ page 80023 "NCT WHT Subpage"
                     BranchCode := TaxReportLine."Branch Code";
                 if BranchCode = '' then
                     BranchCode := '-';
-                CustVendorBranch.reset();
-                CustVendorBranch.SetRange("Source Type", CustVendorBranch."Source Type"::Vendor);
-                CustVendorBranch.SetRange("Source No.", TaxReportLine."Vendor No.");
-                CustVendorBranch.SetRange("Head Office", TaxReportLine."Head Office");
-                CustVendorBranch.SetRange("Branch Code", TaxReportLine."Branch Code");
-                if CustVendorBranch.FindFirst() then begin
-                    BranchData[1] := format(CustVendorBranch."Title Name");
-                    if BranchData[1] = '' then
-                        BranchData[1] := '-';
-                    BranchData[2] := CustVendorBranch."Name";
-                    BranchData[3] := CustVendorBranch."Building";
-                    BranchData[4] := CustVendorBranch."House No.";
-                    BranchData[5] := CustVendorBranch."Floor";
-                    BranchData[6] := CustVendorBranch."No.";
-                    BranchData[7] := CustVendorBranch."Village No.";
-                    BranchData[8] := CustVendorBranch."Alley/Lane";
-                    BranchData[9] := CustVendorBranch."Street";
-                    BranchData[10] := CustVendorBranch."Sub-district";
-                    BranchData[11] := CustVendorBranch."District";
-                    BranchData[12] := CustVendorBranch."Province";
-                    BranchData[13] := CustVendorBranch."post Code";
-                end;
+
+                BranchData[1] := format(TaxReportLine."Title Name");
+                if BranchData[1] = '' then
+                    BranchData[1] := '-';
+                BranchData[2] := TaxReportLine."Name";
+                BranchData[3] := TaxReportLine."Building";
+                BranchData[4] := TaxReportLine."House No.";
+                BranchData[5] := TaxReportLine."Floor";
+                BranchData[6] := TaxReportLine."No.";
+                BranchData[7] := TaxReportLine."Village No.";
+                BranchData[8] := TaxReportLine."Alley/Lane";
+                BranchData[9] := TaxReportLine."Street";
+                BranchData[10] := TaxReportLine."Sub-district";
+                BranchData[11] := TaxReportLine."District";
+                BranchData[12] := TaxReportLine."Province";
+                BranchData[13] := TaxReportLine."post Code";
+
 
                 IF NOT WHTProductPortingGroup.Get(TaxReportLine."WHT Product Posting Group") then
                     WHTProductPortingGroup.init();
@@ -294,7 +342,7 @@ page 80023 "NCT WHT Subpage"
         WHTBusinessPostingGroup: Record "NCT WHT Business Posting Group";
         BranchCode: Code[5];
         BranchData: array[13] of text;
-        CustVendorBranch: Record "NCT Customer & Vendor Branch";
+
         WHTProductPortingGroup: Record "NCT WHT Product Posting Group";
         FunctionCenter: Codeunit "NCT Function Center";
 

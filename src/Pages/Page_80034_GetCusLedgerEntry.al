@@ -3,104 +3,205 @@
 /// </summary>
 page 80034 "NCT Get Cus. Ledger Entry"
 {
-    PageType = List;
+
     SourceTable = "Cust. Ledger Entry";
-    Caption = 'Get Cus. Ledger Entry';
-    Editable = false;
-    InsertAllowed = false;
     DeleteAllowed = false;
+    Editable = false;
     ModifyAllowed = false;
+    InsertAllowed = false;
+    Caption = 'Get Cust. Ledger Entry';
+    SourceTableTemporary = true;
+    PageType = List;
+    RefreshOnActivate = true;
     UsageCategory = None;
     layout
     {
-        area(content)
+        area(Content)
         {
-            repeater(General)
+            repeater("GROUP")
             {
+                Caption = 'Lines';
+                field("Entry No."; Rec."Entry No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the number of the entry, as assigned from the specified number series when the entry was created.';
+                }
+                field("Customer No."; Rec."Customer No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the number of the Customer account that the entry is linked to.';
+                }
                 field("Posting Date"; Rec."Posting Date")
                 {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the customer entry''s posting date.';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the Customer entry''s posting date.';
+                }
+                field("Document Date"; Rec."Document Date")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Document Date field.';
                 }
                 field("Document Type"; Rec."Document Type")
                 {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the document type that the customer entry belongs to.';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the document type that the vendor entry belongs to.';
                 }
                 field("Document No."; Rec."Document No.")
                 {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the entry''s document number.';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the vendor entry''s document number.';
                 }
-                field("External Document No."; Rec."External Document No.")
+                field("Description"; Rec.Description)
                 {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies a document number that refers to the customer''s or vendor''s numbering system.';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies a description of the vendor entry.';
                 }
-                field(Description; Rec.Description)
+                field("Original Amount"; -Rec."Original Amount")
                 {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies a description of the customer entry.';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Original Amount field.';
+                    Caption = 'Original Amount';
                 }
-                field("Due Date"; Rec."Due Date")
+                field("NCT Billing Amount"; Rec."NCT Billing Amount")
                 {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the due date on the entry.';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the NCT Billing Amount field.';
+                    Caption = 'Billing Amount ';
                 }
-                field(Amount; Rec.Amount)
+                field("NCT Remaining Amt."; Rec."NCT Remaining Amt.")
                 {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the amount of the entry.';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Billing Remaining Amt.(LCY) field.';
+                    Caption = 'Remaining Amount';
                 }
-                field("Remaining Amount"; Rec."Remaining Amount")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the amount that remains to be applied to before the entry has been completely applied.';
-                }
-                field("Salesperson Code"; Rec."Salesperson Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the code for the salesperson whom the entry is linked to.';
-                }
-                field("Currency Code"; Rec."Currency Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the currency code for the amount on the line.';
-                }
+
             }
         }
     }
+
+    trigger OnAfterGetRecord()
+    begin
+        Rec.CalcFields("Remaining Amount", "Original Amount", Amount, rec."NCT Billing Amount");
+    end;
+
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
         IF CloseAction IN [ACTION::OK, ACTION::LookupOK] THEN
             CreateLines();
-
     end;
 
     /// <summary>
     /// SetDocument.
     /// </summary>
-    /// <param name="NewDocumentType">Option "Sales Billing","Sales Receipt","Purchase Billing".</param>
-    /// <param name="NewDocumentNo">Code[20].</param>
-    procedure SetDocument(NewDocumentType: Enum "NCT Billing Document Type"; NewDocumentNo: Code[20])
+    /// <param name="BillingRcptHeader">Record "Billing Receipt Header".</param>
+    procedure SetDocument(BillingRcptHeader: Record "NCT Billing Receipt Header")
     begin
-        DocumentType := NewDocumentType;
-        DocumentNo := NewDocumentNo;
-        BillingHeader.GET(DocumentType, DocumentNo);
+        BillRcptHeader.GET(BillingRcptHeader."Document Type", BillingRcptHeader."No.");
     end;
 
     local procedure CreateLines()
     var
-        GetBillingLine: Codeunit "NCT Get Cust/Vend Ledger Entry";
+        CUstLedger: Record "Cust. Ledger Entry" temporary;
+        BillRcptLine: Record "NCT Billing Receipt Line";
+        ltPuchaseInvoiceHeader: Record "Purch. Inv. Header";
+        ltPurchaseCRHeader: Record "Purch. Cr. Memo Hdr.";
     begin
-        CurrPage.SETSELECTIONFILTER(Rec);
-        GetBillingLine."SetDocument"(BillingHeader);
-        GetBillingLine."CreateCustBillingLines"(Rec);
+        CUstLedger.COPY(Rec, true);
+        CurrPage.SETSELECTIONFILTER(CUstLedger);
+        IF CUstLedger.FindSet() THEN
+            REPEAT
+                CUstLedger.CalcFields("Original Amt. (LCY)", CUstLedger."Original Amount");
+                BillRcptLine.INIT();
+                BillRcptLine."Document Type" := DocumentType;
+                BillRcptLine."Document No." := DocumentNo;
+                BillRcptLine."Line No." := GetLastLine();
+                BillRcptLine.INSERT();
+
+                BillRcptLine."Source Ledger Entry No." := CUstLedger."Entry No.";
+                BillRcptLine."Source Document Date" := CUstLedger."Document Date";
+                BillRcptLine."Source Document No." := CUstLedger."Document No.";
+                BillRcptLine."Source Ext. Document No." := CUstLedger."External Document No.";
+                BillRcptLine."Source Due Date" := CUstLedger."Due Date";
+                BillRcptLine."Source Amount (LCY)" := ABS(CUstLedger."Original Amt. (LCY)");
+                BillRcptLine."Source Amount" := ABS(CUstLedger."Original Amount");
+                BillRcptLine."Source Description" := CUstLedger.Description;
+                BillRcptLine."Source Currency Code" := CUstLedger."Currency Code";
+                BillRcptLine."Source Document Type" := BillRcptLine."Source Document Type"::Invoice;
+                if CUstLedger."Document Type" = CUstLedger."Document Type"::Invoice then begin
+                    BillRcptLine."Amount" := ABS(CUstLedger."NCT Remaining Amt.") * -1;
+                    if ltPuchaseInvoiceHeader.GET(CUstLedger."Document No.") then
+                        BillRcptLine."Source Ext. Document No." := ltPuchaseInvoiceHeader."Vendor Invoice No.";
+                end else begin
+                    BillRcptLine."Amount" := ABS(CUstLedger."NCT Remaining Amt.");
+                    if ltPurchaseCRHeader.GET(CUstLedger."Document No.") then
+                        BillRcptLine."Source Ext. Document No." := ltPurchaseCRHeader."Vendor Cr. Memo No.";
+
+                end;
+                BillRcptLine.Modify();
+            UNTIL CUstLedger.NEXT() = 0;
+
     end;
 
-    var
-        DocumentNo: Code[30];
-        DocumentType: Enum "NCT Billing Document Type";
-        BillingHeader: Record "NCT Billing Receipt Header";
 
+    local procedure GetLastLine(): Integer;
+    var
+        BillRcptLine: Record "NCT Billing Receipt Line";
+    begin
+        BillRcptLine.reset();
+        BillRcptLine.SetFilter("Document Type", '%1', DocumentType);
+        BillRcptLine.SetFilter("Document No.", '%1', DocumentNo);
+        if BillRcptLine.FindLast() then
+            exit(BillRcptLine."Line No." + 10000);
+        exit(10000);
+    end;
+
+
+    /// <summary>
+    /// SetTableData.
+    /// </summary>
+    /// <param name="pVendorNo">code[20].</param>
+    /// <param name="pDocumentType">Enum "Document Type".</param>
+    /// <param name="pDocumentNo">code[30].</param>
+    procedure SetTableData(pVendorNo: code[20]; pDocumentType: Enum "NCT Billing Document Type"; pDocumentNo: code[20])
+    var
+        CustLedger: Record "Cust. Ledger Entry";
+    begin
+        DocumentType := pDocumentType;
+        DocumentNo := pDocumentNo;
+        CustLedger.reset();
+        CustLedger.SetRange("Customer No.", pVendorNo);
+        CustLedger.SetFilter("Document Type", '%1|%2', CustLedger."Document Type"::Invoice, CustLedger."Document Type"::"Credit Memo");
+        CustLedger.setrange(Open, true);
+        if CustLedger.FindSet() then
+            repeat
+                CustLedger.CalcFields("Remaining Amount", "NCT Billing Amount", "NCT Receipt Amount");
+                if pDocumentType = pDocumentType::"Sales Billing" then
+                    if (ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Billing Amount")) > 0 then begin
+                        rec.Init();
+                        rec.TransferFields(CustLedger);
+                        if CustLedger."Document Type" = CustLedger."Document Type"::Invoice then
+                            rec."NCT Remaining Amt." := -(ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Billing Amount"))
+                        else
+                            rec."NCT Remaining Amt." := (ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Billing Amount"));
+                        rec.Insert();
+                    end;
+                if pDocumentType = pDocumentType::"Sales Receipt" then
+                    if (ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Receipt Amount")) > 0 then begin
+                        rec.Init();
+                        rec.TransferFields(CustLedger);
+                        if CustLedger."Document Type" = CustLedger."Document Type"::Invoice then
+                            rec."NCT Remaining Amt." := -(ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Receipt Amount"))
+                        else
+                            rec."NCT Remaining Amt." := (ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Receipt Amount"));
+                        rec.Insert();
+                    end;
+            until CustLedger.Next() = 0;
+    end;
+
+
+
+    var
+        BillRcptHeader: Record "NCT Billing Receipt Header";
+        DocumentNo: code[20];
+        DocumentType: Enum "NCT Billing Document Type";
 }

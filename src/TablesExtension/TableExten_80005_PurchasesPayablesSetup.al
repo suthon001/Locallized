@@ -11,13 +11,7 @@ tableextension 80005 "NCT ExtenPurcha&PayablesSetup" extends "Purchases & Payabl
             TableRelation = "No. Series".Code;
             DataClassification = CustomerContent;
         }
-        field(80001; "NCT Purchase Receipt Nos."; Code[20])
-        {
-            Caption = 'Purchase Receipt Nos.';
-            TableRelation = "No. Series".Code;
-            DataClassification = CustomerContent;
-        }
-        field(80002; "NCT Purchase VAT Nos."; Code[20])
+        field(80001; "NCT Purchase VAT Nos."; Code[20])
         {
             Caption = 'Purchase VAT Nos.';
             TableRelation = "No. Series";

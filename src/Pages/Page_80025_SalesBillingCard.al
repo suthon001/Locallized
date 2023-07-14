@@ -16,6 +16,7 @@ page 80025 "NCT Sales Billing Card"
         {
             group(General)
             {
+                Editable = rec.Status = rec.Status::Open;
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -148,6 +149,7 @@ page 80025 "NCT Sales Billing Card"
                 SubPageView = sorting("Document Type", "Document No.", "Line No.");
                 SubPageLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
                 UpdatePropagation = Both;
+                Editable = rec.Status = rec.Status::Open;
             }
         }
 
@@ -217,6 +219,7 @@ page 80025 "NCT Sales Billing Card"
                         ReleaseBillDoc: Codeunit "NCT Function Center";
                     begin
                         ReleaseBillDoc.RereleaseBilling(Rec);
+                        CurrPage.Update();
                     end;
                 }
                 action("Open")
@@ -233,6 +236,7 @@ page 80025 "NCT Sales Billing Card"
                         ReleaseBillDoc: Codeunit "NCT Function Center";
                     begin
                         ReleaseBillDoc."ReopenBilling"(Rec);
+                        CurrPage.Update();
                     end;
                 }
             }
@@ -254,6 +258,7 @@ page 80025 "NCT Sales Billing Card"
                     trigger OnAction()
                     begin
                         ApprovalsMgmt.ApproveRecordApprovalRequest(Rec.RecordId);
+                        CurrPage.Update();
                     end;
                 }
             }
@@ -274,6 +279,7 @@ page 80025 "NCT Sales Billing Card"
                     begin
                         if Rec.CheckWorkflowBillingReceiptEnabled(Rec) then
                             Rec.OnSendBillingReceiptforApproval(rec);
+                        CurrPage.Update();
                     end;
 
 
@@ -292,6 +298,7 @@ page 80025 "NCT Sales Billing Card"
                     begin
 
                         Rec.OnCancelBillingReceiptforApproval(rec);
+                        CurrPage.Update();
                     end;
                 }
             }

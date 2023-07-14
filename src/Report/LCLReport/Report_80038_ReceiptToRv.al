@@ -20,29 +20,30 @@ report 80038 "NCT Recript to CashReceipt"
                 CustLedgEntry: Record "Cust. Ledger Entry";
                 DiffAmt: Decimal;
             begin
-                TemplateName := "Template Name";
-                BatchName := "Batch Name";
-                RVSeries := "RV No. Series";
-                //DocumentNo := "Receive Voucher No.";
+
                 DiffAmt := 0;
                 BillingHeader.GET("Document Type", "No.");
-                TestField("Template Name");
-                TestField("Batch Name");
-                TestField("RV No. Series");
-                TESTFIELD("Receive Account No.");
-                TESTFIELD("Receive Date");
-                TESTFIELD("Receive Amount");
+                TestField("Journal Template Name");
+                TestField("Journal Batch Name");
+                TestField("Journal No. Series");
+                TESTFIELD("Account No.");
+                TESTFIELD("Journal Date");
+                TESTFIELD("Receive & Payment Amount");
+                GenTemplate.GET("Journal Template Name");
+                GenBatch.GET("Journal Template Name", "Journal Batch Name");
                 CALCFIELDS("Amount (LCY)");
-                DiffAmt := "Receive Amount" - "Bank Fee Amount (LCY)" - "Prepaid WHT Amount (LCY)" - "Amount (LCY)";
+                DiffAmt := "Receive & Payment Amount" - "Bank Fee Amount (LCY)" - "Prepaid WHT Amount (LCY)" - "Amount (LCY)";
                 IF DiffAmt <> 0 THEN
                     TESTFIELD("Diff Amount Acc.");
                 IF "Prepaid WHT Amount (LCY)" <> 0 THEN
                     TESTFIELD("Prepaid WHT Acc.");
                 IF "Bank Fee Amount (LCY)" <> 0 THEN
                     TESTFIELD("Bank Fee Acc.");
-                //Insert Customer Line
-                // IF "Receive Voucher No." = '' THEN
-                DocumentNo := NosMgt.GetNextNo(RVSeries, "Receive Date", TRUE);
+
+                if "Journal Document No." = '' then
+                    DocumentNo := NosMgt.GetNextNo("Journal No. Series", "Journal Date", TRUE)
+                else
+                    DocumentNo := "Journal Document No.";
                 GenJnlLine.INIT();
                 GenJnlLine."Journal Template Name" := GenTemplate.Name;
                 GenJnlLine."Journal Batch Name" := GenBatch.Name;
@@ -52,14 +53,15 @@ report 80038 "NCT Recript to CashReceipt"
 
                 GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
                 GenJnlLine.VALIDATE("Document No.", DocumentNo);
-                GenJnlLine.VALIDATE("NCT Document No. Series", RVSeries);
-                GenJnlLine.VALIDATE("Posting Date", "Receive Date");
+                GenJnlLine.VALIDATE("NCT Document No. Series", "Journal No. Series");
+                GenJnlLine.VALIDATE("Posting Date", "Journal Date");
                 GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::Customer);
                 GenJnlLine.VALIDATE("Account No.", "Bill/Pay-to Cust/Vend No.");
                 GenJnlLine.VALIDATE("External Document No.", "No.");
                 GenJnlLine.VALIDATE("Amount (LCY)", -"Amount (LCY)");
                 GenJnlLine."Applies-to ID" := DocumentNo;
-                GenJnlLine."NCT Sales Receipt No." := "No.";
+                GenJnlLine."Ref. Billing & Receipt No." := "No.";
+
                 GenJnlLine.MODIFY();
 
                 //Apply Document
@@ -83,13 +85,14 @@ report 80038 "NCT Recript to CashReceipt"
 
                     GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
                     GenJnlLine.VALIDATE("Document No.", DocumentNo);
-                    GenJnlLine.VALIDATE("NCT Document No. Series", RVSeries);
-                    GenJnlLine.VALIDATE("Posting Date", BillingHeader."Receive Date");
+                    GenJnlLine.VALIDATE("NCT Document No. Series", "Journal No. Series");
+                    GenJnlLine.VALIDATE("Posting Date", BillingHeader."Journal Date");
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
                     GenJnlLine.VALIDATE("Account No.", "Prepaid WHT Acc.");
                     GenJnlLine.VALIDATE("Document Date", "Prepaid WHT Date");
                     GenJnlLine.VALIDATE("External Document No.", "Prepaid WHT No.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Prepaid WHT Amount (LCY)");
+                    GenJnlLine."Ref. Billing & Receipt No." := "No.";
                     GenJnlLine.MODIFY();
                 END;
                 //Insert Bank Fee
@@ -104,11 +107,12 @@ report 80038 "NCT Recript to CashReceipt"
 
                     GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
                     GenJnlLine.VALIDATE("Document No.", DocumentNo);
-                    GenJnlLine.VALIDATE("NCT Document No. Series", RVSeries);
-                    GenJnlLine.VALIDATE("Posting Date", "Receive Date");
+                    GenJnlLine.VALIDATE("NCT Document No. Series", "Journal No. Series");
+                    GenJnlLine.VALIDATE("Posting Date", "Journal Date");
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
                     GenJnlLine.VALIDATE("Account No.", "Bank Fee Acc.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Bank Fee Amount (LCY)");
+                    GenJnlLine."Ref. Billing & Receipt No." := "No.";
                     GenJnlLine.MODIFY();
                 END;
                 //Insert Diff Amount
@@ -123,11 +127,12 @@ report 80038 "NCT Recript to CashReceipt"
 
                     GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
                     GenJnlLine.VALIDATE("Document No.", DocumentNo);
-                    GenJnlLine.VALIDATE("NCT Document No. Series", RVSeries);
-                    GenJnlLine.VALIDATE("Posting Date", "Receive Date");
+                    GenJnlLine.VALIDATE("NCT Document No. Series", "Journal No. Series");
+                    GenJnlLine.VALIDATE("Posting Date", "Journal Date");
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
                     GenJnlLine.VALIDATE("Account No.", "Diff Amount Acc.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Diff Amount (LCY)");
+                    GenJnlLine."Ref. Billing & Receipt No." := "No.";
                     GenJnlLine.MODIFY();
                 END;
                 //Insert Receive Line
@@ -141,24 +146,24 @@ report 80038 "NCT Recript to CashReceipt"
 
                 GenJnlLine.VALIDATE("Document Type", GenJnlLine."Document Type"::Payment);
                 GenJnlLine.VALIDATE("Document No.", DocumentNo);
-                GenJnlLine.VALIDATE("NCT Document No. Series", RVSeries);
-                GenJnlLine.VALIDATE("Posting Date", BillingHeader."Receive Date");
-                IF BillingHeader."Receive Type" = BillingHeader."Receive Type"::"G/L Account" THEN
+                GenJnlLine.VALIDATE("NCT Document No. Series", "Journal No. Series");
+                GenJnlLine.VALIDATE("Posting Date", BillingHeader."Journal Date");
+                IF BillingHeader."Account Type" = BillingHeader."Account Type"::"G/L Account" THEN
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account")
                 ELSE
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"Bank Account");
-                GenJnlLine.VALIDATE("Account No.", BillingHeader."Receive Account No.");
+                GenJnlLine.VALIDATE("Account No.", BillingHeader."Account No.");
                 IF BillingHeader."Cheque Date" <> 0D THEN
                     GenJnlLine.VALIDATE("Document Date", BillingHeader."Cheque Date");
                 IF BillingHeader."Cheque No." <> '' THEN
                     GenJnlLine.VALIDATE("External Document No.", BillingHeader."Cheque No.");
                 GenJnlLine.Description := COPYSTR('Receive From ' + BillingHeader."Bill/Pay-to Cust/Vend Name", 1, 100);
-                GenJnlLine.VALIDATE("Amount (LCY)", BillingHeader."Receive Amount");
+                GenJnlLine.VALIDATE("Amount (LCY)", BillingHeader."Receive & Payment Amount");
+                GenJnlLine."Ref. Billing & Receipt No." := "No.";
                 GenJnlLine.MODIFY();
-
-                BillingHeader."Receive Status" := BillingHeader."Receive Status"::"In used";
                 BillingHeader."Journal Document No." := DocumentNo;
-                BillingHeader."Status" := BillingHeader."Status"::"Created RV";
+                BillingHeader."Status" := BillingHeader."Status"::"Created to Journal";
+                BillingHeader."Create to Journal" := true;
                 BillingHeader.MODIFY();
             end;
         }
@@ -167,8 +172,7 @@ report 80038 "NCT Recript to CashReceipt"
     begin
         CustLedgEntry.VALIDATE("Amount to Apply", AmountApply);
         CODEUNIT.RUN(CODEUNIT::"Cust. Entry-Edit", CustLedgEntry);
-
-        IF (BillingHeader."Receive Date" < CustLedgEntry."Posting Date") THEN
+        IF (BillingHeader."Journal Date" < CustLedgEntry."Posting Date") THEN
             ERROR(
                 EarlierPostingDateErr, BillingHeader."Document Type", BillingHeader."No.",
                 CustLedgEntry."Document Type", CustLedgEntry."Document No.");
@@ -188,21 +192,15 @@ report 80038 "NCT Recript to CashReceipt"
         exit(10000);
     end;
 
-    trigger OnPreReport()
-    begin
-        GenTemplate.GET(TemplateName);
-        GenBatch.GET(TemplateName, BatchName);
-    end;
+
 
     var
         EarlierPostingDateErr: Label 'You cannot apply and post an entry to an entry with an earlier posting date.\\Instead, post the document of type %1 with the number %2 and then apply it to the document of type %3 with the number %4.', Locked = true;
         BillingHeader: Record "NCT Billing Receipt Header";
         DocumentNo: Code[20];
-        TemplateName: Code[20];
-        BatchName: Code[20];
+
         GenTemplate: Record "Gen. Journal Template";
         GenBatch: Record "Gen. Journal Batch";
-        RVSeries: Code[20];
         NosMgt: Codeunit NoSeriesManagement;
         GenJnlLine: Record "Gen. Journal Line";
         BillingLine: Record "NCT Billing Receipt Line";

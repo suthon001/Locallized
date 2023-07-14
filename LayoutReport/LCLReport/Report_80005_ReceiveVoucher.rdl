@@ -492,7 +492,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_Date.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_Date.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -527,7 +527,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_No_.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -561,7 +561,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_Name.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_Name.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -595,7 +595,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Vat_Registration_No_.Value</Value>
+                                  <Value>=Fields!Vat_Registration_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -664,7 +664,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_Base.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_Base.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -707,7 +707,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Tax_Invoice_Amount.Value</Value>
+                                  <Value>=Fields!Tax_Invoice_Amount.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -796,7 +796,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!BW_Tax_Invoice_Base.Value)</Value>
+                                  <Value>=Sum(Fields!Tax_Invoice_Base.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -852,7 +852,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!BW_Tax_Invoice_Amount.Value)</Value>
+                                  <Value>=Sum(Fields!Tax_Invoice_Amount.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2499,7 +2499,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_WHT_Date.Value</Value>
+                                  <Value>=Fields!WHT_Date.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2535,7 +2535,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_WHT_Document_No_.Value</Value>
+                                  <Value>=Fields!WHT_Document_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2567,7 +2567,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_WHT_Name.Value</Value>
+                                  <Value>=Fields!WHT_Name.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2599,7 +2599,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_WHT_Business_Posting_Group.Value</Value>
+                                  <Value>=Fields!WHT_Business_Posting_Group.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2633,7 +2633,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_WHT_Product_Posting_Group.Value</Value>
+                                  <Value>=Fields!WHT_Product_Posting_Group.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2667,7 +2667,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_WHT_Base.Value</Value>
+                                  <Value>=Fields!WHT_Base.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2702,7 +2702,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_WHT__.Value</Value>
+                                  <Value>=Fields!WHT__.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2737,7 +2737,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_WHT_Amount.Value</Value>
+                                  <Value>=Fields!WHT_Amount.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3657,7 +3657,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Pay_Name.Value</Value>
+                                  <Value>=Fields!Pay_Name.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3689,7 +3689,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_CQ_Bank_Name.Value</Value>
+                                  <Value>=Fields!CQ_Bank_Name.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3721,7 +3721,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_CQ_Bank_Branch_No_.Value</Value>
+                                  <Value>=Fields!CQ_Bank_Branch_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3755,7 +3755,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_CQ_Cheque_No_.Value</Value>
+                                  <Value>=Fields!CQ_Cheque_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3789,7 +3789,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_CQ_Cheque_Date.Value</Value>
+                                  <Value>=Fields!CQ_Cheque_Date.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -6309,65 +6309,65 @@ End Function
         <Field Name="CVBufferEntry_Currency_Code">
           <DataField>CVBufferEntry_Currency_Code</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_Date">
-          <DataField>BW_Tax_Invoice_Date</DataField>
+        <Field Name="Tax_Invoice_Date">
+          <DataField>Tax_Invoice_Date</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_No_">
-          <DataField>BW_Tax_Invoice_No_</DataField>
+        <Field Name="Tax_Invoice_No_">
+          <DataField>Tax_Invoice_No_</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_Name">
-          <DataField>BW_Tax_Invoice_Name</DataField>
+        <Field Name="Tax_Invoice_Name">
+          <DataField>Tax_Invoice_Name</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_Amount">
-          <DataField>BW_Tax_Invoice_Amount</DataField>
+        <Field Name="Tax_Invoice_Amount">
+          <DataField>Tax_Invoice_Amount</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_AmountFormat">
-          <DataField>BW_Tax_Invoice_AmountFormat</DataField>
+        <Field Name="Tax_Invoice_AmountFormat">
+          <DataField>Tax_Invoice_AmountFormat</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_Base">
-          <DataField>BW_Tax_Invoice_Base</DataField>
+        <Field Name="Tax_Invoice_Base">
+          <DataField>Tax_Invoice_Base</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_BaseFormat">
-          <DataField>BW_Tax_Invoice_BaseFormat</DataField>
+        <Field Name="Tax_Invoice_BaseFormat">
+          <DataField>Tax_Invoice_BaseFormat</DataField>
         </Field>
         <Field Name="BranchCode">
           <DataField>BranchCode</DataField>
         </Field>
-        <Field Name="BW_Vat_Registration_No_">
-          <DataField>BW_Vat_Registration_No_</DataField>
+        <Field Name="Vat_Registration_No_">
+          <DataField>Vat_Registration_No_</DataField>
         </Field>
-        <Field Name="BW_WHT_Document_No_">
-          <DataField>BW_WHT_Document_No_</DataField>
+        <Field Name="WHT_Document_No_">
+          <DataField>WHT_Document_No_</DataField>
         </Field>
-        <Field Name="BW_WHT_Date">
-          <DataField>BW_WHT_Date</DataField>
+        <Field Name="WHT_Date">
+          <DataField>WHT_Date</DataField>
         </Field>
-        <Field Name="BW_WHT_Name">
-          <DataField>BW_WHT_Name</DataField>
+        <Field Name="WHT_Name">
+          <DataField>WHT_Name</DataField>
         </Field>
-        <Field Name="BW_WHT__">
-          <DataField>BW_WHT__</DataField>
+        <Field Name="WHT__">
+          <DataField>WHT__</DataField>
         </Field>
-        <Field Name="BW_WHT__Format">
-          <DataField>BW_WHT__Format</DataField>
+        <Field Name="WHT__Format">
+          <DataField>WHT__Format</DataField>
         </Field>
-        <Field Name="BW_WHT_Amount">
-          <DataField>BW_WHT_Amount</DataField>
+        <Field Name="WHT_Amount">
+          <DataField>WHT_Amount</DataField>
         </Field>
-        <Field Name="BW_WHT_AmountFormat">
-          <DataField>BW_WHT_AmountFormat</DataField>
+        <Field Name="WHT_AmountFormat">
+          <DataField>WHT_AmountFormat</DataField>
         </Field>
-        <Field Name="BW_WHT_Base">
-          <DataField>BW_WHT_Base</DataField>
+        <Field Name="WHT_Base">
+          <DataField>WHT_Base</DataField>
         </Field>
-        <Field Name="BW_WHT_BaseFormat">
-          <DataField>BW_WHT_BaseFormat</DataField>
+        <Field Name="WHT_BaseFormat">
+          <DataField>WHT_BaseFormat</DataField>
         </Field>
-        <Field Name="BW_WHT_Product_Posting_Group">
-          <DataField>BW_WHT_Product_Posting_Group</DataField>
+        <Field Name="WHT_Product_Posting_Group">
+          <DataField>WHT_Product_Posting_Group</DataField>
         </Field>
-        <Field Name="BW_WHT_Business_Posting_Group">
-          <DataField>BW_WHT_Business_Posting_Group</DataField>
+        <Field Name="WHT_Business_Posting_Group">
+          <DataField>WHT_Business_Posting_Group</DataField>
         </Field>
         <Field Name="BankBranchNo">
           <DataField>BankBranchNo</DataField>
@@ -6387,32 +6387,32 @@ End Function
         <Field Name="Bank_Account_No_">
           <DataField>Bank_Account_No_</DataField>
         </Field>
-        <Field Name="BW_Pay_Name">
-          <DataField>BW_Pay_Name</DataField>
+        <Field Name="Pay_Name">
+          <DataField>Pay_Name</DataField>
         </Field>
-        <Field Name="BW_CQ_Bank_Account_No_">
-          <DataField>BW_CQ_Bank_Account_No_</DataField>
+        <Field Name="CQ_Bank_Account_No_">
+          <DataField>CQ_Bank_Account_No_</DataField>
         </Field>
-        <Field Name="BW_CQ_Bank_Branch_No_">
-          <DataField>BW_CQ_Bank_Branch_No_</DataField>
+        <Field Name="CQ_Bank_Branch_No_">
+          <DataField>CQ_Bank_Branch_No_</DataField>
         </Field>
-        <Field Name="BW_CQ_Bank_Code">
-          <DataField>BW_CQ_Bank_Code</DataField>
+        <Field Name="CQ_Bank_Code">
+          <DataField>CQ_Bank_Code</DataField>
         </Field>
-        <Field Name="BW_CQ_Bank_Name">
-          <DataField>BW_CQ_Bank_Name</DataField>
+        <Field Name="CQ_Bank_Name">
+          <DataField>CQ_Bank_Name</DataField>
         </Field>
-        <Field Name="BW_CQ_Cheque_Date">
-          <DataField>BW_CQ_Cheque_Date</DataField>
+        <Field Name="CQ_Cheque_Date">
+          <DataField>CQ_Cheque_Date</DataField>
         </Field>
-        <Field Name="BW_CQ_Cheque_No_">
-          <DataField>BW_CQ_Cheque_No_</DataField>
+        <Field Name="CQ_Cheque_No_">
+          <DataField>CQ_Cheque_No_</DataField>
         </Field>
-        <Field Name="BW_CQ_Name">
-          <DataField>BW_CQ_Name</DataField>
+        <Field Name="CQ_Name">
+          <DataField>CQ_Name</DataField>
         </Field>
-        <Field Name="BW_CQ_Customer_Vendor">
-          <DataField>BW_CQ_Customer_Vendor</DataField>
+        <Field Name="CQ_Customer_Vendor">
+          <DataField>CQ_Customer_Vendor</DataField>
         </Field>
         <Field Name="Cheque_Amount__LCY_">
           <DataField>Cheque_Amount__LCY_</DataField>

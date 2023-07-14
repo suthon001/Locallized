@@ -10,11 +10,7 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
             Caption = 'Document No. Series';
             DataClassification = CustomerContent;
         }
-        field(80002; "NCT Sales Receipt No."; Code[20])
-        {
-            Caption = 'Sales Receipt No.';
-            DataClassification = CustomerContent;
-        }
+
         field(80003; "NCT Tax Invoice No."; Code[35])
         {
             Caption = 'Tax Invoice No.';
@@ -29,8 +25,6 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
         {
             Caption = 'Tax Invoice Base';
             DataClassification = CustomerContent;
-
-
         }
         field(80006; "NCT Tax Invoice Amount"; Decimal)
         {
@@ -330,6 +324,13 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
             FieldClass = FlowField;
             CalcFormula = lookup("Gen. Journal Template".Type where(Name = field("Journal Template Name")));
             Caption = 'Template Source Type';
+        }
+        field(80055; "Ref. Billing & Receipt No."; code[30])
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Billing & Receipt No.';
+
         }
     }
 }

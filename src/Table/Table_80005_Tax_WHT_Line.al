@@ -83,8 +83,6 @@ table 80005 "NCT Tax & WHT Line"
         {
             Caption = 'Base Amount';
             DataClassification = SystemMetadata;
-
-
         }
         field(15; "VAT Amount"; Decimal)
         {
@@ -159,8 +157,6 @@ table 80005 "NCT Tax & WHT Line"
         {
             Caption = 'Post Code';
             TableRelation = "Post Code";
-            //This property is currently not supported
-            //TestTableRelation = false;
             ValidateTableRelation = false;
             DataClassification = SystemMetadata;
         }
@@ -179,21 +175,6 @@ table 80005 "NCT Tax & WHT Line"
             Caption = 'WHT %';
             DataClassification = SystemMetadata;
         }
-        field(1013; "Base Amount VAT7"; Decimal)
-        {
-            Caption = 'Base Amount VAT7';
-            DataClassification = SystemMetadata;
-        }
-        field(1014; "Base Amount VAT0"; Decimal)
-        {
-            Caption = 'Base Amount VAT0';
-            DataClassification = SystemMetadata;
-        }
-        field(1015; "Consession Fee"; Decimal)
-        {
-            Caption = 'Consession Fee';
-            DataClassification = SystemMetadata;
-        }
         field(1016; "Ref. Entry No."; Integer)
         {
             Caption = 'Ref. Entry No.';
@@ -204,23 +185,13 @@ table 80005 "NCT Tax & WHT Line"
             Caption = 'Cust. Amount';
             DataClassification = SystemMetadata;
         }
-        field(1018; "Cust. Amt. Pus Concession"; Decimal)
-        {
-            Caption = 'Cust. Amount Pus Concession';
-            DataClassification = SystemMetadata;
-        }
+
         field(1019; "Amount Incl. VAT"; Decimal)
         {
             Caption = 'Amount Incl. VAT';
             DataClassification = SystemMetadata;
         }
-        field(1020; "Check Status"; Option)
-        {
-            Caption = 'Check Status';
-            OptionCaption = ' ,Checked,Reconcile,Mark';
-            OptionMembers = " ",Checked,Reconcile,Mark;
-            DataClassification = SystemMetadata;
-        }
+
         field(1021; "Customer No."; Code[20])
         {
             Caption = 'Customer No.';
@@ -247,6 +218,61 @@ table 80005 "NCT Tax & WHT Line"
             Caption = 'WHT Certificate No.';
             DataClassification = SystemMetadata;
         }
+        field(1026; "Title Name"; Enum "NCT Title Document Name")
+        {
+            Caption = 'คำนำหน้า';
+            DataClassification = CustomerContent;
+        }
+        field(1027; "Building"; Text[100])
+        {
+            Caption = 'ชื่ออาคาร/หมู่บ้าน';
+            DataClassification = CustomerContent;
+        }
+        field(1028; "Alley/Lane"; Text[100])
+        {
+            Caption = 'ตรอก/ซอย';
+            DataClassification = CustomerContent;
+        }
+        field(1029; "Sub-district"; Text[100])
+        {
+            Caption = 'ตำบล/แขวง';
+            DataClassification = CustomerContent;
+        }
+        field(1030; "District"; Text[100])
+        {
+            Caption = 'อำเภอ/เขต';
+            DataClassification = CustomerContent;
+        }
+        field(1031; "Floor"; Text[10])
+        {
+            Caption = 'ชั้น';
+            DataClassification = CustomerContent;
+        }
+        field(1032; "House No."; Text[50])
+        {
+            Caption = 'เลขที่ห้อง';
+            DataClassification = CustomerContent;
+        }
+        field(1033; "Village No."; Text[15])
+        {
+            Caption = 'หมู่ที่';
+            DataClassification = CustomerContent;
+        }
+        field(1034; "Street"; Text[50])
+        {
+            Caption = 'ถนน';
+            DataClassification = CustomerContent;
+        }
+        field(1035; "Province"; Text[50])
+        {
+            Caption = 'จังหวัด';
+            DataClassification = CustomerContent;
+        }
+        field(1036; "No."; Text[50])
+        {
+            Caption = 'เลขที่';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -266,8 +292,10 @@ table 80005 "NCT Tax & WHT Line"
     trigger OnDelete()
     var
         Vattransection: Record "NCT VAT Transections";
+        TaxVatHeader: Record "NCT Tax & WHT Header";
     begin
-
+        TaxVatHeader.GET("Tax Type", "Document No.");
+        TaxVatHeader.TestField(Status, TaxVatHeader.Status::Open);
         Vattransection.reset();
         Vattransection.SetRange("Ref. Tax Type", "Tax Type");
         Vattransection.SetRange("Ref. Tax No.", "Document No.");
@@ -312,6 +340,7 @@ table 80005 "NCT Tax & WHT Line"
     begin
 
         TaxReportHeader.get("Tax Type", "Document No.");
+        TaxReportHeader.TestField(Status, TaxReportHeader.Status::Open);
         TaxReportHeader.TestField("End date of Month");
         VatTransection.reset();
         VatTransection.SetRange("Type", "Tax Type".AsInteger() + 1);
@@ -442,9 +471,11 @@ table 80005 "NCT Tax & WHT Line"
         TaxReportHeader: Record "NCT Tax & WHT Header";
         TaxReportLineFind: Record "NCT Tax & WHT Line";
         WHTLine: Record "NCT WHT Line";
+        CustVendorBranch: Record "NCT Customer & Vendor Branch";
     begin
 
         TaxReportHeader.get("Tax Type", "Document No.");
+        TaxReportHeader.TestField(Status, TaxReportHeader.Status::Open);
         TaxReportHeader.TestField("End date of Month");
         WHTHeader.RESET();
         WHTHeader.SETFILTER("WHT Date", '%1..%2', DMY2Date(01, TaxReportHeader."Month No.", TaxReportHeader."Year No."), CalcDate('<CM>', TaxReportHeader."End date of Month"));
@@ -489,6 +520,20 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLineFind."VAT Registration No." := WHTHeader."VAT Registration No.";
                         TaxReportLineFind."Ref. Wht Line" := WHTLine."WHT Line No.";
                         TaxReportLineFind."WHT Certificate No." := WHTHeader."WHT Certificate No.";
+                        if CustVendorBranch.Get(CustVendorBranch."Source Type"::Vendor, TaxReportLineFind."Vendor No.", TaxReportLineFind."Head Office", TaxReportLineFind."Branch Code") then begin
+                            TaxReportLineFind."Alley/Lane" := CustVendorBranch."Alley/Lane";
+                            TaxReportLineFind."Title Name" := CustVendorBranch."Title Name";
+                            TaxReportLineFind.Province := CustVendorBranch.Province;
+                            TaxReportLineFind.Floor := CustVendorBranch.Floor;
+                            TaxReportLineFind.Building := CustVendorBranch.Building;
+                            TaxReportLineFind."Sub-district" := CustVendorBranch."Sub-district";
+                            TaxReportLineFind."House No." := CustVendorBranch."House No.";
+                            TaxReportLineFind.Street := CustVendorBranch.Street;
+                            TaxReportLineFind.District := CustVendorBranch.District;
+                            TaxReportLineFind."Village No." := CustVendorBranch."Village No.";
+                            TaxReportLineFind."No." := CustVendorBranch."No.";
+                        end;
+
                         if (NOT TaxReportLineFind."Head Office") AND (TaxReportLineFind."Branch Code" = '') then
                             TaxReportLineFind."Head Office" := true;
                         TaxReportLineFind.INSERT();
