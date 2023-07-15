@@ -47,4 +47,21 @@ pageextension 80080 "NCT FixedassetCard" extends "Fixed Asset Card"
             }
         }
     }
+    trigger OnAfterGetRecord()
+    begin
+        "NCT LoadDepreciationBooks"();
+        "NCT FADepreciationBook".COPY("NCT FADepreciationBookOld");
+    end;
+
+    procedure "NCT LoadDepreciationBooks"()
+    begin
+        CLEAR("NCT FADepreciationBookOld");
+        "NCT FADepreciationBookOld".SETRANGE("FA No.", Rec."No.");
+        IF "NCT FADepreciationBookOld".COUNT <= 1 THEN
+            IF "NCT FADepreciationBookOld".FINDFIRST() THEN
+                "NCT FADepreciationBookOld".CALCFIELDS("Book Value");
+    end;
+
+    var
+        "NCT FADepreciationBookOld", "NCT FADepreciationBook" : Record "FA Depreciation Book";
 }

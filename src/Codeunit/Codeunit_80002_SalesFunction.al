@@ -3,6 +3,19 @@
 /// </summary>
 codeunit 80002 "NCT Sales Function"
 {
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeSalesCrMemoHeaderInsert', '', false, false)]
+    local procedure OnBeforeSalesCrMemoHeaderInsert(var SalesCrMemoHeader: Record "Sales Cr.Memo Header"; var SalesHeader: Record "Sales Header")
+    begin
+        SalesCrMemoHeader."NCT Applies-to ID" := SalesHeader."Applies-to ID";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeSalesInvHeaderInsert', '', false, false)]
+    local procedure OnBeforeSalesInvHeaderInsert(var SalesInvHeader: Record "Sales Invoice Header"; var SalesHeader: Record "Sales Header")
+    begin
+        SalesInvHeader."NCT Requested Delivery Date" := SalesHeader."Requested Delivery Date";
+        SalesInvHeader."NCT Applies-to ID" := SalesHeader."Applies-to ID";
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post (Yes/No)", 'OnBeforeConfirmSalesPost', '', false, false)]
     local procedure "OnBeforConfirmSalesPost"(var DefaultOption: Integer; var HideDialog: Boolean; var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     var

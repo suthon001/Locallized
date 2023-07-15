@@ -218,7 +218,7 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
         }
         addafter("Purchase Orders")
         {
-            action("BWK Goods Receipt Note List")
+            action("Goods Receipt Note List")
             {
                 Caption = 'Goods Receipt Note';
                 ApplicationArea = all;

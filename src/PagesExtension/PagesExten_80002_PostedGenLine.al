@@ -38,18 +38,25 @@ pageextension 80002 "NCT ExtenPostPostedGenLine" extends "Posted General Journal
                 trigger OnAction()
                 var
                     PostedGenLine: Record "Posted Gen. Journal Line";
-
+                    GenjournalTemp: Record "Gen. Journal Template";
                 begin
+                    GenjournalTemp.GET(rec."Journal Template Name");
                     PostedGenLine.reset();
                     PostedGenLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     PostedGenLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     PostedGenLine.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"NCT Posted Voucher", true, false, PostedGenLine);
+                    if GenjournalTemp.Type = GenjournalTemp.Type::Payments then
+                        REPORT.RunModal(REPORT::"NCT Payment Voucher (Post)", true, false, PostedGenLine);
+                    if GenjournalTemp.Type = GenjournalTemp.Type::General then
+                        REPORT.RunModal(REPORT::"NCT Journal Voucher (Post)", true, false, PostedGenLine);
+                    if GenjournalTemp.Type = GenjournalTemp.Type::"Cash Receipts" then
+                        REPORT.RunModal(REPORT::"NCT Receive Voucher (Post)", true, false, PostedGenLine);
+                    if GenjournalTemp.Type = GenjournalTemp.Type::Assets then
+                        REPORT.RunModal(REPORT::"NCT FA G/L Journal Voucher (P)", true, false, PostedGenLine);
+
                 end;
             }
         }
-
-        //addafter()
         addafter(CopySelected)
         {
             action("Show Detail")

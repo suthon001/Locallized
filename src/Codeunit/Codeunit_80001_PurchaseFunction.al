@@ -4,6 +4,12 @@
 codeunit 80001 "NCT Purchase Function"
 {
     EventSubscriberInstance = StaticAutomatic;
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnAfterInitPurchOrderLine', '', false, false)]
+    local procedure OnAfterInitPurchOrderLine(var PurchaseLine: Record "Purchase Line")
+    begin
+        PurchaseLine."NCT Original Quantity" := PurchaseLine.Quantity;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnFinalizePostingOnBeforeUpdateAfterPosting', '', false, false)]
     local procedure OnFinalizePostingOnBeforeUpdateAfterPosting(var PurchHeader: Record "Purchase Header")
     var
@@ -83,6 +89,7 @@ codeunit 80001 "NCT Purchase Function"
         PurchOrderLine."NCT Ref. PQ Line No." := PurchQuoteLine."Line No.";
         PurchOrderLine."NCT Make Order By" := COPYSTR(UserId, 1, 50);
         PurchOrderLine."NCT Make Order DateTime" := CurrentDateTime;
+        PurchOrderLine."NCT Original Quantity" := PurchOrderLine.Quantity;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeConfirmPost', '', false, false)]

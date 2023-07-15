@@ -76,5 +76,16 @@ tableextension 80044 "NCT FixedAsset" extends "Fixed Asset"
                 "NCT Remark Real Location" := Falocation."NCT Location Detail";
             end;
         }
+        modify("FA Subclass Code")
+        {
+            trigger OnAfterValidate()
+            var
+                FASubclass: Record "FA Subclass";
+            begin
+                if FASubclass.get("FA Subclass Code") then
+                    IF FASubclass."Default FA Posting Group" <> '' THEN
+                        VALIDATE("FA Posting Group", FASubclass."Default FA Posting Group");
+            end;
+        }
     }
 }

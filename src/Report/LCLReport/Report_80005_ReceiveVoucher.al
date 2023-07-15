@@ -124,23 +124,30 @@ report 80005 "NCT Receive Voucher"
 
                 end;
             }
-            dataitem(GenJournalLineWHT; "Gen. Journal Line")
+            dataitem(GenJournalLineWHT; "NCT WHT Header")
             {
-                DataItemTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.") where("NCT Require Screen Detail" = filter(WHT));
 
-                column(WHT_Document_No_; "NCT WHT Document No.") { }
-                column(WHT_Date; format("NCT WHT Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                column(WHT_Name; "NCT WHT Name" + ' ' + "NCT WHT Name 2") { }
-                column(WHT__; "NCT WHT %") { }
-                column(WHT_Amount; "NCT WHT Amount") { }
-                column(WHT_Base; "NCT WHT Base") { }
-                column(WHT_Product_Posting_Group; "NCT WHT Product Posting Group") { }
-                column(WHT_Business_Posting_Group; "NCT WHT Business Posting Group") { }
+                DataItemTableView = sorting("WHT No.") where("posted" = const(false));
+                dataitem("WHT Lines"; "NCT WHT Line")
+                {
+                    DataItemTableView = sorting("WHT No.", "WHT Line No.");
+                    DataItemLink = "WHT No." = field("WHT No.");
+
+                    column(WHT_Document_No_; GenJournalLineWHT."WHT Certificate No.") { }
+                    column(WHT_Date; format("WHT Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+                    column(WHT_Name; "WHT Name" + ' ' + "WHT Name 2") { }
+                    column(WHT__; "WHT %") { }
+                    column(WHT_Amount; "WHT Amount") { }
+                    column(WHT_Base; "WHT Base") { }
+                    column(WHT_Product_Posting_Group; "WHT Lines"."WHT Product Posting Group") { }
+                    column(WHT_Business_Posting_Group; GenJournalLineWHT."WHT Business Posting Group") { }
+
+                }
                 trigger OnPreDataItem()
                 begin
-                    SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
-                    SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
-                    SetRange("Document No.", GenJournalLine."Document No.");
+                    SetRange("Gen. Journal Template Code", GenJournalLine."Journal Template Name");
+                    SetRange("Gen. Journal Batch Code", GenJournalLine."Journal Batch Name");
+                    SetRange("Gen. Journal Document No.", GenJournalLine."Document No.");
                 end;
             }
             dataitem(GenJournalLineBankAccount; "Gen. Journal Line")

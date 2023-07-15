@@ -217,7 +217,7 @@ pageextension 80095 "NCT Role Finan" extends "Accountant Role Center"
         }
         addafter("Purchase Orders")
         {
-            action("BWK Goods Receipt Note List")
+            action("Goods Receipt Note List")
             {
                 Caption = 'Goods Receipt Note';
                 ApplicationArea = all;

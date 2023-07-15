@@ -218,7 +218,7 @@ pageextension 80094 "NCT Role Purchase" extends "Purchasing Agent Role Center"
         }
         addafter("Purchase &Order")
         {
-            action("BWK Goods Receipt Note List")
+            action("Goods Receipt Note List")
             {
                 Caption = 'Goods Receipt Note';
                 ApplicationArea = all;

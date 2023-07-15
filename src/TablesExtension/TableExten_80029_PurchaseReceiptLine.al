@@ -135,6 +135,13 @@ tableextension 80029 "NCT Purchase Rcpt. Line" extends "Purch. Rcpt. Line"
             Caption = 'WHT Option';
             DataClassification = CustomerContent;
         }
+        field(80023; "NCT Original Quantity"; Decimal)
+        {
+            Caption = 'Quantity';
+            DecimalPlaces = 0 : 5;
+            DataClassification = CustomerContent;
+
+        }
 
     }
 }

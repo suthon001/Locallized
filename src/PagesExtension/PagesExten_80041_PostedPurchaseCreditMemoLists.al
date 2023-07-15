@@ -52,5 +52,28 @@ pageextension 80041 "NCT ExtenPostPurchCreditLists" extends "Posted Purchase Cre
             Promoted = true;
             PromotedCategory = Category5;
         }
+        addlast(Reporting)
+        {
+            action("AP CN Voucher")
+            {
+                Caption = 'AP CN Voucher';
+                Image = PrintVoucher;
+                ApplicationArea = all;
+                PromotedCategory = Report;
+                Promoted = true;
+                PromotedIsBig = true;
+                ToolTip = 'Executes the AP Voucher action.';
+                trigger OnAction()
+                var
+                    APVoucher: Report "NCT AP CN Voucher (Post)";
+                    PurchaseHeader: Record "Purch. Cr. Memo Hdr.";
+                begin
+                    PurchaseHeader.reset();
+                    PurchaseHeader.Copy(Rec);
+                    APVoucher."SetGLEntry"(PurchaseHeader);
+                    APVoucher.RunModal();
+                end;
+            }
+        }
     }
 }

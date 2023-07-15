@@ -46,7 +46,65 @@ codeunit 80006 "WHT Preview Event Handler"
         TempWHTApplied.deleteall();
     end;
 
+    [EventSubscriber(ObjectType::Report, Report::"Carry Out Action Msg. - Req.", 'SetPODocumentNo', '', false, false)]
+    local procedure SetPODocumentNo(PONoSeries: Code[20])
+    begin
+        gvPONoNories := PONoSeries;
+    end;
+
+    [EventSubscriber(ObjectType::Report, Report::"Carry Out Action Msg. - Req.", 'OnUseOneJnlOnBeforeSetReqWkshMakeOrdersParameters', '', false, false)]
+    local procedure OnUseOneJnlOnBeforeSetReqWkshMakeOrdersParameters()
     var
+        NoSeriesMgt: Codeunit NoSeriesManagement;
+        newPoNoSeries: Code[20];
+    begin
+        if gvPONoNories <> '' then
+            if NoSeriesMgt.SelectSeries(gvPONoNories, gvPONoNories, newPoNoSeries) then
+                gvPONoNories := newPoNoSeries
+            else
+                ERROR('');
+    end;
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnBeforePurchOrderHeaderInsert', '', false, false)]
+    local procedure OnBeforePurchOrderHeaderInsert(var PurchaseHeader: Record "Purchase Header")
+    var
+        NoSeriesMgt: Codeunit NoSeriesManagement;
+    begin
+        if gvPONoNories <> '' then begin
+            PurchaseHeader."No." := NoSeriesMgt.GetNextNo(gvPONoNories, WorkDate(), true);
+            PurchaseHeader."No. Series" := gvPONoNories;
+        end;
+        CreatePONO := '';
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnAfterCode', '', false, false)]
+    local procedure OnAfterCode()
+    begin
+        if CreatePONO <> '' then
+            Message(CreatePONO);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnBeforeCheckInsertFinalizePurchaseOrderHeader', '', false, false)]
+    local procedure OnBeforeCheckInsertFinalizePurchaseOrderHeader(RequisitionLine: Record "Requisition Line"; var PurchaseHeader: Record "Purchase Header"; var CheckInsert: Boolean)
+
+    begin
+        CheckInsert :=
+            (PurchaseHeader."Buy-from Vendor No." <> RequisitionLine."Vendor No.") or
+            (PurchaseHeader."Currency Code" <> RequisitionLine."Currency Code");
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnInsertHeaderOnBeforeValidateSellToCustNoFromReqLine', '', false, false)]
+    local procedure OnInsertHeaderOnBeforeValidateSellToCustNoFromReqLine(PurchOrderHeader: Record "Purchase Header")
+    begin
+        if CreatePONO <> '' then
+            CreatePONO := CreatePONO + '\n';
+        CreatePONO := CreatePONO + PurchOrderHeader."No.";
+    end;
+
+    var
+        gvPONoNories: Code[20];
+        CreatePONO: Text;
         TempWHTApplied: Record "NCT WHT Applied Entry" temporary;
         PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler";
 }

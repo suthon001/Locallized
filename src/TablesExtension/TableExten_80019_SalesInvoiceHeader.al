@@ -65,6 +65,18 @@ tableextension 80019 "NCT ExtenSalesInvoice Header" extends "Sales Invoice Heade
             DataClassification = SystemMetadata;
             Editable = false;
         }
+        field(89998; "NCT Applies-to ID"; Code[50])
+        {
+            Caption = 'Applies-to ID.';
+            DataClassification = SystemMetadata;
+            Editable = false;
+        }
+        field(89999; "NCT Requested Delivery Date"; Date)
+        {
+            Caption = 'Requested Delivery Date';
+            DataClassification = SystemMetadata;
+            Editable = false;
+        }
     }
 
 }

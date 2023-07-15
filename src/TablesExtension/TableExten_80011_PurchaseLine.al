@@ -221,6 +221,17 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             Caption = 'WHT Option';
             DataClassification = CustomerContent;
         }
+        field(80023; "NCT Original Quantity"; Decimal)
+        {
+            Caption = 'Quantity';
+            DecimalPlaces = 0 : 5;
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if rec."Document Type" = rec."Document Type"::Order then
+                    rec.Validate(Quantity, rec."NCT Original Quantity");
+            end;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()
@@ -240,6 +251,11 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             begin
                 CheckQtyPR();
                 CalWhtAmount();
+                if rec."Document Type" <> rec."Document Type"::Order then
+                    rec.Validate("NCT Original Quantity", rec.Quantity)
+                else
+                    if rec."Over-Receipt Code" = '' then
+                        rec."NCT Original Quantity" := rec.Quantity;
             end;
         }
         modify("Direct Unit Cost")

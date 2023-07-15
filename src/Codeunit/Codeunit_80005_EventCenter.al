@@ -4,6 +4,17 @@
 codeunit 80005 "NCT EventFunction"
 {
     Permissions = TableData "G/L Entry" = rimd;
+    [EventSubscriber(ObjectType::Table, Database::"FA Depreciation Book", 'OnBeforeValidateNoOfDepreYears', '', false, false)]
+    local procedure OnBeforeValidateNoOfDepreYears(var IsHandled: Boolean)
+    begin
+        IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"FA Depreciation Book", 'OnBeforeModifyFADeprBook', '', false, false)]
+    local procedure OnBeforeModifyFADeprBook(var IsHandled: Boolean)
+    begin
+        IsHandled := true;
+    end;
 
     [EventSubscriber(ObjectType::Page, Page::"Payment Journal", 'OnAfterValidateEvent', 'AppliesToDocNo', false, false)]
     local procedure AppliesToDocNo(var Rec: Record "Gen. Journal Line"; var xRec: Record "Gen. Journal Line")
@@ -288,6 +299,8 @@ codeunit 80005 "NCT EventFunction"
             NewReportId := 80074;
         if ReportId = 708 then
             NewReportId := 80075;
+        if ReportId = report::"Calculate Depreciation" then
+            NewReportId := REPORT::"NCT Calculate Depreciation";
 
 
     end;

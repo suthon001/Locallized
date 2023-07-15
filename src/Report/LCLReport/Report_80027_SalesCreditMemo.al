@@ -75,34 +75,6 @@ report 80027 "NCT Report Sales Credit Memo"
                 column(SalesLine_Quantity; Quantity) { }
                 column(SalesLine_Unit_of_Measure_Code; "Unit of Measure Code") { }
 
-
-                dataitem("Reservation Entry"; "Reservation Entry")
-                {
-                    DataItemTableView = sorting("Entry No.");
-                    DataItemLinkReference = SalesLine;
-                    DataItemLink = "Source ID" = field("Document No."), "Source Ref. No." = field("Line No.");
-                    column(LotSeriesNo; LotSeriesNo) { }
-                    column(Reservation_Quantity; Quantity) { }
-                    column(Reservation_Location_Code; "Location Code") { }
-                    column(Expiration_Date; format("Expiration Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                    column(LotSeriesCaption; LotSeriesCaption) { }
-                    trigger OnAfterGetRecord()
-                    begin
-                        LotSeriesNo := '';
-                        LineLotSeries += 1;
-                        if "Lot No." <> '' then begin
-                            LotSeriesNo := "Lot No.";
-                            LotSeriesCaption := 'Lot No. :';
-                        end else begin
-                            LotSeriesNo := "Serial No.";
-                            LotSeriesCaption := 'Series No. :';
-                        end;
-                        if LineLotSeries > 1 then
-                            LotSeriesCaption := '';
-                    end;
-
-
-                }
                 trigger OnAfterGetRecord()
                 begin
                     If "No." <> '' then
