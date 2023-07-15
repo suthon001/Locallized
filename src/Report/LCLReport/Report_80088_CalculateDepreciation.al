@@ -4,14 +4,16 @@ report 80088 "NCT Calculate Depreciation"
     Caption = 'Calculate Depreciation';
     ProcessingOnly = true;
     UsageCategory = Tasks;
-
     dataset
     {
 
         dataitem("Fixed Asset"; "Fixed Asset")
         {
             RequestFilterFields = "No.", "FA Class Code", "FA Subclass Code", "Budgeted Asset";
-
+            trigger OnPreDataItem()
+            begin
+                GeneralLedgerSetup.GET();
+            end;
 
             trigger OnAfterGetRecord()
             begin
@@ -21,10 +23,14 @@ report 80088 "NCT Calculate Depreciation"
                 CalculateDepr."NCT Calculate"(
                   DeprAmount, Custom1Amount, NumberOfDays, Custom1NumberOfDays,
                   "No.", DeprBookCode, DeprUntilDate, EntryAmounts, 0D, DaysInPeriod);
+
                 IF (DeprAmount <> 0) OR (Custom1Amount <> 0) THEN
                     Window.UPDATE(1, "No.")
                 ELSE
                     Window.UPDATE(2, "No.");
+
+                Custom1Amount := Round(Custom1Amount, GeneralLedgerSetup."Amount Rounding Precision");
+                DeprAmount := Round(DeprAmount, GeneralLedgerSetup."Amount Rounding Precision");
 
                 OnAfterCalculateDepreciation(
                   "No.", TempGenJnlLine, TempFAJnlLine, DeprAmount, NumberOfDays, DeprBookCode, DeprUntilDate, EntryAmounts, DaysInPeriod);
@@ -71,7 +77,7 @@ report 80088 "NCT Calculate Depreciation"
 
             trigger OnPostDataItem()
             begin
-                IF TempFAJnlLine.FIND('-') THEN BEGIN
+                IF TempFAJnlLine.FindFirst() THEN BEGIN
                     FAJnlLine.LOCKTABLE();
                     FAJnlSetup.FAJnlName(DeprBook, FAJnlLine, FAJnlNextLineNo);
                     NoSeries := FAJnlSetup.GetFANoSeries(FAJnlLine);
@@ -81,7 +87,7 @@ report 80088 "NCT Calculate Depreciation"
                         DocumentNo2 := DocumentNo;
                 END;
 
-                IF TempFAJnlLine.FIND('-') THEN
+                IF TempFAJnlLine.FindSet() THEN
                     REPEAT
                         FAJnlLine.INIT();
                         FAJnlLine."Line No." := 0;
@@ -108,7 +114,7 @@ report 80088 "NCT Calculate Depreciation"
                         FAJnlLineCreatedCount += 1;
                     UNTIL TempFAJnlLine.NEXT() = 0;
 
-                IF TempGenJnlLine.FIND('-') THEN BEGIN
+                IF TempGenJnlLine.FindFirst() THEN BEGIN
                     GenJnlLine.LOCKTABLE();
                     FAJnlSetup.GenJnlName(DeprBook, GenJnlLine, GenJnlNextLineNo);
                     NoSeries := FAJnlSetup.GetGenNoSeries(GenJnlLine);
@@ -117,7 +123,7 @@ report 80088 "NCT Calculate Depreciation"
                     ELSE
                         DocumentNo2 := DocumentNo;
                 END;
-                IF TempGenJnlLine.FIND('-') THEN
+                IF TempGenJnlLine.FindSet() THEN
                     REPEAT
                         GenJnlLine.INIT();
                         GenJnlLine."Line No." := 0;
@@ -249,16 +255,18 @@ report 80088 "NCT Calculate Depreciation"
         }
 
         trigger OnOpenPage()
+        var
+            ClientTypeManagement: Codeunit "Client Type Management";
         begin
-            BalAccount := TRUE;
-            PostingDate := WORKDATE();
-            DeprUntilDate := WORKDATE();
-            IF DeprBookCode = '' THEN BEGIN
-                FASetup.GET();
+            BalAccount := true;
+            if ClientTypeManagement.GetCurrentClientType() <> CLIENTTYPE::Background then begin
+                PostingDate := WorkDate();
+                DeprUntilDate := WorkDate();
+            end;
+            if DeprBookCode = '' then begin
+                FASetup.Get();
                 DeprBookCode := FASetup."Default Depr. Book";
-
-            END;
-
+            end;
         end;
     }
 
@@ -268,9 +276,13 @@ report 80088 "NCT Calculate Depreciation"
 
     trigger OnPostReport()
     var
-        PageGenJnlLine: Record 81;
-        PageFAJnlLine: Record 5621;
+        PageGenJnlLine: Record "Gen. Journal Line";
+        PageFAJnlLine: Record "FA Journal Line";
     begin
+        if ErrorMessageHandler.HasErrors() then
+            if ErrorMessageHandler.ShowErrors() then
+                Error('');
+
         Window.CLOSE();
         IF (FAJnlLineCreatedCount = 0) AND (GenJnlLineCreatedCount = 0) THEN BEGIN
             MESSAGE(CompletionStatsMsg);
@@ -298,6 +310,8 @@ report 80088 "NCT Calculate Depreciation"
 
     trigger OnPreReport()
     begin
+        ActivateErrorMessageHandling("Fixed Asset");
+
         DeprBook.GET(DeprBookCode);
         IF DeprUntilDate = 0D THEN
             ERROR(Text000, FAJnlLine.FIELDCAPTION("FA Posting Date"));
@@ -313,7 +327,7 @@ report 80088 "NCT Calculate Depreciation"
               FAJnlLine.FIELDCAPTION("Posting Date"),
               DeprBook.FIELDCAPTION("Use Same FA+G/L Posting Dates"),
               FALSE,
-              DeprBook.TABLECAPTION,
+              DeprBook.TABLECAPTION(),
               DeprBook.FIELDCAPTION(Code),
               DeprBook.Code);
 
@@ -324,6 +338,7 @@ report 80088 "NCT Calculate Depreciation"
     end;
 
     var
+        GeneralLedgerSetup: Record "General Ledger Setup";
         Text000: Label 'You must specify %1.';
         Text001: Label 'Force No. of Days must be activated.';
         Text002: Label '%1 and %2 must be identical. %3 must be %4 in %5 %6 = %7.';
@@ -332,6 +347,9 @@ report 80088 "NCT Calculate Depreciation"
         Text005: Label 'Inserting journal lines       #3##########';
         Text006: Label 'Use Force No. of Days must be activated.';
         GenJnlLine: Record 81;
+        ErrorContextElement: Codeunit "Error Context Element";
+        ErrorMessageHandler: Codeunit "Error Message Handler";
+        ErrorMessageMgt: Codeunit "Error Message Management";
         TempGenJnlLine: Record 81 temporary;
         FASetup: Record 5603;
         FAJnlLine: Record 5621;
@@ -368,6 +386,19 @@ report 80088 "NCT Calculate Depreciation"
         CompletionStatsGenJnlQst: Label 'The depreciation has been calculated.\\%1 fixed asset G/L journal lines were created.\\Do you want to open the Fixed Asset G/L Journal window?', Comment = 'The depreciation has been calculated.\\2 fixed asset G/L  journal lines were created.\\Do you want to open the Fixed Asset G/L Journal window?';
         DeprUntilDateModified: Boolean;
 
+    local procedure ActivateErrorMessageHandling(var FixedAsset: Record "Fixed Asset")
+    var
+        IsHandled: Boolean;
+    begin
+        IsHandled := false;
+        OnBeforeActivateErrorMessageHandling(FixedAsset, ErrorMessageMgt, ErrorMessageHandler, ErrorContextElement, IsHandled);
+        if IsHandled then
+            exit;
+
+        if GuiAllowed then
+            ErrorMessageMgt.Activate(ErrorMessageHandler);
+    end;
+
     procedure InitializeRequest(DeprBookCodeFrom: Code[10]; DeprUntilDateFrom: Date; UseForceNoOfDaysFrom: Boolean; DaysInPeriodFrom: Integer; PostingDateFrom: Date; DocumentNoFrom: Code[20]; PostingDescriptionFrom: Text[100]; BalAccountFrom: Boolean)
     begin
         DeprBookCode := DeprBookCodeFrom;
@@ -387,6 +418,11 @@ report 80088 "NCT Calculate Depreciation"
 
     [IntegrationEvent(false, false)]
     local procedure OnBeforeFAJnlLineInsert(var TempFAJournalLine: Record 5621 temporary; FAJournalLine: Record 5621)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforeActivateErrorMessageHandling(varFixedAsset: Record "Fixed Asset"; var ErrorMessageMgt: Codeunit "Error Message Management"; var ErrorMessageHandler: Codeunit "Error Message Handler"; var ErrorContextElement: Codeunit "Error Context Element"; var IsHandled: Boolean)
     begin
     end;
 }
