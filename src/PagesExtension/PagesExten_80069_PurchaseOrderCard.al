@@ -153,7 +153,7 @@ pageextension 80069 "NCT Purchase Order Card" extends "Purchase Order"
         if CheckbeforDelete then begin
             PurchaseReceipt.reset();
             PurchaseReceipt.SetRange("Order No.", Rec."No.");
-            if PurchaseReceipt.FindFirst() then
+            if not PurchaseReceipt.IsEmpty() then
                 ERROR('Cannot Delete this document has been Posted');
         end;
     end;

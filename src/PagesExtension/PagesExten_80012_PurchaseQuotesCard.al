@@ -16,7 +16,7 @@ pageextension 80012 "NCT Purchase Quote Card" extends "Purchase Quote"
             field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
-                ToolTip = 'Specifies the value of the Tax Branch Code field.';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {

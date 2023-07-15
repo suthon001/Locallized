@@ -111,7 +111,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
         }
         field(80011; "NCT Branch Code"; Code[5])
         {
-            Caption = 'Tax Branch Code';
+            Caption = 'Branch Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
 

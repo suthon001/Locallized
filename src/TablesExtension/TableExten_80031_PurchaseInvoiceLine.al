@@ -92,7 +92,7 @@ tableextension 80031 "NCT Purchase Inv. Line" extends "Purch. Inv. Line"
         }
         field(80014; "NCT Branch Code"; Code[5])
         {
-            Caption = 'Tax Branch Code';
+            Caption = 'Branch Code';
             DataClassification = CustomerContent;
 
 

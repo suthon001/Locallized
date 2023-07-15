@@ -149,7 +149,7 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
         }
         field(80014; "NCT Branch Code"; Code[5])
         {
-            Caption = 'Tax Branch Code';
+            Caption = 'Branch Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
 

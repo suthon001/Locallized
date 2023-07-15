@@ -92,7 +92,7 @@ tableextension 80033 "NCT PurchaseCr.MemoLine" extends "Purch. Cr. Memo Line"
         }
         field(80014; "NCT Branch Code"; Code[5])
         {
-            Caption = 'Tax Branch Code';
+            Caption = 'Branch Code';
             DataClassification = CustomerContent;
 
 

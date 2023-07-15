@@ -26,7 +26,7 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
         }
         field(80002; "NCT Branch Code"; Code[5])
         {
-            Caption = 'Tax Branch Code';
+            Caption = 'Branch Code';
             TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Sell-to Customer No."));
             DataClassification = CustomerContent;
             trigger OnValidate()

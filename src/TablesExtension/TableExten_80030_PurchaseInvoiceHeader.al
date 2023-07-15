@@ -15,17 +15,13 @@ tableextension 80030 "NCT Purchase Inv. Header" extends "Purch. Inv. Header"
         {
             Caption = 'Head Office';
             DataClassification = CustomerContent;
-
-
         }
         field(80002; "NCT Branch Code"; Code[5])
         {
-            Caption = 'Tax Branch Code';
+            Caption = 'Branch Code';
             TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("Buy-from Vendor No."));
             DataClassification = CustomerContent;
-
         }
-
         field(80003; "NCT Create By"; Code[50])
         {
             Caption = 'Create By';
@@ -46,7 +42,6 @@ tableextension 80030 "NCT Purchase Inv. Header" extends "Purch. Inv. Header"
         }
         field(80006; "NCT Make PO No.Series No."; Code[20])
         {
-            // TableRelation = "No. Series".Code;
             Caption = 'Make PO No.Series No.';
             DataClassification = CustomerContent;
 

@@ -94,7 +94,7 @@ page 80037 "NCT Posted ShowDetail Vat"
                 field("Branch Code"; Rec."NCT Branch Code")
                 {
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Tax Branch Code field.';
+                    ToolTip = 'Specifies the value of the Branch Code field.';
                 }
                 field("VAT Registration No."; Rec."VAT Registration No.")
                 {

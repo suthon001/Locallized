@@ -92,7 +92,7 @@ tableextension 80029 "NCT Purchase Rcpt. Line" extends "Purch. Rcpt. Line"
         }
         field(80014; "NCT Branch Code"; Code[5])
         {
-            Caption = 'Tax Branch Code';
+            Caption = 'Branch Code';
             DataClassification = CustomerContent;
 
 

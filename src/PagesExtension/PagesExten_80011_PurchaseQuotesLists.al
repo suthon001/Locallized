@@ -16,7 +16,7 @@ pageextension 80011 "NCT Purchase Quotes Lists" extends "Purchase Quotes"
             field("Branch Code"; Rec."NCT Branch Code")
             {
                 ApplicationArea = all;
-                ToolTip = 'Specifies the value of the Tax Branch Code field.';
+                ToolTip = 'Specifies the value of the Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {

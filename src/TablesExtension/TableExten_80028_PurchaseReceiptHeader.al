@@ -20,7 +20,7 @@ tableextension 80028 "NCT Purchase Rcpt. Header" extends "Purch. Rcpt. Header"
         }
         field(80002; "NCT Branch Code"; Code[5])
         {
-            Caption = 'Tax Branch Code';
+            Caption = 'Branch Code';
             TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("Buy-from Vendor No."));
             DataClassification = CustomerContent;
 
