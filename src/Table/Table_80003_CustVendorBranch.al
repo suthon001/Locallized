@@ -120,7 +120,7 @@ table 80003 "NCT Customer & Vendor Branch"
         }
         field(18; "No."; code[20])
         {
-            Caption = 'No.';
+            Caption = 'เลขที่';
             DataClassification = CustomerContent;
         }
         field(19; "Vat Registration No."; Text[20])

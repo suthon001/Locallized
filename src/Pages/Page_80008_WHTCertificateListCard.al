@@ -64,31 +64,6 @@ page 80008 "NCT WHT Certificate"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the WHT Name 2 field.';
                 }
-                field("WHT Address"; Rec."WHT Address")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the WHT Address field.';
-                }
-                field("WHT Address 2"; Rec."WHT Address 2")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the WHT Address 2 field.';
-                }
-                field("WHT Address 3"; Rec."WHT Address 3")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the WHT Address 3 field.';
-                }
-                field("WHT City"; Rec."WHT City")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the WHT City field.';
-                }
-                field("Wht Post Code"; Rec."Wht Post Code")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Wht Post Code field.';
-                }
                 field("VAT Registration No."; Rec."VAT Registration No.")
                 {
                     ApplicationArea = all;
@@ -160,7 +135,78 @@ page 80008 "NCT WHT Certificate"
                 SubPageLink = "WHT No." = field("WHT No.");
                 UpdatePropagation = Both;
             }
+            group(AddressInfor)
+            {
+                Caption = 'Address Information';
+                field("NCT WHT Title Name"; rec."WHT Title Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the คำนำหน้า field.';
+                }
+                field("NCT WHT Name"; rec."WHT Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the ชื่อ field.';
+                }
+                field("NCT WHT Building"; rec."WHT Building")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the ชื่ออาคาร/หมู่บ้าน field.';
+                }
+                field("NCT WHT House No."; rec."WHT House No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the เลขที่ห้อง field.';
+                }
+                field("NCT WHT Village No."; rec."WHT Village No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the หมู่ที่ field.';
+                }
+                field("NCT WHT Floor"; rec."WHT Floor")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the ชั้น field.';
+                }
+                field("NCT WHT No."; rec."WHT No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the เลขที่ field.';
+                }
+                field("NCT WHT Street"; rec."WHT Street")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the ถนน field.';
+                }
+                field("NCT WHT Alley/Lane"; rec."WHT Alley/Lane")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the ตรอก/ซอย field.';
+                }
+                field("NCT WHT Sub-district"; rec."WHT Sub-district")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the ตำบล/แขวง field.';
+                }
+                field("NCT WHT District"; rec."WHT District")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the อำเภอ/เขต field.';
+                }
+                field("NCT WHT Province"; rec."WHT Province")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the จังหวัด field.';
+                }
+                field("NCT WHT Post Code"; rec."WHT Post Code")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the รหัสไปรษณีย์ field.';
+                }
+            }
         }
+
+
 
 
     }

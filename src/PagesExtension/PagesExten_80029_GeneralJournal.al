@@ -249,7 +249,7 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
                 IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor THEN BEGIN
                     IF Vendor.GET(GenJnlLine."Account No.") THEN BEGIN
 
-                        WHTHeader."WHT Business Posting Group" := Vendor."WHT Business Posting Group";
+                        WHTHeader."WHT Business Posting Group" := Vendor."NCT WHT Business Posting Group";
                         WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Vendor;
                         WHTHeader.validate("WHT Source No.", Vendor."No.");
                     END;

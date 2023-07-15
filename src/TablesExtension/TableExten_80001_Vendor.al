@@ -51,10 +51,85 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
 
             end;
         }
-        field(80002; "WHT Business Posting Group"; Code[10])
+        field(80002; "NCT WHT Business Posting Group"; Code[10])
         {
             Caption = 'WHT Business Posting Group';
             TableRelation = "NCT WHT Business Posting Group"."Code";
+            DataClassification = CustomerContent;
+        }
+        field(80003; "NCT WHT Title Name"; Enum "NCT Title Document Name")
+        {
+            Caption = 'คำนำหน้า';
+            DataClassification = CustomerContent;
+        }
+        field(80004; "NCT WHT Building"; Text[100])
+        {
+            Caption = 'ชื่ออาคาร/หมู่บ้าน';
+            DataClassification = CustomerContent;
+        }
+        field(80005; "NCT WHT Alley/Lane"; Text[100])
+        {
+            Caption = 'ตรอก/ซอย';
+            DataClassification = CustomerContent;
+        }
+        field(80006; "NCT WHT Sub-district"; Text[100])
+        {
+            Caption = 'ตำบล/แขวง';
+            DataClassification = CustomerContent;
+        }
+        field(80007; "NCT WHT District"; Text[100])
+        {
+            Caption = 'อำเภอ/เขต';
+            DataClassification = CustomerContent;
+        }
+        field(80008; "NCT WHT Floor"; Text[10])
+        {
+            Caption = 'ชั้น';
+            DataClassification = CustomerContent;
+        }
+        field(80009; "NCT WHT House No."; Text[50])
+        {
+            Caption = 'เลขที่ห้อง';
+            DataClassification = CustomerContent;
+        }
+        field(80010; "NCT WHT Village No."; Text[15])
+        {
+            Caption = 'หมู่ที่';
+            DataClassification = CustomerContent;
+        }
+        field(80011; "NCT WHT Street"; Text[50])
+        {
+            Caption = 'ถนน';
+            DataClassification = CustomerContent;
+        }
+        field(80012; "NCT WHT Province"; Text[50])
+        {
+            Caption = 'จังหวัด';
+            DataClassification = CustomerContent;
+        }
+        field(80013; "NCT WHT Post Code"; code[20])
+        {
+            Caption = 'รหัสไปรษณีย์';
+            DataClassification = CustomerContent;
+            TableRelation = "Post Code".Code;
+            trigger OnValidate()
+            var
+                ltPostCode: Record "Post Code";
+            begin
+                ltPostCode.reset();
+                ltPostCode.SetRange(code, rec."NCT WHT Post Code");
+                if ltPostCode.FindFirst() then
+                    rec."NCT WHT Province" := ltPostCode.City;
+            end;
+        }
+        field(80014; "NCT WHT No."; code[20])
+        {
+            Caption = 'เลขที่';
+            DataClassification = CustomerContent;
+        }
+        field(80015; "NCT WHT Name"; text[100])
+        {
+            Caption = 'ชื่อ';
             DataClassification = CustomerContent;
         }
         modify(Name)
@@ -62,7 +137,7 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
             trigger OnAfterValidate()
             begin
                 UpdateVendorCustBranch(5, Name, false);
-
+                rec."NCT WHT Name" := rec.Name;
             end;
         }
         modify(Address)
@@ -77,6 +152,7 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
             trigger OnAfterValidate()
             begin
                 UpdateVendorCustBranch(16, City, false);
+                rec."NCT WHT Province" := rec.City;
             end;
         }
         modify("Post Code")
@@ -84,6 +160,7 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
             trigger OnAfterValidate()
             begin
                 UpdateVendorCustBranch(17, "Post Code", false);
+                rec."NCT WHT Post Code" := rec."Post Code";
             end;
         }
 

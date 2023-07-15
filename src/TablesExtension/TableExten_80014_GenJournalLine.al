@@ -331,7 +331,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                 "NCT WHT City" := Vendor.City;
                 "NCT WHT Post Code" := Vendor."Post Code";
                 "NCT WHT County" := Vendor.County;
-                VALIDATE("NCT WHT Business Posting Group", Vendor."WHT Business Posting Group");
+                VALIDATE("NCT WHT Business Posting Group", Vendor."NCT WHT Business Posting Group");
                 "NCT WHT Registration No." := Vendor."VAT Registration No.";
                 CalWhtAmount();
             end;

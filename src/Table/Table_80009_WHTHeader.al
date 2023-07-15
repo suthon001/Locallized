@@ -60,12 +60,32 @@ table 80009 "NCT WHT Header"
                         "VAT Registration No." := Vendor."VAT Registration No.";
                         "Head Office" := Vendor."NCT Head Office";
                         "Vat Branch Code" := Vendor."NCT Branch Code";
-                        "WHT Business Posting Group" := Vendor."WHT Business Posting Group";
-                        if NOT whtBusPostingGroup.GET(Vendor."WHT Business Posting Group") then
+                        "WHT Business Posting Group" := Vendor."NCT WHT Business Posting Group";
+                        if NOT whtBusPostingGroup.GET(Vendor."NCT WHT Business Posting Group") then
                             whtBusPostingGroup.init();
                         "WHT Type" := whtBusPostingGroup."WHT Type";
                         "WHT City" := Vendor.City;
                         "WHT Post Code" := Vendor."Post Code";
+                        if Vendor."NCT WHT Name" <> '' then
+                            if "WHT Title Name" <> "WHT Title Name"::" " then
+                                "WHT Name" := format("WHT Title Name") + ' ' + Vendor."NCT WHT Name"
+                            else
+                                "WHT Name" := Vendor."NCT WHT Name";
+
+                        "WHT Title Name" := Vendor."NCT WHT Title Name";
+                        "WHT Building" := Vendor."NCT WHT Building";
+                        "WHT District" := Vendor."NCT WHT District";
+                        "WHT Sub-district" := Vendor."NCT WHT Sub-district";
+                        "WHT Province" := Vendor."NCT WHT Province";
+                        "WHT Alley/Lane" := Vendor."NCT WHT Alley/Lane";
+                        "WHT of No." := Vendor."NCT WHT No.";
+                        "WHT House No." := Vendor."NCT WHT House No.";
+                        "Wht Post Code" := Vendor."Post Code";
+                        if Vendor."NCT WHT Post Code" <> '' then
+                            "Wht Post Code" := Vendor."NCT WHT Post Code";
+                        if Vendor."NCT WHT Province" <> '' then
+                            "WHT City" := Vendor."NCT WHT Province";
+                        UpdateAddress();
                     END;
                 END ELSE
                     IF Customer.GET("WHT Source No.") THEN BEGIN
@@ -87,10 +107,15 @@ table 80009 "NCT WHT Header"
 
             end;
         }
-        field(7; "WHT Name"; Text[100])
+        field(7; "WHT Name"; Text[160])
         {
             Caption = 'WHT Name';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if "WHT Title Name" <> "WHT Title Name"::" " then
+                    "WHT Name" := COPYSTR(format("WHT Title Name") + ' ' + "WHT Name", 1, 160);
+            end;
         }
         field(8; "WHT Name 2"; Text[50])
         {
@@ -112,7 +137,7 @@ table 80009 "NCT WHT Header"
             Caption = 'WHT Address 3';
             DataClassification = CustomerContent;
         }
-        field(12; "WHT City"; Text[30])
+        field(12; "WHT City"; Text[50])
         {
             Caption = 'WHT City';
             DataClassification = CustomerContent;
@@ -228,6 +253,109 @@ table 80009 "NCT WHT Header"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(28; "WHT Title Name"; Enum "NCT Title Document Name")
+        {
+            Caption = 'คำนำหน้า';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if "WHT Title Name" <> "WHT Title Name"::" " then
+                    "WHT Name" := COPYSTR(format("WHT Title Name") + ' ' + "WHT Name", 1, 160)
+                else
+                    "WHT Name" := "WHT Name";
+            end;
+        }
+        field(29; "WHT Building"; Text[100])
+        {
+            Caption = 'ชื่ออาคาร/หมู่บ้าน';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+        field(30; "WHT Alley/Lane"; Text[100])
+        {
+            Caption = 'ตรอก/ซอย';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+        field(31; "WHT Sub-district"; Text[100])
+        {
+            Caption = 'ตำบล/แขวง';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+        field(32; "WHT District"; Text[100])
+        {
+            Caption = 'อำเภอ/เขต';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+        field(33; "WHT Floor"; Text[10])
+        {
+            Caption = 'ชั้น';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+        field(34; "WHT House No."; Text[50])
+        {
+            Caption = 'เลขที่ห้อง';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+        field(35; "WHT Village No."; Text[15])
+        {
+            Caption = 'หมู่ที่';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+        field(36; "WHT Street"; Text[50])
+        {
+            Caption = 'ถนน';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+        field(37; "WHT Province"; Text[50])
+        {
+            Caption = 'จังหวัด';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
+
+        field(38; "WHT of No."; code[20])
+        {
+            Caption = 'เลขที่';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAddress();
+            end;
+        }
     }
     keys
     {
@@ -236,6 +364,93 @@ table 80009 "NCT WHT Header"
             Clustered = true;
         }
     }
+
+    local procedure UpdateAddress()
+    var
+        VTxT: Text;
+        i: Integer;
+        Addr: array[4] of text[100];
+    begin
+        Clear(VTxT);
+        if "WHT Building" <> '' then begin
+            VTxT := 'อาคาร/หมู่บ้าน ' + "WHT Building" + ' ';
+            i := CheckLen(Addr[i], VTxT, i);
+            Addr[i] += VTxT;
+        end;
+        if "WHT House No." <> '' then begin
+            VTxT := 'เลขที่บ้าน ' + "WHT House No." + ' ';
+            i := CheckLen(Addr[i], VTxT, i);
+            Addr[i] += VTxT;
+        end;
+        if "WHT Village No." <> '' then begin
+            VTxT := 'หมู่ที่ ' + "WHT Village No." + ' ';
+            i := CheckLen(Addr[i], VTxT, i);
+            Addr[i] += VTxT;
+        end;
+        if "WHT Floor" <> '' then begin
+            VTxT := 'ชั้น ' + "WHT Floor" + ' ';
+            i := CheckLen(Addr[i], VTxT, i);
+            Addr[i] += VTxT;
+        end;
+        if "WHT No." <> '' then begin
+            VTxT := 'ห้องเลขที่ ' + "WHT No." + ' ';
+            i := CheckLen(Addr[i], VTxT, i);
+            Addr[i] += VTxT;
+        end;
+        if "WHT Street" <> '' then begin
+            VTxT := 'ถนน' + "WHT Street" + ' ';
+            i := CheckLen(Addr[i], VTxT, i);
+            Addr[i] += VTxT;
+        end;
+        if "WHT Alley/Lane" <> '' then begin
+            VTxT := 'ซอย' + "WHT Alley/Lane" + ' ';
+            i := CheckLen(Addr[i], VTxT, i);
+            Addr[i] += VTxT;
+        end;
+        if StrPos("WHT City", 'กรุงเทพ') <> 0 then begin
+            Clear(VTxT);
+            if "WHT Sub-district" <> '' then begin
+                VTxT := 'แขวง' + "WHT Sub-district" + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+            if "WHT District" <> '' then begin
+                VTxT := 'เขต' + "WHT District" + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+        end else begin
+            Clear(VTxT);
+            if "WHT Sub-district" <> '' then begin
+                VTxT := 'ตำบล' + "WHT Sub-district" + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+            if "WHT District" <> '' then begin
+                VTxT := 'อำเภอ' + "WHT District" + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+        end;
+
+        if Addr[1] <> '' then begin
+            Rec."WHT Address" := Addr[1];
+            Rec."WHT Address 2" := '';
+            Rec."WHT Address 3" := '';
+        end;
+        if Addr[2] <> '' then
+            Rec."WHT Address 2" := Addr[2];
+        if Addr[3] <> '' then
+            Rec."WHT Address 3" := Addr[3];
+
+    end;
+
+    local procedure CheckLen(Txt: text; inTxt: text; i: Integer): Integer
+    begin
+        if StrLen(Txt) + StrLen(inTxt) >= 100 then
+            exit(i + 1);
+        exit(i);
+    end;
     /// <summary> 
     /// Description for AssistEditCertificate.
     /// </summary>

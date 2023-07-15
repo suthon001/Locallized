@@ -128,7 +128,7 @@ table 80005 "NCT Tax & WHT Line"
             Description = 'ลำดับที่';
             DataClassification = SystemMetadata;
         }
-        field(1004; "Name"; Text[100])
+        field(1004; "Name"; Text[160])
         {
             Caption = 'Name';
             DataClassification = SystemMetadata;
@@ -471,7 +471,6 @@ table 80005 "NCT Tax & WHT Line"
         TaxReportHeader: Record "NCT Tax & WHT Header";
         TaxReportLineFind: Record "NCT Tax & WHT Line";
         WHTLine: Record "NCT WHT Line";
-        CustVendorBranch: Record "NCT Customer & Vendor Branch";
     begin
 
         TaxReportHeader.get("Tax Type", "Document No.");
@@ -511,8 +510,7 @@ table 80005 "NCT Tax & WHT Line"
                         // TaxReportLineFind.
                         TaxReportLineFind."Address" := WHTHeader."WHT Address";
                         TaxReportLineFind."Address 2" := WHTHeader."WHT Address 2";
-                        TaxReportLineFind."City" := WHTHeader."WHT City";
-                        TaxReportLineFind."Post Code" := WHTHeader."WHT Post Code";
+
                         TaxReportLineFind."WHT Registration No." := WHTHeader."VAT Registration No.";
                         TaxReportLineFind."WHT %" := WHTLine."WHT %";
                         TaxReportLineFind."Head Office" := WHTHeader."Head Office";
@@ -520,19 +518,20 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLineFind."VAT Registration No." := WHTHeader."VAT Registration No.";
                         TaxReportLineFind."Ref. Wht Line" := WHTLine."WHT Line No.";
                         TaxReportLineFind."WHT Certificate No." := WHTHeader."WHT Certificate No.";
-                        if CustVendorBranch.Get(CustVendorBranch."Source Type"::Vendor, TaxReportLineFind."Vendor No.", TaxReportLineFind."Head Office", TaxReportLineFind."Branch Code") then begin
-                            TaxReportLineFind."Alley/Lane" := CustVendorBranch."Alley/Lane";
-                            TaxReportLineFind."Title Name" := CustVendorBranch."Title Name";
-                            TaxReportLineFind.Province := CustVendorBranch.Province;
-                            TaxReportLineFind.Floor := CustVendorBranch.Floor;
-                            TaxReportLineFind.Building := CustVendorBranch.Building;
-                            TaxReportLineFind."Sub-district" := CustVendorBranch."Sub-district";
-                            TaxReportLineFind."House No." := CustVendorBranch."House No.";
-                            TaxReportLineFind.Street := CustVendorBranch.Street;
-                            TaxReportLineFind.District := CustVendorBranch.District;
-                            TaxReportLineFind."Village No." := CustVendorBranch."Village No.";
-                            TaxReportLineFind."No." := CustVendorBranch."No.";
-                        end;
+
+                        TaxReportLineFind."Alley/Lane" := WHTHeader."WHT Alley/Lane";
+                        TaxReportLineFind."Title Name" := WHTHeader."WHT Title Name";
+                        TaxReportLineFind.Province := WHTHeader."WHT Province";
+                        TaxReportLineFind.Floor := WHTHeader."WHT Floor";
+                        TaxReportLineFind.Building := WHTHeader."WHT Building";
+                        TaxReportLineFind."Sub-district" := WHTHeader."WHT Sub-district";
+                        TaxReportLineFind."House No." := WHTHeader."WHT House No.";
+                        TaxReportLineFind.Street := WHTHeader."WHT Street";
+                        TaxReportLineFind.District := WHTHeader."WHT District";
+                        TaxReportLineFind."Village No." := WHTHeader."WHT Village No.";
+                        TaxReportLineFind."No." := WHTHeader."WHT No.";
+                        TaxReportLineFind."City" := WHTHeader."WHT City";
+                        TaxReportLineFind."Post Code" := WHTHeader."WHT Post Code";
 
                         if (NOT TaxReportLineFind."Head Office") AND (TaxReportLineFind."Branch Code" = '') then
                             TaxReportLineFind."Head Office" := true;

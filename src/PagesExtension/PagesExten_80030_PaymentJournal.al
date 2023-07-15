@@ -255,9 +255,9 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
                 WHTHeader."WHT Date" := Rec."Document Date";
                 IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor THEN BEGIN
                     IF Vendor.GET(GenJnlLine."Account No.") THEN BEGIN
-                        if NOT whtBusPostingGroup.GET(Vendor."WHT Business Posting Group") then
+                        if NOT whtBusPostingGroup.GET(Vendor."NCT WHT Business Posting Group") then
                             whtBusPostingGroup.init();
-                        WHTHeader."WHT Business Posting Group" := Vendor."WHT Business Posting Group";
+                        WHTHeader."WHT Business Posting Group" := Vendor."NCT WHT Business Posting Group";
                         WHTHeader."WHT Source Type" := WHTHeader."WHT Source Type"::Vendor;
                         WHTHeader.validate("WHT Source No.", Vendor."No.");
                     END;

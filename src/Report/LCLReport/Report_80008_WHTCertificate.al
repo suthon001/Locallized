@@ -32,7 +32,7 @@ report 80008 "NCT WHT Certificate"
                 WHTCerti := "WHT Certificate No.";
                 WHTDAte := "WHT Date";
                 whtVendorName := "WHT Name" + '  ' + "WHT Name 2";
-                whtVendorAddress := "WHT Address" + ' ' + "WHT Address 2" + ' ' + "WHT City" + ' ' + "WHT Post Code";
+                whtVendorAddress := "WHT Address" + ' ' + "WHT Address 2" + ' ' + "WHT Address 3" + ' ' + "WHT City" + ' ' + "WHT Post Code";
 
                 Currcount := 0;
                 DigitCount := 1;
