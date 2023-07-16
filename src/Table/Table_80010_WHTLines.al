@@ -51,7 +51,7 @@ table 80010 "NCT WHT Line"
             DataClassification = SystemMetadata;
 
         }
-        field(8; "WHT Name"; Text[100])
+        field(8; "WHT Name"; Text[160])
         {
             Caption = 'WHT Name';
             DataClassification = SystemMetadata;
@@ -76,7 +76,7 @@ table 80010 "NCT WHT Line"
             Caption = 'WHT Address 3';
             DataClassification = SystemMetadata;
         }
-        field(13; "WHT City"; Text[30])
+        field(13; "WHT City"; Text[50])
         {
             Caption = 'WHT City';
             DataClassification = SystemMetadata;
@@ -153,7 +153,8 @@ table 80010 "NCT WHT Line"
                 TransferFromHeader();
                 IF NOT WHTSetup.GET("WHT Business Posting Group", "WHT Product Posting Group") THEN
                     WHTSetup.init();
-                "WHT %" := WHTSetup."WHT %";
+                rec."WHT %" := WHTSetup."WHT %";
+
             end;
         }
         field(23; "WHT Option"; Enum "NCT WHT Option")
@@ -254,11 +255,12 @@ table 80010 "NCT WHT Line"
     /// <summary> 
     /// Description for TransferFromHeader.
     /// </summary>
-    local procedure "TransferFromHeader"()
+    procedure TransferFromHeader()
     var
         WhtHeader: Record "NCT WHT Header";
     begin
-        WhtHeader.get("WHT No.");
+        if not WhtHeader.get("WHT No.") then
+            WhtHeader.Init();
         "WHT Business Posting Group" := WHTHeader."WHT Business Posting Group";
         "WHT Certificate No." := WHTHeader."WHT Certificate No.";
         "WHT Date" := WHTHeader."WHT Date";
@@ -279,7 +281,15 @@ table 80010 "NCT WHT Line"
         "Gen. Journal Document No." := WHTHeader."Gen. Journal Document No.";
         "WHT Type" := WHTHeader."WHT Type";
         "WHT Option" := WHTHeader."WHT Option";
+        OnafterTransferFomHeader(WhtHeader, rec)
     end;
 
+
+    [IntegrationEvent(true, false)]
+
+    procedure OnafterTransferFomHeader(WHTHeader: Record "NCT WHT Header"; var WhtLine: Record "NCT WHT Line")
+    begin
+
+    end;
 
 }

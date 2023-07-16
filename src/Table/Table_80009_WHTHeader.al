@@ -85,6 +85,7 @@ table 80009 "NCT WHT Header"
                             "Wht Post Code" := Vendor."NCT WHT Post Code";
                         if Vendor."NCT WHT Province" <> '' then
                             "WHT City" := Vendor."NCT WHT Province";
+                        OnAfterinitWHTHeaderVend(rec, Vendor);
                         UpdateAddress();
                     END;
                 END ELSE
@@ -103,6 +104,7 @@ table 80009 "NCT WHT Header"
                         "WHT Type" := whtBusPostingGroup."WHT Type";
                         "WHT City" := Customer.City;
                         "WHT Post Code" := Customer."Post Code";
+                        OnAfterinitWHTHeaderCust(rec, Customer);
                     END;
 
             end;
@@ -115,6 +117,7 @@ table 80009 "NCT WHT Header"
             begin
                 if "WHT Title Name" <> "WHT Title Name"::" " then
                     "WHT Name" := COPYSTR(format("WHT Title Name") + ' ' + "WHT Name", 1, 160);
+                TrasnferToWHTLine();
             end;
         }
         field(8; "WHT Name 2"; Text[50])
@@ -126,6 +129,11 @@ table 80009 "NCT WHT Header"
         {
             Caption = 'WHT Address';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+
+                TrasnferToWHTLine();
+            end;
         }
         field(10; "WHT Address 2"; Text[50])
         {
@@ -212,6 +220,10 @@ table 80009 "NCT WHT Header"
         {
             Caption = 'WHT Option';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                TrasnferToWHTLine();
+            end;
         }
         field(22; "WHT Base"; Decimal)
         {
@@ -245,6 +257,10 @@ table 80009 "NCT WHT Header"
         {
             Caption = 'Wht Post Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                TrasnferToWHTLine();
+            end;
 
         }
         field(27; "Get to WHT"; Boolean)
@@ -494,6 +510,35 @@ table 80009 "NCT WHT Header"
             WHTLine.DELETEALL(TRUE);
         if ltGenJournalLine.GET(rec."Gen. Journal Template Code", rec."Gen. Journal Batch Code", rec."Gen. Journal Line No.") then
             ltGenJournalLine.Delete(true);
+    end;
+
+    local procedure TrasnferToWHTLine()
+    var
+        ltWHTLine: Record "NCT WHT Line";
+    begin
+        ltWHTLine.reset();
+        ltWHTLine.SetRange("WHT No.", rec."WHT No.");
+        ltWHTLine.SetFilter("WHT Product Posting Group", '<>%1', '');
+        if ltWHTLine.FindSet() then
+            repeat
+                ltWHTLine.TransferFromHeader();
+                ltWHTLine.Modify();
+            until ltWHTLine.Next() = 0;
+
+    end;
+
+    [IntegrationEvent(true, false)]
+
+    procedure OnAfterinitWHTHeaderVend(var WHTHeader: Record "NCT WHT Header"; Vend: Record Vendor)
+    begin
+
+    end;
+
+    [IntegrationEvent(true, false)]
+
+    procedure OnAfterinitWHTHeaderCust(var WHTHeader: Record "NCT WHT Header"; Cust: Record Customer)
+    begin
+
     end;
 
     var

@@ -129,6 +129,7 @@ codeunit 80005 "NCT EventFunction"
                 WHTHeader."WHT Option" := ltWHTAppliedEntry."WHT Option";
                 if ltWHTAppliedEntry."WHT Bus. Posting Group" <> '' then
                     WHTHeader."WHT Business Posting Group" := ltWHTAppliedEntry."WHT Bus. Posting Group";
+                OnbeforModifyWHTHeader(ltWHTAppliedEntry, WHTHeader, rec);
                 WHTHeader.Modify();
 
 
@@ -151,14 +152,15 @@ codeunit 80005 "NCT EventFunction"
                             ltWHTEntry."WHT Line No." := ltLineNo;
                             ltWHTEntry."WHT Certificate No." := WHTHeader."WHT Certificate No.";
                             ltWHTEntry."WHT Date" := WHTHeader."WHT Date";
-                            ltWHTEntry."WHT Business Posting Group" := ltWHTAppliedEntry."WHT Bus. Posting Group";
-                            ltWHTEntry."WHT Product Posting Group" := ltWHTAppliedEntry."WHT Prod. Posting Group";
+                            ltWHTEntry.validate("WHT Business Posting Group", ltWHTAppliedEntry."WHT Bus. Posting Group");
+                            ltWHTEntry.validate("WHT Product Posting Group", ltWHTAppliedEntry."WHT Prod. Posting Group");
                             ltWHTEntry."WHT Base" := ltWHTAppliedEntry."WHT Base";
                             ltWHTEntry."WHT %" := ltWHTAppliedEntry."WHT %";
                             ltWHTEntry."WHT Amount" := ltWHTAppliedEntry."WHT Amount";
                             ltWHTEntry."WHT Name" := ltWHTAppliedEntry."WHT Name";
                             ltWHTEntry."WHT Post Code" := ltWHTAppliedEntry."WHT Post Code";
-                            if ltWHTEntry.Insert() then;
+                            OnbeforInsertWHTLine(ltWHTAppliedEntry, WHTHeader, rec, ltWHTEntry);
+                            ltWHTEntry.Insert();
                         end else begin
                             ltWHTEntry."WHT Amount" := ltWHTEntry."WHT Amount" + ltWHTAppliedEntry."WHT Amount";
                             ltWHTEntry."WHT Base" := ltWHTEntry."WHT Base" + ltWHTAppliedEntry."WHT Base";
@@ -237,6 +239,7 @@ codeunit 80005 "NCT EventFunction"
             WHTEntry.CalcSums("WHT Amount");
             SumAmt := WHTEntry."WHT Amount";
             GenJnlLine.Validate(Amount, -SumAmt);
+            OnbeformodifyCreateWHTCertificate(WHTHeader, GenJnlLine);
             GenJnlLine.MODIFY();
             WHTHeader."Gen. Journal Line No." := CurrLine;
             WHTHeader."Gen. Journal Document No." := GenJnlLine."Document No.";
@@ -807,6 +810,26 @@ codeunit 80005 "NCT EventFunction"
         BillingReceipt.SetRange("Status", Status);
         exit(StrSubstNo(BillingReceiptConditionTxt, workflowSetup.Encode(BillingReceipt.GetView(false)), workflowSetup.Encode(BillingReceiptLine.GetView(false))));
     end;
+
+    [IntegrationEvent(true, false)]
+    procedure OnbeforInsertWHTLine(WhtApplyLine: Record "NCT WHT Applied Entry"; WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line"; var WHTLine: Record "NCT WHT Line")
+    begin
+
+    end;
+
+    [IntegrationEvent(true, false)]
+    procedure OnbeforModifyWHTHeader(WhtApplyLine: Record "NCT WHT Applied Entry"; var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
+    begin
+
+    end;
+
+    [IntegrationEvent(true, false)]
+    procedure OnbeformodifyCreateWHTCertificate(WHTHeader: Record "NCT WHT Header"; var GenLine: Record "Gen. Journal Line")
+    begin
+
+    end;
+
+
 
     var
         GenJnlPostPreview: Codeunit "Gen. Jnl.-Post Preview";

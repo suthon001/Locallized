@@ -378,11 +378,13 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             "NCT WHT Base" := rec."Line Amount";
             "NCT WHT %" := WHTPostingSetup."WHT %";
             "NCT WHT Amount" := ROUND(("NCT WHT Base") * (WHTPostingSetup."WHT %" / 100), 0.01);
+            "NCT WHT Option" := "NCT WHT Option"::"(1) หักภาษี ณ ที่จ่าย";
         END
         ELSE BEGIN
             "NCT WHT Base" := 0;
             "NCT WHT %" := 0;
             "NCT WHT Amount" := 0;
+            "NCT WHT Option" := "NCT WHT Option"::" ";
         END;
     end;
 

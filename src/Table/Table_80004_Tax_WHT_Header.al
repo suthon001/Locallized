@@ -198,10 +198,9 @@ table 80004 "NCT Tax & WHT Header"
         purchaseSetup: Record "Purchases & Payables Setup";
         SalesSetup: Record "Sales & Receivables Setup";
     begin
-        // WITH VatHeader DO BEGIN
+        purchaseSetup.GET();
         VatHeader.COPY(Rec);
         if VatHeader."Tax Type" = VatHeader."Tax Type"::Purchase then begin
-            purchaseSetup.GET();
             purchaseSetup.TESTFIELD("NCT Purchase VAT Nos.");
             IF NoSeriesMgt.SelectSeries(purchaseSetup."NCT Purchase VAT Nos.", OldVatHeader."No. Series",
               VatHeader."No. Series") THEN BEGIN
@@ -220,26 +219,23 @@ table 80004 "NCT Tax & WHT Header"
                 EXIT(TRUE);
             END;
         end;
-        if VatHeader."Tax Type".AsInteger() > 1 then begin
-            purchaseSetup.GET();
-            if "Tax Type" = "Tax Type"::WHT03 then begin
-                purchaseSetup.TESTFIELD("NCT WHT03 Nos.");
-                IF NoSeriesMgt.SelectSeries(purchaseSetup."NCT WHT03 Nos.", OldVatHeader."No. Series",
-                  VatHeader."No. Series") THEN BEGIN
-                    NoSeriesMgt.SetSeries(VatHeader."Document No.");
-                    Rec := VatHeader;
-                    EXIT(TRUE);
-                END;
-            end;
-            if "Tax Type" = "Tax Type"::WHT53 then begin
-                purchaseSetup.TESTFIELD("NCT WHT53 Nos.");
-                IF NoSeriesMgt.SelectSeries(purchaseSetup."NCT WHT53 Nos.", OldVatHeader."No. Series",
-                  VatHeader."No. Series") THEN BEGIN
-                    NoSeriesMgt.SetSeries(VatHeader."Document No.");
-                    Rec := VatHeader;
-                    EXIT(TRUE);
-                END;
-            end;
+        if VatHeader."Tax Type" = VatHeader."Tax Type"::WHT03 then begin
+            purchaseSetup.TESTFIELD("NCT WHT03 Nos.");
+            IF NoSeriesMgt.SelectSeries(purchaseSetup."NCT WHT03 Nos.", OldVatHeader."No. Series",
+              VatHeader."No. Series") THEN BEGIN
+                NoSeriesMgt.SetSeries(VatHeader."Document No.");
+                Rec := VatHeader;
+                EXIT(TRUE);
+            END;
+
+        end;
+        if VatHeader."Tax Type" = VatHeader."Tax Type"::WHT53 then begin
+            purchaseSetup.TESTFIELD("NCT WHT53 Nos.");
+            IF NoSeriesMgt.SelectSeries(purchaseSetup."NCT WHT53 Nos.", OldVatHeader."No. Series", VatHeader."No. Series") THEN BEGIN
+                NoSeriesMgt.SetSeries(VatHeader."Document No.");
+                Rec := VatHeader;
+                EXIT(TRUE);
+            END;
         end;
     END;
 

@@ -148,7 +148,7 @@ table 80005 "NCT Tax & WHT Line"
             Caption = 'Address 2';
             DataClassification = SystemMetadata;
         }
-        field(1008; "City"; Text[30])
+        field(1008; "City"; Text[50])
         {
             Caption = 'City';
             DataClassification = SystemMetadata;
@@ -350,6 +350,7 @@ table 80005 "NCT Tax & WHT Line"
         else
             VatTransection.SetRange("Allow Generate to Sale Vat", true);
         VatTransection.SetFilter("Ref. Tax No.", '%1', '');
+        OnAftersetfilterVatTransaction(VatTransection, TaxReportHeader);
         if VatTransection.FindSet() then
             repeat
                 var_Skip := false;
@@ -397,6 +398,7 @@ table 80005 "NCT Tax & WHT Line"
                     TaxReportLine.SetRange("Tax Type", "Tax Type");
                     TaxReportLine.SetRange("Voucher No.", VatTransection."Document No.");
                     TaxReportLine.SetRange("Tax Invoice No.", TaxInvoiceNo);
+                    OnAftersetfilterVatLine(TaxReportLine, VatTransection);
                     if not TaxReportLine.FindFirst() then begin
                         TaxReportLine.INIT();
                         TaxReportLine."Tax Type" := "Tax Type";
@@ -433,7 +435,7 @@ table 80005 "NCT Tax & WHT Line"
                             TaxReportLine."Vendor No." := VatTransection."Bill-to/Pay-to No.";
                         TaxReportLine."Send to Report" := true;
                         TaxReportLine."Ref. Entry No." := VatTransection."Entry No.";
-                        "OnBeforeInsertVatLine"(TaxReportLine, VatTransection);
+                        OnBeforeInsertVatLine(TaxReportLine, VatTransection);
                         TaxReportLine.Insert();
                         TaxINvoiceLine := TaxReportLine."Entry No.";
                     end else begin
@@ -482,11 +484,13 @@ table 80005 "NCT Tax & WHT Line"
         WHTHeader.SetFilter("WHT Business Posting Group", TaxReportHeader."WHT Bus. Post. Filter");
         WHTHeader.SetRange("Posted", true);
         WHTHeader.SETRANGE("Get to WHT", false);
+        OnAftersetfilterWHT(WHTHeader, TaxReportHeader);
         IF WHTHeader.FindFirst() THEN
             repeat
                 WHTLine.reset();
                 WHTLine.SetRange("WHT No.", WHTHeader."WHT No.");
                 WHTLine.SetRange("Get to WHT", false);
+                OnAftersetfilterWHTLine(WHTLine, WHTHeader, TaxReportHeader);
                 if WHTLine.FindFirst() then
                     repeat
                         TaxReportLineFind.INIT();
@@ -494,12 +498,10 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLineFind."Document No." := "Document No.";
                         TaxReportLineFind."Entry No." := GetLastLineNo();
                         TaxReportLineFind."Posting Date" := WHTHeader."WHT Date";
-                        //  TaxReportLineFind."WHT Date" := WHTHeader.
 
-                        //  TaxReportLineFind.
                         TaxReportLineFind."Voucher No." := WHTHeader."Gen. Journal Document No.";
                         TaxReportLineFind."Vendor No." := WHTHeader."WHT Source No.";
-                        // TaxReportLineFind."Description" := WHTHeader."WHT Revenue Description";
+
                         TaxReportLineFind."Base Amount" := WHTLine."WHT Base";
                         TaxReportLineFind."VAT Amount" := WHTLine."WHT Amount";
                         TaxReportLineFind."WHT Business Posting Group" := WHTHeader."WHT Business Posting Group";
@@ -507,7 +509,6 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLineFind."WHT Document No." := WHTHeader."WHT No.";
                         TaxReportLineFind."Name" := WHTHeader."WHT Name";
                         TaxReportLineFind."Name 2" := WHTHeader."WHT Name 2";
-                        // TaxReportLineFind.
                         TaxReportLineFind."Address" := WHTHeader."WHT Address";
                         TaxReportLineFind."Address 2" := WHTHeader."WHT Address 2";
 
@@ -535,6 +536,8 @@ table 80005 "NCT Tax & WHT Line"
 
                         if (NOT TaxReportLineFind."Head Office") AND (TaxReportLineFind."Branch Code" = '') then
                             TaxReportLineFind."Head Office" := true;
+
+                        OnbeforInsertWHTLine(TaxReportLineFind, WHTHeader, WHTLine);
                         TaxReportLineFind.INSERT();
                         WHTLine."Get to WHT" := true;
                         WHTLine.Modify();
@@ -563,15 +566,49 @@ table 80005 "NCT Tax & WHT Line"
     end;
 
     [IntegrationEvent(true, false)]
-    /// <summary> 
-    /// Description for OnBeforeInsertVatLine.
-    /// </summary>
-    /// <param name="TaxReportLine">Parameter of type Record "Tax Report Line".</param>
-    /// <param name="VatTransaction">Parameter of type Record "VAT Transections".</param>
-    procedure "OnBeforeInsertVatLine"(var TaxReportLine: Record "NCT Tax & WHT Line"; var VatTransaction: Record "NCT VAT Transections")
+
+    procedure OnBeforeInsertVatLine(var TaxReportLine: Record "NCT Tax & WHT Line"; VatTransaction: Record "NCT VAT Transections")
     begin
 
     end;
+
+    [IntegrationEvent(true, false)]
+
+    procedure OnAftersetfilterVatLine(var TaxReportLine: Record "NCT Tax & WHT Line"; VatTransaction: Record "NCT VAT Transections")
+    begin
+
+    end;
+
+
+    [IntegrationEvent(true, false)]
+
+    procedure OnAftersetfilterVatTransaction(var VatTransaction: Record "NCT VAT Transections"; TaxWHT: Record "NCT Tax & WHT Header")
+    begin
+
+    end;
+
+
+    [IntegrationEvent(true, false)]
+
+    procedure OnAftersetfilterWHT(var WHTHeader: Record "NCT WHT Header"; TaxWHT: Record "NCT Tax & WHT Header")
+    begin
+
+    end;
+
+    [IntegrationEvent(true, false)]
+
+    procedure OnAftersetfilterWHTLine(var WHTLine: Record "NCT WHT Line"; WHTHeader: Record "NCT WHT Header"; TaxWHT: Record "NCT Tax & WHT Header")
+    begin
+
+    end;
+
+
+    [IntegrationEvent(true, false)]
+    procedure OnbeforInsertWHTLine(var TaxWHTLine: Record "NCT Tax & WHT Line"; WHTHeader: Record "NCT WHT Header"; WHTLine: Record "NCT WHT Line")
+    begin
+
+    end;
+
 
 }
 

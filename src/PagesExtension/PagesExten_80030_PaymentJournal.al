@@ -167,7 +167,7 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
                 end;
             }
         }
-        //ct >>>
+
         addlast("F&unctions")
         {
             action("SetNetBalance")
@@ -203,7 +203,22 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
                 end;
             }
         }
-        //ct <<<
+        modify(PrintCheck)
+        {
+            Visible = false;
+        }
+        modify("Void Check")
+        {
+            Visible = false;
+        }
+        modify("Void &All Checks")
+        {
+            Visible = false;
+        }
+        modify(PreCheck)
+        {
+            Visible = false;
+        }
 
     }
     /// <summary> 
@@ -271,6 +286,8 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
                             WHTHeader.validate("WHT Source No.", Customer."No.");
                         END;
             END;
+            WHTHeader."WHT Option" := WHTHeader."WHT Option"::"(1) หักภาษี ณ ที่จ่าย";
+            OnbeforInsertWhtHeader(WHTHeader, rec);
             WHTHeader.INSERT();
             Rec.Modify();
         END ELSE
@@ -315,6 +332,13 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
     procedure SetDocumnet(pDocument: code[20])
     begin
         gvDocument := pDocument;
+    end;
+
+    [IntegrationEvent(true, false)]
+
+    procedure OnbeforInsertWhtHeader(var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
+    begin
+
     end;
 
     var
