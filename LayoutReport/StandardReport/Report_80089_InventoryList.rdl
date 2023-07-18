@@ -19,25 +19,25 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.00896cm</Width>
+                  <Width>3.78637cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.35001cm</Width>
+                  <Width>8.63628cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.08466cm</Width>
+                  <Width>1.77258cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.85189cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.84396cm</Width>
+                  <Width>2.08208cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.21696cm</Width>
+                  <Width>1.77259cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.47648cm</Width>
+                  <Width>1.76752cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.91498cm</Width>
@@ -876,7 +876,7 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>10pt</Top>
             <Height>1.05832cm</Height>
-            <Width>18.42013cm</Width>
+            <Width>28.25652cm</Width>
             <Style />
           </Tablix>
           <Textbox Name="ItemTABLECAPTIONItemFilter">
@@ -911,7 +911,7 @@
         <Height>1.4111cm</Height>
         <Style />
       </Body>
-      <Width>18.42013cm</Width>
+      <Width>28.26262cm</Width>
       <Page>
         <PageHeader>
           <Height>1.80452cm</Height>
@@ -987,7 +987,7 @@
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <Left>13.30724cm</Left>
+              <Left>23.08624cm</Left>
               <Height>11pt</Height>
               <Width>5.11288cm</Width>
               <ZIndex>2</ZIndex>
@@ -1017,7 +1017,7 @@
                 </Paragraph>
               </Paragraphs>
               <Top>20pt</Top>
-              <Left>13.30724cm</Left>
+              <Left>23.08624cm</Left>
               <Height>11pt</Height>
               <Width>5.11288cm</Width>
               <ZIndex>3</ZIndex>
@@ -1045,7 +1045,7 @@
                 </Paragraph>
               </Paragraphs>
               <Top>10pt</Top>
-              <Left>13.30724cm</Left>
+              <Left>23.08624cm</Left>
               <Height>11pt</Height>
               <Width>5.11288cm</Width>
               <ZIndex>4</ZIndex>
@@ -1056,14 +1056,14 @@
           </ReportItems>
           <Style />
         </PageHeader>
-        <PageHeight>29.7cm</PageHeight>
-        <PageWidth>21cm</PageWidth>
+        <PageHeight>21cm</PageHeight>
+        <PageWidth>29.7cm</PageWidth>
         <InteractiveHeight>11in</InteractiveHeight>
         <InteractiveWidth>8.5in</InteractiveWidth>
-        <LeftMargin>1.05834cm</LeftMargin>
-        <RightMargin>1.48166cm</RightMargin>
-        <TopMargin>1.05834cm</TopMargin>
-        <BottomMargin>1.05834cm</BottomMargin>
+        <LeftMargin>1cm</LeftMargin>
+        <RightMargin>0cm</RightMargin>
+        <TopMargin>1cm</TopMargin>
+        <BottomMargin>0cm</BottomMargin>
         <ColumnSpacing>1.27cm</ColumnSpacing>
         <Style>
           <BackgroundColor>White</BackgroundColor>
