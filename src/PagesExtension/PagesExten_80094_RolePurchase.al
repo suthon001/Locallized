@@ -7,9 +7,9 @@ pageextension 80094 "NCT Role Purchase" extends "Purchasing Agent Role Center"
     {
         addfirst(sections)
         {
-            group("Locallized")
+            group("Localized")
             {
-                Caption = 'Locallized';
+                Caption = 'Localized';
                 group("WHT Posting Group")
                 {
                     Caption = 'VAT & WHT Posting Setup';

@@ -7,9 +7,9 @@ pageextension 80095 "NCT Role Finan" extends "Accountant Role Center"
     {
         addfirst(sections)
         {
-            group("Locallized")
+            group("Localized")
             {
-                Caption = 'Locallized';
+                Caption = 'Localized';
                 group("WHT Posting Group")
                 {
                     Caption = 'VAT & WHT Posting Setup';

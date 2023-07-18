@@ -3,23 +3,23 @@
 /// </summary>
 pageextension 80092 "NCT Accounting Periods" extends "Accounting Periods"
 {
-    actions
-    {
-        addafter("&Create Year")
-        {
-            action(ClearYears)
-            {
-                Caption = 'Clear Close Year';
-                Image = CloseYear;
-                ToolTip = 'Executes the Clear Close Year action.';
-                ApplicationArea = Basic, Suite;
-                trigger OnAction()
-                begin
-                    rec.Closed := false;
-                    rec."Date Locked" := false;
-                    rec.Modify();
-                end;
-            }
-        }
-    }
+    // actions
+    // {
+    //     addafter("&Create Year")
+    //     {
+    //         action(ClearYears)
+    //         {
+    //             Caption = 'Clear Close Year';
+    //             Image = CloseYear;
+    //             ToolTip = 'Executes the Clear Close Year action.';
+    //             ApplicationArea = Basic, Suite;
+    //             trigger OnAction()
+    //             begin
+    //                 rec.Closed := false;
+    //                 rec."Date Locked" := false;
+    //                 rec.Modify();
+    //             end;
+    //         }
+    //     }
+    // }
 }
