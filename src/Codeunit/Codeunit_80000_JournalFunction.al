@@ -67,7 +67,7 @@ codeunit 80000 "NCT Journal Function"
     /// </summary>
     local procedure "CopyHeaderFromInvoiceBuff"(InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary; var GenJnlLine: Record "Gen. Journal Line")
     begin
-        // with GenJournalLine do begin
+
         GenJnlLine."NCT Tax Invoice No." := InvoicePostingBuffer."NCT Tax Invoice No.";
         GenJnlLine."NCT Tax Invoice Date" := InvoicePostingBuffer."NCT Tax Invoice Date";
         GenJnlLine."NCT Tax Invoice Base" := InvoicePostingBuffer."NCT Tax Invoice Base";
@@ -85,8 +85,9 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine."NCT Tax Invoice City" := InvoicePostingBuffer."NCT City";
         GenJnlLine."NCT Tax Invoice Post Code" := InvoicePostingBuffer."NCT Post Code";
         GenJnlLine."NCT Document Line No." := InvoicePostingBuffer."NCT Document Line No.";
+        "NCT AfterCopyInvoicePostingBufferToGL"(GenJnlLine, InvoicePostingBuffer);
 
-        // end;
+
     end;
 
 
@@ -114,7 +115,7 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine."NCT Tax Invoice City" := InvoicePostBuffer."NCT City";
         GenJnlLine."NCT Tax Invoice Post Code" := InvoicePostBuffer."NCT Post Code";
         GenJnlLine."NCT Document Line No." := InvoicePostBuffer."NCT Document Line No.";
-
+        "NCT AfterCopyInvoicePostBufferToGL"(GenJnlLine, InvoicePostBuffer);
         // end;
     end;
 
@@ -158,6 +159,7 @@ codeunit 80000 "NCT Journal Function"
             VATEntry."NCT Tax Invoice Base" := VATEntry.Base;
             VATEntry."NCT Tax Invoice Amount" := VATEntry.Amount;
         END;
+        "NCT AfterCopyGenLineToVatEntry"(VATEntry, GenJournalLine);
     end;
 
 
@@ -191,6 +193,8 @@ codeunit 80000 "NCT Journal Function"
         if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Invoice then
             if PurchaseHeader."Vendor Cr. Memo No." <> '' then
                 GenJournalLine."NCT Tax Invoice No." := PurchaseHeader."Vendor Invoice No.";
+
+        "NCT AfterCopyPuchaseHeaderToGenLine"(GenJournalLine, PurchaseHeader);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromSalesHeader', '', true, true)]
@@ -205,6 +209,7 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Description Line" := SalesHeader."Posting Description";
         GenJournalLine."NCT Head Office" := SalesHeader."NCT Head Office";
         GenJournalLine."NCT Branch Code" := SalesHeader."NCT Branch Code";
+        "NCT AfterCopySalesHeaderToGenLine"(GenJournalLine, SalesHeader);
 
     end;
 
@@ -237,6 +242,8 @@ codeunit 80000 "NCT Journal Function"
             GLEntry."NCT Document Line No." := GenJournalLine."NCT Document Line No."
         else
             GLEntry."NCT Document Line No." := GenJournalLine."Line No.";
+
+        "NCT AfterCopyGenJournalLineToGLEntry"(GLEntry, GenJournalLine);
 
     end;
 
@@ -499,5 +506,39 @@ codeunit 80000 "NCT Journal Function"
         ItemJnlLine."Bin Code" := PurchLine."Bin Code";
         ItemJnlLine.Description := PurchLine.Description;
     end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT AfterCopyInvoicePostingBufferToGL"(var GenJournalLine: Record "Gen. Journal Line"; InvoicePostingBuffer: Record "Invoice Posting Buffer")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT AfterCopyInvoicePostBufferToGL"(var GenJournalLine: Record "Gen. Journal Line"; InvoicePostBuffer: Record "Invoice Post. Buffer")
+    begin
+    end;
+
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT AfterCopyGenLineToVatEntry"(var VatEntry: Record "VAT Entry"; GenJournalLine: Record "Gen. Journal Line")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT AfterCopyPuchaseHeaderToGenLine"(var GenJournalLine: Record "Gen. Journal Line"; PurchaseHeader: Record "Purchase Header")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT AfterCopySalesHeaderToGenLine"(var GenJournalLine: Record "Gen. Journal Line"; SalesHeader: Record "Sales Header")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT AfterCopyGenJournalLineToGLEntry"(var GLEntry: Record "G/L Entry"; GenJournalLine: Record "Gen. Journal Line")
+    begin
+    end;
+
+
+
 
 }

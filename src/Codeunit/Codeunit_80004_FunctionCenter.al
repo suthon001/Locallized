@@ -2558,19 +2558,20 @@ codeunit 80004 "NCT Function Center"
         TempDimSetEntry: Record "Dimension Set Entry" temporary;
     begin
         DimMgt.GetDimensionSet(TempDimSetEntry, DimensionSetID);
-        IF NOT TempDimSetEntry.GET(DimensionSetID, DimCode) then begin
+
+        TempDimSetEntry.reset();
+        TempDimSetEntry.SetRange("Dimension Code", DimCode);
+        if TempDimSetEntry.FindFirst() then
+            TempDimSetEntry.Delete();
+
+        if (Dimvalue <> '') and (DimCode <> '') then begin
             TempDimSetEntry.init();
             TempDimSetEntry."Dimension Set ID" := DimensionSetID;
             TempDimSetEntry.validate("Dimension Code", DimCode);
             TempDimSetEntry.Insert(true);
             TempDimSetEntry.Validate("Dimension Value Code", Dimvalue);
             TempDimSetEntry.Modify();
-        end else
-            if Dimvalue <> TempDimSetEntry."Dimension Value Code" then begin
-                TempDimSetEntry.Validate("Dimension Value Code", Dimvalue);
-                TempDimSetEntry.Modify();
-            end else
-                TempDimSetEntry.Delete();
+        end;
         TempDimSetEntry.reset();
         DimensionSetID := DimMgt.GetDimensionSetID(TempDimSetEntry);
 
@@ -2580,7 +2581,14 @@ codeunit 80004 "NCT Function Center"
     var
         DimensionDefault: record "Default Dimension";
     begin
-        if NOT DimensionDefault.GET(TableID, MyNo, DimCode) then begin
+        DimensionDefault.reset();
+        DimensionDefault.SetRange("Table ID", TableID);
+        DimensionDefault.SetRange("No.", MyNo);
+        DimensionDefault.SetRange("Dimension Code", DimCode);
+        if DimensionDefault.FindFirst() then
+            DimensionDefault.Delete(true);
+
+        if (DimCode <> '') and (DimValue <> '') then begin
             DimensionDefault.init();
             DimensionDefault.validate("Table ID", TableID);
             DimensionDefault.Validate("No.", MyNo);
@@ -2588,12 +2596,8 @@ codeunit 80004 "NCT Function Center"
             DimensionDefault.Insert(true);
             DimensionDefault.Validate("Dimension Value Code", DimValue);
             DimensionDefault.Modify();
-        end else
-            if Dimvalue <> DimensionDefault."Dimension Value Code" then begin
-                DimensionDefault.Validate("Dimension Value Code", DimValue);
-                DimensionDefault.Modify();
-            end else
-                DimensionDefault.Delete();
+        end;
+
     end;
 
     procedure GetMonthNameEng(MonthNumber: Integer): Text[50];
