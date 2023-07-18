@@ -90,9 +90,13 @@ report 80085 "NCT Debit Note (Post)"
                 RecSaleLine: Record "Sales Invoice Line";
                 ltDocumentType: Enum "Sales Comment Document Type";
             begin
+                if "Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
 
                 FunctionCenter.PostedSalesInvoiceStatistics("No.", TotalAmt, VatText);
-                FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
+
                 FunctionCenter.GetSalesComment(ltDocumentType::"Posted Invoice", "No.", 0, CommentText);
                 FunctionCenter.SalesPostedCustomerInformation(2, "No.", CustText, 0);
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
@@ -104,7 +108,10 @@ report 80085 "NCT Debit Note (Post)"
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
-                AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')';
+                if "Currency Code" = '' then
+                    AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')'
+                else
+                    AmtText := '(' + FunctionCenter."NumberEngToText"(TotalAmt[5], "Currency Code") + ')';
 
 
                 RecCustLedgEntry.RESET();

@@ -108,7 +108,10 @@ report 80034 "NCT Good Receipt Note"
                 PurchaserecriptLine: Record "Purch. Rcpt. Line";
             begin
 
-                FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
+                if "Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
                 FunctionCenter."PurchasePostedVendorInformation"(0, "No.", VendText, 0);
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
                 FunctionCenter."GetPurchaseComment"(PurchaseType::Receipt, "No.", 0, CommentText);

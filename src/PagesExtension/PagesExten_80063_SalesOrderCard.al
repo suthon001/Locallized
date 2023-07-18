@@ -68,6 +68,7 @@ pageextension 80063 "NCT Sales Order Card" extends "Sales Order"
     }
     actions
     {
+
         addlast(Reporting)
         {
 

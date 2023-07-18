@@ -46,6 +46,10 @@ pageextension 80011 "NCT Purchase Quotes Lists" extends "Purchase Quotes"
     }
     actions
     {
+        modify(Print)
+        {
+            Visible = false;
+        }
         addlast(Reporting)
         {
             action("Purchase Quote")

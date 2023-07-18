@@ -38,7 +38,10 @@ pageextension 80068 "NCT Purchase Order Lists" extends "Purchase Order List"
     }
     actions
     {
-
+        modify(Print)
+        {
+            Visible = false;
+        }
         modify(Post)
         {
             Visible = false;

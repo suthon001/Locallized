@@ -304,6 +304,8 @@ codeunit 80005 "NCT EventFunction"
             NewReportId := 80075;
         if ReportId = report::"Calculate Depreciation" then
             NewReportId := REPORT::"NCT Calculate Depreciation";
+        if ReportId = report::"Inventory - List" then
+            NewReportId := REPORT::"NCT Inventory - List";
 
 
     end;

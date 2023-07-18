@@ -117,7 +117,10 @@ pageextension 80069 "NCT Purchase Order Card" extends "Purchase Order"
         {
             Visible = false;
         }
-
+        modify("&Print")
+        {
+            Visible = false;
+        }
         addlast(Reporting)
         {
             action("Purchase Order")

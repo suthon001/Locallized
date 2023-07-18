@@ -442,7 +442,8 @@ codeunit 80004 "NCT Function Center"
         if NOT EngName then begin
             Text[1] := CompanyInfo.Name + ' ' + CompanyInfo."Name 2";
             Text[2] := CompanyInfo.Address + ' ';
-            Text[3] := CompanyInfo."Address 2" + ' ';
+            if CompanyInfo."Address 2" <> '' then
+                Text[3] := CompanyInfo."Address 2" + ' ';
             Text[3] += CompanyInfo.City + ' ' + CompanyInfo."Post Code";
             Text[4] := 'โทร : ' + CompanyInfo."Phone No." + ' ' + CompanyInfo."Phone No. 2";
             if CompanyInfo."Fax No." <> '' then
@@ -456,7 +457,8 @@ codeunit 80004 "NCT Function Center"
         end else begin
             Text[1] := CompanyInfo."NCT Name (Eng)" + ' ' + CompanyInfo."NCT Name 2 (Eng)";
             Text[2] := CompanyInfo."NCT Address (Eng)" + ' ';
-            Text[3] := CompanyInfo."NCT Address 2 (Eng)" + ' ';
+            if CompanyInfo."NCT Address 2 (Eng)" <> ' ' then
+                Text[3] := CompanyInfo."NCT Address 2 (Eng)" + ' ';
             Text[3] += CompanyInfo."NCT City (Eng)" + ' ' + CompanyInfo."Post Code";
             Text[4] := 'Tel. : ' + CompanyInfo."Phone No." + ' ' + CompanyInfo."Phone No. 2";
             if CompanyInfo."Fax No." <> '' then
@@ -488,7 +490,8 @@ codeunit 80004 "NCT Function Center"
             Text[1] := VATBusinessPostingGroup."NCT Company Name (Eng)" + ' ';
             Text[1] += VATBusinessPostingGroup."NCT Company Name 2 (Eng)";
             Text[2] := VATBusinessPostingGroup."NCT Company Address (Eng)" + ' ';
-            Text[3] := VATBusinessPostingGroup."NCT Company Address 2 (Eng)" + ' ';
+            if VATBusinessPostingGroup."NCT Company Address 2 (Eng)" <> '' then
+                Text[3] := VATBusinessPostingGroup."NCT Company Address 2 (Eng)" + ' ';
             Text[3] += VATBusinessPostingGroup."NCT City (Eng)" + ' ' + VATBusinessPostingGroup."NCT Post code";
 
             Text[4] := 'Tel. : ' + VATBusinessPostingGroup."NCT Phone No." + ' ';
@@ -504,7 +507,8 @@ codeunit 80004 "NCT Function Center"
             Text[1] := VATBusinessPostingGroup."NCT Company Name (Thai)" + ' ';
             Text[1] += VATBusinessPostingGroup."NCT Company Name 2 (Thai)";
             Text[2] := VATBusinessPostingGroup."NCT Company Address (Thai)" + ' ';
-            Text[3] := VATBusinessPostingGroup."NCT Company Address 2 (Thai)" + ' ';
+            if VATBusinessPostingGroup."NCT Company Address 2 (Thai)" <> '' then
+                Text[3] := VATBusinessPostingGroup."NCT Company Address 2 (Thai)" + ' ';
             Text[3] += VATBusinessPostingGroup."NCT City (Thai)" + ' ' + VATBusinessPostingGroup."NCT Post code";
 
             Text[4] := 'โทร : ' + VATBusinessPostingGroup."NCT Phone No.";

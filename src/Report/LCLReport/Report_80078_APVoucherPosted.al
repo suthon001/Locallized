@@ -59,10 +59,18 @@ report 80078 "NCT AP Voucher (Post)"
                 FunctionCenter.SetReportGLEntryPosted(PurHeader."No.", GLEntry, TempAmt, groupping);
                 companyInfor.get();
                 companyInfor.CalcFields(Picture);
-                FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", false);
+                if PurHeader."Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", true);
+
                 FunctionCenter.PurchasePostedVendorInformation(2, PurHeader."No.", VendText, 0);
                 FunctionCenter."ConvExchRate"(PurHeader."Currency Code", PurHeader."Currency Factor", ExchangeRate);
-                AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';
+                if PurHeader."Currency Code" = '' then
+                    AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')'
+                else
+                    AmtText := '(' + FunctionCenter."NumberEngToText"(TempAmt, PurHeader."Currency Code") + ')';
+
                 NewDate := DT2Date(PurHeader."NCT Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');

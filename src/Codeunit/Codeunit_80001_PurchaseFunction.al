@@ -10,6 +10,16 @@ codeunit 80001 "NCT Purchase Function"
         PurchaseLine."NCT Original Quantity" := PurchaseLine.Quantity;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnCreatePurchHeaderOnBeforePurchOrderHeaderInsert', '', false, false)]
+    local procedure OnCreatePurchHeaderOnBeforePurchOrderHeaderInsert(var PurchHeader: Record "Purchase Header"; var PurchOrderHeader: Record "Purchase Header")
+    var
+        NoseriesMgt: Codeunit NoSeriesManagement;
+    begin
+        PurchHeader.TestField("NCT Make PO No.Series No.");
+        PurchOrderHeader."No." := NoseriesMgt.GetNextNo(PurchHeader."NCT Make PO No.Series No.", WorkDate(), True);
+        PurchOrderHeader."No. Series" := PurchHeader."NCT Make PO No.Series No.";
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnFinalizePostingOnBeforeUpdateAfterPosting', '', false, false)]
     local procedure OnFinalizePostingOnBeforeUpdateAfterPosting(var PurchHeader: Record "Purchase Header")
     var

@@ -53,6 +53,7 @@ pageextension 80066 "NCT Sales Invoice Card" extends "Sales Invoice"
     }
     actions
     {
+
         addlast(Reporting)
         {
             action("AR Voucher")

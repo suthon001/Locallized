@@ -87,11 +87,19 @@ report 80084 "NCT Sales Invoice (Post)"
                 NewDate: Date;
 
             begin
+                if "Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
+
                 FunctionCenter.PostedSalesInvoiceStatistics("No.", TotalAmt, VatText);
-                FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
                 FunctionCenter.SalesPostedCustomerInformation(2, "No.", CustText, 0);
                 FunctionCenter.SalesPostedCustomerInformation(2, "No.", CustTextShipment, 2);
-                AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')';
+                if "Currency Code" = '' then
+                    AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')'
+                else
+                    AmtText := '(' + FunctionCenter."NumberEngToText"(TotalAmt[5], "Currency Code") + ')';
+
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();
                 IF NOT ShipMethod.Get("Shipment Method Code") then

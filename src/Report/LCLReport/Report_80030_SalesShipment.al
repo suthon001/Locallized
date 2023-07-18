@@ -103,7 +103,10 @@ report 80030 "NCT Sales Shipment"
                 NewDate: Date;
             begin
 
-                FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
+                if "Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
                 FunctionCenter.SalesPostedCustomerInformation(0, "No.", CustText, 0);
                 FunctionCenter.SalesPostedCustomerInformation(0, "No.", CustTextShipment, 2);
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then

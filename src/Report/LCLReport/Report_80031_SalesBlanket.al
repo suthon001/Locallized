@@ -104,9 +104,11 @@ report 80031 "NCT Report Sales Blanket"
             var
                 NewDate: Date;
             begin
-
+                if "Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
                 FunctionCenter.SalesStatistic("Document Type", "No.", TotalAmt, VatText);
-                FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
                 FunctionCenter.GetSalesComment("Document Type", "No.", 0, CommentText);
                 FunctionCenter.SalesInformation("Document Type", "No.", CustText, 0);
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);

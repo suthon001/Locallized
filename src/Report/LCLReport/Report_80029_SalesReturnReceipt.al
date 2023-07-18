@@ -103,7 +103,11 @@ report 80029 "NCT Sales Return Receipt"
                 NewDate: Date;
             begin
 
-                FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
+                if "Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
+
                 FunctionCenter.SalesPostedCustomerInformation(1, "No.", CustText, 0);
                 FunctionCenter.SalesPostedCustomerInformation(1, "No.", CustTextShipment, 2);
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then

@@ -117,7 +117,11 @@ report 80033 "NCT PurchaseOrder"
             var
                 NewDate: Date;
             begin
-                FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
+                if "Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
+
                 FunctionCenter."PurchaseInformation"("Document Type", "No.", VendText, 0);
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
                 FunctionCenter."PurchStatistic"("Document Type", "No.", TotalAmt, VatText);

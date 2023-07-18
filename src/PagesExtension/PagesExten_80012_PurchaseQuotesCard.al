@@ -67,6 +67,10 @@ pageextension 80012 "NCT Purchase Quote Card" extends "Purchase Quote"
     }
     actions
     {
+        modify(Print)
+        {
+            Visible = false;
+        }
         addlast(Reporting)
         {
             action("Purchase Quote")

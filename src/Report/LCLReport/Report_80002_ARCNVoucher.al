@@ -55,10 +55,17 @@ report 80002 "NCT AR CN Voucher"
                 FunctionCenter.SetReportGLEntrySales(SalesHeader, GLEntry, TempAmt, groupping);
                 companyInfor.get();
                 companyInfor.CalcFields(Picture);
-                FunctionCenter."CompanyinformationByVat"(ComText, SalesHeader."VAT Bus. Posting Group", false);
+                if SalesHeader."Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, SalesHeader."VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, SalesHeader."VAT Bus. Posting Group", true);
+
                 FunctionCenter."SalesInformation"(SalesHeader."Document Type", SalesHeader."No.", CustText, 0);
                 FunctionCenter."ConvExchRate"(SalesHeader."Currency Code", SalesHeader."Currency Factor", ExchangeRate);
-                AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';
+                if SalesHeader."Currency Code" = '' then
+                    AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')'
+                else
+                    AmtText := '(' + FunctionCenter.NumberEngToText(TempAmt, SalesHeader."Currency Code") + ')';
                 NewDate := DT2Date(SalesHeader."NCT Create DateTime");
                 SplitDate[1] := Format(NewDate, 0, '<Day,2>');
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
