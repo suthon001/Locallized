@@ -59,11 +59,7 @@ page 80026 "NCT Sales Billing Subform"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Amount field.';
                 }
-                field("Amount (LCY)"; Rec."Amount (LCY)")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Amount (LCY) field.';
-                }
+
             }
         }
     }

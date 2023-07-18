@@ -443,14 +443,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="BW_Source_Document_No_">
+                        <Textbox Name="Source_Document_No_">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Source_Document_No_.Value</Value>
+                                  <Value>=Fields!Source_Document_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -462,7 +462,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>BW_Source_Document_No_</rd:DefaultName>
+                          <rd:DefaultName>Source_Document_No_</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -477,14 +477,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="BW_Source_Posting_Date">
+                        <Textbox Name="Source_Posting_Date">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Source_Posting_Date.Value</Value>
+                                  <Value>=Fields!Source_Posting_Date.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -496,7 +496,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>BW_Source_Posting_Date</rd:DefaultName>
+                          <rd:DefaultName>Source_Posting_Date</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -511,14 +511,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="BW_Source_Due_Date">
+                        <Textbox Name="Source_Due_Date">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Source_Due_Date.Value</Value>
+                                  <Value>=Fields!Source_Due_Date.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -530,7 +530,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>BW_Source_Due_Date</rd:DefaultName>
+                          <rd:DefaultName>Source_Due_Date</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -545,14 +545,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="BW_Source_Amount__LCY_">
+                        <Textbox Name="Source_Amount__LCY_">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Source_Amount__LCY_.Value</Value>
+                                  <Value>=Fields!Source_Amount__LCY_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -565,7 +565,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>BW_Source_Amount__LCY_</rd:DefaultName>
+                          <rd:DefaultName>Source_Amount__LCY_</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -580,14 +580,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="BW_Source_Amount__LCY_1">
+                        <Textbox Name="Source_Amount__LCY_1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BW_Source_Amount__LCY_.Value</Value>
+                                  <Value>=Fields!Source_Amount__LCY_.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -600,7 +600,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>BW_Source_Amount__LCY_1</rd:DefaultName>
+                          <rd:DefaultName>Source_Amount__LCY_1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -854,7 +854,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!BW_Due_Date.Value, "DataSet_Result")</Value>
+                      <Value>=First(Fields!Due_Date.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -2113,7 +2113,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!BW_Amount__LCY_.Value, "DataSet_Result")</Value>
+                      <Value>=First(Fields!Amount__LCY_.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -2321,41 +2321,41 @@ End Function
         <Field Name="Payment_Terms_Code">
           <DataField>Payment_Terms_Code</DataField>
         </Field>
-        <Field Name="BW_Amount__LCY_">
-          <DataField>BW_Amount__LCY_</DataField>
+        <Field Name="Amount__LCY_">
+          <DataField>Amount__LCY_</DataField>
         </Field>
-        <Field Name="BW_Amount__LCY_Format">
-          <DataField>BW_Amount__LCY_Format</DataField>
+        <Field Name="Amount__LCY_Format">
+          <DataField>Amount__LCY_Format</DataField>
         </Field>
         <Field Name="AmtText">
           <DataField>AmtText</DataField>
         </Field>
-        <Field Name="BW_Due_Date">
-          <DataField>BW_Due_Date</DataField>
+        <Field Name="Due_Date">
+          <DataField>Due_Date</DataField>
         </Field>
-        <Field Name="BW_Source_Document_Date">
-          <DataField>BW_Source_Document_Date</DataField>
+        <Field Name="Source_Document_Date">
+          <DataField>Source_Document_Date</DataField>
         </Field>
-        <Field Name="BW_Source_Ext__Document_No_">
-          <DataField>BW_Source_Ext__Document_No_</DataField>
+        <Field Name="Source_Ext__Document_No_">
+          <DataField>Source_Ext__Document_No_</DataField>
         </Field>
-        <Field Name="BW_Source_Posting_Date">
-          <DataField>BW_Source_Posting_Date</DataField>
+        <Field Name="Source_Posting_Date">
+          <DataField>Source_Posting_Date</DataField>
         </Field>
-        <Field Name="BW_Source_Due_Date">
-          <DataField>BW_Source_Due_Date</DataField>
+        <Field Name="Source_Due_Date">
+          <DataField>Source_Due_Date</DataField>
         </Field>
-        <Field Name="BW_Source_Description">
-          <DataField>BW_Source_Description</DataField>
+        <Field Name="Source_Description">
+          <DataField>Source_Description</DataField>
         </Field>
-        <Field Name="BW_Source_Amount__LCY_">
-          <DataField>BW_Source_Amount__LCY_</DataField>
+        <Field Name="Source_Amount__LCY_">
+          <DataField>Source_Amount__LCY_</DataField>
         </Field>
-        <Field Name="BW_Source_Amount__LCY_Format">
-          <DataField>BW_Source_Amount__LCY_Format</DataField>
+        <Field Name="Source_Amount__LCY_Format">
+          <DataField>Source_Amount__LCY_Format</DataField>
         </Field>
-        <Field Name="BW_Source_Document_No_">
-          <DataField>BW_Source_Document_No_</DataField>
+        <Field Name="Source_Document_No_">
+          <DataField>Source_Document_No_</DataField>
         </Field>
       </Fields>
       <Query>

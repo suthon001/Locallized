@@ -38,20 +38,20 @@ report 80016 "NCT Sales Receipt"
             column(SplitDate_2; SplitDate[2]) { }
             column(SplitDate_3; SplitDate[3]) { }
             column(Payment_Terms_Code; PaymentTerm.description) { }
-            column(BW_Amount__LCY_; "Amount (LCY)") { }
+            column(Amount__LCY_; "Amount") { }
             column(AmtText; AmtText) { }
             dataitem("Billing & Receipt Line"; "NCT Billing Receipt Line")
             {
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
                 DataItemLink = "Document Type" = field("Document Type"), "DOcument No." = field("NO.");
 
-                column(BW_Source_Document_Date; format("Source Document Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                column(BW_Source_Ext__Document_No_; "Source Ext. Document No.") { }
-                column(BW_Source_Posting_Date; format("Source Posting Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                column(BW_Source_Due_Date; format("Source Due Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
-                column(BW_Source_Description; "Source Description") { }
-                column(BW_Source_Amount__LCY_; "Source Amount (LCY)") { }
-                column(BW_Source_Document_No_; "Source Document No.") { }
+                column(Source_Document_Date; format("Source Document Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+                column(Source_Ext__Document_No_; "Source Ext. Document No.") { }
+                column(Source_Posting_Date; format("Source Posting Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+                column(Source_Due_Date; format("Source Due Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+                column(Source_Description; "Source Description") { }
+                column(Source_Amount__LCY_; "Source Amount") { }
+                column(Source_Document_No_; "Source Document No.") { }
 
             }
             trigger OnPreDataItem()
@@ -65,7 +65,10 @@ report 80016 "NCT Sales Receipt"
                 NewDate: Date;
 
             begin
-                FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false);
+                if "Currency Code" = '' then
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
+                else
+                    FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
                 FunctionCenter."SalesBillingReceiptInformation"(CustVend, "Document Type", "No.");
                 NewDate := DT2Date("Create DateTime");
@@ -75,7 +78,10 @@ report 80016 "NCT Sales Receipt"
                 if not PaymentTerm.GET("Payment Terms Code") then
                     PaymentTerm.init();
 
-                AmtText := FunctionCenter."NumberThaiToText"("Amount (LCY)");
+                if "Currency Code" = '' then
+                    AmtText := FunctionCenter."NumberThaiToText"("Amount")
+                else
+                    AmtText := FunctionCenter.NumberEngToText("Amount", "Currency Code")
             end;
 
         }
