@@ -139,6 +139,7 @@ codeunit 80013 "NCT Clear Transactions"
         MyTable.add('Resource Register');
         MyTable.add('Job Register');
         MyTable.add('Requisition Line');
+        MyTable.add('G/L Entry');
         MyTable.add('G/L Entry - VAT Entry Link');
         MyTable.add('VAT Entry');
         MyTable.add('Document Entry');
