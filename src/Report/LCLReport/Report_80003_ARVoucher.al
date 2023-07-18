@@ -52,9 +52,7 @@ report 80003 "NCT AR Voucher"
             var
                 NewDate: Date;
             begin
-                if not glAccount.GET("G/L Account No.") then
-                    glAccount.Init();
-                AccountName := glAccount.Name;
+
 
                 FunctionCenter.SetReportGLEntrySales(SalesHeader, GLEntry, TempAmt, groupping);
                 companyInfor.get();
@@ -75,6 +73,13 @@ report 80003 "NCT AR Voucher"
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 "CheckLineData"();
+            end;
+
+            trigger OnAfterGetRecord()
+            begin
+                if not glAccount.GET("G/L Account No.") then
+                    glAccount.Init();
+                AccountName := glAccount.Name;
             end;
         }
         dataitem("Sales Line"; "Sales Line")

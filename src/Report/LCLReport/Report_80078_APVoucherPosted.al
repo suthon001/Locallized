@@ -56,9 +56,7 @@ report 80078 "NCT AP Voucher (Post)"
             var
                 NewDate: Date;
             begin
-                if not glAccount.GET("G/L Account No.") then
-                    glAccount.Init();
-                AccountName := glAccount.Name;
+
 
                 FunctionCenter.SetReportGLEntryPosted(PurHeader."No.", PurHeader."Posting Date", GLEntry, TempAmt, groupping);
                 companyInfor.get();
@@ -80,6 +78,13 @@ report 80078 "NCT AP Voucher (Post)"
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 "CheckLineData"();
+            end;
+
+            trigger OnAfterGetRecord()
+            begin
+                if not glAccount.GET("G/L Account No.") then
+                    glAccount.Init();
+                AccountName := glAccount.Name;
             end;
         }
         dataitem("Purch. Inv. Line"; "Purch. Inv. Line")
