@@ -24,7 +24,7 @@ report 80005 "NCT Receive Voucher"
                 column(Journal_Batch_Name; "Journal Batch Name") { }
                 column(JournalDescriptionThai; JournalDescriptionThai) { }
                 column(G_L_Account_No_; "G/L Account No.") { }
-                column(G_L_Account_Name; glName) { }
+                column(G_L_Account_Name; AccountName) { }
                 column(Debit_Amount; "Debit Amount") { }
                 column(Credit_Amount; "Credit Amount") { }
                 column(Global_Dimension_1_Code; "Global Dimension 1 Code") { }
@@ -62,11 +62,11 @@ report 80005 "NCT Receive Voucher"
                 column(HaveBankAccount; HaveBankAccount) { }
                 column(GenjournalTemplate_DescThai; GenJournalBatchName.Description) { }
                 trigger OnAfterGetRecord()
-                var
-                    glAccount: Record "G/L Account";
+
                 begin
-                    glAccount.GET("G/L Account No.");
-                    glName := glAccount.Name;
+                    if not glAccount.GET("G/L Account No.") then
+                        glAccount.Init();
+                    AccountName := glAccount.Name;
                 end;
 
             }
@@ -381,6 +381,7 @@ report 80005 "NCT Receive Voucher"
         haveCheque: Boolean;
 
         groupping: Boolean;
-        glName: text;
+        AccountName: text[100];
+        glAccount: Record "G/L Account";
 
 }

@@ -50,7 +50,8 @@ report 80037 "NCT FA G/L Journal Voucher"
                 var
                     glAccount: Record "G/L Account";
                 begin
-                    glAccount.GET("G/L Account No.");
+                    if not glAccount.GET("G/L Account No.") then
+                        glAccount.Init();
                     glName := glAccount.Name;
                 end;
 

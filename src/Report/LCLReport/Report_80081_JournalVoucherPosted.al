@@ -25,7 +25,7 @@ report 80081 "NCT Journal Voucher (Post)"
                 column(Journal_Batch_Name; "Journal Batch Name") { }
                 column(JournalDescriptionThai; JournalDescriptionThai) { }
                 column(G_L_Account_No_; "G/L Account No.") { }
-                column(G_L_Account_Name; glName) { }
+                column(G_L_Account_Name; AccountName) { }
                 column(Debit_Amount; "Debit Amount") { }
                 column(Credit_Amount; "Credit Amount") { }
                 column(Global_Dimension_1_Code; "Global Dimension 1 Code") { }
@@ -53,11 +53,11 @@ report 80081 "NCT Journal Voucher (Post)"
                 column(GenjournalTemplate_DescThai; JournalDescriptionThai) { }
                 column(GenJournalBatchName_Desc; GenJournalBatchName.Description) { }
                 trigger OnAfterGetRecord()
-                var
-                    glAccount: Record "G/L Account";
+
                 begin
-                    glAccount.GET("G/L Account No.");
-                    glName := glAccount.Name;
+                    if not glAccount.GET("G/L Account No.") then
+                        glAccount.Init();
+                    AccountName := glAccount.Name;
                 end;
 
 
@@ -105,7 +105,7 @@ report 80081 "NCT Journal Voucher (Post)"
                 NewDate: Date;
 
             begin
-                FunctionCenter.SetReportGLEntryPosted(GenJournalLine."Document No.", GLEntry, TempAmt, groupping);
+                FunctionCenter.SetReportGLEntryPosted(GenJournalLine."Document No.", GenJournalLine."Posting Date", GLEntry, TempAmt, groupping);
                 "GetExchange"();
                 FunctionCenter."ConvExchRate"(CurrencyCode, CurrencyFactor, ExchangeRate);
                 AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';
@@ -213,6 +213,7 @@ report 80081 "NCT Journal Voucher (Post)"
         JournalDescriptionEng: Text[250];
         GenJournalBatchName: Record "Gen. Journal Batch";
         HaveItemVAT, groupping : Boolean;
-        glName: Text;
+        AccountName: text[100];
+        glAccount: Record "G/L Account";
 
 }

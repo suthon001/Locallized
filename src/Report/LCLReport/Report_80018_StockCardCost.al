@@ -106,7 +106,7 @@ report 80018 "NCT Report Stock Card Cost"
                 column(DocumentNo_ItemLedgerEntry; "Item Ledger Entry"."Document No.")
                 {
                 }
-                column(ExtDocumentNo_ItemLedgerEntry; "Item Ledger Entry"."External Document No.")
+                column(ExtDocumentNo_ItemLedgerEntry; ExternalDoc)
                 {
                 }
                 column(InvoiceNo_ItemLedgerEntry; "Item Ledger Entry"."NCT Document Invoice No.")
@@ -210,6 +210,7 @@ report 80018 "NCT Report Stock Card Cost"
             trigger OnAfterGetRecord()
             var
                 ItemLedgerEntry: Record "Item Ledger Entry";
+                ltValueEntry: Record "Value Entry";
             begin
 
                 var_Description := Description + ' ' + "Description 2" + ' Base Unit of Measure ' + "Base Unit of Measure";
@@ -245,8 +246,9 @@ report 80018 "NCT Report Stock Card Cost"
                         ItemLedgerEntry.SETFILTER("Item No.", '%1', "No.");
                         ItemLedgerEntry.SETRANGE("Posting Date", StartingDate, GETRANGEMIN("Date Filter") - 1);
                         ItemLedgerEntry.SETRANGE("NCT Date Filter", StartingDate, GETRANGEMIN("Date Filter") - 1);
-                        ItemLedgerEntry.SETFILTER("Location Code", GETFILTER("Location Filter"));
-                        IF ItemLedgerEntry.FIND('-') THEN
+                        if GETFILTER("Location Filter") <> '' then
+                            ItemLedgerEntry.SETFILTER("Location Code", GETFILTER("Location Filter"));
+                        IF ItemLedgerEntry.FindSet() THEN
                             REPEAT
                                 ItemLedgerEntry.CALCFIELDS("Cost Amount (Actual)", "NCT Cost Amount (Actual Cal.)");
                                 var_Amount2 += ItemLedgerEntry."NCT Cost Amount (Actual Cal.)";
@@ -261,6 +263,14 @@ report 80018 "NCT Report Stock Card Cost"
                 var_OpeningBalance := var_OpeningBalance2;
                 var_Amount := var_Amount2;
                 var_UnitCost := var_UnitCost2;
+                ExternalDoc := "Item Ledger Entry"."External Document No.";
+
+                ltValueEntry.reset();
+                ltValueEntry.SetRange("Item Ledger Entry Type", ltValueEntry."Item Ledger Entry No.");
+                ltValueEntry.SetFilter("Document Type", '%1|%2', ltValueEntry."Document Type"::"Sales Invoice", ltValueEntry."Document Type"::"Purchase Invoice");
+                ltValueEntry.SetFilter("External Document No.", '<>%1', '');
+                if ltValueEntry.FindFirst() then
+                    ExternalDoc := ltValueEntry."External Document No.";
             end;
 
 
@@ -346,5 +356,6 @@ report 80018 "NCT Report Stock Card Cost"
         var_ShowSummary: Boolean;
         ItemFilter: Text;
         StartingDate: Date;
+        ExternalDoc: code[35];
 }
 

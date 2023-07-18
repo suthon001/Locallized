@@ -24,7 +24,7 @@ report 80082 "NCT Payment Voucher (Post)"
                 column(Journal_Batch_Name; "Journal Batch Name") { }
                 column(JournalDescriptionThai; JournalDescriptionThai) { }
                 column(G_L_Account_No_; "G/L Account No.") { }
-                column(G_L_Account_Name; "G/L Account Name") { }
+                column(G_L_Account_Name; AccountName) { }
                 column(Debit_Amount; "Debit Amount") { }
                 column(Credit_Amount; "Credit Amount") { }
                 column(Global_Dimension_1_Code; "Global Dimension 1 Code") { }
@@ -62,11 +62,11 @@ report 80082 "NCT Payment Voucher (Post)"
                 column(HaveBankAccount; HaveBankAccount) { }
                 column(GenjournalTemplate_DescThai; GenJournalBatchName.Description) { }
                 trigger OnAfterGetRecord()
-                var
-                    glAccount: Record "G/L Account";
+
                 begin
-                    glAccount.GET("G/L Account No.");
-                    glName := glAccount.Name;
+                    if not glAccount.GET("G/L Account No.") then
+                        glAccount.Init();
+                    AccountName := glAccount.Name;
                 end;
             }
             dataitem(ApplyEntry; Integer)
@@ -224,7 +224,7 @@ report 80082 "NCT Payment Voucher (Post)"
                 ltGenjournalTemplate: Record "Gen. Journal Template";
                 NewDate: Date;
             begin
-                FunctionCenter.SetReportGLEntryPosted(GenJournalLine."Document No.", GLEntry, TempAmt, groupping);
+                FunctionCenter.SetReportGLEntryPosted(GenJournalLine."Document No.", GenJournalLine."Posting Date", GLEntry, TempAmt, groupping);
                 GetVendorExchange();
                 FunctionCenter."VendInfo"(VendorCode, VendText);
 
@@ -368,7 +368,8 @@ report 80082 "NCT Payment Voucher (Post)"
         HaveApply: Boolean;
         haveCheque: Boolean;
         groupping: Boolean;
-        glName: Text;
+        AccountName: text[100];
+        glAccount: Record "G/L Account";
 
 
 }

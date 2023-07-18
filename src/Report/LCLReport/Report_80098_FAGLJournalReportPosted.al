@@ -50,7 +50,8 @@ report 80098 "NCT FA G/L Journal Voucher (P)"
                 var
                     glAccount: Record "G/L Account";
                 begin
-                    glAccount.GET("G/L Account No.");
+                    if not glAccount.GET("G/L Account No.") then
+                        glAccount.Init();
                     glName := glAccount.Name;
                 end;
 
@@ -70,7 +71,7 @@ report 80098 "NCT FA G/L Journal Voucher (P)"
                 ltGenjournalTemplate: Record "Gen. Journal Template";
                 NewDate: Date;
             begin
-                FunctionCenter.SetReportGLEntryPosted(GenJournalLine."Document No.", GLEntry, TempAmt, groupping);
+                FunctionCenter.SetReportGLEntryPosted(GenJournalLine."Document No.", GenJournalLine."Posting Date", GLEntry, TempAmt, groupping);
                 GetExchange();
                 FunctionCenter."ConvExchRate"(CurrencyCode, CurrencyFactor, ExchangeRate);
                 AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';

@@ -16,7 +16,7 @@ report 80000 "NCT AP CN Voucher"
             DataItemTableView = sorting("Entry No.") where(Amount = filter(<> 0));
             UseTemporary = true;
             column(G_L_Account_No_; "G/L Account No.") { }
-            column(G_L_Account_Name; "G/L Account Name") { }
+            column(G_L_Account_Name; AccountName) { }
             column(Debit_Amount; "Debit Amount") { }
             column(Credit_Amount; "Credit Amount") { }
             column(Global_Dimension_1_Code; "Global Dimension 1 Code") { }
@@ -54,6 +54,10 @@ report 80000 "NCT AP CN Voucher"
             var
                 NewDate: Date;
             begin
+                if not glAccount.GET("G/L Account No.") then
+                    glAccount.Init();
+                AccountName := glAccount.Name;
+
                 FunctionCenter.SetReportGLEntryPurchase(PurHeader, GLEntry, TempAmt, groupping);
                 companyInfor.get();
                 companyInfor.CalcFields(Picture);
@@ -243,6 +247,7 @@ report 80000 "NCT AP CN Voucher"
         HaveItemCharge: Boolean;
         HaveItemVAT: Boolean;
         groupping: Boolean;
-
+        AccountName: text[100];
+        glAccount: Record "G/L Account";
 
 }

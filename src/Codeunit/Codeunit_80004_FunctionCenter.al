@@ -128,6 +128,7 @@ codeunit 80004 "NCT Function Center"
 
         TempGLEntry.reset();
         TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+        TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
         TempGLEntry.SetFilter(Amount, '>%1', 0);
         if TempGLEntry.FindFirst() then
             repeat
@@ -166,6 +167,7 @@ codeunit 80004 "NCT Function Center"
             until TempGLEntry.next() = 0;
         TempGLEntry.reset();
         TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+        TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
         TempGLEntry.SetFilter(Amount, '<%1', 0);
         if TempGLEntry.FindFirst() then
             repeat
@@ -219,6 +221,7 @@ codeunit 80004 "NCT Function Center"
 
         TempGLEntry.reset();
         TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+        TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
         TempGLEntry.SetFilter(Amount, '>%1', 0);
         if TempGLEntry.FindFirst() then
             repeat
@@ -257,6 +260,7 @@ codeunit 80004 "NCT Function Center"
             until TempGLEntry.next() = 0;
         TempGLEntry.reset();
         TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+        TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
         TempGLEntry.SetFilter(Amount, '<%1', 0);
         if TempGLEntry.FindFirst() then
             repeat
@@ -297,7 +301,7 @@ codeunit 80004 "NCT Function Center"
         pTempGLEntry.Copy(TempltGLEntry, true);
     end;
 
-    procedure SetReportGLEntryPosted(pDocumentNo: code[30]; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
+    procedure SetReportGLEntryPosted(pDocumentNo: code[30]; pPostingDate: Date; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
     var
         TempltGLEntry: Record "G/L Entry" temporary;
         ltGlEntry: Record "G/L Entry";
@@ -308,6 +312,7 @@ codeunit 80004 "NCT Function Center"
         ltGlEntry.reset();
         ltGlEntry.SetCurrentKey("G/L Account No.", Amount);
         ltGlEntry.SetRange("Document No.", pDocumentNo);
+        ltGlEntry.SetRange("Posting Date", pPostingDate);
         ltGlEntry.SetFilter(Amount, '>%1', 0);
         if ltGlEntry.FindFirst() then
             repeat
@@ -344,6 +349,8 @@ codeunit 80004 "NCT Function Center"
             until ltGlEntry.next() = 0;
         ltGlEntry.reset();
         ltGlEntry.SetCurrentKey("G/L Account No.", Amount);
+        ltGlEntry.SetRange("Document No.", pDocumentNo);
+        ltGlEntry.SetRange("Posting Date", pPostingDate);
         ltGlEntry.SetFilter(Amount, '<%1', 0);
         if ltGlEntry.FindFirst() then
             repeat
