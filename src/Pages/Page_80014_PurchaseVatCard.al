@@ -142,6 +142,7 @@ page 80014 "NCT Purchase Vat Card"
     {
         area(Processing)
         {
+
             group("ReleaseReOpen")
             {
                 Caption = 'Release&ReOpen';

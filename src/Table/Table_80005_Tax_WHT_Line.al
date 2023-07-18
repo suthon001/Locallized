@@ -300,11 +300,14 @@ table 80005 "NCT Tax & WHT Line"
         Vattransection.SetRange("Ref. Tax Type", "Tax Type");
         Vattransection.SetRange("Ref. Tax No.", "Document No.");
         Vattransection.SetRange("Ref. Tax Line No.", "Entry No.");
-        if Vattransection.FindSet() then begin
-            Vattransection.ModifyAll("Get to Tax", false);
-            Vattransection.ModifyAll("Ref. Tax Line No.", 0);
-            Vattransection.ModifyAll("Ref. Tax No.", '');
-        end;
+        if Vattransection.FindSet() then
+            repeat
+                Vattransection."Get to Tax" := false;
+                Vattransection."Ref. Tax Line No." := 0;
+                Vattransection."Ref. Tax No." := '';
+                Vattransection.Modify();
+            until Vattransection.Next() = 0;
+
     end;
 
     var

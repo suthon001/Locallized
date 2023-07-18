@@ -388,12 +388,12 @@ report 80071 "NCT Inventory Valuation"
         ExpCostPostedToGL: Decimal;
         IsEmptyLine: Boolean;
 
-    local procedure AssignAmounts(ValueEntry: Record "Value Entry"; var InvoicedValue: Decimal; var InvoicedQty: Decimal; var ExpectedValue: Decimal; var ExpectedQty: Decimal; Sign: Decimal)
+    local procedure AssignAmounts(pValueEntry: Record "Value Entry"; var InvoicedValue: Decimal; var InvoicedQty: Decimal; var ExpectedValue: Decimal; var ExpectedQty: Decimal; Sign: Decimal)
     begin
-        InvoicedValue += ValueEntry."Cost Amount (Actual)" * Sign;
-        InvoicedQty += ValueEntry."Invoiced Quantity" * Sign;
-        ExpectedValue += ValueEntry."Cost Amount (Expected)" * Sign;
-        ExpectedQty += ValueEntry."Item Ledger Entry Quantity" * Sign;
+        InvoicedValue += pValueEntry."Cost Amount (Actual)" * Sign;
+        InvoicedQty += pValueEntry."Invoiced Quantity" * Sign;
+        ExpectedValue += pValueEntry."Cost Amount (Expected)" * Sign;
+        ExpectedQty += pValueEntry."Item Ledger Entry Quantity" * Sign;
     end;
 
     local procedure GetOutboundItemEntry(ItemLedgerEntryNo: Integer): Boolean
