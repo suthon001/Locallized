@@ -91,6 +91,15 @@ pageextension 80017 "NCT Sales Quote Card" extends "Sales Quote"
                 ToolTip = 'Specifies the telephone number of the contact person that the sales document will be sent to.';
             }
         }
+        addafter(Status)
+        {
+            field("Completely Shipped"; rec."Completely Shipped")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
+                Caption = 'Completely';
+            }
+        }
 
     }
     actions
@@ -129,6 +138,7 @@ pageextension 80017 "NCT Sales Quote Card" extends "Sales Quote"
     var
         Handled: Boolean;
     begin
+        Handled := false;
         "OnBeforeDeleteRecord"(Rec, Handled);
         if not Handled then
             ERROR('Cannot Delete Record');

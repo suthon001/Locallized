@@ -275,6 +275,7 @@ codeunit 80000 "NCT Journal Function"
         BankAccountLedgerEntry."NCT Cheque No." := GenJournalLine."NCT Cheque No.";
         BankAccountLedgerEntry."NCT Customer/Vendor No." := GenJournalLine."NCT Customer/Vendor No.";
         BankAccountLedgerEntry."NCT Cheque Date" := GenJournalLine."NCT Cheque Date";
+        "NCT OnAfterBankAccountLedgerEntryCopyFromGenJnlLine"(BankAccountLedgerEntry, GenJournalLine);
         //  end;
     end;
 
@@ -298,6 +299,7 @@ codeunit 80000 "NCT Journal Function"
         CheckLedgerEntry."NCT Cheque No." := BankAccountLedgerEntry."NCT Cheque No.";
         CheckLedgerEntry."NCT Customer/Vendor No." := BankAccountLedgerEntry."NCT Customer/Vendor No.";
         CheckLedgerEntry."NCT Cheque Date" := BankAccountLedgerEntry."NCT Cheque Date";
+        "NCT OnAfterCheckLedgerEntryCopyFromBankLedger"(CheckLedgerEntry, BankAccountLedgerEntry);
         // end;
 
     end;
@@ -447,6 +449,7 @@ codeunit 80000 "NCT Journal Function"
         NewItemLedgEntry."NCT Vat Bus. Posting Group" := ItemJournalLine."NCT Vat Bus. Posting Group";
         NewItemLedgEntry."NCT Vendor/Customer Name" := ItemJournalLine."NCT Vendor/Customer Name";
         NewItemLedgEntry."NCT Bin Code" := ItemJournalLine."Bin Code";
+        "NCT OnCopyItemLedgerFromItemJournal"(NewItemLedgEntry, ItemJournalLine);
         //  end;
     end;
 
@@ -538,7 +541,19 @@ codeunit 80000 "NCT Journal Function"
     begin
     end;
 
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnAfterBankAccountLedgerEntryCopyFromGenJnlLine"(var BankAccountLedger: Record "Bank Account Ledger Entry"; GenJournalLine: Record "Gen. Journal Line")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnAfterCheckLedgerEntryCopyFromBankLedger"(var CheckLedgerEntry: record "Check Ledger Entry"; BankAccountLedger: Record "Bank Account Ledger Entry")
+    begin
+    end;
 
 
-
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnCopyItemLedgerFromItemJournal"(var ItemLedgerEntry: record "Item Ledger Entry"; ItemJournalLine: Record "Item Journal Line")
+    begin
+    end;
 }

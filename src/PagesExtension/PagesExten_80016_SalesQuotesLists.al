@@ -68,6 +68,15 @@ pageextension 80016 "NCT Sales Quotes Lists" extends "Sales Quotes"
                 ToolTip = 'Specifies value of the field.';
             }
         }
+        addafter(Status)
+        {
+            field("Completely Shipped"; rec."Completely Shipped")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
+                Caption = 'Completely';
+            }
+        }
 
     }
     actions
