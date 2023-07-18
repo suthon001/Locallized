@@ -99,14 +99,6 @@ report 80033 "NCT PurchaseOrder"
                 end;
 
             }
-
-
-
-
-
-
-
-
             trigger OnPreDataItem()
             begin
                 companyInfor.get();
