@@ -10,14 +10,21 @@ codeunit 80001 "NCT Purchase Function"
         PurchaseLine."NCT Original Quantity" := PurchaseLine.Quantity;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnBeforeDeletePurchQuote', '', false, false)]
+    local procedure OnBeforeDeletePurchQuote(var QuotePurchHeader: Record "Purchase Header"; var IsHandled: Boolean)
+
+    begin
+        IsHandled := true;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnCreatePurchHeaderOnBeforePurchOrderHeaderInsert', '', false, false)]
     local procedure OnCreatePurchHeaderOnBeforePurchOrderHeaderInsert(var PurchHeader: Record "Purchase Header"; var PurchOrderHeader: Record "Purchase Header")
     var
         NoseriesMgt: Codeunit NoSeriesManagement;
     begin
-        PurchHeader.TestField("NCT Make PO No.Series No.");
-        PurchOrderHeader."No." := NoseriesMgt.GetNextNo(PurchHeader."NCT Make PO No.Series No.", WorkDate(), True);
-        PurchOrderHeader."No. Series" := PurchHeader."NCT Make PO No.Series No.";
+        PurchHeader.TestField("NCT Make PO No. Series");
+        PurchOrderHeader."No." := NoseriesMgt.GetNextNo(PurchHeader."NCT Make PO No. Series", WorkDate(), True);
+        PurchOrderHeader."No. Series" := PurchHeader."NCT Make PO No. Series";
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnFinalizePostingOnBeforeUpdateAfterPosting', '', false, false)]
@@ -88,6 +95,7 @@ codeunit 80001 "NCT Purchase Function"
     begin
         PurchaseQuoteLine."Outstanding Qty. (Base)" := 0;
         PurchaseQuoteLine."Outstanding Quantity" := 0;
+        PurchaseQuoteLine."Completely Received" := (PurchaseQuoteLine.Quantity <> 0) and (PurchaseQuoteLine."Outstanding Quantity" = 0);
         PurchaseQuoteLine.Modify();
     end;
 

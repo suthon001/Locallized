@@ -43,6 +43,15 @@ pageextension 80011 "NCT Purchase Quotes Lists" extends "Purchase Quotes"
             Visible = true;
         }
         moveafter("No."; Status)
+        addafter(Status)
+        {
+            field("Completely Received"; rec."Completely Received")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
+                Caption = 'Completely';
+            }
+        }
     }
     actions
     {

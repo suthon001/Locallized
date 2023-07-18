@@ -29,10 +29,10 @@ pageextension 80012 "NCT Purchase Quote Card" extends "Purchase Quote"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Purchase Order No. field.';
             }
-            field("Make PO No.Series No."; rec."NCT Make PO No.Series No.")
+            field("NCT Make PO No. Series"; rec."NCT Make PO No. Series")
             {
                 ApplicationArea = all;
-                ToolTip = 'Specifies the value of the Make PO No.Series No. field.';
+                ToolTip = 'Specifies the value of the NCT Make PO No. Series field.';
             }
         }
         modify("No.")
@@ -63,7 +63,16 @@ pageextension 80012 "NCT Purchase Quote Card" extends "Purchase Quote"
         }
         moveafter("Purchaser Code"; "Currency Code")
         moveafter("Currency Code"; "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code")
-        moveafter("Make PO No.Series No."; "Expected Receipt Date", "Location Code")
+        moveafter("NCT Make PO No. Series"; "Expected Receipt Date", "Location Code")
+        addafter(Status)
+        {
+            field("Completely Received"; rec."Completely Received")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
+                Caption = 'Completely';
+            }
+        }
     }
     actions
     {

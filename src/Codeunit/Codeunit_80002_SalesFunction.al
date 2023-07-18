@@ -83,10 +83,10 @@ codeunit 80002 "NCT Sales Function"
     var
         NoSeriesMgt: Codeunit NoSeriesManagement;
     begin
-        //   with SalesQuoteHeader do begin
+
         SalesQuoteHeader.TestField("NCT Make Order No. Series");
         NoSeriesMgt.InitSeries(SalesQuoteHeader."NCT Make Order No. Series", SalesQuoteHeader."NCT Make Order No. Series", SalesQuoteHeader."Posting Date", SalesOrderHeader."No.", SalesOrderHeader."No. Series");
-        //   end;
+
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", 'OnBeforeInsertSalesOrderLine', '', false, false)]

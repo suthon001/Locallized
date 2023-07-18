@@ -40,8 +40,8 @@ codeunit 80013 "NCT Clear Transactions"
     TableData "Warranty Ledger Entry" = rimd, TableData "Item Budget Entry" = rimd,
     TableData "Production Forecast Entry" = rimd, TableData "Location" = rimd, TableData "Bin" = rimd,
     TableData "Customer" = rimd, TableData "Vendor" = rimd, TableData "Item" = rimd,
-    TableData "Warehouse Entry" = rimd,
-    TableData "NCT VAT Transections" = rimd, TableData "Posted Gen. Journal Line" = rimd, TableData "NCT Posted ItemJournal Lines" = rimd,
+    TableData "Warehouse Entry" = rimd, tabledata "Post Value Entry to G/L" = rimd,
+    TableData "NCT VAT Transections" = rimd, TableData "Posted Gen. Journal Line" = rimd, tableData "Posted Gen. Journal Batch" = rimd, TableData "NCT Posted ItemJournal Lines" = rimd,
     TableData "NCT Tax & WHT Header" = rimd, TableData "NCT Tax & WHT Line" = rimd, TableData "NCT WHT Header" = rimd,
     TableData "NCT WHT Line" = rimd, TableData "NCT Billing Receipt Header" = rimd, TableData "NCT Billing Receipt Line" = rimd,
     tabledata "NCT Record Deletion Table" = rimd,
@@ -82,10 +82,12 @@ codeunit 80013 "NCT Clear Transactions"
             until RecordDeletionTable.Next() = 0;
             if setdefultnoseries then begin
                 NoseriesLine.reset();
-                if NoseriesLine.FindSet() then begin
-                    NoseriesLine.modifyall("Last Date Used", 0D);
-                    NoseriesLine.modifyall("Last No. Used", '');
-                end;
+                if NoseriesLine.FindSet() then
+                    repeat
+                        NoseriesLine."Last Date Used" := 0D;
+                        NoseriesLine."Last No. Used" := '';
+                        NoseriesLine.Modify();
+                    until NoseriesLine.Next() = 0;
             end;
         end else
             Message('Nothing to Clean');
@@ -293,7 +295,10 @@ codeunit 80013 "NCT Clear Transactions"
         MyTable.add('Planning Assignment');
         MyTable.add('Production Forecast Entry');
         MyTable.add('Untracked Planning Element');
+        MyTable.add('Posted Gen.Journal Batch');
         MyTable.add('Posted Gen. Journal Line');
+
+
         MyTable.add('NCT VAT Transections');
         MyTable.add('NCT Tax & WHT Header');
         MyTable.add('NCT Tax & WHT Line');

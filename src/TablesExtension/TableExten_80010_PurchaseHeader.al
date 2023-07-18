@@ -93,10 +93,10 @@ tableextension 80010 "NCT ExtenPurchase Header" extends "Purchase Header"
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80006; "NCT Make PO No.Series No."; Code[20])
+        field(80006; "NCT Make PO No. Series"; Code[20])
         {
             // TableRelation = "No. Series".Code;
-            Caption = 'Make PO No.Series No.';
+            Caption = 'Make PO No.Series';
             DataClassification = CustomerContent;
             trigger OnLookup()
             var
@@ -110,7 +110,7 @@ tableextension 80010 "NCT ExtenPurchase Header" extends "Purchase Header"
                 PayableSetup.GET();
                 PayableSetup.TestField("Order Nos.");
                 if NoseriesMgt.SelectSeries(PayableSetup."Order Nos.", "No. Series", newNoseries) then
-                    "NCT Make PO No.Series No." := newNoseries;
+                    "NCT Make PO No. Series" := newNoseries;
             end;
         }
 
