@@ -107,7 +107,17 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
         {
             Caption = 'Make Order No. Series';
             DataClassification = CustomerContent;
-            TableRelation = "No. Series".Code;
+            trigger OnLookup()
+            var
+                SalesSetup: Record "Sales & Receivables Setup";
+                NoseriesMgt: Codeunit NoSeriesManagement;
+                newNoseries: code[20];
+            begin
+                SalesSetup.GET();
+                SalesSetup.TestField("Order Nos.");
+                if NoseriesMgt.SelectSeries(SalesSetup."Order Nos.", "No. Series", newNoseries) then
+                    "NCT Make Order No. Series" := newNoseries;
+            end;
         }
         field(80009; "NCT Sales Order No."; Code[20])
         {
@@ -139,6 +149,10 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
         TestField("No.");
         "NCT Create By" := COPYSTR(UserId, 1, 50);
         "NCT Create DateTime" := CurrentDateTime;
+        if rec."Posting Date" = 0D then
+            rec."Posting Date" := Today();
+        if rec."Document Date" = 0D then
+            rec."Document Date" := Today();
         if "Document Type" IN ["Document Type"::Invoice, "Document Type"::"Credit Memo"] then
             "Posting No." := "No.";
     end;

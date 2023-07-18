@@ -137,6 +137,10 @@ tableextension 80010 "NCT ExtenPurchase Header" extends "Purchase Header"
         TestField("No.");
         "NCT Create By" := COPYSTR(UserId(), 1, 50);
         "NCT Create DateTime" := CurrentDateTime;
+        if rec."Posting Date" = 0D then
+            rec."Posting Date" := Today();
+        if rec."Document Date" = 0D then
+            rec."Document Date" := Today();
         if "Document Type" IN ["Document Type"::Invoice, "Document Type"::"Credit Memo"] then
             "Posting No." := "No.";
     end;

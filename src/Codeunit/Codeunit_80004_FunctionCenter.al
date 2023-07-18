@@ -23,23 +23,46 @@ codeunit 80004 "NCT Function Center"
         TempltGLEntry, TempGLEntry : Record "G/L Entry" temporary;
         PreviewPost: Codeunit "NCT EventFunction";
         EntryNo: Integer;
+        ltIshandle: Boolean;
     begin
+        ltIshandle := false;
         pTotalAmount := 0;
         EntryNo := 0;
         PreviewPost."GenLinePreviewVourcher"(GenLine, TempGLEntry);
-        TempGLEntry.reset();
-        TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-        TempGLEntry.SetFilter(Amount, '>%1', 0);
-        if TempGLEntry.FindFirst() then
-            repeat
-                if pGroupping then begin
-                    TempltGLEntry.reset();
-                    TempltGLEntry.SetRange("Document No.", GenLine."Document No.");
-                    TempltGLEntry.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
-                    TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
-                    TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
-                    TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
-                    if not TempltGLEntry.FindFirst() then begin
+        BeforSetGenLineGLEntry(ltIshandle, GenLine, pGroupping, pTotalAmount, TempGLEntry, pTempGLEntry);
+        if not ltIshandle then begin
+            TempGLEntry.reset();
+            TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+            TempGLEntry.SetFilter(Amount, '>%1', 0);
+            if TempGLEntry.FindFirst() then
+                repeat
+                    if pGroupping then begin
+                        TempltGLEntry.reset();
+                        TempltGLEntry.SetRange("Document No.", GenLine."Document No.");
+                        TempltGLEntry.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
+                        TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
+                        TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
+                        TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
+                        if not TempltGLEntry.FindFirst() then begin
+                            EntryNo += 1;
+                            TempltGLEntry.init();
+                            TempltGLEntry.TransferFields(TempGLEntry, false);
+                            TempltGLEntry."Document No." := GenLine."Document No.";
+                            TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
+                            TempltGLEntry."Entry No." := EntryNo;
+                            TempltGLEntry.Insert();
+                        end else begin
+                            TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
+                            if TempltGLEntry.Amount > 0 then begin
+                                TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                                TempltGLEntry."Credit Amount" := 0;
+                            end else begin
+                                TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                                TempltGLEntry."Debit Amount" := 0;
+                            end;
+                            TempltGLEntry.Modify();
+                        end;
+                    end else begin
                         EntryNo += 1;
                         TempltGLEntry.init();
                         TempltGLEntry.TransferFields(TempGLEntry, false);
@@ -47,41 +70,41 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
-                    end else begin
-                        TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
-                        if TempltGLEntry.Amount > 0 then begin
-                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
-                            TempltGLEntry."Credit Amount" := 0;
-                        end else begin
-                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
-                            TempltGLEntry."Debit Amount" := 0;
-                        end;
-                        TempltGLEntry.Modify();
                     end;
-                end else begin
-                    EntryNo += 1;
-                    TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry, false);
-                    TempltGLEntry."Document No." := GenLine."Document No.";
-                    TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
-                    TempltGLEntry."Entry No." := EntryNo;
-                    TempltGLEntry.Insert();
-                end;
-                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
-            until TempGLEntry.next() = 0;
-        TempGLEntry.reset();
-        TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-        TempGLEntry.SetFilter(Amount, '<%1', 0);
-        if TempGLEntry.FindFirst() then
-            repeat
-                if pGroupping then begin
-                    TempltGLEntry.reset();
-                    TempltGLEntry.SetRange("Document No.", GenLine."Document No.");
-                    TempltGLEntry.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
-                    TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
-                    TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
-                    TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
-                    if not TempltGLEntry.FindFirst() then begin
+                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+                until TempGLEntry.next() = 0;
+            TempGLEntry.reset();
+            TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+            TempGLEntry.SetFilter(Amount, '<%1', 0);
+            if TempGLEntry.FindFirst() then
+                repeat
+                    if pGroupping then begin
+                        TempltGLEntry.reset();
+                        TempltGLEntry.SetRange("Document No.", GenLine."Document No.");
+                        TempltGLEntry.SetRange("Journal Batch Name", GenLine."Journal Batch Name");
+                        TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
+                        TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
+                        TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
+                        if not TempltGLEntry.FindFirst() then begin
+                            EntryNo += 1;
+                            TempltGLEntry.init();
+                            TempltGLEntry.TransferFields(TempGLEntry, false);
+                            TempltGLEntry."Document No." := GenLine."Document No.";
+                            TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
+                            TempltGLEntry."Entry No." := EntryNo;
+                            TempltGLEntry.Insert();
+                        end else begin
+                            TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
+                            if TempltGLEntry.Amount > 0 then begin
+                                TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                                TempltGLEntry."Credit Amount" := 0;
+                            end else begin
+                                TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                                TempltGLEntry."Debit Amount" := 0;
+                            end;
+                            TempltGLEntry.Modify();
+                        end;
+                    end else begin
                         EntryNo += 1;
                         TempltGLEntry.init();
                         TempltGLEntry.TransferFields(TempGLEntry, false);
@@ -89,30 +112,12 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
-                    end else begin
-                        TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
-                        if TempltGLEntry.Amount > 0 then begin
-                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
-                            TempltGLEntry."Credit Amount" := 0;
-                        end else begin
-                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
-                            TempltGLEntry."Debit Amount" := 0;
-                        end;
-                        TempltGLEntry.Modify();
                     end;
-                end else begin
-                    EntryNo += 1;
-                    TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry, false);
-                    TempltGLEntry."Document No." := GenLine."Document No.";
-                    TempltGLEntry."Journal Batch Name" := GenLine."Journal Batch Name";
-                    TempltGLEntry."Entry No." := EntryNo;
-                    TempltGLEntry.Insert();
-                end;
-                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
-            until TempGLEntry.next() = 0;
-        TempltGLEntry.reset();
-        pTempGLEntry.Copy(TempltGLEntry, true);
+                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+                until TempGLEntry.next() = 0;
+            TempltGLEntry.reset();
+            pTempGLEntry.Copy(TempltGLEntry, true);
+        end;
     end;
 
     procedure SetReportGLEntryPurchase(PurchaseHeader: Record "Purchase Header"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
@@ -121,91 +126,95 @@ codeunit 80004 "NCT Function Center"
         PreviewPost: Codeunit "NCT EventFunction";
         EntryNo: Integer;
         PurHeader: Record "Purchase Header";
+        ltIshandle: Boolean;
     begin
+        ltIshandle := false;
         pTotalAmount := 0;
         PurHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.");
         PreviewPost."PurchasePreviewVourcher"(PurHeader, TempGLEntry);
-
-        TempGLEntry.reset();
-        TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-        TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
-        TempGLEntry.SetFilter(Amount, '>%1', 0);
-        if TempGLEntry.FindFirst() then
-            repeat
-                if pGroupping then begin
-                    TempltGLEntry.reset();
-                    TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
-                    TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
-                    TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
-                    if not TempltGLEntry.FindFirst() then begin
+        BeforSetPurchaseGLEntry(ltIshandle, PurHeader, pGroupping, pTotalAmount, TempGLEntry, pTempGLEntry);
+        if not ltIshandle then begin
+            TempGLEntry.reset();
+            TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            TempGLEntry.SetFilter(Amount, '>%1', 0);
+            if TempGLEntry.FindFirst() then
+                repeat
+                    if pGroupping then begin
+                        TempltGLEntry.reset();
+                        TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
+                        TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
+                        TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
+                        if not TempltGLEntry.FindFirst() then begin
+                            EntryNo += 1;
+                            TempltGLEntry.init();
+                            TempltGLEntry.TransferFields(TempGLEntry, false);
+                            TempltGLEntry."Document No." := PurHeader."No.";
+                            TempltGLEntry."Entry No." := EntryNo;
+                            TempltGLEntry.Insert();
+                        end else begin
+                            TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
+                            if TempltGLEntry.Amount > 0 then begin
+                                TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                                TempltGLEntry."Credit Amount" := 0;
+                            end else begin
+                                TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                                TempltGLEntry."Debit Amount" := 0;
+                            end;
+                            TempltGLEntry.Modify();
+                        end;
+                    end else begin
                         EntryNo += 1;
                         TempltGLEntry.init();
                         TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := PurHeader."No.";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
-                    end else begin
-                        TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
-                        if TempltGLEntry.Amount > 0 then begin
-                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
-                            TempltGLEntry."Credit Amount" := 0;
-                        end else begin
-                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
-                            TempltGLEntry."Debit Amount" := 0;
-                        end;
-                        TempltGLEntry.Modify();
                     end;
-                end else begin
-                    EntryNo += 1;
-                    TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry, false);
-                    TempltGLEntry."Document No." := PurHeader."No.";
-                    TempltGLEntry."Entry No." := EntryNo;
-                    TempltGLEntry.Insert();
-                end;
-                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
-            until TempGLEntry.next() = 0;
-        TempGLEntry.reset();
-        TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-        TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
-        TempGLEntry.SetFilter(Amount, '<%1', 0);
-        if TempGLEntry.FindFirst() then
-            repeat
-                if pGroupping then begin
-                    TempltGLEntry.reset();
-                    TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
-                    TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
-                    TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
-                    if not TempltGLEntry.FindFirst() then begin
+                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+                until TempGLEntry.next() = 0;
+            TempGLEntry.reset();
+            TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            TempGLEntry.SetFilter(Amount, '<%1', 0);
+            if TempGLEntry.FindFirst() then
+                repeat
+                    if pGroupping then begin
+                        TempltGLEntry.reset();
+                        TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
+                        TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
+                        TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
+                        if not TempltGLEntry.FindFirst() then begin
+                            EntryNo += 1;
+                            TempltGLEntry.init();
+                            TempltGLEntry.TransferFields(TempGLEntry, false);
+                            TempltGLEntry."Document No." := PurHeader."No.";
+                            TempltGLEntry."Entry No." := EntryNo;
+                            TempltGLEntry.Insert();
+                        end else begin
+                            TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
+                            if TempltGLEntry.Amount > 0 then begin
+                                TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                                TempltGLEntry."Credit Amount" := 0;
+                            end else begin
+                                TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                                TempltGLEntry."Debit Amount" := 0;
+                            end;
+                            TempltGLEntry.Modify();
+                        end;
+                    end else begin
                         EntryNo += 1;
                         TempltGLEntry.init();
                         TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := PurHeader."No.";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
-                    end else begin
-                        TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
-                        if TempltGLEntry.Amount > 0 then begin
-                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
-                            TempltGLEntry."Credit Amount" := 0;
-                        end else begin
-                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
-                            TempltGLEntry."Debit Amount" := 0;
-                        end;
-                        TempltGLEntry.Modify();
                     end;
-                end else begin
-                    EntryNo += 1;
-                    TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry, false);
-                    TempltGLEntry."Document No." := PurHeader."No.";
-                    TempltGLEntry."Entry No." := EntryNo;
-                    TempltGLEntry.Insert();
-                end;
-                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
-            until TempGLEntry.next() = 0;
-        TempltGLEntry.reset();
-        pTempGLEntry.Copy(TempltGLEntry, true);
+                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+                until TempGLEntry.next() = 0;
+            TempltGLEntry.reset();
+            pTempGLEntry.Copy(TempltGLEntry, true);
+        end;
     end;
 
     procedure SetReportGLEntrySales(pSalseHeader: Record "Sales Header"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
@@ -214,91 +223,95 @@ codeunit 80004 "NCT Function Center"
         PreviewPost: Codeunit "NCT EventFunction";
         EntryNo: Integer;
         SalesHeader: Record "Sales Header";
+        ltIshandle: Boolean;
     begin
+        ltIshandle := false;
         pTotalAmount := 0;
         SalesHeader.GET(pSalseHeader."Document Type", pSalseHeader."No.");
         PreviewPost.SalesPreviewVourcher(SalesHeader, TempGLEntry);
-
-        TempGLEntry.reset();
-        TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-        TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
-        TempGLEntry.SetFilter(Amount, '>%1', 0);
-        if TempGLEntry.FindFirst() then
-            repeat
-                if pGroupping then begin
-                    TempltGLEntry.reset();
-                    TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
-                    TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
-                    TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
-                    if not TempltGLEntry.FindFirst() then begin
+        BeforSetSalesGLEntry(ltIshandle, SalesHeader, pGroupping, pTotalAmount, TempGLEntry, pTempGLEntry);
+        if not ltIshandle then begin
+            TempGLEntry.reset();
+            TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            TempGLEntry.SetFilter(Amount, '>%1', 0);
+            if TempGLEntry.FindFirst() then
+                repeat
+                    if pGroupping then begin
+                        TempltGLEntry.reset();
+                        TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
+                        TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
+                        TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
+                        if not TempltGLEntry.FindFirst() then begin
+                            EntryNo += 1;
+                            TempltGLEntry.init();
+                            TempltGLEntry.TransferFields(TempGLEntry, false);
+                            TempltGLEntry."Document No." := SalesHeader."No.";
+                            TempltGLEntry."Entry No." := EntryNo;
+                            TempltGLEntry.Insert();
+                        end else begin
+                            TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
+                            if TempltGLEntry.Amount > 0 then begin
+                                TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                                TempltGLEntry."Credit Amount" := 0;
+                            end else begin
+                                TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                                TempltGLEntry."Debit Amount" := 0;
+                            end;
+                            TempltGLEntry.Modify();
+                        end;
+                    end else begin
                         EntryNo += 1;
                         TempltGLEntry.init();
                         TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := SalesHeader."No.";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
-                    end else begin
-                        TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
-                        if TempltGLEntry.Amount > 0 then begin
-                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
-                            TempltGLEntry."Credit Amount" := 0;
-                        end else begin
-                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
-                            TempltGLEntry."Debit Amount" := 0;
-                        end;
-                        TempltGLEntry.Modify();
                     end;
-                end else begin
-                    EntryNo += 1;
-                    TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry, false);
-                    TempltGLEntry."Document No." := SalesHeader."No.";
-                    TempltGLEntry."Entry No." := EntryNo;
-                    TempltGLEntry.Insert();
-                end;
-                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
-            until TempGLEntry.next() = 0;
-        TempGLEntry.reset();
-        TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-        TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
-        TempGLEntry.SetFilter(Amount, '<%1', 0);
-        if TempGLEntry.FindFirst() then
-            repeat
-                if pGroupping then begin
-                    TempltGLEntry.reset();
-                    TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
-                    TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
-                    TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
-                    if not TempltGLEntry.FindFirst() then begin
+                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+                until TempGLEntry.next() = 0;
+            TempGLEntry.reset();
+            TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
+            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            TempGLEntry.SetFilter(Amount, '<%1', 0);
+            if TempGLEntry.FindFirst() then
+                repeat
+                    if pGroupping then begin
+                        TempltGLEntry.reset();
+                        TempltGLEntry.SetRange("G/L Account No.", TempGLEntry."G/L Account No.");
+                        TempltGLEntry.SetRange("Global Dimension 1 Code", TempGLEntry."Global Dimension 1 Code");
+                        TempltGLEntry.SetRange("Global Dimension 2 Code", TempGLEntry."Global Dimension 2 Code");
+                        if not TempltGLEntry.FindFirst() then begin
+                            EntryNo += 1;
+                            TempltGLEntry.init();
+                            TempltGLEntry.TransferFields(TempGLEntry, false);
+                            TempltGLEntry."Document No." := SalesHeader."No.";
+                            TempltGLEntry."Entry No." := EntryNo;
+                            TempltGLEntry.Insert();
+                        end else begin
+                            TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
+                            if TempltGLEntry.Amount > 0 then begin
+                                TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                                TempltGLEntry."Credit Amount" := 0;
+                            end else begin
+                                TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                                TempltGLEntry."Debit Amount" := 0;
+                            end;
+                            TempltGLEntry.Modify();
+                        end;
+                    end else begin
                         EntryNo += 1;
                         TempltGLEntry.init();
                         TempltGLEntry.TransferFields(TempGLEntry, false);
                         TempltGLEntry."Document No." := SalesHeader."No.";
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
-                    end else begin
-                        TempltGLEntry.Amount := TempltGLEntry.Amount + TempGLEntry.Amount;
-                        if TempltGLEntry.Amount > 0 then begin
-                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
-                            TempltGLEntry."Credit Amount" := 0;
-                        end else begin
-                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
-                            TempltGLEntry."Debit Amount" := 0;
-                        end;
-                        TempltGLEntry.Modify();
                     end;
-                end else begin
-                    EntryNo += 1;
-                    TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(TempGLEntry, false);
-                    TempltGLEntry."Document No." := SalesHeader."No.";
-                    TempltGLEntry."Entry No." := EntryNo;
-                    TempltGLEntry.Insert();
-                end;
-                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
-            until TempGLEntry.next() = 0;
-        TempltGLEntry.reset();
-        pTempGLEntry.Copy(TempltGLEntry, true);
+                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+                until TempGLEntry.next() = 0;
+            TempltGLEntry.reset();
+            pTempGLEntry.Copy(TempltGLEntry, true);
+        end;
     end;
 
     procedure SetReportGLEntryPosted(pDocumentNo: code[30]; pPostingDate: Date; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
@@ -306,87 +319,91 @@ codeunit 80004 "NCT Function Center"
         TempltGLEntry: Record "G/L Entry" temporary;
         ltGlEntry: Record "G/L Entry";
         EntryNo: Integer;
-
+        ltIshandle: Boolean;
     begin
+        ltIshandle := false;
         pTotalAmount := 0;
-        ltGlEntry.reset();
-        ltGlEntry.SetCurrentKey("G/L Account No.", Amount);
-        ltGlEntry.SetRange("Document No.", pDocumentNo);
-        ltGlEntry.SetRange("Posting Date", pPostingDate);
-        ltGlEntry.SetFilter(Amount, '>%1', 0);
-        if ltGlEntry.FindFirst() then
-            repeat
-                if pGroupping then begin
-                    TempltGLEntry.reset();
-                    TempltGLEntry.SetRange("G/L Account No.", ltGlEntry."G/L Account No.");
-                    TempltGLEntry.SetRange("Global Dimension 1 Code", ltGlEntry."Global Dimension 1 Code");
-                    TempltGLEntry.SetRange("Global Dimension 2 Code", ltGlEntry."Global Dimension 2 Code");
-                    if not TempltGLEntry.FindFirst() then begin
+        BeforSetPostedGLEntry(ltIshandle, pDocumentNo, pPostingDate, pGroupping, pTotalAmount, pTempGLEntry);
+        if not ltIshandle then begin
+            ltGlEntry.reset();
+            ltGlEntry.SetCurrentKey("G/L Account No.", Amount);
+            ltGlEntry.SetRange("Document No.", pDocumentNo);
+            ltGlEntry.SetRange("Posting Date", pPostingDate);
+            ltGlEntry.SetFilter(Amount, '>%1', 0);
+            if ltGlEntry.FindFirst() then
+                repeat
+                    if pGroupping then begin
+                        TempltGLEntry.reset();
+                        TempltGLEntry.SetRange("G/L Account No.", ltGlEntry."G/L Account No.");
+                        TempltGLEntry.SetRange("Global Dimension 1 Code", ltGlEntry."Global Dimension 1 Code");
+                        TempltGLEntry.SetRange("Global Dimension 2 Code", ltGlEntry."Global Dimension 2 Code");
+                        if not TempltGLEntry.FindFirst() then begin
+                            EntryNo += 1;
+                            TempltGLEntry.init();
+                            TempltGLEntry.TransferFields(ltGlEntry, false);
+                            TempltGLEntry."Entry No." := EntryNo;
+                            TempltGLEntry.Insert();
+                        end else begin
+                            TempltGLEntry.Amount := TempltGLEntry.Amount + ltGlEntry.Amount;
+                            if TempltGLEntry.Amount > 0 then begin
+                                TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                                TempltGLEntry."Credit Amount" := 0;
+                            end else begin
+                                TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                                TempltGLEntry."Debit Amount" := 0;
+                            end;
+                            TempltGLEntry.Modify();
+                        end;
+                    end else begin
                         EntryNo += 1;
                         TempltGLEntry.init();
                         TempltGLEntry.TransferFields(ltGlEntry, false);
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
-                    end else begin
-                        TempltGLEntry.Amount := TempltGLEntry.Amount + ltGlEntry.Amount;
-                        if TempltGLEntry.Amount > 0 then begin
-                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
-                            TempltGLEntry."Credit Amount" := 0;
-                        end else begin
-                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
-                            TempltGLEntry."Debit Amount" := 0;
-                        end;
-                        TempltGLEntry.Modify();
                     end;
-                end else begin
-                    EntryNo += 1;
-                    TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(ltGlEntry, false);
-                    TempltGLEntry."Entry No." := EntryNo;
-                    TempltGLEntry.Insert();
-                end;
-                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
-            until ltGlEntry.next() = 0;
-        ltGlEntry.reset();
-        ltGlEntry.SetCurrentKey("G/L Account No.", Amount);
-        ltGlEntry.SetRange("Document No.", pDocumentNo);
-        ltGlEntry.SetRange("Posting Date", pPostingDate);
-        ltGlEntry.SetFilter(Amount, '<%1', 0);
-        if ltGlEntry.FindFirst() then
-            repeat
-                if pGroupping then begin
-                    TempltGLEntry.reset();
-                    TempltGLEntry.SetRange("G/L Account No.", ltGlEntry."G/L Account No.");
-                    TempltGLEntry.SetRange("Global Dimension 1 Code", ltGlEntry."Global Dimension 1 Code");
-                    TempltGLEntry.SetRange("Global Dimension 2 Code", ltGlEntry."Global Dimension 2 Code");
-                    if not TempltGLEntry.FindFirst() then begin
+                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+                until ltGlEntry.next() = 0;
+            ltGlEntry.reset();
+            ltGlEntry.SetCurrentKey("G/L Account No.", Amount);
+            ltGlEntry.SetRange("Document No.", pDocumentNo);
+            ltGlEntry.SetRange("Posting Date", pPostingDate);
+            ltGlEntry.SetFilter(Amount, '<%1', 0);
+            if ltGlEntry.FindFirst() then
+                repeat
+                    if pGroupping then begin
+                        TempltGLEntry.reset();
+                        TempltGLEntry.SetRange("G/L Account No.", ltGlEntry."G/L Account No.");
+                        TempltGLEntry.SetRange("Global Dimension 1 Code", ltGlEntry."Global Dimension 1 Code");
+                        TempltGLEntry.SetRange("Global Dimension 2 Code", ltGlEntry."Global Dimension 2 Code");
+                        if not TempltGLEntry.FindFirst() then begin
+                            EntryNo += 1;
+                            TempltGLEntry.init();
+                            TempltGLEntry.TransferFields(ltGlEntry, false);
+                            TempltGLEntry."Entry No." := EntryNo;
+                            TempltGLEntry.Insert();
+                        end else begin
+                            TempltGLEntry.Amount := TempltGLEntry.Amount + ltGlEntry.Amount;
+                            if TempltGLEntry.Amount > 0 then begin
+                                TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
+                                TempltGLEntry."Credit Amount" := 0;
+                            end else begin
+                                TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
+                                TempltGLEntry."Debit Amount" := 0;
+                            end;
+                            TempltGLEntry.Modify();
+                        end;
+                    end else begin
                         EntryNo += 1;
                         TempltGLEntry.init();
                         TempltGLEntry.TransferFields(ltGlEntry, false);
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
-                    end else begin
-                        TempltGLEntry.Amount := TempltGLEntry.Amount + ltGlEntry.Amount;
-                        if TempltGLEntry.Amount > 0 then begin
-                            TempltGLEntry."Debit Amount" := TempltGLEntry.Amount;
-                            TempltGLEntry."Credit Amount" := 0;
-                        end else begin
-                            TempltGLEntry."Credit Amount" := ABS(TempltGLEntry.Amount);
-                            TempltGLEntry."Debit Amount" := 0;
-                        end;
-                        TempltGLEntry.Modify();
                     end;
-                end else begin
-                    EntryNo += 1;
-                    TempltGLEntry.init();
-                    TempltGLEntry.TransferFields(ltGlEntry, false);
-                    TempltGLEntry."Entry No." := EntryNo;
-                    TempltGLEntry.Insert();
-                end;
-                pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
-            until ltGlEntry.next() = 0;
-        TempltGLEntry.reset();
-        pTempGLEntry.Copy(TempltGLEntry, true);
+                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+                until ltGlEntry.next() = 0;
+            TempltGLEntry.reset();
+            pTempGLEntry.Copy(TempltGLEntry, true);
+        end;
     end;
     /// <summary> 
     /// Description for Get ThaiMonth.
@@ -477,6 +494,7 @@ codeunit 80004 "NCT Function Center"
             else
                 Text[6] += ' (' + CompanyInfo."NCT Branch Code" + ')';
         end;
+        OnAfterGetCompanyInfor(CompanyInfo, Text, EngName);
     end;
 
     /// <summary> 
@@ -529,6 +547,7 @@ codeunit 80004 "NCT Function Center"
                 Text[6] += ' (' + VATBusinessPostingGroup."NCT Branch Code" + ')';
 
         end;
+        OnAfterGetCompanyInforByVat(Text, VatBus, EngName);
     END;
 
     /// <summary> 
@@ -2676,6 +2695,38 @@ codeunit 80004 "NCT Function Center"
         BillingHeader.MODIFY();
         //   END;
     end;
+
+    [IntegrationEvent(false, false)]
+    local procedure BeforSetPurchaseGLEntry(var Ishandle: Boolean; PurchaseHeader: Record "Purchase Header"; pGroupping: boolean; var pTotalAmt: Decimal; var FromTempGLEntry: Record "G/L Entry" temporary; var ToTempGLEntry: Record "G/L Entry" temporary)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure BeforSetSalesGLEntry(var Ishandle: Boolean; SalesHeader: Record "Sales Header"; pGroupping: boolean; var pTotalAmt: Decimal; var FromTempGLEntry: Record "G/L Entry" temporary; var ToTempGLEntry: Record "G/L Entry" temporary)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure BeforSetGenLineGLEntry(var Ishandle: Boolean; GenLines: Record "Gen. Journal Line"; pGroupping: boolean; var pTotalAmt: Decimal; var FromTempGLEntry: Record "G/L Entry" temporary; var ToTempGLEntry: Record "G/L Entry" temporary)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure BeforSetPostedGLEntry(var Ishandle: Boolean; pDocumentNo: code[30]; pPostingDate: Date; pGroupping: boolean; var pTotalAmt: Decimal; var ToTempGLEntry: Record "G/L Entry" temporary)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterGetCompanyInfor(pCompany: Record "Company Information"; VAR pText: ARRAY[10] OF Text[250]; pEngName: Boolean)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterGetCompanyInforByVat(VAR pText: ARRAY[10] OF Text[250]; pVatBus: code[20]; pEngName: Boolean)
+    begin
+    end;
+
+
 
     var
         BillingLine: Record "NCT Billing Receipt Line";

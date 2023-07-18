@@ -11,10 +11,12 @@ codeunit 80001 "NCT Purchase Function"
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnBeforeDeletePurchQuote', '', false, false)]
-    local procedure OnBeforeDeletePurchQuote(var QuotePurchHeader: Record "Purchase Header"; var IsHandled: Boolean)
-
+    local procedure OnBeforeDeletePurchQuote(var QuotePurchHeader: Record "Purchase Header"; var IsHandled: Boolean; var OrderPurchHeader: Record "Purchase Header")
     begin
         IsHandled := true;
+        QuotePurchHeader."NCT Purchase Order No." := OrderPurchHeader."No.";
+        QuotePurchHeader.Modify();
+        MESSAGE('Create to Document No. ' + OrderPurchHeader."No.");
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnCreatePurchHeaderOnBeforePurchOrderHeaderInsert', '', false, false)]

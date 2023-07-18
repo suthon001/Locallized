@@ -57,13 +57,10 @@ report 80098 "NCT FA G/L Journal Voucher (P)"
 
             }
             trigger OnPreDataItem()
-
             begin
-
                 companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 FunctionCenter."CompanyInformation"(ComText, false);
-
             end;
 
             trigger OnAfterGetRecord()

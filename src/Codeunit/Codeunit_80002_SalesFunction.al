@@ -58,6 +58,7 @@ codeunit 80002 "NCT Sales Function"
         IsHandled := true;
     end;
 
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", 'OnBeforeDeleteSalesQuote', '', false, false)]
     local procedure "OnBeferDeleteSalesQuote"(var IsHandled: Boolean; var QuoteSalesHeader: Record "Sales Header"; var OrderSalesHeader: Record "Sales Header")
     begin
@@ -67,14 +68,17 @@ codeunit 80002 "NCT Sales Function"
         MESSAGE('Create to Document No. ' + OrderSalesHeader."No.");
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", 'OnBeforeOnRun', '', false, false)]
-    local procedure "OnBeforeOnRun"(var SalesHeader: Record "Sales Header")
+
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order (Yes/No)", 'OnBeforeRun', '', false, false)]
+    local procedure OnBeforeRun(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     var
 
     begin
         if SalesHeader."NCT Sales Order No." <> '' then begin
             MESSAGE('Document has been convers to Order %1', SalesHeader."NCT Sales Order No.");
-            exit;
+            IsHandled := true;
         end
     end;
 
@@ -85,12 +89,12 @@ codeunit 80002 "NCT Sales Function"
     begin
 
         SalesQuoteHeader.TestField("NCT Make Order No. Series");
-        NoSeriesMgt.InitSeries(SalesQuoteHeader."NCT Make Order No. Series", SalesQuoteHeader."NCT Make Order No. Series", SalesQuoteHeader."Posting Date", SalesOrderHeader."No.", SalesOrderHeader."No. Series");
-
+        SalesOrderHeader."No." := NoseriesMgt.GetNextNo(SalesQuoteHeader."NCT Make Order No. Series", WorkDate(), True);
+        SalesOrderHeader."No. Series" := SalesQuoteHeader."NCT Make Order No. Series";
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", 'OnBeforeInsertSalesOrderLine', '', false, false)]
-    local procedure OnAfterInsertSalesOrderLine(var SalesOrderLine: Record "Sales Line"; SalesOrderHeader: Record "Sales Header"; BlanketOrderSalesLine: Record "Sales Line"; BlanketOrderSalesHeader: Record "Sales Header");
+    local procedure OnBeforeInsertSalesOrderLineBlanket(var SalesOrderLine: Record "Sales Line"; SalesOrderHeader: Record "Sales Header"; BlanketOrderSalesLine: Record "Sales Line"; BlanketOrderSalesHeader: Record "Sales Header");
     begin
         SalesOrderLine."NCT Ref. SQ No." := BlanketOrderSalesLine."Document No.";
         SalesOrderLine."NCT Ref. SQ Line No." := BlanketOrderSalesLine."Line No.";
@@ -102,6 +106,19 @@ codeunit 80002 "NCT Sales Function"
         SalesOrderLine."NCT Ref. SQ No." := SalesQuoteLine."Document No.";
         SalesOrderLine."NCT Ref. SQ Line No." := SalesQuoteLine."Line No.";
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", 'OnAfterInsertSalesOrderLine', '', false, false)]
+    local procedure OnAfterInsertSalesOrderLine(SalesQuoteLine: Record "Sales Line");
+    begin
+
+        SalesQuoteLine."Outstanding Qty. (Base)" := 0;
+        SalesQuoteLine."Outstanding Quantity" := 0;
+        SalesQuoteLine."Completely Shipped" := (SalesQuoteLine.Quantity <> 0) and (SalesQuoteLine."Outstanding Quantity" = 0);
+        SalesQuoteLine.Modify();
+
+    end;
+
+
 
     [IntegrationEvent(false, false)]
     local procedure HandleMessagebeforPostSales(var Handle: Boolean)
