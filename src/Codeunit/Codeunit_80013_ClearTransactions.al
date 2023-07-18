@@ -294,7 +294,6 @@ codeunit 80013 "NCT Clear Transactions"
         MyTable.add('Production Forecast Entry');
         MyTable.add('Untracked Planning Element');
         MyTable.add('Posted Gen. Journal Line');
-
         MyTable.add('NCT VAT Transections');
         MyTable.add('NCT Tax & WHT Header');
         MyTable.add('NCT Tax & WHT Line');
