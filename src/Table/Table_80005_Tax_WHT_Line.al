@@ -431,7 +431,7 @@ table 80005 "NCT Tax & WHT Line"
                                 TaxReportLine."Base Amount" := VatBase;
                                 TaxReportLine."VAT Amount" := VatAmt;
                             end;
-
+                        TaxReportLine."Cust. Amount" := TaxReportLine."Base Amount" + TaxReportLine."VAT Amount";
                         if VatTransection.Type = VatTransection.Type::Sale then
                             TaxReportLine."Customer No." := VatTransection."Bill-to/Pay-to No."
                         else
@@ -456,6 +456,7 @@ table 80005 "NCT Tax & WHT Line"
                                 TaxReportLine."Base Amount" += VatBase;
                                 TaxReportLine."VAT Amount" += VatAmt;
                             end;
+                        TaxReportLine."Cust. Amount" := TaxReportLine."Base Amount" + TaxReportLine."VAT Amount";
                         TaxReportLine.Modify();
                     end;
                     VatTransection."Ref. Tax Type" := "Tax Type";

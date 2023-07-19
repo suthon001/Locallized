@@ -296,7 +296,10 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             trigger OnValidate()
             begin
                 "External Document No." := "NCT Cheque No.";
-                "NCT Cheque Date" := TODAY;
+                if "NCT Cheque No." <> '' then
+                    "NCT Cheque Date" := "Document Date"
+                else
+                    "NCT Cheque Date" := 0D;
             end;
 
         }
@@ -452,10 +455,13 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
         {
             trigger OnAfterValidate()
             begin
-                if "Account Type" = "Account Type"::"Bank Account" then
-                    "NCT Cheque No." := "External Document No."
-                else
+                if "Account Type" = "Account Type"::"Bank Account" then begin
+                    "NCT Cheque No." := rec."External Document No.";
+                    "NCT Cheque Date" := rec."Document Date";
+                end else begin
                     "NCT Cheque No." := '';
+                    "NCT Cheque Date" := 0D;
+                end;
             end;
         }
         modify("Account No.")

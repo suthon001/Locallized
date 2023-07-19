@@ -101,15 +101,15 @@ page 80012 "NCT Sales Vat Subpage"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the VAT Amount field.';
+
                 }
                 field("Cust. Amount"; Rec."Cust. Amount")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Cust. Amount field.';
+                    Caption = 'Amount';
+
                 }
-
-
-
 
                 field("VAT Business Posting Group"; Rec."VAT Business Posting Group")
                 {

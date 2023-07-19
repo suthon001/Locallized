@@ -61,7 +61,7 @@ report 80047 "NCT Receipt Tax Invoice"
                 column(Unit_Price; "Unit Price") { }
                 trigger OnAfterGetRecord()
                 begin
-                    if "Document Type" = "Document Type" then
+                    if "Document Type" = "Document Type"::"Credit Memo" then
                         "Line Amount" := -"Line Amount";
                 end;
             }
