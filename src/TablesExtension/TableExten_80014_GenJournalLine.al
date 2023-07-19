@@ -294,12 +294,18 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             Caption = 'Cheque No.';
             DataClassification = CustomerContent;
             trigger OnValidate()
+            var
+                IsHandle: Boolean;
             begin
-                "External Document No." := "NCT Cheque No.";
-                if "NCT Cheque No." <> '' then
-                    "NCT Cheque Date" := "Document Date"
-                else
-                    "NCT Cheque Date" := 0D;
+                IsHandle := false;
+                "NCT OnbeforUpdateChequeToExternal"(IsHandle);
+                if not IsHandle then begin
+                    "External Document No." := "NCT Cheque No.";
+                    if "NCT Cheque No." <> '' then
+                        "NCT Cheque Date" := "Document Date"
+                    else
+                        "NCT Cheque Date" := 0D;
+                end;
             end;
 
         }
@@ -336,6 +342,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                 "NCT WHT County" := Vendor.County;
                 VALIDATE("NCT WHT Business Posting Group", Vendor."NCT WHT Business Posting Group");
                 "NCT WHT Registration No." := Vendor."VAT Registration No.";
+                "NCT OnAfterInitWHTVendorNo"(rec, Vendor);
                 CalWhtAmount();
             end;
         }
@@ -454,14 +461,20 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
         modify("External Document No.")
         {
             trigger OnAfterValidate()
+            var
+                IsHandle: Boolean;
             begin
-                if "Account Type" = "Account Type"::"Bank Account" then begin
-                    "NCT Cheque No." := rec."External Document No.";
-                    "NCT Cheque Date" := rec."Document Date";
-                end else begin
-                    "NCT Cheque No." := '';
-                    "NCT Cheque Date" := 0D;
-                end;
+                IsHandle := false;
+                "NCT OnbeforUpdateExternalToCheque"(IsHandle);
+                if not IsHandle then
+                    if "Account Type" = "Account Type"::"Bank Account" then begin
+                        "NCT Cheque No." := rec."External Document No.";
+                        "NCT Cheque Date" := rec."Document Date";
+                    end else begin
+                        "NCT Cheque No." := '';
+                        "NCT Cheque Date" := 0D;
+                    end;
+
             end;
         }
         modify("Account No.")
@@ -578,5 +591,20 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
         if genJournalLine.FindLast() then
             exit(genJournalLine."Line No." + 10000);
         exit(10000);
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnbeforUpdateExternalToCheque"(var IsHandle: Boolean)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnbeforUpdateChequeToExternal"(var IsHandle: Boolean)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnAfterInitWHTVendorNo"(var GenLine: Record "Gen. Journal Line"; Vendor: Record Vendor)
+    begin
     end;
 }
