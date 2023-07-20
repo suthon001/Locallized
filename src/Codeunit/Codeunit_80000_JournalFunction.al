@@ -223,6 +223,9 @@ codeunit 80000 "NCT Journal Function"
     var
         VATEntryReport: Record "NCT VAT Transections";
     begin
+        if rec.IsTemporary then
+            exit;
+
         VATEntryReport.INIT();
         VATEntryReport.TRANSFERFIELDS(Rec);
         if VATEntryReport.Insert() then;
