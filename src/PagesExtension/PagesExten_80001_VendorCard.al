@@ -29,13 +29,13 @@ pageextension 80001 "NCT ExtenVendor Card" extends "Vendor Card"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; rec."NCT Branch Code")
+            field("VAT Branch Code"; rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
-                ToolTip = 'Specifies the value of the Branch Code field.';
+                ToolTip = 'Specifies the value of the VAT Branch Code field.';
             }
         }
-        moveafter("Branch Code"; "VAT Registration No.")
+        moveafter("VAT Branch Code"; "VAT Registration No.")
         modify("Currency Code")
         {
             Visible = true;

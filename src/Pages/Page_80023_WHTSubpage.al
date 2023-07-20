@@ -41,6 +41,11 @@ page 80023 "NCT WHT Subpage"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the WHT Certificate No. field.';
                 }
+                field("WHT %"; Rec."WHT %")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the WHT % field.';
+                }
                 field("Base Amount"; Rec."Base Amount")
                 {
                     ApplicationArea = All;
@@ -52,11 +57,7 @@ page 80023 "NCT WHT Subpage"
                     Caption = 'WHT Amount';
                     ToolTip = 'Specifies the value of the WHT Amount field.';
                 }
-                field("WHT %"; Rec."WHT %")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the WHT % field.';
-                }
+
                 field("WHT Business Posting Group"; Rec."WHT Business Posting Group")
                 {
                     ApplicationArea = All;
@@ -159,10 +160,10 @@ page 80023 "NCT WHT Subpage"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Head Office field.';
                 }
-                field("Branch Code"; Rec."Branch Code")
+                field("VAT Branch Code"; Rec."VAT Branch Code")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Branch Code field.';
+                    ToolTip = 'Specifies the value of the VAT Branch Code field.';
                 }
                 field("WHT Registration No."; Rec."WHT Registration No.")
                 {
@@ -186,8 +187,14 @@ page 80023 "NCT WHT Subpage"
                     ApplicationArea = all;
                     ToolTip = 'Executes the Generate WHT Entry action.';
                     trigger OnAction()
+                    var
+                        ltTaxWHTHeader: Record "NCT Tax & WHT Header";
                     begin
-                        Rec."Get WHTData"();
+                        ltTaxWHTHeader.GET(rec."Tax Type", rec."Document No.");
+                        if ltTaxWHTHeader."Tax Type" = ltTaxWHTHeader."Tax Type"::WHT53 then
+                            Rec."Get WHTData"(true)
+                        else
+                            Rec."Get WHTData"(false);
                         CurrPage.Update();
                     end;
 
@@ -215,6 +222,7 @@ page 80023 "NCT WHT Subpage"
                         MoveMonthPage.LookupMode := true;
                         MoveMonthPage."SetData"(Rec."Tax Type", TaxReportHeader."End date of Month", TaxReportLine);
                         MoveMonthPage.RunModal();
+                        CurrPage.Update();
                         Clear(MoveMonthPage);
                     end;
                 }
@@ -253,71 +261,95 @@ page 80023 "NCT WHT Subpage"
         FileName: Text;
         TaxReportLine: Record "NCT Tax & WHT Line";
         TempTaxt: Text;
-        LineNo: Integer;
+        LineNo, ltLineCheckRec : Integer;
         TaxReportHeader: Record "NCT Tax & WHT Header";
+        ltGrouppingWHTLine: Query "NCT Groupping WHT Transaction";
         ltFileNameLbl: Label '%1_%2%3', Locked = true;
+
     begin
 
         LineNo := 0;
+        ltLineCheckRec := 0;
         TaxReportHeader.get(Rec."Tax Type", Rec."Document No.");
         WHTBusinessPostingGroup.Get(format(rec."Tax Type"));
         FileName := StrSubstNo(ltFileNameLbl, TaxReportHeader."End date of Month", WHTBusinessPostingGroup."Code", '.txt');
         TempBlob.CreateOutStream(OutStrm, TextEncoding::UTF8);
-        TaxReportLine.reset();
-        TaxReportLine.CopyFilters(Rec);
-        if TaxReportLine.FindSet() then
-            repeat
-                if TaxReportLine."Head Office" then
-                    BranchCode := '00000'
-                else
-                    BranchCode := TaxReportLine."Branch Code";
-                if BranchCode = '' then
-                    BranchCode := '-';
+        CLEAR(ltGrouppingWHTLine);
+        ltGrouppingWHTLine.SetRange(TaxType, TaxReportHeader."Tax Type");
+        ltGrouppingWHTLine.SetRange(DocumentNo, TaxReportHeader."Document No.");
+        ltGrouppingWHTLine.Open();
+        while ltGrouppingWHTLine.Read() do begin
+            Clear(TempTaxt);
+            CLEAR(ltLineCheckRec);
+            TaxReportLine.reset();
+            TaxReportLine.SetRange("Tax Type", TaxReportHeader."Tax Type");
+            TaxReportLine.SetRange("Document No.", TaxReportHeader."Document No.");
+            TaxReportLine.SetRange("WHT Certificate No.", ltGrouppingWHTLine.WHTCertificateNo);
+            if TaxReportLine.FindSet() then
+                repeat
+                    ltLineCheckRec := ltLineCheckRec + 1;
+                    if TaxReportLine."Head Office" then
+                        BranchCode := '00000'
+                    else
+                        BranchCode := TaxReportLine."VAT Branch Code";
+                    if BranchCode = '' then
+                        BranchCode := '-';
 
-                BranchData[1] := format(TaxReportLine."Title Name");
-                if BranchData[1] = '' then
-                    BranchData[1] := '-';
-                BranchData[2] := TaxReportLine."Name";
-                BranchData[3] := TaxReportLine."Building";
-                BranchData[4] := TaxReportLine."House No.";
-                BranchData[5] := TaxReportLine."Floor";
-                BranchData[6] := TaxReportLine."No.";
-                BranchData[7] := TaxReportLine."Village No.";
-                BranchData[8] := TaxReportLine."Alley/Lane";
-                BranchData[9] := TaxReportLine."Street";
-                BranchData[10] := TaxReportLine."Sub-district";
-                BranchData[11] := TaxReportLine."District";
-                BranchData[12] := TaxReportLine."Province";
-                BranchData[13] := TaxReportLine."post Code";
+                    BranchData[1] := format(TaxReportLine."Title Name");
+                    if BranchData[1] = '' then
+                        BranchData[1] := '-';
+                    BranchData[2] := TaxReportLine."Name";
+                    BranchData[3] := TaxReportLine."Building";
+                    BranchData[4] := TaxReportLine."House No.";
+                    BranchData[5] := TaxReportLine."Floor";
+                    BranchData[6] := TaxReportLine."No.";
+                    BranchData[7] := TaxReportLine."Village No.";
+                    BranchData[8] := TaxReportLine."Alley/Lane";
+                    BranchData[9] := TaxReportLine."Street";
+                    BranchData[10] := TaxReportLine."Sub-district";
+                    BranchData[11] := TaxReportLine."District";
+                    BranchData[12] := TaxReportLine."Province";
+                    BranchData[13] := TaxReportLine."post Code";
 
 
-                IF NOT WHTProductPortingGroup.Get(TaxReportLine."WHT Product Posting Group") then
-                    WHTProductPortingGroup.init();
-                LineNo += 1;
-                if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.3") then
-                    TempTaxt := FORMAT(LineNo) + '|' + FORMAT(DelChr(TaxReportLine."VAT Registration No.", '=', '-')) + '|' +
-                                BranchCode + '|' + BranchData[1] + '|' + FORMAT(BranchData[2]) + '|' + '|' + FORMAT(BranchData[3]) + '|' +
-                                FORMAT(BranchData[4]) + '|' + FORMAT(BranchData[5]) + '|' + FORMAT(BranchData[6]) + '|' + FORMAT(BranchData[7]) + '|' +
-                                FORMAT(BranchData[8]) + '|' + FORMAT(BranchData[9]) + '|' + FORMAT(BranchData[10]) + '|' + FORMAT(BranchData[11]) + '|' +
-                                FORMAT(BranchData[12]) + '|' + FORMAT(BranchData[13]) + '|' +
-                                FORMAT(TaxReportLine."Posting Date", 0, '<Day,2>/<Month,2>/<Year4>') + '|' + FORMAT(WHTProductPortingGroup."Description") + '|' +
-                                DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."WHT %"), '=', ',') + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."Base Amount"), '=', ',')
-                                + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."VAT Amount"), '=', ',') + '|' + FORMAT(1)
-                else
-                    if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.53") then
-                        TempTaxt := FORMAT(LineNo) + '|' + FORMAT(DelChr(TaxReportLine."VAT Registration No.", '=', '-')) + '|' +
-                              BranchCode + '|' + BranchData[1] + '|' + FORMAT(BranchData[2]) + '|' + FORMAT(BranchData[3]) + '|' +
-                              FORMAT(BranchData[4]) + '|' + FORMAT(BranchData[5]) + '|' + FORMAT(BranchData[6]) + '|' + FORMAT(BranchData[7]) + '|' +
-                              FORMAT(BranchData[8]) + '|' + FORMAT(BranchData[9]) + '|' + FORMAT(BranchData[10]) + '|' + FORMAT(BranchData[11]) + '|' +
-                              FORMAT(BranchData[12]) + '|' + FORMAT(BranchData[13]) + '|' +
-                              FORMAT(TaxReportLine."Posting Date", 0, '<Day,2>/<Month,2>/<Year4>') + '|' + FORMAT(WHTProductPortingGroup."Description") + '|' +
-                              DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."WHT %"), '=', ',') + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."Base Amount"), '=', ',')
-                              + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."VAT Amount"), '=', ',') + '|' + FORMAT(1);
-                OutStrm.WriteText(TempTaxt);
-                OutStrm.WriteText();
-                TempTaxt := '';
-            Until TaxReportLine.Next() = 0;
+                    IF NOT WHTProductPortingGroup.Get(TaxReportLine."WHT Product Posting Group") then
+                        WHTProductPortingGroup.init();
 
+                    if ltLineCheckRec = 1 then begin
+                        LineNo := LineNo + 1;
+                        if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.3") then
+                            TempTaxt := FORMAT(LineNo) + '|' + FORMAT(DelChr(TaxReportLine."VAT Registration No.", '=', '-')) + '|' +
+                                        BranchCode + '|' + BranchData[1] + '|' + FORMAT(BranchData[2]) + '|' + '|' + FORMAT(BranchData[3]) + '|' +
+                                        FORMAT(BranchData[4]) + '|' + FORMAT(BranchData[5]) + '|' + FORMAT(BranchData[6]) + '|' + FORMAT(BranchData[7]) + '|' +
+                                        FORMAT(BranchData[8]) + '|' + FORMAT(BranchData[9]) + '|' + FORMAT(BranchData[10]) + '|' + FORMAT(BranchData[11]) + '|' +
+                                        FORMAT(BranchData[12]) + '|' + FORMAT(BranchData[13]) + '|' +
+                                        FORMAT(TaxReportLine."Posting Date", 0, '<Day,2>/<Month,2>/<Year4>') + '|' + FORMAT(WHTProductPortingGroup."Description") + '|' +
+                                        DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."WHT %"), '=', ',') + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."Base Amount"), '=', ',')
+                                        + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."VAT Amount"), '=', ',') + '|' + FORMAT(1)
+                        else
+                            if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.53") then
+                                TempTaxt := FORMAT(LineNo) + '|' + FORMAT(DelChr(TaxReportLine."VAT Registration No.", '=', '-')) + '|' +
+                                      BranchCode + '|' + BranchData[1] + '|' + FORMAT(BranchData[2]) + '|' + FORMAT(BranchData[3]) + '|' +
+                                      FORMAT(BranchData[4]) + '|' + FORMAT(BranchData[5]) + '|' + FORMAT(BranchData[6]) + '|' + FORMAT(BranchData[7]) + '|' +
+                                      FORMAT(BranchData[8]) + '|' + FORMAT(BranchData[9]) + '|' + FORMAT(BranchData[10]) + '|' + FORMAT(BranchData[11]) + '|' +
+                                      FORMAT(BranchData[12]) + '|' + FORMAT(BranchData[13]) + '|' +
+                                      FORMAT(TaxReportLine."Posting Date", 0, '<Day,2>/<Month,2>/<Year4>') + '|' + FORMAT(WHTProductPortingGroup."Description") + '|' +
+                                      DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."WHT %"), '=', ',') + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."Base Amount"), '=', ',')
+                                      + '|' + DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."VAT Amount"), '=', ',') + '|' + FORMAT(1);
+                    end else
+                        TempTaxt := TempTaxt + '|' + FORMAT(TaxReportLine."WHT Date", 0, '<Day,2>/<Month,2>/<Year4>') + '|' + FORMAT(WHTProductPortingGroup."Description") + '|' +
+                                                              DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."WHT %"), '=', ',') + '|' + DELCHR(FORMAT(TaxReportLine."Base Amount", 0, '<Precision,2:2><Standard Format,0>'), '=', ',')
+                                                              + '|' + DELCHR(FORMAT(TaxReportLine."VAT Amount", 0, '<Precision,2:2><Standard Format,0>'), '=', ',') + '|' + FORMAT(1);
+
+                    if TaxReportLine.Count < 2 then
+                        TempTaxt := TempTaxt + '||||||';
+
+
+                Until TaxReportLine.Next() = 0;
+            OutStrm.WriteText(TempTaxt);
+            OutStrm.WriteText();
+            TempTaxt := '';
+        end;
         TempBlob.CreateInStream(Instrm, TextEncoding::UTF8);
         DownloadFromStream(Instrm, 'Export', '', '*.txt|(*.txt)', FileName);
     end;

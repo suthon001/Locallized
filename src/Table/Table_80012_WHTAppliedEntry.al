@@ -94,9 +94,9 @@ table 80012 "NCT WHT Applied Entry"
             Caption = 'Head Office';
             DataClassification = CustomerContent;
         }
-        field(18; "Branch Code"; Code[5])
+        field(18; "VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = CustomerContent;
         }
         field(19; "WHT Post Code"; Text[30])

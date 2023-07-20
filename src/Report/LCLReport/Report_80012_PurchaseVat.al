@@ -68,7 +68,7 @@ report 80012 "NCT Purchase Vat Report"
                 column(Establishment_TaxReportLine; "Head Office")
                 {
                 }
-                column(BranchNo_TaxReportLine; "Branch Code")
+                column(BranchNo_TaxReportLine; "VAT Branch Code")
                 {
                 }
                 column(VATRegistrationNo_TaxReportLine; "VAT Registration No.")
@@ -109,7 +109,7 @@ report 80012 "NCT Purchase Vat Report"
                     if "Head Office" then
                         Var_EstablishmentLine := '/'
                     else
-                        Var_Branch := "Branch Code";
+                        Var_Branch := "VAT Branch Code";
                 end;
             }
 
@@ -130,7 +130,7 @@ report 80012 "NCT Purchase Vat Report"
                         var_BrandName := 'สำนักงานใหญ่';
                     END
                     ELSE BEGIN
-                        var_BrandNo := VATBusinessPostingGroup."NCT Branch Code";
+                        var_BrandNo := VATBusinessPostingGroup."NCT VAT Branch Code";
                         var_BrandName := 'สาขาที่ ';
                     END;
                     var_BrandAddress := VATBusinessPostingGroup."NCT Company Address (Thai)" + ' ';
@@ -147,7 +147,7 @@ report 80012 "NCT Purchase Vat Report"
                         var_BrandNo := '';
                     end else begin
                         var_BrandName := 'สาขาที่ ';
-                        var_BrandNo := CompanyInformation."NCT Branch Code";
+                        var_BrandNo := CompanyInformation."NCT VAT Branch Code";
                     end;
                     var_BrandAddress := CompanyInformation.Address + ' ';
                     var_BrandAddress2 := CompanyInformation."Address 2" + ' ' + CompanyInformation.City + ' ' + CompanyInformation."Post Code";

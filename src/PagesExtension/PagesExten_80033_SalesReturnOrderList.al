@@ -75,7 +75,7 @@ pageextension 80033 "NCT SalesOrderLists" extends "Sales Return Order List"
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

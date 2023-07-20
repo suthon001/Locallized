@@ -5,6 +5,12 @@ codeunit 80004 "NCT Function Center"
 {
 
     Permissions = tabledata "G/L Entry" = rimd;
+    /// <summary>
+    /// Generatebarcode.
+    /// </summary>
+    /// <param name="pBarcodeSymbology">Enum "Barcode Symbology".</param>
+    /// <param name="pValue">Text.</param>
+    /// <returns>Return value of type Text.</returns>
     procedure Generatebarcode(pBarcodeSymbology: Enum "Barcode Symbology"; pValue: Text): Text
     var
         BarcodeSymbology: Enum "Barcode Symbology";
@@ -17,7 +23,13 @@ codeunit 80004 "NCT Function Center"
         BarcodeFontProvider.ValidateInput(BarcodeString, BarcodeSymbology);
         exit(BarcodeFontProvider.EncodeFont(BarcodeString, BarcodeSymbology));
     end;
-
+    /// <summary>
+    /// SetReportGLEntry.
+    /// </summary>
+    /// <param name="GenLine">Record "Gen. Journal Line".</param>
+    /// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
+    /// <param name="pTotalAmount">VAR Decimal.</param>
+    /// <param name="pGroupping">Boolean.</param>
     procedure SetReportGLEntry(GenLine: Record "Gen. Journal Line"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
     var
         TempltGLEntry, TempGLEntry : Record "G/L Entry" temporary;
@@ -119,7 +131,13 @@ codeunit 80004 "NCT Function Center"
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;
     end;
-
+    /// <summary>
+    /// SetReportGLEntryPurchase.
+    /// </summary>
+    /// <param name="PurchaseHeader">Record "Purchase Header".</param>
+    /// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
+    /// <param name="pTotalAmount">VAR Decimal.</param>
+    /// <param name="pGroupping">Boolean.</param>
     procedure SetReportGLEntryPurchase(PurchaseHeader: Record "Purchase Header"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
     var
         TempGLEntry, TempltGLEntry : Record "G/L Entry" temporary;
@@ -136,7 +154,8 @@ codeunit 80004 "NCT Function Center"
         if not ltIshandle then begin
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            if not IsNOTFilterCostGL then
+                TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
             TempGLEntry.SetFilter(Amount, '>%1', 0);
             if TempGLEntry.FindFirst() then
                 repeat
@@ -175,7 +194,8 @@ codeunit 80004 "NCT Function Center"
                 until TempGLEntry.next() = 0;
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            if not IsNOTFilterCostGL then
+                TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
             TempGLEntry.SetFilter(Amount, '<%1', 0);
             if TempGLEntry.FindFirst() then
                 repeat
@@ -216,7 +236,13 @@ codeunit 80004 "NCT Function Center"
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;
     end;
-
+    /// <summary>
+    /// SetReportGLEntrySales.
+    /// </summary>
+    /// <param name="pSalseHeader">Record "Sales Header".</param>
+    /// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
+    /// <param name="pTotalAmount">VAR Decimal.</param>
+    /// <param name="pGroupping">Boolean.</param>
     procedure SetReportGLEntrySales(pSalseHeader: Record "Sales Header"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
     var
         TempGLEntry, TempltGLEntry : Record "G/L Entry" temporary;
@@ -233,7 +259,8 @@ codeunit 80004 "NCT Function Center"
         if not ltIshandle then begin
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            if not IsNOTFilterCostGL then
+                TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
             TempGLEntry.SetFilter(Amount, '>%1', 0);
             if TempGLEntry.FindFirst() then
                 repeat
@@ -272,7 +299,8 @@ codeunit 80004 "NCT Function Center"
                 until TempGLEntry.next() = 0;
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            if not IsNOTFilterCostGL then
+                TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
             TempGLEntry.SetFilter(Amount, '<%1', 0);
             if TempGLEntry.FindFirst() then
                 repeat
@@ -313,7 +341,14 @@ codeunit 80004 "NCT Function Center"
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;
     end;
-
+    /// <summary>
+    /// SetReportGLEntryPosted.
+    /// </summary>
+    /// <param name="pDocumentNo">code[30].</param>
+    /// <param name="pPostingDate">Date.</param>
+    /// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
+    /// <param name="pTotalAmount">VAR Decimal.</param>
+    /// <param name="pGroupping">Boolean.</param>
     procedure SetReportGLEntryPosted(pDocumentNo: code[30]; pPostingDate: Date; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
     var
         TempltGLEntry: Record "G/L Entry" temporary;
@@ -477,7 +512,7 @@ codeunit 80004 "NCT Function Center"
             if CompanyInfo."NCT Head Office" then
                 Text[6] += ' (สำนักงานใหญ่)'
             else
-                Text[6] += ' (' + CompanyInfo."NCT Branch Code" + ')';
+                Text[6] += ' (' + CompanyInfo."NCT VAT Branch Code" + ')';
         end else begin
             Text[1] := CompanyInfo."NCT Name (Eng)" + ' ' + CompanyInfo."NCT Name 2 (Eng)";
             Text[2] := CompanyInfo."NCT Address (Eng)" + ' ';
@@ -492,7 +527,7 @@ codeunit 80004 "NCT Function Center"
             if CompanyInfo."NCT Head Office" then
                 Text[6] += ' (Head Office)'
             else
-                Text[6] += ' (' + CompanyInfo."NCT Branch Code" + ')';
+                Text[6] += ' (' + CompanyInfo."NCT VAT Branch Code" + ')';
         end;
         OnAfterGetCompanyInfor(CompanyInfo, Text, EngName);
     end;
@@ -527,7 +562,7 @@ codeunit 80004 "NCT Function Center"
             if VATBusinessPostingGroup."NCT Head Office" then
                 Text[6] += ' (Head Office)'
             else
-                Text[6] += ' (' + VATBusinessPostingGroup."NCT Branch Code" + ')';
+                Text[6] += ' (' + VATBusinessPostingGroup."NCT VAT Branch Code" + ')';
         end else begin
             Text[1] := VATBusinessPostingGroup."NCT Company Name (Thai)" + ' ';
             Text[1] += VATBusinessPostingGroup."NCT Company Name 2 (Thai)";
@@ -544,7 +579,7 @@ codeunit 80004 "NCT Function Center"
             if VATBusinessPostingGroup."NCT Head Office" then
                 Text[6] += ' (สำนักงานใหญ่)'
             else
-                Text[6] += ' (' + VATBusinessPostingGroup."NCT Branch Code" + ')';
+                Text[6] += ' (' + VATBusinessPostingGroup."NCT VAT Branch Code" + ')';
 
         end;
         OnAfterGetCompanyInforByVat(Text, VatBus, EngName);
@@ -590,8 +625,8 @@ codeunit 80004 "NCT Function Center"
                             Text[4] += 'Fax. : ' + Vend."Fax No.";
                     Text[5] := PurchHeader."Buy-from Contact";
                     // END else begin
-                    if (PurchHeader."NCT Branch Code" <> '') AND (NOT PurchHeader."NCT Head Office") then begin
-                        if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT Branch Code") then
+                    if (PurchHeader."NCT VAT Branch Code" <> '') AND (NOT PurchHeader."NCT Head Office") then begin
+                        if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then
                             VandorBranch.Init();
                         Text[1] := VandorBranch."Name";
                         Text[2] := VandorBranch."Address";
@@ -625,8 +660,8 @@ codeunit 80004 "NCT Function Center"
                         IF Vend."Fax No." <> '' THEN
                             Text[4] += 'Fax. : ' + Vend."Fax No.";
                     Text[5] := PurchHeader."Pay-to Contact";
-                    if (PurchHeader."NCT Branch Code" <> '') AND (NOT PurchHeader."NCT Head Office") then begin
-                        if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT Branch Code") then
+                    if (PurchHeader."NCT VAT Branch Code" <> '') AND (NOT PurchHeader."NCT Head Office") then begin
+                        if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then
                             VandorBranch.Init();
                         Text[1] := VandorBranch."Name";
                         Text[2] := VandorBranch."Address";
@@ -666,8 +701,8 @@ codeunit 80004 "NCT Function Center"
         //  end;
         //if PurchHeader."Head Office" then
         Text[10] := PurchHeader."VAT Registration No.";
-        if (PurchHeader."NCT Branch Code" <> '') AND (NOT PurchHeader."NCT Head Office") then begin
-            if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT Branch Code") then
+        if (PurchHeader."NCT VAT Branch Code" <> '') AND (NOT PurchHeader."NCT Head Office") then begin
+            if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then
                 VandorBranch.Init();
             Text[10] := VandorBranch."VAT Registration No.";
         end;
@@ -675,12 +710,12 @@ codeunit 80004 "NCT Function Center"
             if PurchHeader."NCT Head Office" then
                 Text[10] += ' (สำนักงานใหญ่)'
             else
-                Text[10] += ' (' + PurchHeader."NCT Branch Code" + ')';
+                Text[10] += ' (' + PurchHeader."NCT VAT Branch Code" + ')';
         end else
             if PurchHeader."NCT Head Office" then
                 Text[10] += ' (Head Office)'
             else
-                Text[10] += ' (' + PurchHeader."NCT Branch Code" + ')';
+                Text[10] += ' (' + PurchHeader."NCT VAT Branch Code" + ')';
     end;
 
     /// <summary> 
@@ -854,7 +889,9 @@ codeunit 80004 "NCT Function Center"
             END;
         EXIT(fdigit + fcount);
     end;
-
+    /// <summary>
+    /// InitTextVariable.
+    /// </summary>
     Local procedure "InitTextVariable"()
     var
 
@@ -924,7 +961,12 @@ codeunit 80004 "NCT Function Center"
         ExponentText[3] := Text060Lbl;
         ExponentText[4] := Text061Lbl;
     end;
-
+    /// <summary>
+    /// EngInterger.
+    /// </summary>
+    /// <param name="VAR NoText">ARRAY[2] OF Text[80].</param>
+    /// <param name="No">Decimal.</param>
+    /// <param name="CurrencyCode">Code[10].</param>
     Local procedure "EngInterger"(VAR NoText: ARRAY[2] OF Text[80]; No: Decimal; CurrencyCode: Code[10])
     var
         PrintExponent: Boolean;
@@ -1088,8 +1130,8 @@ codeunit 80004 "NCT Function Center"
                             Text[4] += 'Fax. : ' + Cust."Fax No.";
                     Text[5] := SalesHeader."Sell-to Contact";
                     // end else begin
-                    if (SalesHeader."NCT Branch Code" <> '') AND (NOT SalesHeader."NCT Head Office") then begin
-                        if not CustBranch.GET(CustBranch."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT Branch Code") then
+                    if (SalesHeader."NCT VAT Branch Code" <> '') AND (NOT SalesHeader."NCT Head Office") then begin
+                        if not CustBranch.GET(CustBranch."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then
                             CustBranch.Init();
                         Text[1] := CustBranch."Name";
                         Text[2] := CustBranch."Address";
@@ -1122,8 +1164,8 @@ codeunit 80004 "NCT Function Center"
                         IF Cust."Fax No." <> '' THEN
                             Text[4] += 'Fax. : ' + Cust."Fax No.";
                     Text[5] := SalesHeader."Bill-to Contact";
-                    if (SalesHeader."NCT Branch Code" <> '') AND (NOT SalesHeader."NCT Head Office") then begin
-                        if not CustBranch.GET(CustBranch."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT Branch Code") then
+                    if (SalesHeader."NCT VAT Branch Code" <> '') AND (NOT SalesHeader."NCT Head Office") then begin
+                        if not CustBranch.GET(CustBranch."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then
                             CustBranch.Init();
                         Text[1] := CustBranch."Name";
                         Text[2] := CustBranch."Address";
@@ -1165,8 +1207,8 @@ codeunit 80004 "NCT Function Center"
         //end;
         // end; 
         Text[10] := SalesHeader."VAT Registration No.";
-        if (SalesHeader."NCT Branch Code" <> '') AND (NOT SalesHeader."NCT Head Office") then begin
-            if not CustBranch.GET(CustBranch."Source Type"::customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT Branch Code") then
+        if (SalesHeader."NCT VAT Branch Code" <> '') AND (NOT SalesHeader."NCT Head Office") then begin
+            if not CustBranch.GET(CustBranch."Source Type"::customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then
                 CustBranch.Init();
             Text[10] := CustBranch."VAT Registration No.";
         end;
@@ -1175,13 +1217,13 @@ codeunit 80004 "NCT Function Center"
             if SalesHeader."NCT Head Office" then
                 Text[10] += ' (สำนักงานใหญ่)'
             else
-                Text[10] += ' (' + SalesHeader."NCT Branch Code" + ')';
+                Text[10] += ' (' + SalesHeader."NCT VAT Branch Code" + ')';
         end else
 
             if SalesHeader."NCT Head Office" then
                 Text[10] += ' (Head Office)'
             else
-                Text[10] += ' (' + SalesHeader."NCT Branch Code" + ')';
+                Text[10] += ' (' + SalesHeader."NCT VAT Branch Code" + ')';
 
     end;
 
@@ -1344,7 +1386,14 @@ codeunit 80004 "NCT Function Center"
 
             UNTIL GenJnlLine.NEXT() = 0;
     end;
-
+    /// <summary>
+    /// PostedJnlFindApplyEntries.
+    /// </summary>
+    /// <param name="JnlTemplateName">Code[30].</param>
+    /// <param name="JnlBatchName">code[30].</param>
+    /// <param name="PostingDate">Date.</param>
+    /// <param name="DocumentNo">Code[20].</param>
+    /// <param name="VAR CVLedgEntryBuf">Record "CV Ledger Entry Buffer" TEMPORARY.</param>
     procedure PostedJnlFindApplyEntries(JnlTemplateName: Code[30]; JnlBatchName: code[30]; PostingDate: Date; DocumentNo: Code[20]; VAR CVLedgEntryBuf: Record "CV Ledger Entry Buffer" TEMPORARY)
     var
         GenJnlLine: Record "Posted Gen. Journal Line";
@@ -1441,7 +1490,12 @@ codeunit 80004 "NCT Function Center"
 
             UNTIL GenJnlLine.NEXT() = 0;
     end;
-
+    /// <summary>
+    /// PostedSalesInvoiceStatistics.
+    /// </summary>
+    /// <param name="DocumentNo">Code[20].</param>
+    /// <param name="VAR TotalAmt">ARRAY[100] OF Decimal.</param>
+    /// <param name="VAR VATText">Text[30].</param>
     procedure "PostedSalesInvoiceStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
 
     var
@@ -1470,7 +1524,12 @@ codeunit 80004 "NCT Function Center"
         end;
 
     end;
-
+    /// <summary>
+    /// PostedSalesCrMemoStatistics.
+    /// </summary>
+    /// <param name="DocumentNo">Code[20].</param>
+    /// <param name="VAR TotalAmt">ARRAY[100] OF Decimal.</param>
+    /// <param name="VAR VATText">Text[30].</param>
     procedure "PostedSalesCrMemoStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
     var
         DocumentTotals: Codeunit "Document Totals";
@@ -1561,7 +1620,7 @@ codeunit 80004 "NCT Function Center"
                 if BillingReceiptHeader."Head Office" then
                     VatRegis += ' (สำนักงานใหญ่)'
                 else
-                    VatRegis += ' (' + BillingReceiptHeader."Branch Code" + ')';
+                    VatRegis += ' (' + BillingReceiptHeader."VAT Branch Code" + ')';
             end else begin
                 if vendor."Fax No." <> '' then
                     tel += 'Fax : ' + vendor."Fax No.";
@@ -1569,7 +1628,7 @@ codeunit 80004 "NCT Function Center"
                 if BillingReceiptHeader."Head Office" then
                     VatRegis += ' (Head Office)'
                 else
-                    VatRegis += ' (' + BillingReceiptHeader."Branch Code" + ')';
+                    VatRegis += ' (' + BillingReceiptHeader."VAT Branch Code" + ')';
             end;
         end else begin
             Cust.get(BillingReceiptHeader."Bill/Pay-to Cust/Vend No.");
@@ -1581,7 +1640,7 @@ codeunit 80004 "NCT Function Center"
                 if BillingReceiptHeader."Head Office" then
                     VatRegis += ' (สำนักงานใหญ่)'
                 else
-                    VatRegis += ' (' + BillingReceiptHeader."Branch Code" + ')';
+                    VatRegis += ' (' + BillingReceiptHeader."VAT Branch Code" + ')';
             end else begin
                 if Cust."Fax No." <> '' then
                     tel += 'Fax : ' + Cust."Fax No.";
@@ -1589,7 +1648,7 @@ codeunit 80004 "NCT Function Center"
                 if BillingReceiptHeader."Head Office" then
                     VatRegis += ' (Head Office)'
                 else
-                    VatRegis += ' (' + BillingReceiptHeader."Branch Code" + ')';
+                    VatRegis += ' (' + BillingReceiptHeader."VAT Branch Code" + ')';
             end;
         end;
 
@@ -1605,7 +1664,13 @@ codeunit 80004 "NCT Function Center"
 
 
     end;
-
+    /// <summary>
+    /// PurchStatistic.
+    /// </summary>
+    /// <param name="DocumentType">Enum "Purchase Document Type".</param>
+    /// <param name="DocumentNo">Code[20].</param>
+    /// <param name="VAR TotalAmt">ARRAY[100] OF Decimal.</param>
+    /// <param name="VAR VATText">Text[30].</param>
     procedure PurchStatistic(DocumentType: Enum "Purchase Document Type"; DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
     var
 
@@ -1667,7 +1732,12 @@ codeunit 80004 "NCT Function Center"
                 VATText := STRSUBSTNO(Text002Msg, PurchInvoiceLine."VAT %");
         end;
     end;
-
+    /// <summary>
+    /// PostedPurchaseCreditMemoStatistics.
+    /// </summary>
+    /// <param name="DocumentNo">Code[20].</param>
+    /// <param name="VAR TotalAmt">ARRAY[100] OF Decimal.</param>
+    /// <param name="VAR VATText">Text[30].</param>
     procedure "PostedPurchaseCreditMemoStatistics"(DocumentNo: Code[20]; VAR TotalAmt: ARRAY[100] OF Decimal; VAR VATText: Text[30])
 
     var
@@ -1696,7 +1766,13 @@ codeunit 80004 "NCT Function Center"
         end;
 
     end;
-
+    /// <summary>
+    /// GetSalesComment.
+    /// </summary>
+    /// <param name="DocumentType">Enum "Sales Comment Document Type".</param>
+    /// <param name="DocumentNo">Code[30].</param>
+    /// <param name="LineNo">Integer.</param>
+    /// <param name="SalesComment">VAR array[100] of text[250].</param>
     procedure GetSalesComment(DocumentType: Enum "Sales Comment Document Type"; DocumentNo: Code[30]; LineNo: Integer; var SalesComment: array[100] of text[250])
     var
         SalesCommentLine: Record "Sales Comment Line";
@@ -1719,7 +1795,13 @@ codeunit 80004 "NCT Function Center"
 
 
     end;
-
+    /// <summary>
+    /// GetPurchaseComment.
+    /// </summary>
+    /// <param name="DocumentType">Enum "Purchase Comment Document Type".</param>
+    /// <param name="DocumentNo">Code[30].</param>
+    /// <param name="LineNo">Integer.</param>
+    /// <param name="PurchCommentLine">VAR array[100] of text[250].</param>
     procedure GetPurchaseComment(DocumentType: Enum "Purchase Comment Document Type"; DocumentNo: Code[30]; LineNo: Integer; var PurchCommentLine: array[100] of text[250])
     var
         PurchaseCommentLine: Record "Purch. Comment Line";
@@ -1740,7 +1822,13 @@ codeunit 80004 "NCT Function Center"
             UNTIL PurchaseCommentLine.NEXT() = 0;
 
     end;
-
+    /// <summary>
+    /// PurchasePostedVendorInformation.
+    /// </summary>
+    /// <param name="DocumentType">Option Receipt,"Return Shipment","Posted Invoice","Posted Credit Memo".</param>
+    /// <param name="DocumentNo">Code[20].</param>
+    /// <param name="VAR Text">ARRAY[10] OF Text[250].</param>
+    /// <param name="Tab">Option General,Invoicing,Shipping.</param>
     procedure PurchasePostedVendorInformation(DocumentType: Option Receipt,"Return Shipment","Posted Invoice","Posted Credit Memo"; DocumentNo: Code[20]; VAR Text: ARRAY[10] OF Text[250]; Tab: Option General,Invoicing,Shipping)
     var
         PurchRcptHeader: Record "Purch. Rcpt. Header";
@@ -1779,8 +1867,8 @@ codeunit 80004 "NCT Function Center"
                                 Text[5] := PurchRcptHeader."Buy-from Contact";
 
                                 //end else begin
-                                if (PurchRcptHeader."NCT Branch Code" <> '') AND (NOT PurchRcptHeader."NCT Head Office") then begin
-                                    if not VendBranch.GET(VendBranch."Source Type"::Vendor, PurchRcptHeader."Buy-from Vendor No.", PurchRcptHeader."NCT Head Office", PurchRcptHeader."NCT Branch Code") then
+                                if (PurchRcptHeader."NCT VAT Branch Code" <> '') AND (NOT PurchRcptHeader."NCT Head Office") then begin
+                                    if not VendBranch.GET(VendBranch."Source Type"::Vendor, PurchRcptHeader."Buy-from Vendor No.", PurchRcptHeader."NCT Head Office", PurchRcptHeader."NCT VAT Branch Code") then
                                         VendBranch.Init();
                                     Text[1] := VendBranch."Name";
                                     Text[2] := VendBranch."Address";
@@ -1842,8 +1930,8 @@ codeunit 80004 "NCT Function Center"
 
                     //  if PurchRcptHeader."Head Office" then
                     Text[10] := PurchRcptHeader."VAT Registration No.";
-                    if (PurchRcptHeader."NCT Branch Code" <> '') AND (NOT PurchRcptHeader."NCT Head Office") then begin
-                        if not VendBranch.GET(VendBranch."Source Type"::Vendor, PurchRcptHeader."Buy-from Vendor No.", PurchRcptHeader."NCT Head Office", PurchRcptHeader."NCT Branch Code") then
+                    if (PurchRcptHeader."NCT VAT Branch Code" <> '') AND (NOT PurchRcptHeader."NCT Head Office") then begin
+                        if not VendBranch.GET(VendBranch."Source Type"::Vendor, PurchRcptHeader."Buy-from Vendor No.", PurchRcptHeader."NCT Head Office", PurchRcptHeader."NCT VAT Branch Code") then
                             VendBranch.Init();
                         Text[10] := VendBranch."VAT Registration No.";
                     end;
@@ -1851,12 +1939,12 @@ codeunit 80004 "NCT Function Center"
                         if PurchRcptHeader."NCT Head Office" then
                             Text[10] += ' (สำนักงานใหญ่)'
                         else
-                            Text[10] += ' (' + PurchRcptHeader."NCT Branch Code" + ')';
+                            Text[10] += ' (' + PurchRcptHeader."NCT VAT Branch Code" + ')';
                     end else
                         if PurchRcptHeader."NCT Head Office" then
                             Text[10] += ' (Head Office)'
                         else
-                            Text[10] += ' (' + PurchRcptHeader."NCT Branch Code" + ')';
+                            Text[10] += ' (' + PurchRcptHeader."NCT VAT Branch Code" + ')';
                 END;
             DocumentType::"Return Shipment":
                 BEGIN
@@ -2070,7 +2158,13 @@ codeunit 80004 "NCT Function Center"
         END;
     end;
 
-
+    /// <summary>
+    /// SalesPostedCustomerInformation.
+    /// </summary>
+    /// <param name="DocumentType">Option Shipment,"Return Receipt","Posted Invoice","Posted Credit Memo".</param>
+    /// <param name="DocumentNo">Code[20].</param>
+    /// <param name="VAR Text">ARRAY[10] OF Text[250].</param>
+    /// <param name="Tab">Option General,Invoicing,Shipping.</param>
     procedure SalesPostedCustomerInformation(DocumentType: Option Shipment,"Return Receipt","Posted Invoice","Posted Credit Memo"; DocumentNo: Code[20]; VAR Text: ARRAY[10] OF Text[250]; Tab: Option General,Invoicing,Shipping)
     var
         SalesShptHeader: Record "Sales Shipment Header";
@@ -2110,8 +2204,8 @@ codeunit 80004 "NCT Function Center"
                                         Text[4] += 'Fax. : ' + Cust."Fax No.";
                                 Text[5] := SalesShptHeader."Sell-to Contact";
 
-                                if (SalesShptHeader."NCT Branch Code" <> '') AND (NOT SalesShptHeader."NCT Head Office") then begin
-                                    if not CustBranch.GET(CustBranch."Source Type"::customer, SalesShptHeader."Sell-to Customer No.", SalesShptHeader."NCT Head Office", SalesShptHeader."NCT Branch Code") then
+                                if (SalesShptHeader."NCT VAT Branch Code" <> '') AND (NOT SalesShptHeader."NCT Head Office") then begin
+                                    if not CustBranch.GET(CustBranch."Source Type"::customer, SalesShptHeader."Sell-to Customer No.", SalesShptHeader."NCT Head Office", SalesShptHeader."NCT VAT Branch Code") then
                                         CustBranch.Init();
                                     Text[1] := CustBranch."Name";
                                     Text[2] := CustBranch."Address";
@@ -2173,8 +2267,8 @@ codeunit 80004 "NCT Function Center"
                     end;
                     //  if SalesShptHeader."Head Office" then
                     Text[10] := SalesShptHeader."VAT Registration No.";
-                    if (SalesShptHeader."NCT Branch Code" <> '') AND (NOT SalesShptHeader."NCT Head Office") then begin
-                        if not CustBranch.GET(CustBranch."Source Type"::customer, SalesShptHeader."Sell-to Customer No.", SalesShptHeader."NCT Head Office", SalesShptHeader."NCT Branch Code") then
+                    if (SalesShptHeader."NCT VAT Branch Code" <> '') AND (NOT SalesShptHeader."NCT Head Office") then begin
+                        if not CustBranch.GET(CustBranch."Source Type"::customer, SalesShptHeader."Sell-to Customer No.", SalesShptHeader."NCT Head Office", SalesShptHeader."NCT VAT Branch Code") then
                             CustBranch.Init();
                         Text[10] := CustBranch."VAT Registration No.";
                     end;
@@ -2182,12 +2276,12 @@ codeunit 80004 "NCT Function Center"
                         if SalesShptHeader."NCT Head Office" then
                             Text[10] += ' (สำนักงานใหญ่)'
                         else
-                            Text[10] += ' (' + SalesShptHeader."NCT Branch Code" + ')';
+                            Text[10] += ' (' + SalesShptHeader."NCT VAT Branch Code" + ')';
                     end else
                         if SalesShptHeader."NCT Head Office" then
                             Text[10] += ' (Head Office)'
                         else
-                            Text[10] += ' (' + SalesShptHeader."NCT Branch Code" + ')';
+                            Text[10] += ' (' + SalesShptHeader."NCT VAT Branch Code" + ')';
                 end;
             DocumentType::"Return Receipt":
                 BEGIN
@@ -2404,91 +2498,15 @@ codeunit 80004 "NCT Function Center"
 
     end;
 
-    // /// <summary> 
-    // /// Description for GetSignature.
-    // /// </summary>
-    // /// <param name="DocumentType">Parameter of type Integer.</param>
-    // /// <param name="DocNo">Parameter of type Code[30].</param>
-    // /// <param name="MyStorage">Parameter of type array[10] of Record "Image Storage" temporary.</param>
-    // procedure "GetSignature"(DocumentType: Integer; DocNo: Code[30]; var MyStorage: array[10] of Record "Image Storage" temporary)
-    // var
-    //     UserSetup: Record "User Setup";
-    //     ApprovalEntry: Record "Approval Entry";
-    //     LineNO: Integer;
-    // begin
-    //     Clear(MyStorage);
-    //     ApprovalEntry.reset();
-    //     ApprovalEntry.SetRange("Document Type", DocumentType);
-    //     ApprovalEntry.SetRange("Document No.", DocNo);
-    //     if ApprovalEntry.FindFirst() then begin
-    //         UserSetup.reset();
-    //         UserSetup.SetRange("User ID", ApprovalEntry."Sender ID");
-    //         if UserSetup.FindFirst() then begin
-    //             UserSetup.CalcFields("Signature");
-    //             if UserSetup."Signature".HasValue then begin
-    //                 LineNO += 1;
-    //                 MyStorage[1]."Line No." := LineNO;
-    //                 MyStorage[1]."Type" := MyStorage[1]."Type"::IMAGE;
-    //                 MyStorage[1]."No." := DocNo;
-    //                 MyStorage[1]."Image" := UserSetup."Signature";
-    //                 MyStorage[1]."Date Time" := ApprovalEntry."Last Date-Time Modified";
-    //                 MyStorage[1].Insert();
-    //             end;
-    //         end;
-    //     end;
-    //     LineNO := 1;
-    //     ApprovalEntry.reset();
-    //     ApprovalEntry.SetCurrentKey("Entry No.");
-    //     ApprovalEntry.SetRange("Document Type", DocumentType);
-    //     ApprovalEntry.SetRange("Document No.", DocNo);
-    //     ApprovalEntry.SetFilter("Pending Approvals", '<>%1', 0);
-    //     ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-    //     if ApprovalEntry.FindFirst() then
-    //         repeat
-    //             UserSetup.reset();
-    //             UserSetup.SetRange("User ID", ApprovalEntry."Approver ID");
-    //             if UserSetup.FindFirst() then begin
-    //                 UserSetup.CalcFields("Signature");
-    //                 if UserSetup."Signature".HasValue then begin
-    //                     LineNO += 1;
-    //                     MyStorage[LineNO]."Line No." := LineNO;
-    //                     MyStorage[LineNO]."Type" := MyStorage[LineNO]."Type"::IMAGE;
-    //                     MyStorage[LineNO]."No." := DocNo;
-    //                     MyStorage[LineNO]."Image" := UserSetup."Signature";
-    //                     MyStorage[LineNO]."Date Time" := ApprovalEntry."Last Date-Time Modified";
-    //                     MyStorage[LineNO].Insert();
-    //                 end;
-    //             end;
-    //         until ApprovalEntry.next() = 0;
-
-    //     LineNO := 0;
-    //     ApprovalEntry.reset();
-    //     ApprovalEntry.SetCurrentKey("Entry No.");
-    //     ApprovalEntry.SetRange("Document Type", DocumentType);
-    //     ApprovalEntry.SetRange("Document No.", DocNo);
-    //     ApprovalEntry.SetFilter("Pending Approvals", '%1', 0);
-    //     ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-    //     if ApprovalEntry.FindLast() then begin
-    //         UserSetup.reset();
-    //         UserSetup.SetRange("User ID", ApprovalEntry."Approver ID");
-    //         if UserSetup.FindFirst() then begin
-    //             UserSetup.CalcFields("Signature");
-    //             if UserSetup."Signature".HasValue then begin
-    //                 LineNO += 1;
-    //                 MyStorage[10]."Line No." := LineNO;
-    //                 MyStorage[10]."Type" := MyStorage[10]."Type"::IMAGE;
-    //                 MyStorage[10]."No." := DocNo;
-    //                 MyStorage[10]."Image" := UserSetup."Signature";
-    //                 MyStorage[10]."Date Time" := ApprovalEntry."Last Date-Time Modified";
-    //                 MyStorage[10].Insert();
-    //             end;
-    //         end;
-    //     end;
 
 
 
     // end;
-
+    /// <summary>
+    /// GetName.
+    /// </summary>
+    /// <param name="Var_Name">Text[250].</param>
+    /// <returns>Return variable Name of type Text[50].</returns>
     procedure "GetName"(Var_Name: Text[250]) Name: Text[50]
     var
         Pos: Integer;
@@ -2500,7 +2518,11 @@ codeunit 80004 "NCT Function Center"
             Pos := STRPOS(Name, '\')
         END;
     end;
-
+    /// <summary>
+    /// GetNameFAClass.
+    /// </summary>
+    /// <param name="pCode">Code[10].</param>
+    /// <returns>Return value of type Text[50].</returns>
     procedure "GetNameFAClass"(pCode: Code[10]): Text[50]
     var
         FaClass: Record "FA Class";
@@ -2510,7 +2532,11 @@ codeunit 80004 "NCT Function Center"
         ELSE
             EXIT('*****');
     end;
-
+    /// <summary>
+    /// GetNameFASubClass.
+    /// </summary>
+    /// <param name="pCode">Code[10].</param>
+    /// <returns>Return value of type Text[50].</returns>
     procedure "GetNameFASubClass"(pCode: Code[10]): Text[50]
     var
         FASubclass: Record "FA Subclass";
@@ -2520,7 +2546,11 @@ codeunit 80004 "NCT Function Center"
         ELSE
             EXIT('*****');
     end;
-
+    /// <summary>
+    /// GetNameFALocation.
+    /// </summary>
+    /// <param name="pCode">Code[10].</param>
+    /// <returns>Return value of type Text[50].</returns>
     procedure "GetNameFALocation"(pCode: Code[10]): Text[50]
     var
         FALocation: Record "FA Location";
@@ -2548,10 +2578,12 @@ codeunit 80004 "NCT Function Center"
     end;
 
 
-    /// <summary> 
-    /// Description for InsertDimensionEntry.
+    /// <summary>
+    /// InsertDimensionEntry.
     /// </summary>
-    /// <param name="DimensionSetID">Parameter of type Integer.</param>
+    /// <param name="DimensionSetID">VAR Integer.</param>
+    /// <param name="DimCode">code[30].</param>
+    /// <param name="Dimvalue">code[30].</param>
     procedure InsertDimensionEntry(var DimensionSetID: Integer; DimCode: code[30]; Dimvalue: code[30])
     var
         DimMgt: Codeunit DimensionManagement;
@@ -2576,7 +2608,13 @@ codeunit 80004 "NCT Function Center"
         DimensionSetID := DimMgt.GetDimensionSetID(TempDimSetEntry);
 
     end;
-
+    /// <summary>
+    /// SaveDimensionDefault.
+    /// </summary>
+    /// <param name="TableID">Integer.</param>
+    /// <param name="MyNo">Code[30].</param>
+    /// <param name="DimCode">Code[30].</param>
+    /// <param name="DimValue">Code[30].</param>
     procedure SaveDimensionDefault(TableID: Integer; MyNo: Code[30]; DimCode: Code[30]; DimValue: Code[30])
     var
         DimensionDefault: record "Default Dimension";
@@ -2599,7 +2637,11 @@ codeunit 80004 "NCT Function Center"
         end;
 
     end;
-
+    /// <summary>
+    /// GetMonthNameEng.
+    /// </summary>
+    /// <param name="MonthNumber">Integer.</param>
+    /// <returns>Return value of type Text[50].</returns>
     procedure GetMonthNameEng(MonthNumber: Integer): Text[50];
     begin
         case MonthNumber of
@@ -2631,7 +2673,11 @@ codeunit 80004 "NCT Function Center"
                 exit('');
         end;
     end;
-
+    /// <summary>
+    /// GetMonthFullNameEng.
+    /// </summary>
+    /// <param name="MonthNumber">Integer.</param>
+    /// <returns>Return value of type Text[50].</returns>
     procedure GetMonthFullNameEng(MonthNumber: Integer): Text[50];
     begin
         case MonthNumber of
@@ -2688,7 +2734,10 @@ codeunit 80004 "NCT Function Center"
         BillingHeader."Status" := BillingHeader."Status"::Released;
         BillingHeader.MODIFY();
     end;
-
+    /// <summary>
+    /// ReopenBilling.
+    /// </summary>
+    /// <param name="BillingHeader">Record "NCT Billing Receipt Header".</param>
     procedure "ReopenBilling"(BillingHeader: Record "NCT Billing Receipt Header")
     begin
         //  WITH BillingHeader DO BEGIN
@@ -2698,6 +2747,14 @@ codeunit 80004 "NCT Function Center"
         BillingHeader."Status" := BillingHeader."Status"::Open;
         BillingHeader.MODIFY();
         //   END;
+    end;
+    /// <summary>
+    /// NCT IsNOTFilterCostGL.
+    /// </summary>
+    /// <param name="ISNOTCostGL">Boolean.</param>
+    procedure "NCT IsNOTFilterCostGL"(ISNOTCostGL: Boolean)
+    begin
+        IsNOTFilterCostGL := ISNOTCostGL;
     end;
 
     [IntegrationEvent(false, false)]
@@ -2741,5 +2798,6 @@ codeunit 80004 "NCT Function Center"
         TensText: array[10] of Text[50];
         ExponentText: array[5] of text[50];
         TempCurrencyPointInterger: array[20] of Integer;
+        IsNOTFilterCostGL: Boolean;
 
 }

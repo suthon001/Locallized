@@ -38,9 +38,9 @@ tableextension 80037 "NCT ExtenVendorLedger Entry" extends "Vendor Ledger Entry"
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(80005; "NCT Branch Code"; Code[5])
+        field(80005; "NCT VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = CustomerContent;
             Editable = false;
         }

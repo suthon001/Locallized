@@ -127,8 +127,8 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
                 "NCT Tax Invoice Name 2" := Vend."Name 2";
                 "NCT Vat Registration No." := Vend."VAT Registration No.";
                 "NCT Head Office" := Vend."NCT Head Office";
-                "NCT Branch Code" := Vend."NCT Branch Code";
-                if (NOT "NCT Head Office") AND ("NCT Branch Code" = '') then
+                "NCT VAT Branch Code" := Vend."NCT VAT Branch Code";
+                if (NOT "NCT Head Office") AND ("NCT VAT Branch Code" = '') then
                     "NCT Head Office" := true;
             end;
         }
@@ -144,25 +144,25 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             trigger OnValidate()
             begin
                 if "NCT Head Office" then
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
             end;
         }
-        field(80014; "NCT Branch Code"; Code[5])
+        field(80014; "NCT VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
 
             begin
-                if "NCT Branch Code" <> '' then begin
-                    if StrLen("NCT Branch Code") < 5 then
-                        Error('Branch Code must be 5 characters');
+                if "NCT VAT Branch Code" <> '' then begin
+                    if StrLen("NCT VAT Branch Code") < 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "NCT Head Office" := false;
 
                 end;
-                if "NCT Branch Code" = '00000' then begin
+                if "NCT VAT Branch Code" = '00000' then begin
                     "NCT Head Office" := TRUE;
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
 
                 end;
             end;

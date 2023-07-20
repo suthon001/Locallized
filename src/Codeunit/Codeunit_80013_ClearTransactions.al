@@ -1,3 +1,6 @@
+/// <summary>
+/// Codeunit NCT Clear Transactions (ID 80013).
+/// </summary>
 codeunit 80013 "NCT Clear Transactions"
 {
 
@@ -56,7 +59,11 @@ codeunit 80013 "NCT Clear Transactions"
 
     var
         Text0002: Label 'Deleting Records!\Table: #1#######';
-
+    /// <summary>
+    /// DeleteRecords.
+    /// </summary>
+    /// <param name="pCompanyName">Text.</param>
+    /// <param name="setdefultnoseries">Boolean.</param>
     procedure DeleteRecords(pCompanyName: Text; setdefultnoseries: Boolean)
     var
         Window: Dialog;
@@ -93,7 +100,9 @@ codeunit 80013 "NCT Clear Transactions"
             Message('Nothing to Clean');
         Window.Close();
     end;
-
+    /// <summary>
+    /// Generate Table.
+    /// </summary>
     procedure "Generate Table"()
     var
         MyTable: list of [text];
@@ -298,8 +307,6 @@ codeunit 80013 "NCT Clear Transactions"
         MyTable.add('Untracked Planning Element');
         MyTable.add('Posted Gen.Journal Batch');
         MyTable.add('Posted Gen. Journal Line');
-
-
         MyTable.add('NCT VAT Transections');
         MyTable.add('NCT Tax & WHT Header');
         MyTable.add('NCT Tax & WHT Line');

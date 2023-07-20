@@ -78,7 +78,7 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine."NCT Tax Invoice Address" := InvoicePostingBuffer."NCT Address";
         GenJnlLine."NCT Tax Invoice Address 2" := InvoicePostingBuffer."NCT Address 2";
         GenJnlLine."NCT Head Office" := InvoicePostingBuffer."NCT Head Office";
-        GenJnlLine."NCT Branch Code" := InvoicePostingBuffer."NCT Branch Code";
+        GenJnlLine."NCT VAT Branch Code" := InvoicePostingBuffer."NCT VAT Branch Code";
         GenJnlLine."VAT Registration No." := InvoicePostingBuffer."NCT VAT Registration No.";
         GenJnlLine."NCT Description Line" := InvoicePostingBuffer."NCT Description Line";
         GenJnlLine."NCT Tax Invoice Address" := InvoicePostingBuffer."NCT Address";
@@ -108,7 +108,7 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine."NCT Tax Invoice Address" := InvoicePostBuffer."NCT Address";
         GenJnlLine."NCT Tax Invoice Address 2" := InvoicePostBuffer."NCT Address 2";
         GenJnlLine."NCT Head Office" := InvoicePostBuffer."NCT Head Office";
-        GenJnlLine."NCT Branch Code" := InvoicePostBuffer."NCT Branch Code";
+        GenJnlLine."NCT VAT Branch Code" := InvoicePostBuffer."NCT VAT Branch Code";
         GenJnlLine."VAT Registration No." := InvoicePostBuffer."NCT VAT Registration No.";
         GenJnlLine."NCT Description Line" := InvoicePostBuffer."NCT Description Line";
         GenJnlLine."NCT Tax Invoice Address" := InvoicePostBuffer."NCT Address";
@@ -131,7 +131,7 @@ codeunit 80000 "NCT Journal Function"
     begin
 
         VATEntry."NCT Head Office" := GenJournalLine."NCT Head Office";
-        VATEntry."NCT Branch Code" := GenJournalLine."NCT Branch Code";
+        VATEntry."NCT VAT Branch Code" := GenJournalLine."NCT VAT Branch Code";
         VATEntry."NCT Tax Invoice No." := GenJournalLine."NCT Tax Invoice No.";
         VATEntry."NCT Tax Invoice Name" := GenJournalLine."NCT Tax Invoice Name";
         VATEntry."NCT Tax Invoice Name 2" := GenJournalLine."NCT Tax Invoice Name 2";
@@ -178,8 +178,8 @@ codeunit 80000 "NCT Journal Function"
 
         GenJournalLine."NCT Description Line" := PurchaseHeader."Posting Description";
         GenJournalLine."NCT Head Office" := PurchaseHeader."NCT Head Office";
-        GenJournalLine."NCT Branch Code" := PurchaseHeader."NCT Branch Code";
-        if VendCust.Get(VendCust."Source Type"::Vendor, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."NCT Head Office", PurchaseHeader."NCT Branch Code") then
+        GenJournalLine."NCT VAT Branch Code" := PurchaseHeader."NCT VAT Branch Code";
+        if VendCust.Get(VendCust."Source Type"::Vendor, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."NCT Head Office", PurchaseHeader."NCT VAT Branch Code") then
             if VendCust."Title Name" <> VendCust."Title Name"::" " then
                 GenJournalLine."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
             else
@@ -208,7 +208,7 @@ codeunit 80000 "NCT Journal Function"
 
         GenJournalLine."NCT Description Line" := SalesHeader."Posting Description";
         GenJournalLine."NCT Head Office" := SalesHeader."NCT Head Office";
-        GenJournalLine."NCT Branch Code" := SalesHeader."NCT Branch Code";
+        GenJournalLine."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
         "NCT AfterCopySalesHeaderToGenLine"(GenJournalLine, SalesHeader);
 
     end;
@@ -372,7 +372,7 @@ codeunit 80000 "NCT Journal Function"
     local procedure "OnAfterCopyCustLedgerEntryFromGenJnlLine"(GenJournalLine: Record "Gen. Journal Line"; var CustLedgerEntry: Record "Cust. Ledger Entry")
     begin
         CustLedgerEntry."NCT Head Office" := GenJournalLine."NCT Head Office";
-        CustLedgerEntry."NCT Branch Code" := GenJournalLine."NCT Branch Code";
+        CustLedgerEntry."NCT VAT Branch Code" := GenJournalLine."NCT VAT Branch Code";
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Vendor Ledger Entry", 'OnAfterCopyVendLedgerEntryFromGenJnlLine', '', false, false)]
@@ -384,7 +384,7 @@ codeunit 80000 "NCT Journal Function"
     local procedure "OnAfterCopyVendLedgerEntryFromGenJnlLine"(GenJournalLine: Record "Gen. Journal Line"; var VendorLedgerEntry: Record "Vendor Ledger Entry")
     begin
         VendorLedgerEntry."NCT Head Office" := GenJournalLine."NCT Head Office";
-        VendorLedgerEntry."NCT Branch Code" := GenJournalLine."NCT Branch Code";
+        VendorLedgerEntry."NCT VAT Branch Code" := GenJournalLine."NCT VAT Branch Code";
     end;
 
 

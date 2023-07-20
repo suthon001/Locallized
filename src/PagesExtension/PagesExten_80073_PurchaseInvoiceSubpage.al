@@ -76,7 +76,7 @@ pageextension 80073 "NCT Purchase Invoice Subpage" extends "Purch. Invoice Subfo
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

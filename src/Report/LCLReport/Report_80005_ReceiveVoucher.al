@@ -119,7 +119,7 @@ report 80005 "NCT Receive Voucher"
                     if "NCT Head Office" then
                         BranchCode := 'สำนักงานใหญ่'
                     else
-                        BranchCode := "NCT Branch Code";
+                        BranchCode := "NCT VAT Branch Code";
 
 
                 end;

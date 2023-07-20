@@ -33,26 +33,26 @@ tableextension 80023 "NCT VATBusinessPostingGroup" extends "VAT Business Posting
 
             begin
                 if "NCT Head Office" then
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
 
             end;
 
         }
-        field(80005; "NCT Branch Code"; code[5])
+        field(80005; "NCT VAT Branch Code"; code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
 
             begin
-                if "NCT Branch Code" <> '' then begin
-                    if StrLen("NCT Branch Code") < 5 then
-                        Error('Branch Code must be 5 characters');
+                if "NCT VAT Branch Code" <> '' then begin
+                    if StrLen("NCT VAT Branch Code") < 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "NCT Head Office" := false;
                 end;
-                if "NCT Branch Code" = '00000' then begin
+                if "NCT VAT Branch Code" = '00000' then begin
                     "NCT Head Office" := TRUE;
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
 
                 end;
 

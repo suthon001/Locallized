@@ -16,10 +16,10 @@ tableextension 80030 "NCT Purchase Inv. Header" extends "Purch. Inv. Header"
             Caption = 'Head Office';
             DataClassification = CustomerContent;
         }
-        field(80002; "NCT Branch Code"; Code[5])
+        field(80002; "NCT VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
-            TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("Buy-from Vendor No."));
+            Caption = 'VAT Branch Code';
+            TableRelation = "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("Buy-from Vendor No."));
             DataClassification = CustomerContent;
         }
         field(80003; "NCT Create By"; Code[50])

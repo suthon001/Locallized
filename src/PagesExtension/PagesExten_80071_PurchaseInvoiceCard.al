@@ -21,11 +21,11 @@ pageextension 80071 "NCT Purchase Invoice Card" extends "Purchase Invoice"
                 Caption = 'Head Office';
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
-                Caption = 'Branch Code';
-                ToolTip = 'Specifies the value of the Branch Code field.';
+                Caption = 'VAT Branch Code';
+                ToolTip = 'Specifies the value of the VAT Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {

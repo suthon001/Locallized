@@ -149,7 +149,7 @@ codeunit 80002 "NCT Sales Function"
     begin
         IF SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.") THEN BEGIN
             InvoicePostingBuffer."NCT Head Office" := SalesHeader."NCT Head Office";
-            InvoicePostingBuffer."NCT Branch Code" := SalesHeader."NCT Branch Code";
+            InvoicePostingBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
             InvoicePostingBuffer."NCT VAT Registration No." := SalesHeader."VAT Registration No.";
             InvoicePostingBuffer."NCT Tax Invoice Date" := SalesHeader."Document Date";
             InvoicePostingBuffer."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
@@ -160,7 +160,7 @@ codeunit 80002 "NCT Sales Function"
             InvoicePostingBuffer."NCT Address 2" := SalesHeader."Sell-to Address 2";
             InvoicePostingBuffer."NCT City" := SalesHeader."Sell-to city";
             InvoicePostingBuffer."NCT Post Code" := SalesHeader."Sell-to Post Code";
-            if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT Branch Code") then begin
+            if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then begin
                 if VendCust."Title Name" <> VendCust."Title Name"::" " then
                     InvoicePostingBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
                 else
@@ -191,7 +191,7 @@ codeunit 80002 "NCT Sales Function"
     begin
         IF SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.") THEN BEGIN
             InvoicePostBuffer."NCT Head Office" := SalesHeader."NCT Head Office";
-            InvoicePostBuffer."NCT Branch Code" := SalesHeader."NCT Branch Code";
+            InvoicePostBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
             InvoicePostBuffer."NCT VAT Registration No." := SalesHeader."VAT Registration No.";
             InvoicePostBuffer."NCT Tax Invoice Date" := SalesHeader."Document Date";
             InvoicePostBuffer."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
@@ -203,7 +203,7 @@ codeunit 80002 "NCT Sales Function"
             InvoicePostBuffer."NCT City" := SalesHeader."Sell-to city";
             InvoicePostBuffer."NCT Post Code" := SalesHeader."Sell-to Post Code";
 
-            if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT Branch Code") then begin
+            if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then begin
                 if VendCust."Title Name" <> VendCust."Title Name"::" " then
                     InvoicePostBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
                 else

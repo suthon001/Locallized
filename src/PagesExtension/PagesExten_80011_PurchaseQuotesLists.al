@@ -13,10 +13,10 @@ pageextension 80011 "NCT Purchase Quotes Lists" extends "Purchase Quotes"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Head Office field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
-                ToolTip = 'Specifies the value of the Branch Code field.';
+                ToolTip = 'Specifies the value of the VAT Branch Code field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")
             {

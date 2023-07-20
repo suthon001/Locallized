@@ -64,9 +64,9 @@ table 80005 "NCT Tax & WHT Line"
             Caption = 'Head Office';
             DataClassification = SystemMetadata;
         }
-        field(11; "Branch Code"; Code[5])
+        field(11; "VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = SystemMetadata;
         }
         field(12; "VAT Registration No."; Text[20])
@@ -273,6 +273,7 @@ table 80005 "NCT Tax & WHT Line"
             Caption = 'เลขที่';
             DataClassification = CustomerContent;
         }
+
     }
 
     keys
@@ -412,7 +413,7 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLine."VAT Business Posting Group" := VatTransection."VAT Bus. Posting Group";
                         TaxReportLine."VAT Product Posting Group" := VatTransection."VAT Prod. Posting Group";
                         TaxReportLine."Head Office" := VatTransection."Head Office";
-                        TaxReportLine."Branch Code" := VatTransection."Branch Code";
+                        TaxReportLine."VAT Branch Code" := VatTransection."VAT Branch Code";
                         TaxReportLine."VAT Registration No." := VatTransection."VAT Registration No.";
                         TaxReportLine."Description" := VatTransection."Description Line";
                         TaxReportLine."Tax Invoice Name" := VatTransection."Tax Invoice Name";
@@ -472,20 +473,35 @@ table 80005 "NCT Tax & WHT Line"
     /// <summary> 
     /// Description for Get WHTData.
     /// </summary>
-    procedure "Get WHTData"()
+    /// <param name="pISWHT53">Boolean.</param>
+    procedure "Get WHTData"(pISWHT53: Boolean)
     var
         TaxReportHeader: Record "NCT Tax & WHT Header";
         TaxReportLineFind: Record "NCT Tax & WHT Line";
         WHTLine: Record "NCT WHT Line";
+        WHTBusPotingGroup: Record "NCT WHT Business Posting Group";
+        WHTCode: Text;
     begin
-
+        WHTCode := '';
         TaxReportHeader.get("Tax Type", "Document No.");
         TaxReportHeader.TestField(Status, TaxReportHeader.Status::Open);
         TaxReportHeader.TestField("End date of Month");
+        WHTBusPotingGroup.reset();
+        if not pISWHT53 then
+            WHTBusPotingGroup.SetRange("WHT Certificate Option", WHTBusPotingGroup."WHT Certificate Option"::"ภ.ง.ด.3")
+        else
+            WHTBusPotingGroup.SetRange("WHT Certificate Option", WHTBusPotingGroup."WHT Certificate Option"::"ภ.ง.ด.53");
+        if WHTBusPotingGroup.FindSet() then
+            repeat
+                if WHTCode <> '' then
+                    WHTCode := WHTCode + '|';
+                WHTCode := WHTCode + WHTBusPotingGroup.Code;
+            until WHTBusPotingGroup.next() = 0;
+
         WHTHeader.RESET();
         WHTHeader.SETFILTER("WHT Date", '%1..%2', DMY2Date(01, TaxReportHeader."Month No.", TaxReportHeader."Year No."), CalcDate('<CM>', TaxReportHeader."End date of Month"));
         WHTHeader.SETFILTER("WHT No.", '<>%1', '');
-        WHTHeader.SetFilter("WHT Business Posting Group", TaxReportHeader."WHT Bus. Post. Filter");
+        WHTHeader.SetFilter("WHT Business Posting Group", WHTCode);
         WHTHeader.SetRange("Posted", true);
         WHTHeader.SETRANGE("Get to WHT", false);
         OnAftersetfilterWHT(WHTHeader, TaxReportHeader);
@@ -519,7 +535,7 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLineFind."WHT Registration No." := WHTHeader."VAT Registration No.";
                         TaxReportLineFind."WHT %" := WHTLine."WHT %";
                         TaxReportLineFind."Head Office" := WHTHeader."Head Office";
-                        TaxReportLineFind."Branch Code" := WHTHeader."VAT Branch Code";
+                        TaxReportLineFind."VAT Branch Code" := WHTHeader."VAT VAT Branch Code";
                         TaxReportLineFind."VAT Registration No." := WHTHeader."VAT Registration No.";
                         TaxReportLineFind."Ref. Wht Line" := WHTLine."WHT Line No.";
                         TaxReportLineFind."WHT Certificate No." := WHTHeader."WHT Certificate No.";
@@ -538,7 +554,7 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLineFind."City" := WHTHeader."WHT City";
                         TaxReportLineFind."Post Code" := WHTHeader."WHT Post Code";
 
-                        if (NOT TaxReportLineFind."Head Office") AND (TaxReportLineFind."Branch Code" = '') then
+                        if (NOT TaxReportLineFind."Head Office") AND (TaxReportLineFind."VAT Branch Code" = '') then
                             TaxReportLineFind."Head Office" := true;
 
                         OnbeforInsertWHTLine(TaxReportLineFind, WHTHeader, WHTLine);
@@ -549,7 +565,9 @@ table 80005 "NCT Tax & WHT Line"
 
                 WHTHeader."Get to WHT" := true;
                 WHTHeader.Modify();
-            until WHTHeader.next() = 0;
+            until WHTHeader.next() = 0
+        else
+            Message('Nothing to generate');
     end;
 
     /// <summary> 

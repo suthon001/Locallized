@@ -12,7 +12,7 @@ pageextension 80017 "NCT Sales Quote Card" extends "Sales Quote"
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

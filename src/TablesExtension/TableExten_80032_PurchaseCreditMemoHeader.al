@@ -18,10 +18,10 @@ tableextension 80032 "NCT Purchase Cr. Memo Header" extends "Purch. Cr. Memo Hdr
 
 
         }
-        field(80002; "NCT Branch Code"; Code[5])
+        field(80002; "NCT VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
-            TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("Buy-from Vendor No."));
+            Caption = 'VAT Branch Code';
+            TableRelation = "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("Buy-from Vendor No."));
             DataClassification = CustomerContent;
 
         }

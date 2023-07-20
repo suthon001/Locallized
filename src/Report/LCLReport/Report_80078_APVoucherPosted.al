@@ -130,7 +130,7 @@ report 80078 "NCT AP Voucher (Post)"
                 if "NCT Head Office" then
                     BranchCode := 'สำนักงานใหญ่'
                 else
-                    BranchCode := "NCT Branch Code";
+                    BranchCode := "NCT VAT Branch Code";
 
             end;
         }

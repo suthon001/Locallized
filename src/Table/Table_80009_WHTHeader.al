@@ -59,7 +59,7 @@ table 80009 "NCT WHT Header"
                         "WHT Address 2" := Vendor."Address 2";
                         "VAT Registration No." := Vendor."VAT Registration No.";
                         "Head Office" := Vendor."NCT Head Office";
-                        "Vat Branch Code" := Vendor."NCT Branch Code";
+                        "Vat VAT Branch Code" := Vendor."NCT VAT Branch Code";
                         "WHT Business Posting Group" := Vendor."NCT WHT Business Posting Group";
                         if NOT whtBusPostingGroup.GET(Vendor."NCT WHT Business Posting Group") then
                             whtBusPostingGroup.init();
@@ -97,7 +97,7 @@ table 80009 "NCT WHT Header"
                         "WHT Address 2" := Customer."Address 2";
                         "VAT Registration No." := Customer."VAT Registration No.";
                         "Head Office" := Customer."NCT Head Office";
-                        "Vat Branch Code" := Customer."NCT Branch Code";
+                        "Vat VAT Branch Code" := Customer."NCT VAT Branch Code";
                         "WHT Business Posting Group" := Customer."NCT WHT Business Posting Group";
                         if NOT whtBusPostingGroup.GET(Customer."NCT WHT Business Posting Group") then
                             whtBusPostingGroup.init();
@@ -162,26 +162,26 @@ table 80009 "NCT WHT Header"
             trigger OnValidate()
             begin
                 if "Head Office" then
-                    "Vat Branch Code" := '';
+                    "Vat VAT Branch Code" := '';
             end;
         }
-        field(15; "VAT Branch Code"; Code[5])
+        field(15; "VAT VAT Branch Code"; Code[5])
         {
-            Caption = 'VAT Branch Code';
+            Caption = 'VAT VAT Branch Code';
             DataClassification = CustomerContent;
-            TableRelation = IF ("WHT Source Type" = CONST(Vendor)) "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = FILTER(Vendor), "Source No." = FIELD("WHT Source No.")) ELSE
-            IF ("WHT Source Type" = CONST(Customer)) "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = FILTER(Customer), "Source No." = FIELD("WHT Source No."));
+            TableRelation = IF ("WHT Source Type" = CONST(Vendor)) "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = FILTER(Vendor), "Source No." = FIELD("WHT Source No.")) ELSE
+            IF ("WHT Source Type" = CONST(Customer)) "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = FILTER(Customer), "Source No." = FIELD("WHT Source No."));
             ValidateTableRelation = true;
             trigger OnValidate()
             begin
-                if "Vat Branch Code" <> '' then begin
-                    if StrLen("Vat Branch Code") < 5 then
-                        Error('Branch Code must be 5 characters');
+                if "Vat VAT Branch Code" <> '' then begin
+                    if StrLen("Vat VAT Branch Code") < 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "Head Office" := false;
                 end;
-                if "Vat Branch Code" = '00000' then begin
+                if "Vat VAT Branch Code" = '00000' then begin
                     "Head Office" := TRUE;
-                    "Vat Branch Code" := '';
+                    "Vat VAT Branch Code" := '';
                 end;
             end;
 

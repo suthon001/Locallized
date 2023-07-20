@@ -49,7 +49,7 @@ tableextension 80016 "NCT Invoice Post. Buffer" extends "Invoice Post. Buffer"
             DataClassification = SystemMetadata;
 
         }
-        field(80008; "NCT Branch Code"; Code[5])
+        field(80008; "NCT VAT Branch Code"; Code[5])
         {
             Caption = 'Tax Branch No.';
             DataClassification = SystemMetadata;

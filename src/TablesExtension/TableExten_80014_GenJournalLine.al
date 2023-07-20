@@ -61,8 +61,8 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                     "NCT Tax Invoice Name" := Cust.Name;
                     "NCT Tax Invoice Name 2" := Cust."Name 2";
                     "NCT Head Office" := Cust."NCT Head Office";
-                    "NCT Branch Code" := Cust."NCT Branch Code";
-                    if (NOT "NCT Head Office") AND ("NCT Branch Code" = '') then
+                    "NCT VAT Branch Code" := Cust."NCT VAT Branch Code";
+                    if (NOT "NCT Head Office") AND ("NCT VAT Branch Code" = '') then
                         "NCT Head Office" := true;
                     "NCT Tax Invoice Address" := Cust.Address;
                     "NCT Tax Invoice Address 2" := Cust."Address 2";
@@ -74,8 +74,8 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                         "NCT Tax Invoice Name" := Vendor.Name;
                         "NCT Tax Invoice Name 2" := Vendor."Name 2";
                         "NCT Head Office" := Vendor."NCT Head Office";
-                        "NCT Branch Code" := Vendor."NCT Branch Code";
-                        if (NOT "NCT Head Office") AND ("NCT Branch Code" = '') then
+                        "NCT VAT Branch Code" := Vendor."NCT VAT Branch Code";
+                        if (NOT "NCT Head Office") AND ("NCT VAT Branch Code" = '') then
                             "NCT Head Office" := true;
                         "NCT Tax Invoice Address" := Vendor.Address;
                         "NCT Tax Invoice Address 2" := Vendor."Address 2";
@@ -104,27 +104,27 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             trigger OnValidate()
             begin
                 if "NCT Head Office" then
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
 
             end;
 
         }
-        field(80011; "NCT Branch Code"; Code[5])
+        field(80011; "NCT VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
 
             begin
-                if "NCT Branch Code" <> '' then begin
-                    if StrLen("NCT Branch Code") <> 5 then
-                        Error('Branch Code must be 5 characters');
+                if "NCT VAT Branch Code" <> '' then begin
+                    if StrLen("NCT VAT Branch Code") <> 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "NCT Head Office" := false;
 
                 end;
-                if ("NCT Branch Code" = '00000') OR ("NCT Branch Code" = '') then begin
+                if ("NCT VAT Branch Code" = '00000') OR ("NCT VAT Branch Code" = '') then begin
                     "NCT Head Office" := TRUE;
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
 
                 end;
             end;
@@ -499,14 +499,14 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                     if not Cust.GET("Account No.") then
                         Cust.init();
                     "NCT Head Office" := Cust."NCT Head Office";
-                    "NCT Branch Code" := Cust."NCT Branch Code";
+                    "NCT VAT Branch Code" := Cust."NCT VAT Branch Code";
                     "VAT Registration No." := Cust."VAT Registration No.";
                 end;
                 if "Account Type" = "Account Type"::Vendor then begin
                     if not Vend.GET("Account No.") then
                         Vend.init();
                     "NCT Head Office" := Vend."NCT Head Office";
-                    "NCT Branch Code" := Vend."NCT Branch Code";
+                    "NCT VAT Branch Code" := Vend."NCT VAT Branch Code";
                     "VAT Registration No." := Vend."VAT Registration No.";
                 end;
 
@@ -519,7 +519,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                 if xRec."Account Type" <> "Account Type" then begin
                     "NCT Require Screen Detail" := "NCT Require Screen Detail"::" ";
                     "NCT Head Office" := false;
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
                 end;
             end;
         }

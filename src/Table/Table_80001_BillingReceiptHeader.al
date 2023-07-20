@@ -68,8 +68,8 @@ Table 80001 "NCT Billing Receipt Header"
                             rec."VAT Bus. Posting Group" := Cust."VAT Bus. Posting Group";
                             rec."Vat Registration No." := cust."VAT Registration No.";
                             rec."Head Office" := cust."NCT Head Office";
-                            rec."Branch Code" := Cust."NCT Branch Code";
-                            if (NOT rec."Head Office") AND (rec."Branch Code" = '') then
+                            rec."VAT Branch Code" := Cust."NCT VAT Branch Code";
+                            if (NOT rec."Head Office") AND (rec."VAT Branch Code" = '') then
                                 rec."Head Office" := true;
                             if rec."Document Date" = 0D then
                                 rec."Document Date" := TODAY;
@@ -93,8 +93,8 @@ Table 80001 "NCT Billing Receipt Header"
                             rec."VAT Bus. Posting Group" := Vend."VAT Bus. Posting Group";
                             rec."Vat Registration No." := Vend."VAT Registration No.";
                             rec."Head Office" := Vend."NCT Head Office";
-                            rec."Branch Code" := Vend."NCT Branch Code";
-                            if (NOT rec."Head Office") AND (rec."Branch Code" = '') then
+                            rec."VAT Branch Code" := Vend."NCT VAT Branch Code";
+                            if (NOT rec."Head Office") AND (rec."VAT Branch Code" = '') then
                                 rec."Head Office" := true;
                             if rec."Document Date" = 0D then
                                 rec."Document Date" := TODAY;
@@ -266,29 +266,29 @@ Table 80001 "NCT Billing Receipt Header"
             trigger OnValidate()
             begin
                 if "Head Office" then
-                    "Branch Code" := '';
+                    "VAT Branch Code" := '';
             end;
 
         }
-        field(30; "Branch Code"; Code[5])
+        field(30; "VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
-            TableRelation = IF ("Document Type" = FILTER('Sales Billing|Sales Receipt')) "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Bill/Pay-to Cust/Vend No."))
+            Caption = 'VAT Branch Code';
+            TableRelation = IF ("Document Type" = FILTER('Sales Billing|Sales Receipt')) "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Bill/Pay-to Cust/Vend No."))
             ELSE
-            IF ("Document Type" = FILTER("Purchase Billing")) "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("Bill/Pay-to Cust/Vend No."));
+            IF ("Document Type" = FILTER("Purchase Billing")) "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = CONST(Vendor), "Source No." = FIELD("Bill/Pay-to Cust/Vend No."));
             DataClassification = CustomerContent;
 
             trigger OnValidate()
             begin
-                if "Branch Code" <> '' then begin
-                    if StrLen("Branch Code") < 5 then
-                        Error('Branch Code must be 5 characters');
+                if "VAT Branch Code" <> '' then begin
+                    if StrLen("VAT Branch Code") < 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "Head Office" := false;
 
                 end;
-                if ("Branch Code" = '00000') OR ("Branch Code" = '') then begin
+                if ("VAT Branch Code" = '00000') OR ("VAT Branch Code" = '') then begin
                     "Head Office" := TRUE;
-                    "Branch Code" := '';
+                    "VAT Branch Code" := '';
 
                 end;
 

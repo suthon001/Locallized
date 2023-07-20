@@ -8,7 +8,7 @@ page 80021 "NCT Tax Move Month"
     ModifyAllowed = false;
     DelayedInsert = false;
     PageType = List;
-    Caption = 'Tax - Move Month';
+    Caption = 'Move Month';
     SourceTableTemporary = true;
     UsageCategory = None;
     layout
@@ -18,6 +18,11 @@ page 80021 "NCT Tax Move Month"
             repeater("General")
             {
                 Caption = 'General';
+                field("Document No."; rec."Document No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Document No. field.';
+                }
                 field("Year-Month"; Rec."Year-Month")
                 {
                     ApplicationArea = all;
@@ -49,8 +54,8 @@ page 80021 "NCT Tax Move Month"
     var
         TaxReportLine: Record "NCT Tax & WHT Line";
     begin
-
-
+        if not confirm(StrSubstNo('Do you want move to %1', rec."Document No.")) then
+            exit;
         if TaxLine.FindFirst() then
             repeat
                 TaxReportLine.Init();
@@ -63,6 +68,7 @@ page 80021 "NCT Tax Move Month"
                 TaxLine.Delete();
 
             until TaxLine.next() = 0;
+
 
     end;
 

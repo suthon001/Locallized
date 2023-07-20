@@ -13,7 +13,6 @@ page 80020 "NCT Goods Receipt Note Subform"
     PageType = ListPart;
     SourceTable = "Purchase Line";
     SourceTableView = WHERE("Document Type" = FILTER(Order));
-
     layout
     {
         area(content)

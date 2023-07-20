@@ -12,15 +12,15 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
             trigger OnValidate()
             begin
                 if "NCT Head Office" then
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
 
             end;
 
         }
-        field(80001; "NCT Branch Code"; code[5])
+        field(80001; "NCT VAT Branch Code"; code[5])
         {
-            Caption = 'Branch Code';
-            TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("No."));
+            Caption = 'VAT Branch Code';
+            TableRelation = "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("No."));
             ValidateTableRelation = true;
             DataClassification = CustomerContent;
             trigger OnValidate()
@@ -32,22 +32,22 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
                 CustVendBarch.reset();
                 CustVendBarch.SetRange("Source Type", CustVendBarch."Source Type"::Customer);
                 CustVendBarch.SetRange("Source No.", "No.");
-                CustVendBarch.SetRange("Branch Code", "NCT Branch Code");
+                CustVendBarch.SetRange("VAT Branch Code", "NCT VAT Branch Code");
                 if CustVendBarch.FindFirst() then begin
                     "VAT Registration No." := CustVendBarch."Vat Registration No.";
                     if CustVendBarch."Head Office" then
-                        "NCT Branch Code" := '00000';
+                        "NCT VAT Branch Code" := '00000';
                 end;
 
-                if "NCT Branch Code" <> '' then begin
-                    if StrLen("NCT Branch Code") < 5 then
-                        Error('Branch Code must be 5 characters');
+                if "NCT VAT Branch Code" <> '' then begin
+                    if StrLen("NCT VAT Branch Code") < 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "NCT Head Office" := false;
-                    UpdateVendorCustBranch(4, "NCT Branch Code", false);
+                    UpdateVendorCustBranch(4, "NCT VAT Branch Code", false);
                 end;
-                if "NCT Branch Code" = '00000' then begin
+                if "NCT VAT Branch Code" = '00000' then begin
                     "NCT Head Office" := TRUE;
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
                 end;
                 UpdateVendorCustBranch(4, TempSendtoUpdate, TRUE);
             end;

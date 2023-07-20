@@ -58,7 +58,7 @@ report 80010 "NCT Withholding"
                 column(Establishment_TaxReportLine; "Head Office")
                 {
                 }
-                column(BranchNo_TaxReportLine; "Branch Code")
+                column(BranchNo_TaxReportLine; "VAT Branch Code")
                 {
                 }
                 column(VATRegistrationNo_TaxReportLine; "VAT Registration No.")

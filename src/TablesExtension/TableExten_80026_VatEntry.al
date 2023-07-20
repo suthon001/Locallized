@@ -49,9 +49,9 @@ tableextension 80026 "NCT Vat Entry" extends "VAT Entry"
             DataClassification = CustomerContent;
 
         }
-        field(80009; "NCT Branch Code"; Code[5])
+        field(80009; "NCT VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = CustomerContent;
 
         }

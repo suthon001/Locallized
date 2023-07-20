@@ -17,10 +17,10 @@ tableextension 80019 "NCT ExtenSalesInvoice Header" extends "Sales Invoice Heade
             Caption = 'Head Office';
             DataClassification = CustomerContent;
         }
-        field(80002; "NCT Branch Code"; Code[5])
+        field(80002; "NCT VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
-            TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Sell-to Customer No."));
+            Caption = 'VAT Branch Code';
+            TableRelation = "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Sell-to Customer No."));
             DataClassification = CustomerContent;
 
 

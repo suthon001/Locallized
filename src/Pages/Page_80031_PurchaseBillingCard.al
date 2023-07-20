@@ -120,10 +120,10 @@ page 80031 "NCT Purchase Billing Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Head Office field.';
                 }
-                field("Branch Code"; Rec."Branch Code")
+                field("VAT Branch Code"; Rec."VAT Branch Code")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Branch Code field.';
+                    ToolTip = 'Specifies the value of the VAT Branch Code field.';
                 }
                 field("Vat Registration No."; Rec."Vat Registration No.")
                 {

@@ -123,7 +123,7 @@ report 80077 "NCT AP CN Voucher (Post)"
                 if "NCT Head Office" then
                     BranchCode := 'สำนักงานใหญ่'
                 else
-                    BranchCode := "NCT Branch Code";
+                    BranchCode := "NCT VAT Branch Code";
 
             end;
         }

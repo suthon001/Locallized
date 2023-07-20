@@ -13,7 +13,7 @@ pageextension 80066 "NCT Sales Invoice Card" extends "Sales Invoice"
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -28,7 +28,7 @@ pageextension 80066 "NCT Sales Invoice Card" extends "Sales Invoice"
         {
             Visible = true;
         }
-        moveafter("Branch Code"; "VAT Registration No.", "Posting Description")
+        moveafter("VAT Branch Code"; "VAT Registration No.", "Posting Description")
         modify("No.")
         {
             Visible = true;

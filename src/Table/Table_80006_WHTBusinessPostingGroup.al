@@ -67,24 +67,24 @@ table 80006 "NCT WHT Business Posting Group"
             trigger OnValidate()
             begin
                 if "Head Office" then
-                    "Branch Code" := '';
+                    "VAT Branch Code" := '';
             end;
 
         }
-        field(11; "Branch Code"; Text[5])
+        field(11; "VAT Branch Code"; Text[5])
         {
-            Description = 'Branch Code';
+            Description = 'VAT Branch Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "Branch Code" <> '' then begin
-                    if StrLen("Branch Code") < 5 then
-                        Error('Branch Code must be 5 characters');
+                if "VAT Branch Code" <> '' then begin
+                    if StrLen("VAT Branch Code") < 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "Head Office" := false;
                 end;
-                if "Branch Code" = '00000' then begin
+                if "VAT Branch Code" = '00000' then begin
                     "Head Office" := TRUE;
-                    "Branch Code" := '';
+                    "VAT Branch Code" := '';
                 end;
             end;
         }

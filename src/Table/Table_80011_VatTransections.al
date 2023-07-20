@@ -479,9 +479,9 @@ table 80011 "NCT VAT Transections"
             DataClassification = CustomerContent;
 
         }
-        field(80009; "Branch Code"; Code[5])
+        field(80009; "VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = CustomerContent;
 
         }

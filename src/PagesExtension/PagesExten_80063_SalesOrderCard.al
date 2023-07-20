@@ -12,7 +12,7 @@ pageextension 80063 "NCT Sales Order Card" extends "Sales Order"
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
@@ -28,7 +28,7 @@ pageextension 80063 "NCT Sales Order Card" extends "Sales Order"
         {
             Visible = true;
         }
-        moveafter("Branch Code"; "VAT Registration No.")
+        moveafter("VAT Branch Code"; "VAT Registration No.")
         modify("No.")
         {
             Visible = true;

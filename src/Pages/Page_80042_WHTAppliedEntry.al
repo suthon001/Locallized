@@ -91,10 +91,10 @@ page 80042 "NCT WHT Applied Entry"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Head Office field.';
                 }
-                field("Branch Code"; Rec."Branch Code")
+                field("VAT Branch Code"; Rec."VAT Branch Code")
                 {
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Branch Code field.';
+                    ToolTip = 'Specifies the value of the VAT Branch Code field.';
                 }
                 field("WHT Post Code"; Rec."WHT Post Code")
                 {

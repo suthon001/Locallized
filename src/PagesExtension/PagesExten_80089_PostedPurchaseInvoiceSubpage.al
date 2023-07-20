@@ -83,7 +83,7 @@ pageextension 80089 "NCT Posted Purch. Invoice Sub" extends "Posted Purch. Invoi
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';

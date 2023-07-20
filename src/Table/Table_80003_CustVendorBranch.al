@@ -32,24 +32,24 @@ table 80003 "NCT Customer & Vendor Branch"
             trigger OnValidate()
             begin
                 if "Head Office" then
-                    "Branch Code" := '';
+                    "VAT Branch Code" := '';
             end;
 
         }
-        field(4; "Branch Code"; Code[5])
+        field(4; "VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "Branch Code" <> '' then begin
-                    if StrLen("Branch Code") <> 5 then
-                        Error('Branch Code must be 5 characters');
+                if "VAT Branch Code" <> '' then begin
+                    if StrLen("VAT Branch Code") <> 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "Head Office" := false;
                 end;
-                if ("Branch Code" = '00000') OR ("Branch Code" = '') then begin
+                if ("VAT Branch Code" = '00000') OR ("VAT Branch Code" = '') then begin
                     "Head Office" := TRUE;
-                    "Branch Code" := '';
+                    "VAT Branch Code" := '';
                 end;
             end;
         }
@@ -151,7 +151,7 @@ table 80003 "NCT Customer & Vendor Branch"
     }
     keys
     {
-        key(PK; "Source Type", "Source No.", "Head Office", "Branch Code")
+        key(PK; "Source Type", "Source No.", "Head Office", "VAT Branch Code")
         {
             Clustered = true;
         }

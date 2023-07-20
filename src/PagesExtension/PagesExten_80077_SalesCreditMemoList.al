@@ -14,10 +14,10 @@ pageextension 80077 "NCT Sales Creidt Lists" extends "Sales Credit Memos"
                 Caption = 'Head Office';
                 ToolTip = 'Specifies value of the field.';
             }
-            field("Branch Code"; Rec."NCT Branch Code")
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
             {
                 ApplicationArea = all;
-                Caption = 'Branch Code';
+                Caption = 'VAT Branch Code';
                 ToolTip = 'Specifies value of the field.';
             }
             field("VAT Registration No."; Rec."VAT Registration No.")

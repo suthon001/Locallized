@@ -19,28 +19,28 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
             trigger OnValidate()
             begin
                 if "NCT Head Office" then
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
             end;
 
 
         }
-        field(80002; "NCT Branch Code"; Code[5])
+        field(80002; "NCT VAT Branch Code"; Code[5])
         {
-            Caption = 'Branch Code';
-            TableRelation = "NCT Customer & Vendor Branch"."Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Sell-to Customer No."));
+            Caption = 'VAT Branch Code';
+            TableRelation = "NCT Customer & Vendor Branch"."VAT Branch Code" WHERE("Source Type" = CONST(Customer), "Source No." = FIELD("Sell-to Customer No."));
             DataClassification = CustomerContent;
             trigger OnValidate()
 
             begin
-                if "NCT Branch Code" <> '' then begin
-                    if StrLen("NCT Branch Code") <> 5 then
-                        Error('Branch Code must be 5 characters');
+                if "NCT VAT Branch Code" <> '' then begin
+                    if StrLen("NCT VAT Branch Code") <> 5 then
+                        Error('VAT Branch Code must be 5 characters');
                     "NCT Head Office" := false;
 
                 end;
-                if ("NCT Branch Code" = '00000') OR ("NCT Branch Code" = '') then begin
+                if ("NCT VAT Branch Code" = '00000') OR ("NCT VAT Branch Code" = '') then begin
                     "NCT Head Office" := TRUE;
-                    "NCT Branch Code" := '';
+                    "NCT VAT Branch Code" := '';
 
                 end;
             end;
@@ -61,11 +61,11 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
                     VendCustPage.GetRecord(VendCustBranch);
                     if VendCustBranch."Head Office" then begin
                         "NCT Head Office" := true;
-                        "NCT Branch Code" := '';
+                        "NCT VAT Branch Code" := '';
                         "VAT Registration No." := VendCustBranch."Vat Registration No.";
                     end else
-                        if VendCustBranch."Branch Code" <> '' then begin
-                            "NCT Branch Code" := VendCustBranch."Branch Code";
+                        if VendCustBranch."VAT Branch Code" <> '' then begin
+                            "NCT VAT Branch Code" := VendCustBranch."VAT Branch Code";
                             "NCT Head Office" := false;
                             "VAT Registration No." := VendCustBranch."Vat Registration No.";
                         end;
@@ -136,8 +136,8 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
                     Cust.init();
 
                 "NCT Head Office" := Cust."NCT Head Office";
-                "NCT Branch Code" := Cust."NCT Branch Code";
-                if (NOT "NCT Head Office") AND ("NCT Branch Code" = '') then
+                "NCT VAT Branch Code" := Cust."NCT VAT Branch Code";
+                if (NOT "NCT Head Office") AND ("NCT VAT Branch Code" = '') then
                     "NCT Head Office" := true;
             end;
         }

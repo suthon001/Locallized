@@ -1,3 +1,6 @@
+/// <summary>
+/// Unknown NCT LCL Permission (ID 80000).
+/// </summary>
 permissionset 80000 "NCT LCL Permission"
 {
     Assignable = true;

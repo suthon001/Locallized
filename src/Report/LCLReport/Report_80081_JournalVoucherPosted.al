@@ -86,7 +86,7 @@ report 80081 "NCT Journal Voucher (Post)"
                     if "NCT Head Office" then
                         BranchCode := 'สำนักงานใหญ่'
                     else
-                        BranchCode := "NCT Branch Code";
+                        BranchCode := "NCT VAT Branch Code";
                 end;
             }
             trigger OnPreDataItem()

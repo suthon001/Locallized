@@ -103,7 +103,7 @@ report 80011 "NCT Sales Vat"
                     if "Head Office" then
                         Var_EstablishmentLine := '/'
                     else
-                        Var_Branch := "Branch Code";
+                        Var_Branch := "VAT Branch Code";
                 end;
 
 
@@ -125,7 +125,7 @@ report 80011 "NCT Sales Vat"
                     END ELSE BEGIN
 
                         var_BrandName := 'สาขาที่';
-                        var_BrandNo := VATBusPostingGroup."NCT Branch Code";
+                        var_BrandNo := VATBusPostingGroup."NCT VAT Branch Code";
                     END;
                 end else begin
                     Comtext[1] := CompanyInformation.Name + ' ' + CompanyInformation."Name 2";
@@ -139,7 +139,7 @@ report 80011 "NCT Sales Vat"
                     END ELSE BEGIN
 
                         var_BrandName := 'สาขาที่';
-                        var_BrandNo := CompanyInformation."NCT Branch Code";
+                        var_BrandNo := CompanyInformation."NCT VAT Branch Code";
                     END;
                 end;
 

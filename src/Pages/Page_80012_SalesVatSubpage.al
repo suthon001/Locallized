@@ -82,10 +82,10 @@ page 80012 "NCT Sales Vat Subpage"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Head Office field.';
                 }
-                field("Branch Code"; Rec."Branch Code")
+                field("VAT Branch Code"; Rec."VAT Branch Code")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Branch Code field.';
+                    ToolTip = 'Specifies the value of the VAT Branch Code field.';
                 }
                 field("VAT Registration No."; Rec."VAT Registration No.")
                 {

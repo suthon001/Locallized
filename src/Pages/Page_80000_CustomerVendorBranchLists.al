@@ -133,11 +133,11 @@ page 80000 "NCT Cust. & Vendor BranchLists"
                     Caption = 'Head Office';
                     ToolTip = 'Specifies the value of the Head Office field.';
                 }
-                field("Branch Code"; Rec."Branch Code")
+                field("VAT Branch Code"; Rec."VAT Branch Code")
                 {
                     ApplicationArea = All;
-                    Caption = 'Branch Code';
-                    ToolTip = 'Specifies the value of the Branch Code field.';
+                    Caption = 'VAT Branch Code';
+                    ToolTip = 'Specifies the value of the VAT Branch Code field.';
                 }
                 field("Vat Registration No."; Rec."Vat Registration No.")
                 {
