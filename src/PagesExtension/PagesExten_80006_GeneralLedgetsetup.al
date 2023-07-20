@@ -16,11 +16,6 @@ pageextension 80006 "NCT ExtenGeneralSetup" extends "General Ledger Setup"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the No. of Copy WHT Cert. field.';
                 }
-                field("No. of Perpage"; Rec."NCT No. of Perpage")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the No. of Perpage field.';
-                }
                 field("WHT Pre-Document Nos."; Rec."NCT WHT Document Nos.")
                 {
                     ApplicationArea = all;

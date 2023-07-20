@@ -17,12 +17,6 @@ tableextension 80005 "NCT ExtenPurcha&PayablesSetup" extends "Purchases & Payabl
             TableRelation = "No. Series";
             DataClassification = CustomerContent;
         }
-        field(80003; "NCT WHT Nos."; Code[20])
-        {
-            Caption = 'WHT Nos.';
-            TableRelation = "No. Series";
-            DataClassification = CustomerContent;
-        }
         field(80004; "NCT WHT03 Nos."; Code[20])
         {
             Caption = 'WHT03 Nos.';

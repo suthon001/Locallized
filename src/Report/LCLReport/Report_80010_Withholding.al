@@ -34,10 +34,6 @@ report 80010 "NCT Withholding"
             column(MonthName_TaxReportHeader; "Month Name")
             {
             }
-            column(NoofPerpage; GeneralLedgerSetup."NCT No. of Perpage")
-            {
-
-            }
             dataitem("Tax Report Line"; "NCT Tax & WHT Line")
             {
                 DataItemTableView = sorting("Tax Type", "Document No.", "Entry No.");
@@ -175,7 +171,7 @@ report 80010 "NCT Withholding"
                     TaxReportLineFind.SETFILTER("Document No.", '%1', "Document No.");
                     TaxReportLineFind.SETFILTER("WHT Document No.", '%1', "WHT Document No.");
                     TaxReportLineFind.SetFilter("WHT Product Posting Group", '<>%1', "WHT Product Posting Group");
-                    IF TaxReportLineFind.FIND('-') THEN begin
+                    IF TaxReportLineFind.FindFirst() THEN begin
                         //  REPEAT
                         //  i += 1;
                         WHTPercent[2] := TaxReportLineFind."WHT %";
@@ -201,7 +197,7 @@ report 80010 "NCT Withholding"
 
                 YesrPS := "Year No." + 543;
                 IF NOT Rec_WHTBusinessPostingGroup.GET(WHTBus) THEN
-                    CLEAR(Rec_WHTBusinessPostingGroup);
+                    Rec_WHTBusinessPostingGroup.Init();
             end;
         }
     }
@@ -235,8 +231,6 @@ report 80010 "NCT Withholding"
 
         CompanyInformation.GET();
         CompanyInformation.CALCFIELDS(Picture);
-        GeneralLedgerSetup.get();
-        GeneralLedgerSetup.TestField("NCT No. of Perpage");
     end;
 
     /// <summary> 
@@ -268,7 +262,7 @@ report 80010 "NCT Withholding"
         BaseAmount: array[2] of Decimal;
         VATAmount: array[2] of Decimal;
         TaxReportLineFind: Record "NCT Tax & WHT Line";
-        GeneralLedgerSetup: Record "General Ledger Setup";
+
         WHTBus: Code[100];
         WHTDate: Text;
 }

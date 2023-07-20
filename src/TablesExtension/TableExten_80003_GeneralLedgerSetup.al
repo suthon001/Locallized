@@ -11,12 +11,6 @@ tableextension 80003 "NCT ExtenGeneral Ledger Setup" extends "General Ledger Set
             MinValue = 0;
             DataClassification = CustomerContent;
         }
-        field(80001; "NCT No. of Perpage"; Integer)
-        {
-            Caption = 'No. of Perpage';
-            MinValue = 0;
-            DataClassification = CustomerContent;
-        }
         field(80002; "NCT WHT Certificate Caption 1"; Text[1024])
         {
             Caption = 'WHT Certificate Caption 1';

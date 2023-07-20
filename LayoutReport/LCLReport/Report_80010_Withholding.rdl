@@ -3794,9 +3794,6 @@ End Function</Code>
         <Field Name="MonthName_TaxReportHeader">
           <DataField>MonthName_TaxReportHeader</DataField>
         </Field>
-        <Field Name="NoofPerpage">
-          <DataField>NoofPerpage</DataField>
-        </Field>
         <Field Name="LineNo">
           <DataField>LineNo</DataField>
         </Field>
