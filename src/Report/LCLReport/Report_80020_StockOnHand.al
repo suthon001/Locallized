@@ -9,7 +9,7 @@ report 80020 "NCT Stock On Hand"
     PreviewMode = PrintLayout;
     ApplicationArea = all;
     UsageCategory = ReportsAndAnalysis;
-    Caption = 'Stock On Hand';
+    Caption = 'Report Stock On Hand';
 
     dataset
     {

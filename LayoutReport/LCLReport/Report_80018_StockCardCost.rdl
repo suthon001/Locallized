@@ -3765,7 +3765,7 @@
       <Width>27.70006cm</Width>
       <Page>
         <PageHeader>
-          <Height>3cm</Height>
+          <Height>2.41792cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -3790,7 +3790,7 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>CompanyNameEng</rd:DefaultName>
-              <Top>0.29167in</Top>
+              <Top>0.31667in</Top>
               <Left>0.00002in</Left>
               <Height>0.25in</Height>
               <Width>3.94792in</Width>
@@ -3811,7 +3811,7 @@
                       <Value>Stock Card</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
+                        <FontSize>14pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -3978,7 +3978,7 @@
                   <Style />
                 </Paragraph>
               </Paragraphs>
-              <Top>2.57667cm</Top>
+              <Top>1.94167cm</Top>
               <Left>0cm</Left>
               <Height>11pt</Height>
               <Width>27.7cm</Width>

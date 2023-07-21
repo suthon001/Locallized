@@ -23,17 +23,7 @@ tableextension 80007 "NCT ExtenItem Ledger Entry" extends "Item Ledger Entry"
             CalcFormula = Sum("Value Entry"."Cost Amount (Actual)" WHERE("Item Ledger Entry No." = FIELD("Entry No."), "Posting Date" = FIELD("NCT Date Filter")));
             Editable = false;
         }
-        field(80003; "NCT Charge Item Ledg.Entry No."; Integer)
-        {
-            Caption = 'Charge Item Ledger Entry No.';
-            DataClassification = SystemMetadata;
-        }
-        field(80004; "NCT Invoice No."; Code[30])
-        {
-            Caption = 'Invoice No.';
-            Editable = false;
-            DataClassification = SystemMetadata;
-        }
+
         field(80005; "NCT Gen. Bus. Posting Group"; Code[20])
         {
             Caption = 'Gen. Bus. Posting Group';

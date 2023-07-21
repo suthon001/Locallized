@@ -1274,13 +1274,13 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox25">
+                        <Textbox Name="BaseAmount_TaxReportLine">
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BaseAmountVAT7_TaxReportLine.Value+Fields!BaseAmountVAT0_TaxReportLine.Value</Value>
+                                  <Value>=Fields!BaseAmount_TaxReportLine.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -1291,7 +1291,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox25</rd:DefaultName>
+                          <rd:DefaultName>BaseAmount_TaxReportLine</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>DimGray</Color>
@@ -1470,7 +1470,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!BaseAmountVAT7_TaxReportLine.Value)+SUM(Fields!BaseAmountVAT0_TaxReportLine.Value)</Value>
+                                  <Value>=Sum(Fields!BaseAmount_TaxReportLine.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -1679,7 +1679,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!BaseAmountVAT7_TaxReportLine.Value)+SUM(Fields!BaseAmountVAT0_TaxReportLine.Value)</Value>
+                                  <Value>=Sum(Fields!BaseAmount_TaxReportLine.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>

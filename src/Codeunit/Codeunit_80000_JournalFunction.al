@@ -446,14 +446,13 @@ codeunit 80000 "NCT Journal Function"
     /// <param name="NewItemLedgEntry">Parameter of type Record "Item Ledger Entry".</param>
     local procedure "AfterInitItemLedgEntry"(ItemJournalLine: Record "Item Journal Line"; var NewItemLedgEntry: Record "Item Ledger Entry")
     begin
-        //  with ItemJournalLine do begin
-        NewItemLedgEntry."NCT Invoice No." := ItemJournalLine."Invoice No.";
+
         NewItemLedgEntry."NCT Gen. Bus. Posting Group" := ItemJournalLine."Gen. Bus. Posting Group";
         NewItemLedgEntry."NCT Vat Bus. Posting Group" := ItemJournalLine."NCT Vat Bus. Posting Group";
         NewItemLedgEntry."NCT Vendor/Customer Name" := ItemJournalLine."NCT Vendor/Customer Name";
         NewItemLedgEntry."NCT Bin Code" := ItemJournalLine."Bin Code";
         "NCT OnCopyItemLedgerFromItemJournal"(NewItemLedgEntry, ItemJournalLine);
-        //  end;
+
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyItemJnlLineFromSalesHeader', '', true, true)]
@@ -467,6 +466,7 @@ codeunit 80000 "NCT Journal Function"
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Invoice then
             ItemJnlLine."Invoice No." := SalesHeader."No.";
         ItemJnlLine."NCT Vendor/Customer Name" := SalesHeader."Sell-to Customer Name";
+
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyItemJnlLineFromPurchHeader', '', true, true)]

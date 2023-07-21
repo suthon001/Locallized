@@ -159,6 +159,8 @@ report 80018 "NCT Report Stock Card Cost"
                 }
 
                 trigger OnAfterGetRecord()
+                var
+                    ltValueEntry: Record "Value Entry";
                 begin
                     var_Pos := 0;
                     var_AmountPos := 0;
@@ -198,6 +200,16 @@ report 80018 "NCT Report Stock Card Cost"
                     var_TotalPos := var_TotalPos + var_Pos;
                     var_TotalNeg := var_TotalNeg + var_Neg;
                     var_TotalQuantity := var_TotalQuantity + "Item Ledger Entry".Quantity;
+
+
+                    ExternalDoc := '';
+                    "Item Ledger Entry".CalcFields("NCT Document Invoice No.");
+                    ltValueEntry.reset();
+                    ltValueEntry.SetRange("Item Ledger Entry No.", "Entry No.");
+                    ltValueEntry.SetFilter("Document No.", "Item Ledger Entry"."NCT Document Invoice No.");
+                    ltValueEntry.SetFilter("External Document No.", '<>%1', '');
+                    if ltValueEntry.FindFirst() then
+                        ExternalDoc := ltValueEntry."External Document No.";
                 end;
 
                 trigger OnPreDataItem()
@@ -210,7 +222,7 @@ report 80018 "NCT Report Stock Card Cost"
             trigger OnAfterGetRecord()
             var
                 ItemLedgerEntry: Record "Item Ledger Entry";
-                ltValueEntry: Record "Value Entry";
+
             begin
 
                 var_Description := Description + ' ' + "Description 2" + ' Base Unit of Measure ' + "Base Unit of Measure";
@@ -263,14 +275,7 @@ report 80018 "NCT Report Stock Card Cost"
                 var_OpeningBalance := var_OpeningBalance2;
                 var_Amount := var_Amount2;
                 var_UnitCost := var_UnitCost2;
-                ExternalDoc := "Item Ledger Entry"."External Document No.";
 
-                ltValueEntry.reset();
-                ltValueEntry.SetRange("Item Ledger Entry Type", ltValueEntry."Item Ledger Entry No.");
-                ltValueEntry.SetFilter("Document Type", '%1|%2', ltValueEntry."Document Type"::"Sales Invoice", ltValueEntry."Document Type"::"Purchase Invoice");
-                ltValueEntry.SetFilter("External Document No.", '<>%1', '');
-                if ltValueEntry.FindFirst() then
-                    ExternalDoc := ltValueEntry."External Document No.";
             end;
 
 
