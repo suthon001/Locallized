@@ -2,7 +2,7 @@ tableextension 80055 "NCT Detailed Cust. Ledg. Entry" extends "Detailed Cust. Le
 {
     fields
     {
-        field(80000; "Ref. Invoice_CN No."; Code[20])
+        field(80000; "NCT Ref. Invoice_CN No."; Code[20])
         {
             Caption = 'Ref. Invoice_CN No.';
             FieldClass = FlowField;
