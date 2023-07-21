@@ -93,10 +93,9 @@ report 80018 "NCT Report Stock Card Cost"
             dataitem("Item Ledger Entry"; "Item Ledger Entry")
             {
                 DataItemLink = "Item No." = FIELD("No."),
-                               "Posting Date" = FIELD("Date Filter");
+                               "Posting Date" = FIELD("Date Filter"), "Location Code" = field("Location Filter");
                 DataItemTableView = SORTING("Item No.", "Variant Code", "Posting Date")
                                     ORDER(Ascending);
-                RequestFilterFields = "Location Code", "Entry Type", "Document No.";
                 column(GlobalDimension1Code_ItemLedgerEntry; "Item Ledger Entry"."Global Dimension 1 Code")
                 {
                 }
