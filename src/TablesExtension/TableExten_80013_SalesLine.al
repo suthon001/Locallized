@@ -74,10 +74,9 @@ tableextension 80013 "NCT ExtenSales Line" extends "Sales Line"
             trigger OnAfterValidate()
             begin
                 if type = Type::"G/L Account" then
-                    if "No." <> '' then
-                        Validate("Gen. Prod. Posting Group", 'GL')
-                    else
+                    if "No." = '' then
                         Validate("Gen. Prod. Posting Group", '')
+
 
             end;
         }
