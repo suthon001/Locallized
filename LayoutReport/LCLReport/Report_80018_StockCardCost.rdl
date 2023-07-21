@@ -11,196 +11,6 @@
       <rd:DataSourceID>5352b826-8e4e-4728-a8f1-ec89c9ef744d</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="Var_USERID">
-          <DataField>Var_USERID</DataField>
-        </Field>
-        <Field Name="Name_CompanyInfo">
-          <DataField>Name_CompanyInfo</DataField>
-        </Field>
-        <Field Name="Address_CompanyInfo">
-          <DataField>Address_CompanyInfo</DataField>
-        </Field>
-        <Field Name="Address2_CompanyInfo">
-          <DataField>Address2_CompanyInfo</DataField>
-        </Field>
-        <Field Name="City_CompanyInfo">
-          <DataField>City_CompanyInfo</DataField>
-        </Field>
-        <Field Name="PostCode_CompanyInfo">
-          <DataField>PostCode_CompanyInfo</DataField>
-        </Field>
-        <Field Name="VATRegistration_CompanyInfo">
-          <DataField>VATRegistration_CompanyInfo</DataField>
-        </Field>
-        <Field Name="No_Item">
-          <DataField>No_Item</DataField>
-        </Field>
-        <Field Name="var_Description">
-          <DataField>var_Description</DataField>
-        </Field>
-        <Field Name="var_ItemNo">
-          <DataField>var_ItemNo</DataField>
-        </Field>
-        <Field Name="var_ItemDateFilter">
-          <DataField>var_ItemDateFilter</DataField>
-        </Field>
-        <Field Name="var_ItemLocationFilter">
-          <DataField>var_ItemLocationFilter</DataField>
-        </Field>
-        <Field Name="var_ItemProductGroupCode">
-          <DataField>var_ItemProductGroupCode</DataField>
-        </Field>
-        <Field Name="var_ItemLedDocumentNo">
-          <DataField>var_ItemLedDocumentNo</DataField>
-        </Field>
-        <Field Name="var_ItemLedLocationCode">
-          <DataField>var_ItemLedLocationCode</DataField>
-        </Field>
-        <Field Name="var_ItemLedEntryType">
-          <DataField>var_ItemLedEntryType</DataField>
-        </Field>
-        <Field Name="var_OpeningBalance">
-          <DataField>var_OpeningBalance</DataField>
-        </Field>
-        <Field Name="var_OpeningBalanceFormat">
-          <DataField>var_OpeningBalanceFormat</DataField>
-        </Field>
-        <Field Name="var_Amount">
-          <DataField>var_Amount</DataField>
-        </Field>
-        <Field Name="var_AmountFormat">
-          <DataField>var_AmountFormat</DataField>
-        </Field>
-        <Field Name="var_UnitCost">
-          <DataField>var_UnitCost</DataField>
-        </Field>
-        <Field Name="var_UnitCostFormat">
-          <DataField>var_UnitCostFormat</DataField>
-        </Field>
-        <Field Name="var_Amount2">
-          <DataField>var_Amount2</DataField>
-        </Field>
-        <Field Name="var_Amount2Format">
-          <DataField>var_Amount2Format</DataField>
-        </Field>
-        <Field Name="var_UnitCost2">
-          <DataField>var_UnitCost2</DataField>
-        </Field>
-        <Field Name="var_UnitCost2Format">
-          <DataField>var_UnitCost2Format</DataField>
-        </Field>
-        <Field Name="var_OpeningBalance2">
-          <DataField>var_OpeningBalance2</DataField>
-        </Field>
-        <Field Name="var_OpeningBalance2Format">
-          <DataField>var_OpeningBalance2Format</DataField>
-        </Field>
-        <Field Name="BaseUnitofMeasure_Item">
-          <DataField>BaseUnitofMeasure_Item</DataField>
-        </Field>
-        <Field Name="ItemFilter">
-          <DataField>ItemFilter</DataField>
-        </Field>
-        <Field Name="GlobalDimension1Code_ItemLedgerEntry">
-          <DataField>GlobalDimension1Code_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="PostingDate_ItemLedgerEntry">
-          <DataField>PostingDate_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="DocumentNo_ItemLedgerEntry">
-          <DataField>DocumentNo_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="ExtDocumentNo_ItemLedgerEntry">
-          <DataField>ExtDocumentNo_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="InvoiceNo_ItemLedgerEntry">
-          <DataField>InvoiceNo_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="LocationCode_ItemLedgerEntry">
-          <DataField>LocationCode_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="Quantity_ItemLedgerEntry">
-          <DataField>Quantity_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="Quantity_ItemLedgerEntryFormat">
-          <DataField>Quantity_ItemLedgerEntryFormat</DataField>
-        </Field>
-        <Field Name="EntryType_ItemLedgerEntry">
-          <DataField>EntryType_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="OrderNo_ItemLedgerEntry">
-          <DataField>OrderNo_ItemLedgerEntry</DataField>
-        </Field>
-        <Field Name="var_Neg">
-          <DataField>var_Neg</DataField>
-        </Field>
-        <Field Name="var_NegFormat">
-          <DataField>var_NegFormat</DataField>
-        </Field>
-        <Field Name="var_UnitCostNeg">
-          <DataField>var_UnitCostNeg</DataField>
-        </Field>
-        <Field Name="var_UnitCostNegFormat">
-          <DataField>var_UnitCostNegFormat</DataField>
-        </Field>
-        <Field Name="var_AmountNeg">
-          <DataField>var_AmountNeg</DataField>
-        </Field>
-        <Field Name="var_AmountNegFormat">
-          <DataField>var_AmountNegFormat</DataField>
-        </Field>
-        <Field Name="var_Pos">
-          <DataField>var_Pos</DataField>
-        </Field>
-        <Field Name="var_PosFormat">
-          <DataField>var_PosFormat</DataField>
-        </Field>
-        <Field Name="var_UnitCostPos">
-          <DataField>var_UnitCostPos</DataField>
-        </Field>
-        <Field Name="var_UnitCostPosFormat">
-          <DataField>var_UnitCostPosFormat</DataField>
-        </Field>
-        <Field Name="var_AmountPos">
-          <DataField>var_AmountPos</DataField>
-        </Field>
-        <Field Name="var_AmountPosFormat">
-          <DataField>var_AmountPosFormat</DataField>
-        </Field>
-        <Field Name="var_TotalQuantity">
-          <DataField>var_TotalQuantity</DataField>
-        </Field>
-        <Field Name="var_TotalQuantityFormat">
-          <DataField>var_TotalQuantityFormat</DataField>
-        </Field>
-        <Field Name="var_TotalPos">
-          <DataField>var_TotalPos</DataField>
-        </Field>
-        <Field Name="var_TotalPosFormat">
-          <DataField>var_TotalPosFormat</DataField>
-        </Field>
-        <Field Name="var_TotalNeg">
-          <DataField>var_TotalNeg</DataField>
-        </Field>
-        <Field Name="var_TotalNegFormat">
-          <DataField>var_TotalNegFormat</DataField>
-        </Field>
-        <Field Name="var_flightno">
-          <DataField>var_flightno</DataField>
-        </Field>
-        <Field Name="var_ShowSummary">
-          <DataField>var_ShowSummary</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -4195,12 +4005,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -4273,4 +4077,194 @@ LK/qVFFYRi0rN3IrVFObkla/RbfI+S/+Cwn7E/if9uv9nzw74X8K3Wn2d9pfiKPVJXvN+wxrbXERA2Kx
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="Var_USERID">
+          <DataField>Var_USERID</DataField>
+        </Field>
+        <Field Name="Name_CompanyInfo">
+          <DataField>Name_CompanyInfo</DataField>
+        </Field>
+        <Field Name="Address_CompanyInfo">
+          <DataField>Address_CompanyInfo</DataField>
+        </Field>
+        <Field Name="Address2_CompanyInfo">
+          <DataField>Address2_CompanyInfo</DataField>
+        </Field>
+        <Field Name="City_CompanyInfo">
+          <DataField>City_CompanyInfo</DataField>
+        </Field>
+        <Field Name="PostCode_CompanyInfo">
+          <DataField>PostCode_CompanyInfo</DataField>
+        </Field>
+        <Field Name="VATRegistration_CompanyInfo">
+          <DataField>VATRegistration_CompanyInfo</DataField>
+        </Field>
+        <Field Name="No_Item">
+          <DataField>No_Item</DataField>
+        </Field>
+        <Field Name="var_Description">
+          <DataField>var_Description</DataField>
+        </Field>
+        <Field Name="var_ItemNo">
+          <DataField>var_ItemNo</DataField>
+        </Field>
+        <Field Name="var_ItemDateFilter">
+          <DataField>var_ItemDateFilter</DataField>
+        </Field>
+        <Field Name="var_ItemLocationFilter">
+          <DataField>var_ItemLocationFilter</DataField>
+        </Field>
+        <Field Name="var_ItemProductGroupCode">
+          <DataField>var_ItemProductGroupCode</DataField>
+        </Field>
+        <Field Name="var_ItemLedDocumentNo">
+          <DataField>var_ItemLedDocumentNo</DataField>
+        </Field>
+        <Field Name="var_ItemLedLocationCode">
+          <DataField>var_ItemLedLocationCode</DataField>
+        </Field>
+        <Field Name="var_ItemLedEntryType">
+          <DataField>var_ItemLedEntryType</DataField>
+        </Field>
+        <Field Name="var_OpeningBalance">
+          <DataField>var_OpeningBalance</DataField>
+        </Field>
+        <Field Name="var_OpeningBalanceFormat">
+          <DataField>var_OpeningBalanceFormat</DataField>
+        </Field>
+        <Field Name="var_Amount">
+          <DataField>var_Amount</DataField>
+        </Field>
+        <Field Name="var_AmountFormat">
+          <DataField>var_AmountFormat</DataField>
+        </Field>
+        <Field Name="var_UnitCost">
+          <DataField>var_UnitCost</DataField>
+        </Field>
+        <Field Name="var_UnitCostFormat">
+          <DataField>var_UnitCostFormat</DataField>
+        </Field>
+        <Field Name="var_Amount2">
+          <DataField>var_Amount2</DataField>
+        </Field>
+        <Field Name="var_Amount2Format">
+          <DataField>var_Amount2Format</DataField>
+        </Field>
+        <Field Name="var_UnitCost2">
+          <DataField>var_UnitCost2</DataField>
+        </Field>
+        <Field Name="var_UnitCost2Format">
+          <DataField>var_UnitCost2Format</DataField>
+        </Field>
+        <Field Name="var_OpeningBalance2">
+          <DataField>var_OpeningBalance2</DataField>
+        </Field>
+        <Field Name="var_OpeningBalance2Format">
+          <DataField>var_OpeningBalance2Format</DataField>
+        </Field>
+        <Field Name="BaseUnitofMeasure_Item">
+          <DataField>BaseUnitofMeasure_Item</DataField>
+        </Field>
+        <Field Name="ItemFilter">
+          <DataField>ItemFilter</DataField>
+        </Field>
+        <Field Name="GlobalDimension1Code_ItemLedgerEntry">
+          <DataField>GlobalDimension1Code_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="PostingDate_ItemLedgerEntry">
+          <DataField>PostingDate_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="DocumentNo_ItemLedgerEntry">
+          <DataField>DocumentNo_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="ExtDocumentNo_ItemLedgerEntry">
+          <DataField>ExtDocumentNo_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="InvoiceNo_ItemLedgerEntry">
+          <DataField>InvoiceNo_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="LocationCode_ItemLedgerEntry">
+          <DataField>LocationCode_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="Quantity_ItemLedgerEntry">
+          <DataField>Quantity_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="Quantity_ItemLedgerEntryFormat">
+          <DataField>Quantity_ItemLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="EntryType_ItemLedgerEntry">
+          <DataField>EntryType_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="OrderNo_ItemLedgerEntry">
+          <DataField>OrderNo_ItemLedgerEntry</DataField>
+        </Field>
+        <Field Name="var_Neg">
+          <DataField>var_Neg</DataField>
+        </Field>
+        <Field Name="var_NegFormat">
+          <DataField>var_NegFormat</DataField>
+        </Field>
+        <Field Name="var_UnitCostNeg">
+          <DataField>var_UnitCostNeg</DataField>
+        </Field>
+        <Field Name="var_UnitCostNegFormat">
+          <DataField>var_UnitCostNegFormat</DataField>
+        </Field>
+        <Field Name="var_AmountNeg">
+          <DataField>var_AmountNeg</DataField>
+        </Field>
+        <Field Name="var_AmountNegFormat">
+          <DataField>var_AmountNegFormat</DataField>
+        </Field>
+        <Field Name="var_Pos">
+          <DataField>var_Pos</DataField>
+        </Field>
+        <Field Name="var_PosFormat">
+          <DataField>var_PosFormat</DataField>
+        </Field>
+        <Field Name="var_UnitCostPos">
+          <DataField>var_UnitCostPos</DataField>
+        </Field>
+        <Field Name="var_UnitCostPosFormat">
+          <DataField>var_UnitCostPosFormat</DataField>
+        </Field>
+        <Field Name="var_AmountPos">
+          <DataField>var_AmountPos</DataField>
+        </Field>
+        <Field Name="var_AmountPosFormat">
+          <DataField>var_AmountPosFormat</DataField>
+        </Field>
+        <Field Name="var_TotalQuantity">
+          <DataField>var_TotalQuantity</DataField>
+        </Field>
+        <Field Name="var_TotalQuantityFormat">
+          <DataField>var_TotalQuantityFormat</DataField>
+        </Field>
+        <Field Name="var_TotalPos">
+          <DataField>var_TotalPos</DataField>
+        </Field>
+        <Field Name="var_TotalPosFormat">
+          <DataField>var_TotalPosFormat</DataField>
+        </Field>
+        <Field Name="var_TotalNeg">
+          <DataField>var_TotalNeg</DataField>
+        </Field>
+        <Field Name="var_TotalNegFormat">
+          <DataField>var_TotalNegFormat</DataField>
+        </Field>
+        <Field Name="var_flightno">
+          <DataField>var_flightno</DataField>
+        </Field>
+        <Field Name="var_ShowSummary">
+          <DataField>var_ShowSummary</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>
