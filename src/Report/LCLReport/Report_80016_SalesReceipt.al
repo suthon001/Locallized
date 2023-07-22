@@ -10,7 +10,7 @@ report 80016 "NCT Sales Receipt"
     UsageCategory = None;
     dataset
     {
-        dataitem(BWBillingReceiptHeader; "NCT Billing Receipt Header")
+        dataitem(BillingReceiptHeader; "NCT Billing Receipt Header")
         {
             DataItemTableView = sorting("Document Type", "No.");
             RequestFilterFields = "Document Type", "No.";

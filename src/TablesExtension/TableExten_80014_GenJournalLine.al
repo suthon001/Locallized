@@ -450,7 +450,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             CalcFormula = lookup("Gen. Journal Template".Type where(Name = field("Journal Template Name")));
             Caption = 'Template Source Type';
         }
-        field(80055; "Ref. Billing & Receipt No."; code[30])
+        field(80055; "NCT Ref. Billing & Receipt No."; code[30])
         {
             Editable = false;
             DataClassification = CustomerContent;

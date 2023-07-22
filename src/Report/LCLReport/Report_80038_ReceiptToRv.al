@@ -60,7 +60,7 @@ report 80038 "NCT Recript to CashReceipt"
                 GenJnlLine.VALIDATE("External Document No.", "No.");
                 GenJnlLine.VALIDATE("Amount (LCY)", -"Amount (LCY)");
                 GenJnlLine."Applies-to ID" := DocumentNo;
-                GenJnlLine."Ref. Billing & Receipt No." := "No.";
+                GenJnlLine."NCT Ref. Billing & Receipt No." := "No.";
 
                 GenJnlLine.MODIFY();
 
@@ -92,7 +92,7 @@ report 80038 "NCT Recript to CashReceipt"
                     GenJnlLine.VALIDATE("Document Date", "Prepaid WHT Date");
                     GenJnlLine.VALIDATE("External Document No.", "Prepaid WHT No.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Prepaid WHT Amount (LCY)");
-                    GenJnlLine."Ref. Billing & Receipt No." := "No.";
+                    GenJnlLine."NCT Ref. Billing & Receipt No." := "No.";
                     GenJnlLine.MODIFY();
                 END;
                 //Insert Bank Fee
@@ -112,7 +112,7 @@ report 80038 "NCT Recript to CashReceipt"
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
                     GenJnlLine.VALIDATE("Account No.", "Bank Fee Acc.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Bank Fee Amount (LCY)");
-                    GenJnlLine."Ref. Billing & Receipt No." := "No.";
+                    GenJnlLine."NCT Ref. Billing & Receipt No." := "No.";
                     GenJnlLine.MODIFY();
                 END;
                 //Insert Diff Amount
@@ -132,7 +132,7 @@ report 80038 "NCT Recript to CashReceipt"
                     GenJnlLine.VALIDATE("Account Type", GenJnlLine."Account Type"::"G/L Account");
                     GenJnlLine.VALIDATE("Account No.", "Diff Amount Acc.");
                     GenJnlLine.VALIDATE("Amount (LCY)", "Diff Amount (LCY)");
-                    GenJnlLine."Ref. Billing & Receipt No." := "No.";
+                    GenJnlLine."NCT Ref. Billing & Receipt No." := "No.";
                     GenJnlLine.MODIFY();
                 END;
                 //Insert Receive Line
@@ -159,7 +159,7 @@ report 80038 "NCT Recript to CashReceipt"
                     GenJnlLine.VALIDATE("External Document No.", BillingHeader."Cheque No.");
                 GenJnlLine.Description := COPYSTR('Receive From ' + BillingHeader."Bill/Pay-to Cust/Vend Name", 1, 100);
                 GenJnlLine.VALIDATE("Amount (LCY)", BillingHeader."Receive & Payment Amount");
-                GenJnlLine."Ref. Billing & Receipt No." := "No.";
+                GenJnlLine."NCT Ref. Billing & Receipt No." := "No.";
                 GenJnlLine.MODIFY();
                 BillingHeader."Journal Document No." := DocumentNo;
                 BillingHeader."Status" := BillingHeader."Status"::"Created to Journal";

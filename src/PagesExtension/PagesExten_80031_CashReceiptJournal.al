@@ -228,7 +228,7 @@ pageextension 80031 "NCT Receipt Journal" extends "Cash Receipt Journal"
     var
         PurchaseBilling: Record "NCT Billing Receipt Header";
     begin
-        if PurchaseBilling.GET(PurchaseBilling."Document Type"::"Sales Receipt", rec."Ref. Billing & Receipt No.") then begin
+        if PurchaseBilling.GET(PurchaseBilling."Document Type"::"Sales Receipt", rec."NCT Ref. Billing & Receipt No.") then begin
             PurchaseBilling."Status" := PurchaseBilling."Status"::Released;
             PurchaseBilling."Create to Journal" := false;
             PurchaseBilling.Modify();

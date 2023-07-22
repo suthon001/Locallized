@@ -52,11 +52,18 @@ tableextension 80007 "NCT ExtenItem Ledger Entry" extends "Item Ledger Entry"
             DataClassification = CustomerContent;
             Caption = 'Bin Code';
         }
-        field(80010; "NCT Document Invoice No."; Code[30])
+        field(80010; "NCT Purchase Invoice No."; Code[30])
+        {
+            Caption = 'Purchase Invoice No.';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Value Entry"."Document No." WHERE("Item Ledger Entry No." = field("Entry No."), "Document Type" = filter("Purchase Credit Memo" | "Purchase Invoice")));
+            Editable = false;
+        }
+        field(80011; "NCT Document Invoice No."; Code[30])
         {
             Caption = 'Document Invoice No.';
             FieldClass = FlowField;
-            CalcFormula = lookup("Value Entry"."Document No." WHERE("Item Ledger Entry No." = field("Entry No."), "Document Type" = filter("Sales Invoice" | "Purchase Invoice")));
+            CalcFormula = lookup("Value Entry"."Document No." WHERE("Item Ledger Entry No." = field("Entry No."), "Document Type" = filter("Purchase Credit Memo" | "Purchase Invoice" | "Sales Credit Memo" | "Sales Invoice")));
             Editable = false;
         }
 

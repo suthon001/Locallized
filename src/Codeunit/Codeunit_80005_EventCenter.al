@@ -24,7 +24,7 @@ codeunit 80005 "NCT EventFunction"
 
         if rec."Applies-to Doc. No." <> xRec."Applies-to Doc. No." then
             if (rec."Applies-to Doc. No." <> '') and (rec."Account Type" = rec."Account Type"::Vendor) then begin
-                if rec."Ref. Billing & Receipt No." = '' then begin
+                if rec."NCT Ref. Billing & Receipt No." = '' then begin
                     PurchaseBillingLine.reset();
                     PurchaseBillingLine.SetRange("Document Type", PurchaseBillingLine."Document Type"::"Purchase Billing");
                     PurchaseBillingLine.SetRange("Source Document No.", rec."Applies-to Doc. No.");
@@ -51,7 +51,7 @@ codeunit 80005 "NCT EventFunction"
             VendLdgEntry.SetRange("Applies-to ID", GenJournalLine."Document No.");
             if VendLdgEntry.FindSet() then begin
                 repeat
-                    if GenJournalLine."Ref. Billing & Receipt No." = '' then begin
+                    if GenJournalLine."NCT Ref. Billing & Receipt No." = '' then begin
 
                         PurchaseBillingLine.reset();
                         PurchaseBillingLine.SetRange("Document Type", PurchaseBillingLine."Document Type"::"Purchase Billing");

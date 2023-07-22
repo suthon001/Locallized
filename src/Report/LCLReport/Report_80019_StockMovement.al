@@ -87,7 +87,7 @@ report 80019 "NCT Stock Movement"
                 column(DocumentNo_ItemLedgerEntry; "Item Ledger Entry"."Document No.")
                 {
                 }
-                column(ExtDocumentNo_ItemLedgerEntry; "Item Ledger Entry"."External Document No.")
+                column(ExtDocumentNo_ItemLedgerEntry; ExternalDoc)
                 {
                 }
                 column(LocationCode_ItemLedgerEntry; "Item Ledger Entry"."Location Code")
@@ -125,6 +125,8 @@ report 80019 "NCT Stock Movement"
                 }
 
                 trigger OnAfterGetRecord()
+                var
+                    ltValueEntry: Record "Value Entry";
                 begin
                     var_Pos := 0;
                     var_Neg := 0;
@@ -139,6 +141,20 @@ report 80019 "NCT Stock Movement"
                     var_TotalPos := var_TotalPos + var_Pos;
                     var_TotalNeg := var_TotalNeg + var_Neg;
                     var_TotalQuantity := var_TotalQuantity + "Item Ledger Entry".Quantity;
+
+
+                    ExternalDoc := "Item Ledger Entry"."External Document No.";
+                    "Item Ledger Entry".CalcFields("NCT Document Invoice No.");
+                    if "Item Ledger Entry"."Entry Type" = "Item Ledger Entry"."Entry Type"::Sale then
+                        ExternalDoc := "Item Ledger Entry"."NCT Document Invoice No.";
+                    if "Item Ledger Entry"."Entry Type" = "Item Ledger Entry"."Entry Type"::Purchase then begin
+                        ltValueEntry.reset();
+                        ltValueEntry.SetRange("Item Ledger Entry No.", "Entry No.");
+                        ltValueEntry.SetFilter("Document No.", "Item Ledger Entry"."NCT Document Invoice No.");
+                        ltValueEntry.SetFilter("External Document No.", '<>%1', '');
+                        if ltValueEntry.FindFirst() then
+                            ExternalDoc := ltValueEntry."External Document No.";
+                    end;
 
 
                 end;
@@ -207,7 +223,7 @@ report 80019 "NCT Stock Movement"
         var_TotalQuantity: Decimal;
         var_TotalPos: Decimal;
         var_TotalNeg: Decimal;
-        var_ItemDateFilter: Text;
+        var_ItemDateFilter, ExternalDoc : Text;
 
         CompanyInfo: Record "Company Information";
         var_ItemNo: text;

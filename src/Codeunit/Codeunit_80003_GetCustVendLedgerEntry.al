@@ -17,7 +17,7 @@ codeunit 80003 "NCT Get Cust/Vend Ledger Entry"
                     GetCustLedger.SetTableData(BillingHeader."Bill/Pay-to Cust/Vend No.", BillingHeader."Document Type", BillingHeader."No.");
                     GetCustLedger.LOOKUPMODE := TRUE;
                     GetCustLedger.RUNMODAL();
-                    CLEAR(GetVendLedger);
+                    CLEAR(GetCustLedger);
                 END;
             BillingHeader."Document Type"::"Purchase Billing":
                 BEGIN

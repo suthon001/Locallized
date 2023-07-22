@@ -62,11 +62,12 @@ page 80034 "NCT Get Cus. Ledger Entry"
                     ToolTip = 'Specifies the value of the Original Amount field.';
                     Caption = 'Original Amount';
                 }
-                field("NCT Billing Amount"; Rec."NCT Billing Amount")
+                field(BillingReceiptAmount; BillingReceiptAmount)
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the NCT Billing Amount field.';
                     Caption = 'Billing Amount ';
+                    Editable = false;
                 }
                 field("NCT Remaining Amt."; Rec."NCT Remaining Amt.")
                 {
@@ -80,8 +81,14 @@ page 80034 "NCT Get Cus. Ledger Entry"
     }
 
     trigger OnAfterGetRecord()
+
     begin
-        Rec.CalcFields("Remaining Amount", "Original Amount", Amount, rec."NCT Billing Amount");
+        Rec.CalcFields("Remaining Amount", "Original Amount", Amount, rec."NCT Billing Amount", rec."NCT Receipt Amount");
+        if BillRcptHeader."Document Type" = BillRcptHeader."Document Type"::"Sales Billing" then
+            BillingReceiptAmount := rec."NCT Billing Amount"
+        else
+            BillingReceiptAmount := rec."NCT Receipt Amount";
+
     end;
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
@@ -97,6 +104,7 @@ page 80034 "NCT Get Cus. Ledger Entry"
     procedure SetDocument(BillingRcptHeader: Record "NCT Billing Receipt Header")
     begin
         BillRcptHeader.GET(BillingRcptHeader."Document Type", BillingRcptHeader."No.");
+
     end;
 
     local procedure CreateLines()
@@ -204,4 +212,5 @@ page 80034 "NCT Get Cus. Ledger Entry"
         BillRcptHeader: Record "NCT Billing Receipt Header";
         DocumentNo: code[20];
         DocumentType: Enum "NCT Billing Document Type";
+        BillingReceiptAmount: Decimal;
 }

@@ -34,11 +34,11 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine3.Copy(GenJournalLine);
         GenJnlLine3.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
         GenJnlLine3.SetFilter("Account No.", '<>%1', '');
-        GenJnlLine3.SetFilter("Ref. Billing & Receipt No.", '<>%1', '');
+        GenJnlLine3.SetFilter("NCT Ref. Billing & Receipt No.", '<>%1', '');
         if GenJnlLine3.FindSet() then
             repeat
                 BillingHeader.reset();
-                BillingHeader.SetRange("No.", GenJnlLine3."Ref. Billing & Receipt No.");
+                BillingHeader.SetRange("No.", GenJnlLine3."NCT Ref. Billing & Receipt No.");
                 if BillingHeader.FindFirst() then begin
                     BillingHeader."Status" := BillingHeader."Status"::Posted;
                     BillingHeader."Journal Document No." := GenJnlLine3."Document No.";

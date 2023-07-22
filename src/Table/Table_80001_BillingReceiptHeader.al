@@ -689,7 +689,7 @@ Table 80001 "NCT Billing Receipt Header"
                 GenJournalLine.Validate("Account No.", rec."Bill/Pay-to Cust/Vend No.");
                 GenJournalLine."External Document No." := PurchaseBillingLine."Document No.";
                 GenJournalLine.Validate(Amount, PurchaseBillingLine."Amount");
-                GenJournalLine."Ref. Billing & Receipt No." := rec."No.";
+                GenJournalLine."NCT Ref. Billing & Receipt No." := rec."No.";
 
                 if PurchaseBillingLine."Source Document Type" = PurchaseBillingLine."Source Document Type"::Invoice then
                     GenJournalLine."Applies-to Doc. Type" := GenJournalLine."Applies-to Doc. Type"::Invoice
@@ -753,7 +753,7 @@ Table 80001 "NCT Billing Receipt Header"
             else
                 GenJournalLine."Account Type" := GenJournalLine."Account Type"::"G/L Account";
             GenJournalLine.insert();
-            GenJournalLine."Ref. Billing & Receipt No." := rec."No.";
+            GenJournalLine."NCT Ref. Billing & Receipt No." := rec."No.";
             GenJournalLine.Validate("Account No.", rec."Account No.");
             GenJournalLine.Validate(Amount, -TotalAmt);
             GenJournalLine.Modify();
