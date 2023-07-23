@@ -39,6 +39,24 @@ pageextension 80038 "NCT PostedReceiptLines" extends "Posted Purchase Rcpt. Subf
             }
 
         }
+        addafter("Gen. Bus. Posting Group")
+        {
+            field("Gen. Prod. Posting Group"; rec."Gen. Prod. Posting Group")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Gen. Prod. Posting Group field.';
+            }
+            field("VAT Bus. Posting Group"; rec."VAT Bus. Posting Group")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the VAT Bus. Posting Group field.';
+            }
+            field("VAT Prod. Posting Group"; rec."VAT Prod. Posting Group")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the VAT Prod. Posting Group field.';
+            }
+        }
 
 
     }

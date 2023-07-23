@@ -20,11 +20,6 @@ pageextension 80003 "NCT ExtenItem Journal Batches" extends "Item Journal Batche
         }
         addafter(Description)
         {
-            field("Default Entry Type"; rec."NCT Default Entry Type")
-            {
-                ApplicationArea = all;
-                ToolTip = 'Specifies the value of the Default Entry Type field.';
-            }
             field("Shortcut Dimension 1 Code"; rec."NCT Shortcut Dimension 1 Code")
             {
                 ApplicationArea = all;

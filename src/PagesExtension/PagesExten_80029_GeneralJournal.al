@@ -44,6 +44,11 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
                 ToolTip = 'Specifies the value of the Journal Description field.';
             }
         }
+        modify("Document Date")
+        {
+            Visible = true;
+        }
+        moveafter("Posting Date"; "Document Date")
     }
     actions
     {

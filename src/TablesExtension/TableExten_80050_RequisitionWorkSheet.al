@@ -10,7 +10,6 @@ tableextension 80049 "NCT Requisition WorkSheet" extends "Requisition Line"
             Caption = 'Document No.';
             DataClassification = CustomerContent;
         }
-
         field(80002; "NCT Create By"; Code[50])
         {
             Caption = 'Create By';

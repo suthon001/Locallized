@@ -421,7 +421,6 @@ codeunit 80000 "NCT Journal Function"
     var
         Item: Record Item;
         ItemJournalBatch: Record "Item Journal Batch";
-        ItemTemplateName: Record "Item Journal Template";
     begin
 
         if not Item.get(Rec."Item No.") then
@@ -429,9 +428,6 @@ codeunit 80000 "NCT Journal Function"
         Rec."NCT Description 2" := Item."Description 2";
         if not ItemJournalBatch.GET(rec."Journal Template Name", Rec."Journal Batch Name") then
             ItemJournalBatch.init();
-        ItemTemplateName.GET(rec."Journal Template Name");
-        if ItemTemplateName.Type = ItemTemplateName.Type::Item then
-            rec."Entry Type" := ItemJournalBatch."NCT Default Entry Type";
         if ItemJournalBatch."NCT Shortcut Dimension 1 Code" <> '' then
             rec.validate("Shortcut Dimension 1 Code", ItemJournalBatch."NCT Shortcut Dimension 1 Code");
 

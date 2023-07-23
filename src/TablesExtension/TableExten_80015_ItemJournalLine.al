@@ -59,6 +59,9 @@ tableextension 80015 "NCT ExtenItem Journal Line" extends "Item Journal Line"
 
 
     trigger OnInsert()
+    var
+        ItemTemplateName: Record "Item Journal Template";
+        ItemJournalBatch: Record "Item Journal Batch";
     begin
         "NCT Create By" := COPYSTR(USERID, 1, 50);
         "NCT Create DateTime" := CurrentDateTime;
@@ -103,5 +106,8 @@ tableextension 80015 "NCT ExtenItem Journal Line" extends "Item Journal Line"
             exit(ItemJournalLine."Line No." + 10000);
         exit(10000);
     end;
+
+    var
+        CheckEntryType: Boolean;
 
 }

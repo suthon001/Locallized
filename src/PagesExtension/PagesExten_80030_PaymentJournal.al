@@ -61,6 +61,11 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
             Visible = true;
         }
         movebefore(Amount; "Currency Code")
+        modify("Document Date")
+        {
+            Visible = true;
+        }
+        moveafter("Posting Date"; "Document Date")
     }
 
 

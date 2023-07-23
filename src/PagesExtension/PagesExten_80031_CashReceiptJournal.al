@@ -64,6 +64,11 @@ pageextension 80031 "NCT Receipt Journal" extends "Cash Receipt Journal"
 
         movebefore(Amount; "Currency Code")
         moveafter(Description; Amount)
+        modify("Document Date")
+        {
+            Visible = true;
+        }
+        moveafter("Posting Date"; "Document Date")
     }
     actions
     {
