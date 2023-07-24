@@ -6,11 +6,11 @@ Report 80076 "NCT Account Schedule"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/StandardReport/Report_80076_AccountSchedule.rdl';
     AdditionalSearchTerms = 'financial reporting,income statement,balance sheet';
-    //  ApplicationArea = Basic, Suite;
-    Caption = '- Account Schedule';
+    ApplicationArea = Basic, Suite;
+    Caption = 'Financial Report';
     PreviewMode = PrintLayout;
     UsageCategory = ReportsAndAnalysis;
-    ApplicationArea = All;
+    AllowScheduling = false;
 
     dataset
     {
@@ -23,7 +23,7 @@ Report 80076 "NCT Account Schedule"
             dataitem(Heading; "Integer")
             {
                 DataItemTableView = SORTING(Number) WHERE(Number = CONST(1));
-                column(TodayFormatted; TypeHelper.GetFormattedCurrentDateTimeInUserTimeZone('d'))
+                column(TodayFormatted; Format(Today()))
                 {
                 }
                 column(ColumnLayoutName; ColumnLayoutName)
@@ -38,7 +38,7 @@ Report 80076 "NCT Account Schedule"
                 column(COMPANYNAME; COMPANYPROPERTY.DisplayName())
                 {
                 }
-                column(AccScheduleName_Description; AccScheduleName.Description)
+                column(AccScheduleName_Description; FinancialReportDescription)
                 {
                 }
                 column(AnalysisView_Code; AnalysisView.Code)
@@ -159,6 +159,8 @@ Report 80076 "NCT Account Schedule"
                         }
 
                         trigger OnAfterGetRecord()
+                        var
+                            ValueIsEmpty: Boolean;
                         begin
                             if Show = Show::Never then
                                 CurrReport.Skip();
@@ -174,13 +176,15 @@ Report 80076 "NCT Account Schedule"
                                         RoundingHeader := Text001;
                                 end;
 
-                            ColumnValuesAsText := CalcColumnValueAsText("Acc. Schedule Line", "Column Layout");
+                            ColumnValuesAsText := CalcColumnValueAsText("Acc. Schedule Line", "Column Layout", ValueIsEmpty);
 
                             ColumnValuesArrayIndex += 1;
                             if ColumnValuesArrayIndex <= ArrayLen(ColumnValuesArrayText) then
                                 ColumnValuesArrayText[ColumnValuesArrayIndex] := ColumnValuesAsText;
 
-                            if (ColumnValuesAsText <> '') or (("Acc. Schedule Line".Show = "Acc. Schedule Line".Show::Yes) and not SkipEmptyLines) then
+                            if (not ValueIsEmpty) or (("Acc. Schedule Line".Show = "Acc. Schedule Line".Show::Yes) and not SkipEmptyLines) or
+                                (("Acc. Schedule Line".Totaling = '') and ("Acc. Schedule Line".Show = "Acc. Schedule Line".Show::Yes))
+                            then
                                 LineSkipped := false;
                         end;
 
@@ -317,16 +321,57 @@ Report 80076 "NCT Account Schedule"
                     {
                         Caption = 'Layout';
                         Visible = AccSchedNameEditable;
+
+                        field(FinancialReport; FinancialReportName)
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Financial Report';
+                            Editable = AccSchedNameEditable;
+                            Importance = Promoted;
+                            Lookup = true;
+                            ShowMandatory = true;
+                            TableRelation = "Financial Report";
+                            ToolTip = 'Specifies the name of the financial report.';
+
+                            trigger OnLookup(var Text: Text): Boolean
+                            var
+                                LookupText: Text[10];
+                                Result: Boolean;
+                            begin
+                                LookupText := CopyStr(Text, 1, 10);
+                                Result := FinancialReportMgt.LookupName(FinancialReportName, LookupText);
+                                Text := LookupText;
+                                exit(Result);
+                            end;
+
+                            trigger OnValidate()
+                            var
+                                FinancialReport: Record "Financial Report";
+                            begin
+                                FinancialReport.Get(FinancialReportName);
+                                AccSchedName := FinancialReport."Financial Report Row Group";
+                                if FinancialReport."Financial Report Column Group" <> '' then
+                                    ColumnLayoutName := FinancialReport."Financial Report Column Group"
+                                else
+                                    ColumnLayoutName := '';
+                                FinancialReportDescription := FinancialReport.Description;
+                                ValidateAccSchedName(FinancialReport);
+                                AccSchedNameHidden := '';
+                                SetBudgetFilterEnable();
+                                RequestOptionsPage.Update(false);
+                            end;
+                        }
+
                         field(AccSchedNam; AccSchedName)
                         {
                             ApplicationArea = Basic, Suite;
-                            Caption = 'Acc. Schedule Name';
+                            Caption = 'Row Definition';
                             Editable = AccSchedNameEditable;
                             Importance = Promoted;
                             Lookup = true;
                             ShowMandatory = true;
                             TableRelation = "Acc. Schedule Name";
-                            ToolTip = 'Specifies the name of the account schedule.';
+                            ToolTip = 'Specifies the name of the row definition.';
 
                             trigger OnLookup(var Text: Text): Boolean
                             begin
@@ -344,7 +389,7 @@ Report 80076 "NCT Account Schedule"
                         field(ColumnLayoutNames; ColumnLayoutName)
                         {
                             ApplicationArea = Basic, Suite;
-                            Caption = 'Column Layout Name';
+                            Caption = 'Column Definition';
                             Editable = AccSchedNameEditable;
                             Importance = Promoted;
                             Lookup = true;
@@ -381,12 +426,14 @@ Report 80076 "NCT Account Schedule"
                         {
                             ApplicationArea = Basic, Suite;
                             Caption = 'Starting Date';
+                            ClosingDates = true;
                             Enabled = StartDateEnabled;
                             ShowMandatory = true;
                             ToolTip = 'Specifies the date from which the report or batch job processes information.';
 
                             trigger OnValidate()
                             begin
+                                UseHiddenFilters := false;
                                 ValidateStartEndDate();
                             end;
                         }
@@ -394,11 +441,13 @@ Report 80076 "NCT Account Schedule"
                         {
                             ApplicationArea = Basic, Suite;
                             Caption = 'Ending Date';
+                            ClosingDates = true;
                             ShowMandatory = true;
                             ToolTip = 'Specifies the date to which the report or batch job processes information.';
 
                             trigger OnValidate()
                             begin
+                                UseHiddenFilters := false;
                                 ValidateStartEndDate();
                             end;
                         }
@@ -413,6 +462,7 @@ Report 80076 "NCT Account Schedule"
 
                             trigger OnValidate()
                             begin
+                                UseHiddenFilters := false;
                                 GLBudgetFilter := GLBudgetName;
                                 "Acc. Schedule Line".SetRange("G/L Budget Filter", GLBudgetFilter);
                                 GLBudgetFilter := "Acc. Schedule Line".GetFilter("G/L Budget Filter");
@@ -429,6 +479,7 @@ Report 80076 "NCT Account Schedule"
 
                             trigger OnValidate()
                             begin
+                                UseHiddenFilters := false;
                                 "Acc. Schedule Line".SetFilter("Cost Budget Filter", CostBudgetFilter);
                                 CostBudgetFilter := "Acc. Schedule Line".GetFilter("Cost Budget Filter");
                             end;
@@ -445,110 +496,9 @@ Report 80076 "NCT Account Schedule"
 
                             trigger OnValidate()
                             begin
+                                UseHiddenFilters := false;
                                 "Acc. Schedule Line".SetFilter("Business Unit Filter", BusinessUnitFilter);
                                 BusinessUnitFilter := "Acc. Schedule Line".GetFilter("Business Unit Filter");
-                            end;
-                        }
-                    }
-                    group("Dimension Filters")
-                    {
-                        Caption = 'Dimension Filters';
-                        field(Dim1Filter; Dim1Filter)
-                        {
-                            ApplicationArea = Dimensions;
-                            CaptionClass = FormGetCaptionClass(1);
-                            Caption = 'Dimension 1 Filter';
-                            Importance = Additional;
-                            ToolTip = 'Specifies a filter for dimension values within a dimension. The filter uses the dimension you have defined as dimension 1 for the analysis view selected in the Analysis View Code field.';
-                            Visible = Dim1FilterEnable;
-
-                            trigger OnLookup(var Text: Text): Boolean
-                            begin
-                                exit(FormLookUpDimFilter(AnalysisView."Dimension 1 Code", Text));
-                            end;
-                        }
-                        field(Dim2Filter; Dim2Filter)
-                        {
-                            ApplicationArea = Dimensions;
-                            CaptionClass = FormGetCaptionClass(2);
-                            Caption = 'Dimension 2 Filter';
-                            Importance = Additional;
-                            ToolTip = 'Specifies a filter for dimension values within a dimension. The filter uses the dimension you have defined as dimension 2 for the analysis view selected in the Analysis View Code field.';
-                            Visible = Dim2FilterEnable;
-
-                            trigger OnLookup(var Text: Text): Boolean
-                            begin
-                                exit(FormLookUpDimFilter(AnalysisView."Dimension 2 Code", Text));
-                            end;
-                        }
-                        field(Dim3Filter; Dim3Filter)
-                        {
-                            ApplicationArea = Dimensions;
-                            CaptionClass = FormGetCaptionClass(3);
-                            Caption = 'Dimension 3 Filter';
-                            Importance = Additional;
-                            ToolTip = 'Specifies a filter for dimension values within a dimension. The filter uses the dimension you have defined as dimension 3 for the analysis view selected in the Analysis View Code field.';
-                            Visible = Dim3FilterEnable;
-
-                            trigger OnLookup(var Text: Text): Boolean
-                            begin
-                                exit(FormLookUpDimFilter(AnalysisView."Dimension 3 Code", Text));
-                            end;
-                        }
-                        field(Dim4Filter; Dim4Filter)
-                        {
-                            ApplicationArea = Dimensions;
-                            CaptionClass = FormGetCaptionClass(4);
-                            Caption = 'Dimension 4 Filter';
-                            Importance = Additional;
-                            ToolTip = 'Specifies a filter for dimension values within a dimension. The filter uses the dimension you have defined as dimension 4 for the analysis view selected in the Analysis View Code field.';
-                            Visible = Dim4FilterEnable;
-
-                            trigger OnLookup(var Text: Text): Boolean
-                            begin
-                                exit(FormLookUpDimFilter(AnalysisView."Dimension 4 Code", Text));
-                            end;
-                        }
-                        field(CostCenterFilter; CostCenterFilter)
-                        {
-                            ApplicationArea = Dimensions;
-                            Caption = 'Cost Center Filter';
-                            Importance = Additional;
-                            ToolTip = 'Specifies a cost center filter for dimension values within a dimension. The filter uses the dimension you have defined as Dimension 1 for the Analysis View selected in the Analysis View Code field. If you have not defined a Dimension 1 for an analysis view, this field will be disabled. ';
-
-                            trigger OnLookup(var Text: Text): Boolean
-                            var
-                                CostCenter: Record "Cost Center";
-                            begin
-                                exit(CostCenter.LookupCostCenterFilter(Text));
-                            end;
-                        }
-                        field(CostObjectFilter; CostObjectFilter)
-                        {
-                            ApplicationArea = CostAccounting;
-                            Caption = 'Cost Object Filter';
-                            Importance = Additional;
-                            ToolTip = 'Specifies the cost object filter that applies.';
-
-                            trigger OnLookup(var Text: Text): Boolean
-                            var
-                                CostObject: Record "Cost Object";
-                            begin
-                                exit(CostObject.LookupCostObjectFilter(Text));
-                            end;
-                        }
-                        field(CashFlowFilter; CashFlowFilter)
-                        {
-                            ApplicationArea = Basic, Suite;
-                            Caption = 'Cash Flow Filter';
-                            Importance = Additional;
-                            ToolTip = 'Specifies a cash flow filter for the schedule.';
-
-                            trigger OnLookup(var Text: Text): Boolean
-                            var
-                                CashFlowForecast: Record "Cash Flow Forecast";
-                            begin
-                                exit(CashFlowForecast.LookupCashFlowFilter(Text));
                             end;
                         }
                     }
@@ -593,6 +543,157 @@ Report 80076 "NCT Account Schedule"
                             Importance = Additional;
                             ToolTip = 'Specifies if you want the report to skip lines that have a balance equal to zero.';
                         }
+                        field(ShowCurrencySymbolCtrl; ShowCurrencySymbol)
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Show Currency Symbol';
+                            Importance = Additional;
+                            ToolTip = 'Specifies whether the report will show currency symbols for amounts.';
+                        }
+                        field(ShowEmptyAmountTypeCtrl; ShowEmptyAmountType)
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Show Empty Amounts As';
+                            Importance = Additional;
+                            ToolTip = 'Specifies how to show amounts for empty accounts.';
+                        }
+                    }
+                    group("Dimension Filters")
+                    {
+                        Caption = 'Dimension Filters';
+                        field(Dim1Filter; Dim1Filter)
+                        {
+                            ApplicationArea = Dimensions;
+                            CaptionClass = FormGetCaptionClass(1);
+                            Caption = 'Dimension 1 Filter';
+                            Importance = Additional;
+                            ToolTip = 'Specifies a filter for dimension values within a dimension. The filter uses the dimension you have defined as dimension 1 for the analysis view selected in the Analysis View Code field.';
+                            Visible = Dim1FilterEnable;
+
+                            trigger OnLookup(var Text: Text): Boolean
+                            begin
+                                exit(FormLookUpDimFilter(AnalysisView."Dimension 1 Code", Text));
+                            end;
+
+                            trigger OnValidate()
+                            begin
+                                UseHiddenFilters := false;
+                            end;
+                        }
+                        field(Dim2Filter; Dim2Filter)
+                        {
+                            ApplicationArea = Dimensions;
+                            CaptionClass = FormGetCaptionClass(2);
+                            Caption = 'Dimension 2 Filter';
+                            Importance = Additional;
+                            ToolTip = 'Specifies a filter for dimension values within a dimension. The filter uses the dimension you have defined as dimension 2 for the analysis view selected in the Analysis View Code field.';
+                            Visible = Dim2FilterEnable;
+
+                            trigger OnLookup(var Text: Text): Boolean
+                            begin
+                                exit(FormLookUpDimFilter(AnalysisView."Dimension 2 Code", Text));
+                            end;
+
+                            trigger OnValidate()
+                            begin
+                                UseHiddenFilters := false;
+                            end;
+                        }
+                        field(Dim3Filter; Dim3Filter)
+                        {
+                            ApplicationArea = Dimensions;
+                            CaptionClass = FormGetCaptionClass(3);
+                            Caption = 'Dimension 3 Filter';
+                            Importance = Additional;
+                            ToolTip = 'Specifies a filter for dimension values within a dimension. The filter uses the dimension you have defined as dimension 3 for the analysis view selected in the Analysis View Code field.';
+                            Visible = Dim3FilterEnable;
+
+                            trigger OnLookup(var Text: Text): Boolean
+                            begin
+                                exit(FormLookUpDimFilter(AnalysisView."Dimension 3 Code", Text));
+                            end;
+
+                            trigger OnValidate()
+                            begin
+                                UseHiddenFilters := false;
+                            end;
+                        }
+                        field(Dim4Filter; Dim4Filter)
+                        {
+                            ApplicationArea = Dimensions;
+                            CaptionClass = FormGetCaptionClass(4);
+                            Caption = 'Dimension 4 Filter';
+                            Importance = Additional;
+                            ToolTip = 'Specifies a filter for dimension values within a dimension. The filter uses the dimension you have defined as dimension 4 for the analysis view selected in the Analysis View Code field.';
+                            Visible = Dim4FilterEnable;
+
+                            trigger OnLookup(var Text: Text): Boolean
+                            begin
+                                exit(FormLookUpDimFilter(AnalysisView."Dimension 4 Code", Text));
+                            end;
+
+                            trigger OnValidate()
+                            begin
+                                UseHiddenFilters := false;
+                            end;
+                        }
+                        field(CostCenterFilter; CostCenterFilter)
+                        {
+                            ApplicationArea = Dimensions;
+                            Caption = 'Cost Center Filter';
+                            Importance = Additional;
+                            ToolTip = 'Specifies a cost center filter for dimension values within a dimension. The filter uses the dimension you have defined as Dimension 1 for the Analysis View selected in the Analysis View Code field. If you have not defined a Dimension 1 for an analysis view, this field will be disabled. ';
+
+                            trigger OnLookup(var Text: Text): Boolean
+                            var
+                                CostCenter: Record "Cost Center";
+                            begin
+                                exit(CostCenter.LookupCostCenterFilter(Text));
+                            end;
+
+                            trigger OnValidate()
+                            begin
+                                UseHiddenFilters := false;
+                            end;
+                        }
+                        field(CostObjectFilter; CostObjectFilter)
+                        {
+                            ApplicationArea = CostAccounting;
+                            Caption = 'Cost Object Filter';
+                            Importance = Additional;
+                            ToolTip = 'Specifies the cost object filter that applies.';
+
+                            trigger OnLookup(var Text: Text): Boolean
+                            var
+                                CostObject: Record "Cost Object";
+                            begin
+                                exit(CostObject.LookupCostObjectFilter(Text));
+                            end;
+
+                            trigger OnValidate()
+                            begin
+                                UseHiddenFilters := false;
+                            end;
+                        }
+                        field(CashFlowFilter; CashFlowFilter)
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Cash Flow Filter';
+                            Importance = Additional;
+                            ToolTip = 'Specifies a cash flow filter for the schedule.';
+
+                            trigger OnLookup(var Text: Text): Boolean
+                            var
+                                CashFlowForecast: Record "Cash Flow Forecast";
+                            begin
+                                exit(CashFlowForecast.LookupCashFlowFilter(Text));
+                            end;
+
+                            trigger OnValidate()
+                            begin
+                                UseHiddenFilters := false;
+                            end;
+                        }
                     }
                 }
             }
@@ -612,9 +713,15 @@ Report 80076 "NCT Account Schedule"
         end;
 
         trigger OnOpenPage()
+        var
+            FinancialReportMgt: Codeunit "Financial Report Mgt.";
         begin
+            FinancialReportMgt.Initialize();
             GLSetup.Get();
+            AccSchedName := '';
+            ColumnLayoutName := '';
             TransferValues();
+            ContextInitialized := true;
             if AccSchedName <> '' then
                 if (ColumnLayoutName = '') or not AccSchedNameEditable then
                     ValidateAccSchedName();
@@ -629,22 +736,21 @@ Report 80076 "NCT Account Schedule"
 
     trigger OnPreReport()
     begin
+        FinancialReportMgt.Initialize();
         TransferValues();
         UpdateFilters();
         InitAccSched();
     end;
 
     var
-        Text000: Label '(Thousands)';
-        Text001: Label '(Millions)';
-        Text002: Label '* ERROR *';
-        Text003: Label 'All amounts are in %1.';
         AnalysisView: Record "Analysis View";
         GLSetup: Record "General Ledger Setup";
         AccSchedManagement: Codeunit AccSchedManagement;
-        TypeHelper: Codeunit "Type Helper";
+        FinancialReportMgt: Codeunit "Financial Report Mgt.";
         AccSchedName: Code[10];
         AccSchedNameHidden: Code[10];
+        FinancialReportName: Code[10];
+        FinancialReportDescription: Text;
         ColumnLayoutName: Code[10];
         ColumnLayoutNameHidden: Code[10];
         GLBudgetName: Code[10];
@@ -674,6 +780,7 @@ Report 80076 "NCT Account Schedule"
         Dim4FilterHidden: Text;
         CostCenterFilter: Text;
         CostObjectFilter: Text;
+        CashFlowFilterHidden: Text;
         CashFlowFilter: Text;
         FiscalStartDate: Date;
         ColumnHeaderArrayText: array[5] of Text[30];
@@ -695,15 +802,12 @@ Report 80076 "NCT Account Schedule"
         ShowRowNo: Boolean;
         RowNoCaption: Text;
         HeaderText: Text[100];
-        Text004: Label 'Not Available';
-        Text005: Label '1,6,,Dimension %1 Filter';
         Bold_control: Boolean;
         Italic_control: Boolean;
         Underline_control: Boolean;
         DoubleUnderline_control: Boolean;
         PageGroupNo: Integer;
         NextPageGroupNo: Integer;
-        Text006: Label 'Enter the Column Layout Name.';
         [InDataSet]
         Dim1FilterEnable: Boolean;
         [InDataSet]
@@ -717,53 +821,131 @@ Report 80076 "NCT Account Schedule"
         LineShadowed: Boolean;
         LineSkipped: Boolean;
         SkipEmptyLines: Boolean;
-        ColumnLayoutNameCaptionLbl: Label 'Column Layout';
-        AccScheduleName_Name_CaptionLbl: Label 'Account Schedule';
+        ShowCurrencySymbol: Boolean;
+        ShowEmptyAmountType: Enum "Show Empty Amount Type";
+        PadChar: Char;
+        PadString: Text;
+
+        Text000: Label '(Thousands)';
+        Text001: Label '(Millions)';
+        Text002: Label '* ERROR *';
+        Text003: Label 'All amounts are in %1.';
+        Text004: Label 'Not Available';
+        Text005: Label '1,6,,Dimension %1 Filter';
+        Text006: Label 'Enter the Column Definition Name.';
+        ColumnLayoutNameCaptionLbl: Label 'Column Definition';
+        AccScheduleName_Name_CaptionLbl: Label 'Financial Report';
         FiscalStartDateCaptionLbl: Label 'Fiscal Start Date';
         PeriodTextCaptionLbl: Label 'Period';
         PeriodEndingTextCaptionLbl: Label 'Period Ending';
         CurrReport_PAGENOCaptionLbl: Label 'Page';
-        Account_ScheduleCaptionLbl: Label 'Account Schedule';
+        Account_ScheduleCaptionLbl: Label 'Financial Report';
         AnalysisView_CodeCaptionLbl: Label 'Analysis View';
-        PadChar: Char;
-        PadString: Text;
+        ContextInitialized: Boolean;
 
-    local procedure CalcColumnValueAsText(var AccScheduleLine: Record "Acc. Schedule Line"; var ColumnLayout: Record "Column Layout"): Text[30]
-
+    local procedure CalcColumnValueAsText(var AccScheduleLine: Record "Acc. Schedule Line"; var ColumnLayout: Record "Column Layout"; var ValueIsEmpty: Boolean): Text[30]
+    var
+        ColumnValuesAsText2: Text[30];
     begin
-        ColumnValuesAsText := '';
+        ColumnValuesAsText2 := '';
 
         ColumnValuesDisplayed := AccSchedManagement.CalcCell(AccScheduleLine, ColumnLayout, UseAmtsInAddCurr);
         if AccSchedManagement.GetDivisionError() then begin
             if ShowError in [ShowError::"Division by Zero", ShowError::Both] then
-                ColumnValuesAsText := Text002;
+                ColumnValuesAsText2 := Text002
+            else
+                ValueIsEmpty := true;
         end else
             if AccSchedManagement.GetPeriodError() then begin
                 if ShowError in [ShowError::"Period Error", ShowError::Both] then
-                    ColumnValuesAsText := Text004;
+                    ColumnValuesAsText2 := Text004
+                else
+                    ValueIsEmpty := true;
             end else begin
-                ColumnValuesAsText :=
-                  AccSchedManagement.FormatCellAsText(ColumnLayout, ColumnValuesDisplayed, UseAmtsInAddCurr);
+                if ColumnValuesDisplayed = 0 then
+                    ValueIsEmpty := true;
 
                 if AccScheduleLine."Totaling Type" = AccScheduleLine."Totaling Type"::Formula then
                     case AccScheduleLine.Show of
                         AccScheduleLine.Show::"When Positive Balance":
                             if ColumnValuesDisplayed < 0 then
-                                ColumnValuesAsText := '';
+                                ValueIsEmpty := true;
                         AccScheduleLine.Show::"When Negative Balance":
                             if ColumnValuesDisplayed > 0 then
-                                ColumnValuesAsText := '';
+                                ValueIsEmpty := true;
                         AccScheduleLine.Show::"If Any Column Not Zero":
                             if ColumnValuesDisplayed = 0 then
-                                ColumnValuesAsText := '';
+                                ValueIsEmpty := true;
                     end;
+
+                if ValueIsEmpty then
+                    ColumnValuesAsText2 := FormatZeroAmount(AccScheduleLine, ColumnLayout)
+                else
+                    ColumnValuesAsText2 :=
+                        AccSchedManagement.FormatCellAsText(ColumnLayout, ColumnValuesDisplayed, UseAmtsInAddCurr);
+
+                FormatCurrencySymbol(AccScheduleLine, ColumnLayout, ColumnValuesAsText2);
             end;
-        exit(ColumnValuesAsText);
+        exit(ColumnValuesAsText2);
     end;
 
-    /// <summary>
-    /// InitAccSched.
-    /// </summary>
+    local procedure GetCurrencySymbol(): Text[10]
+    var
+        Currency: Record Currency;
+    begin
+        if UseAmtsInAddCurr then begin
+            Currency.Get(GLSetup."Additional Reporting Currency");
+            exit(Currency.Symbol);
+        end else
+            exit(GLSetup."Local Currency Symbol");
+    end;
+
+    local procedure FormatZeroAmount(var AccScheduleLine: Record "Acc. Schedule Line"; var ColumnLayout: Record "Column Layout") Result: Text[30]
+    var
+        MatrixMgt: Codeunit "Matrix Management";
+        ZeroDecimal: Decimal;
+    begin
+        if (AccScheduleLine.Totaling = '') and (AccScheduleLine.Show = AccScheduleLine.Show::Yes) then
+            exit('');
+
+        ZeroDecimal := 0;
+        case ShowEmptyAmountType of
+            "Show Empty Amount Type"::Blank:
+                exit('');
+            "Show Empty Amount Type"::Zero:
+                exit(
+                    CopyStr(
+                        Format(ZeroDecimal, 0, MatrixMgt.FormatRoundingFactor(ColumnLayout."Rounding Factor", UseAmtsInAddCurr)),
+                        1,
+                        MaxStrLen(Result)));
+            "Show Empty Amount Type"::Dash:
+                exit('-');
+        end;
+
+        OnAfterFormatZeroAmount(AccScheduleLine, ColumnLayout, Result);
+    end;
+
+    local procedure FormatCurrencySymbol(var AccScheduleLine: Record "Acc. Schedule Line"; var ColumnLayout: Record "Column Layout"; var ColumnValuesAsText: Text[30])
+    begin
+        if not ShowCurrencySymbol then
+            exit;
+
+        if ColumnValuesAsText = '' then
+            exit;
+
+        if (ColumnValuesAsText = '-') and (ShowEmptyAmountType = ShowEmptyAmountType::Dash) then
+            exit;
+
+        if AccScheduleLine."Hide Currency Symbol" or ColumnLayout."Hide Currency Symbol" then
+            exit;
+
+        ColumnValuesAsText :=
+            CopyStr(
+                GetCurrencySymbol() + ColumnValuesAsText,
+                1,
+                MaxStrLen(ColumnValuesAsText));
+    end;
+
     procedure InitAccSched()
     var
         ColumnLayout: Record "Column Layout";
@@ -789,7 +971,7 @@ Report 80076 "NCT Account Schedule"
 
         AccScheduleLine.CopyFilters("Acc. Schedule Line");
         AccScheduleLine.SetRange("Date Filter");
-        AccSchedLineFilter := AccScheduleLine.GetFilters;
+        AccSchedLineFilter := AccScheduleLine.GetFilters();
 
         if StartDateEnabled then
             PeriodText := PeriodTextCaptionLbl + ': ' + "Acc. Schedule Line".GetFilter("Date Filter")
@@ -801,49 +983,43 @@ Report 80076 "NCT Account Schedule"
 
         ColumnLayout.SetRange("Column Layout Name", ColumnLayoutName);
         ColumnLayout.SetFilter("Rounding Factor", '<>%1&<>%2', ColumnLayout."Rounding Factor"::None, ColumnLayout."Rounding Factor"::"1");
-        ShowRoundingHeader := not ColumnLayout.IsEmpty;
+        ShowRoundingHeader := not ColumnLayout.IsEmpty();
     end;
 
-    /// <summary>
-    /// SetAccSchedName.
-    /// </summary>
-    /// <param name="NewAccSchedName">Code[10].</param>
     procedure SetAccSchedName(NewAccSchedName: Code[10])
     begin
         AccSchedNameHidden := NewAccSchedName;
         AccSchedNameEditable := true;
     end;
 
-    /// <summary>
-    /// SetAccSchedNameNonEditable.
-    /// </summary>
-    /// <param name="NewAccSchedName">Code[10].</param>
     procedure SetAccSchedNameNonEditable(NewAccSchedName: Code[10])
     begin
         SetAccSchedName(NewAccSchedName);
         AccSchedNameEditable := false;
     end;
 
-    /// <summary>
-    /// SetColumnLayoutName.
-    /// </summary>
-    /// <param name="ColLayoutName">Code[10].</param>
+    procedure SetFinancialReportNameNonEditable(NewAccSchedName: Code[10])
+    begin
+        SetFinancialReportName(NewAccSchedName);
+        AccSchedNameEditable := false;
+    end;
+
+    procedure SetFinancialReportName(NewFinancialReportName: Code[10])
+    var
+        FinancialReportLocal: Record "Financial Report";
+    begin
+        FinancialReportName := NewFinancialReportName;
+        if FinancialReportLocal.Get(FinancialReportName) then begin
+            AccSchedNameHidden := FinancialReportLocal."Financial Report Row Group";
+            AccSchedNameEditable := false;
+        end;
+    end;
+
     procedure SetColumnLayoutName(ColLayoutName: Code[10])
     begin
         ColumnLayoutNameHidden := ColLayoutName;
     end;
 
-    /// <summary>
-    /// SetFilters.
-    /// </summary>
-    /// <param name="NewDateFilter">Text.</param>
-    /// <param name="NewBudgetFilter">Text.</param>
-    /// <param name="NewCostBudgetFilter">Text.</param>
-    /// <param name="NewBusUnitFilter">Text.</param>
-    /// <param name="NewDim1Filter">Text.</param>
-    /// <param name="NewDim2Filter">Text.</param>
-    /// <param name="NewDim3Filter">Text.</param>
-    /// <param name="NewDim4Filter">Text.</param>
     procedure SetFilters(NewDateFilter: Text; NewBudgetFilter: Text; NewCostBudgetFilter: Text; NewBusUnitFilter: Text; NewDim1Filter: Text; NewDim2Filter: Text; NewDim3Filter: Text; NewDim4Filter: Text)
     begin
         DateFilterHidden := NewDateFilter;
@@ -855,14 +1031,30 @@ Report 80076 "NCT Account Schedule"
         Dim3FilterHidden := NewDim3Filter;
         Dim4FilterHidden := NewDim4Filter;
         UseHiddenFilters := true;
+        ContextInitialized := false;
+        OnAfterSetFilters(AccScheduleName, CostCenterFilter, CostObjectFilter, CashFlowFilter, CurrReport.UseRequestPage());
     end;
 
-    /// <summary>
-    /// ShowLine.
-    /// </summary>
-    /// <param name="Bold">Boolean.</param>
-    /// <param name="Italic">Boolean.</param>
-    /// <returns>Return value of type Boolean.</returns>
+    procedure SetFilters(NewDateFilter: Text; NewBudgetFilter: Text; NewCostBudgetFilter: Text; NewBusUnitFilter: Text; NewDim1Filter: Text; NewDim2Filter: Text; NewDim3Filter: Text; NewDim4Filter: Text; CashFlowFilter: Text)
+    begin
+        DateFilterHidden := NewDateFilter;
+        if DateFilterHidden <> '' then begin
+            "Acc. Schedule Line".SetFilter("Date Filter", DateFilterHidden);
+            StartDate := "Acc. Schedule Line".GetRangeMin("Date Filter");
+            EndDate := "Acc. Schedule Line".GetRangeMax("Date Filter");
+        end;
+        GLBudgetFilterHidden := NewBudgetFilter;
+        CostBudgetFilterHidden := NewCostBudgetFilter;
+        BusinessUnitFilterHidden := NewBusUnitFilter;
+        Dim1FilterHidden := NewDim1Filter;
+        Dim2FilterHidden := NewDim2Filter;
+        Dim3FilterHidden := NewDim3Filter;
+        Dim4FilterHidden := NewDim4Filter;
+        CashFlowFilterHidden := CashFlowFilter;
+        UseHiddenFilters := true;
+        OnAfterSetFilters(AccScheduleName, CostCenterFilter, CostObjectFilter, CashFlowFilter, CurrReport.UseRequestPage());
+    end;
+
     procedure ShowLine(Bold: Boolean; Italic: Boolean): Boolean
     begin
         if "Acc. Schedule Line"."Totaling Type" = "Acc. Schedule Line"."Totaling Type"::"Set Base For Percent" then
@@ -877,7 +1069,7 @@ Report 80076 "NCT Account Schedule"
         exit(true);
     end;
 
-    local procedure FormLookUpDimFilter(Dim: Code[20]; var Text: Text): Boolean
+    local procedure FormLookUpDimFilter(Dim: Code[20]; var Text: Text[1024]): Boolean
     var
         DimVal: Record "Dimension Value";
         DimValList: Page "Dimension Value List";
@@ -890,6 +1082,7 @@ Report 80076 "NCT Account Schedule"
         if DimValList.RunModal() = ACTION::LookupOK then begin
             DimValList.GetRecord(DimVal);
             Text := DimValList.GetSelectionFilter();
+            UseHiddenFilters := false;
             exit(true);
         end;
         exit(false)
@@ -929,34 +1122,48 @@ Report 80076 "NCT Account Schedule"
     var
         ColumnLayoutName2: Record "Column Layout Name";
         BusinessUnit: Record "Business Unit";
+        FinancialReportLocal: Record "Financial Report";
     begin
         if GLBudgetName <> '' then
             GLBudgetFilter := GLBudgetName;
         GLSetup.Get();
         UseAmtsInAddCurrVisible := GLSetup."Additional Reporting Currency" <> '';
-        BusinessUnitFilterVisible := not BusinessUnit.IsEmpty;
+        BusinessUnitFilterVisible := not BusinessUnit.IsEmpty();
         if not UseAmtsInAddCurrVisible then
             UseAmtsInAddCurr := false;
-        if AccSchedNameHidden <> '' then
-            AccSchedName := AccSchedNameHidden;
-        if ColumnLayoutNameHidden <> '' then
-            ColumnLayoutName := ColumnLayoutNameHidden;
-        if DateFilterHidden <> '' then
-            DateFilter := DateFilterHidden;
-        if GLBudgetFilterHidden <> '' then
-            GLBudgetFilter := GLBudgetFilterHidden;
-        if CostBudgetFilterHidden <> '' then
-            CostBudgetFilter := CostBudgetFilterHidden;
-        if BusinessUnitFilterHidden <> '' then
-            BusinessUnitFilter := BusinessUnitFilterHidden;
-        if Dim1FilterHidden <> '' then
-            Dim1Filter := Dim1FilterHidden;
-        if Dim2FilterHidden <> '' then
-            Dim2Filter := Dim2FilterHidden;
-        if Dim3FilterHidden <> '' then
-            Dim3Filter := Dim3FilterHidden;
-        if Dim4FilterHidden <> '' then
-            Dim4Filter := Dim4FilterHidden;
+        if not ContextInitialized then begin
+            if AccSchedNameHidden <> '' then
+                AccSchedName := AccSchedNameHidden;
+            if ColumnLayoutNameHidden <> '' then
+                ColumnLayoutName := ColumnLayoutNameHidden;
+            if DateFilterHidden <> '' then
+                DateFilter := DateFilterHidden;
+            if GLBudgetFilterHidden <> '' then
+                GLBudgetFilter := GLBudgetFilterHidden;
+            if CostBudgetFilterHidden <> '' then
+                CostBudgetFilter := CostBudgetFilterHidden;
+            if BusinessUnitFilterHidden <> '' then
+                BusinessUnitFilter := BusinessUnitFilterHidden;
+            if Dim1FilterHidden <> '' then
+                Dim1Filter := Dim1FilterHidden;
+            if Dim2FilterHidden <> '' then
+                Dim2Filter := Dim2FilterHidden;
+            if Dim3FilterHidden <> '' then
+                Dim3Filter := Dim3FilterHidden;
+            if Dim4FilterHidden <> '' then
+                Dim4Filter := Dim4FilterHidden;
+            if CashFlowFilterHidden <> '' then
+                CashFlowFilter := CashFlowFilterHidden;
+        end;
+
+        if FinancialReportName <> '' then
+            if not FinancialReportLocal.Get(FinancialReportName) then
+                FinancialReportName := '';
+
+        if AccSchedName = '' then
+            AccSchedName := FinancialReportLocal."Financial Report Row Group";
+        if ColumnLayoutName = '' then
+            ColumnLayoutName := FinancialReportLocal."Financial Report Column Group";
 
         if AccSchedName <> '' then
             if not AccScheduleName.Get(AccSchedName) then
@@ -965,8 +1172,14 @@ Report 80076 "NCT Account Schedule"
             if AccScheduleName.FindFirst() then
                 AccSchedName := AccScheduleName.Name;
 
+        if FinancialReportLocal.Name <> '' then
+            FinancialReportDescription := FinancialReportLocal.Description
+        else
+            FinancialReportDescription := AccScheduleName.Description;
+
         if not ColumnLayoutName2.Get(ColumnLayoutName) then
-            ColumnLayoutName := AccScheduleName."Default Column Layout";
+            if ColumnLayoutName2.FindFirst() then
+                ColumnLayoutName := ColumnLayoutName2.Name;
 
         if AccScheduleName."Analysis View Name" <> '' then
             AnalysisView.Get(AccScheduleName."Analysis View Name")
@@ -989,6 +1202,7 @@ Report 80076 "NCT Account Schedule"
             Dim2Filter := Dim2FilterHidden;
             Dim3Filter := Dim3FilterHidden;
             Dim4Filter := Dim4FilterHidden;
+            CashFlowFilter := CashFlowFilterHidden;
         end else begin
             if EndDate = 0D then
                 EndDate := WorkDate();
@@ -996,10 +1210,6 @@ Report 80076 "NCT Account Schedule"
                 StartDate := CalcDate('<-CM>', EndDate);
             ValidateStartEndDate();
         end;
-
-        if ColumnLayoutName = '' then
-            if AccScheduleName.Get(AccSchedName) then
-                ColumnLayoutName := AccScheduleName."Default Column Layout";
     end;
 
     local procedure SetBudgetFilterEnable()
@@ -1014,28 +1224,26 @@ Report 80076 "NCT Account Schedule"
             exit;
         ColumnLayout.SetRange("Column Layout Name", ColumnLayoutName);
         ColumnLayout.SetRange("Ledger Entry Type", ColumnLayout."Ledger Entry Type"::"Budget Entries");
-        BudgetFilterEnable := not ColumnLayout.IsEmpty;
+        BudgetFilterEnable := not ColumnLayout.IsEmpty();
         if not BudgetFilterEnable then
             GLBudgetFilter := '';
         GLBudgetName := CopyStr(GLBudgetFilter, 1, MaxStrLen(GLBudgetName));
         ColumnLayout.SetRange("Ledger Entry Type");
         ColumnLayout.SetFilter("Column Type", '<>%1', ColumnLayout."Column Type"::"Balance at Date");
-        StartDateEnabled := not ColumnLayout.IsEmpty;
+        StartDateEnabled := not ColumnLayout.IsEmpty();
         if not StartDateEnabled then
             StartDate := 0D;
     end;
 
     local procedure ValidateStartEndDate()
-    var
-        ltDateLbl: Label '%1..%2', Locked = true;
     begin
         if (StartDate = 0D) and (EndDate = 0D) then
             ValidateDateFilter('')
         else
-            ValidateDateFilter(StrSubstNo(ltDateLbl, StartDate, EndDate));
+            ValidateDateFilter(StrSubstNo('%1..%2', StartDate, EndDate));
     end;
 
-    local procedure ValidateDateFilter(NewDateFilter: Text)
+    local procedure ValidateDateFilter(NewDateFilter: Text[30])
     var
         FilterTokens: Codeunit "Filter Tokens";
     begin
@@ -1044,12 +1252,23 @@ Report 80076 "NCT Account Schedule"
         DateFilter := CopyStr("Acc. Schedule Line".GetFilter("Date Filter"), 1, MaxStrLen(DateFilter));
     end;
 
+
     local procedure ValidateAccSchedName()
+    var
+        FinancialReportToValidate: Record "Financial Report";
+    begin
+        if FinancialReportName <> '' then
+            FinancialReportToValidate.Get(FinancialReportName);
+        ValidateAccSchedName(FinancialReportToValidate);
+    end;
+
+    local procedure ValidateAccSchedName(var FinancialReport: Record "Financial Report")
+    var
+        AccScheduleName: Record "Acc. Schedule Name";
     begin
         AccSchedManagement.CheckName(AccSchedName);
         AccScheduleName.Get(AccSchedName);
-        if AccScheduleName."Default Column Layout" <> '' then
-            ColumnLayoutName := AccScheduleName."Default Column Layout";
+
         if AccScheduleName."Analysis View Name" <> '' then
             AnalysisView.Get(AccScheduleName."Analysis View Name")
         else begin
@@ -1061,7 +1280,8 @@ Report 80076 "NCT Account Schedule"
         Dim2FilterEnable := AnalysisView."Dimension 2 Code" <> '';
         Dim3FilterEnable := AnalysisView."Dimension 3 Code" <> '';
         Dim4FilterEnable := AnalysisView."Dimension 4 Code" <> '';
-        RequestOptionsPage.Caption := AccScheduleName.Description;
+        if FinancialReport.Name <> '' then
+            RequestOptionsPage.Caption := FinancialReport.Description;
         RequestOptionsPage.Update(false);
     end;
 
@@ -1069,4 +1289,15 @@ Report 80076 "NCT Account Schedule"
     local procedure OnAfterTransferValues(var StartDate: Date; var EndDate: Date; var DateFilterHidden: Text);
     begin
     end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterFormatZeroAmount(var AccScheduleLine: Record "Acc. Schedule Line"; var ColumnLayout: Record "Column Layout"; var Result: Text[30])
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterSetFilters(var AccScheduleName: Record "Acc. Schedule Name"; CostCenterFilter: Text; CostObjectFilter: Text; CashFlowFilter: Text; UseReqPage: Boolean)
+    begin
+    end;
 }
+

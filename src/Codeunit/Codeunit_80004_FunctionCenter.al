@@ -1548,6 +1548,9 @@ codeunit 80004 "NCT Function Center"
         TotalAmt[3] := TotalSalesCreditMemo.Amount;
         TotalAmt[4] := VATAmount;
         TotalAmt[5] := TotalSalesCreditMemo."Amount Including VAT";
+
+
+        
         if VATAmount <> 0 then begin
             SalesCreditLine.reset();
             SalesCreditLine.SetRange("Document No.", DocumentNo);

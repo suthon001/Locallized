@@ -21,16 +21,16 @@
                 <TablixBody>
                   <TablixColumns>
                     <TablixColumn>
-                      <Width>1.30741cm</Width>
+                      <Width>1.1222cm</Width>
                     </TablixColumn>
                     <TablixColumn>
-                      <Width>6.81441cm</Width>
+                      <Width>2.97795cm</Width>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>0.17639cm</Width>
                     </TablixColumn>
                     <TablixColumn>
-                      <Width>3.63361cm</Width>
+                      <Width>1.51694cm</Width>
                     </TablixColumn>
                   </TablixColumns>
                   <TablixRows>
@@ -48,8 +48,8 @@
                                     <TextRun>
                                       <Value>=Fields!RowNoCaption.Value</Value>
                                       <Style>
-                                        <FontFamily />
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -80,8 +80,8 @@
                                     <TextRun>
                                       <Value>=Parameters!AccSchedLineSpec_DescriptionCaptionLbl.Value</Value>
                                       <Style>
-                                        <FontFamily>tahoma</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -110,8 +110,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI Semibold</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -141,8 +141,8 @@
                                     <TextRun>
                                       <Value>=Fields!Header.Value</Value>
                                       <Style>
-                                        <FontFamily />
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -177,8 +177,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -213,8 +213,8 @@
                                       <Value />
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                         <TextDecoration>=IIF(Fields!Underline_control.Value=TRUE,"Underline","None")</TextDecoration>
                                       </Style>
@@ -248,8 +248,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -279,8 +279,8 @@
                                     <TextRun>
                                       <Value>=Fields!RoundingHeader.Value</Value>
                                       <Style>
-                                        <FontFamily />
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -320,8 +320,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -360,8 +360,8 @@
                                       <Value />
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                         <TextDecoration>=IIF(Fields!Underline_control.Value=TRUE,"Underline","None")</TextDecoration>
                                       </Style>
@@ -399,8 +399,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -438,8 +438,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -482,8 +482,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -515,8 +515,8 @@
                                       <Value />
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                         <TextDecoration>=IIF(Fields!Underline_control.Value=TRUE,"Underline","None")</TextDecoration>
                                       </Style>
@@ -547,8 +547,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -579,8 +579,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -616,8 +616,8 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -649,8 +649,8 @@
                                       <Value />
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                         <TextDecoration>=IIF(Fields!Underline_control.Value=TRUE,"Underline","None")</TextDecoration>
                                       </Style>
@@ -682,8 +682,8 @@
                                       <Value />
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                         <TextDecoration>=IIF(Fields!Underline_control.Value=TRUE,"Underline","None")</TextDecoration>
                                       </Style>
@@ -717,8 +717,8 @@
                                       <Value />
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                         <TextDecoration>=IIF(Fields!Underline_control.Value=TRUE,"Underline","None")</TextDecoration>
                                       </Style>
@@ -756,8 +756,8 @@
                                       <Value>=Fields!Acc__Schedule_Line__Row_No.Value</Value>
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily />
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                       </Style>
                                     </TextRun>
@@ -794,8 +794,8 @@
                                       <Value>=Fields!Acc__Schedule_Line_Description.Value</Value>
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily />
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                       </Style>
                                     </TextRun>
@@ -830,8 +830,8 @@
                                       <Value />
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily>Segoe UI</FontFamily>
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                       </Style>
                                     </TextRun>
@@ -867,8 +867,8 @@
                                       <Value>=Fields!ColumnValuesAsText.Value</Value>
                                       <Style>
                                         <FontStyle>=IIF(Fields!Italic_control.Value=TRUE,"Italic","Normal")</FontStyle>
-                                        <FontFamily />
-                                        <FontSize>8pt</FontSize>
+                                        <FontFamily>Tahoma</FontFamily>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>=IIF(Fields!Bold_control.Value=TRUE,"Bold","Normal")</FontWeight>
                                       </Style>
                                     </TextRun>
@@ -915,7 +915,7 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
+                                        <FontFamily>Tahoma</FontFamily>
                                         <FontSize>8pt</FontSize>
                                       </Style>
                                     </TextRun>
@@ -947,7 +947,7 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
+                                        <FontFamily>Tahoma</FontFamily>
                                         <FontSize>8pt</FontSize>
                                       </Style>
                                     </TextRun>
@@ -979,7 +979,7 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
+                                        <FontFamily>Tahoma</FontFamily>
                                         <FontSize>8pt</FontSize>
                                       </Style>
                                     </TextRun>
@@ -1009,7 +1009,7 @@
                                     <TextRun>
                                       <Value />
                                       <Style>
-                                        <FontFamily>Segoe UI</FontFamily>
+                                        <FontFamily>Tahoma</FontFamily>
                                         <FontSize>8pt</FontSize>
                                       </Style>
                                     </TextRun>
@@ -1173,7 +1173,7 @@
                 <KeepTogether>true</KeepTogether>
                 <DataSetName>DataSet_Result</DataSetName>
                 <Height>2.24296cm</Height>
-                <Width>11.93182cm</Width>
+                <Width>5.79349cm</Width>
                 <DataElementOutput>NoOutput</DataElementOutput>
                 <Style />
               </Tablix>
@@ -1203,21 +1203,21 @@
                     <TextRun>
                       <Value>=Fields!FiscalStartDateCaption.Value</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>7pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>: </Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>7pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>=Fields!FiscalStartDate.Value</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>7pt</FontSize>
                         <Format>d</Format>
                       </Style>
@@ -1241,7 +1241,7 @@
                     <TextRun>
                       <Value>=Fields!HeaderText.Value</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>7pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1269,7 +1269,7 @@
                     <TextRun>
                       <Value>=Fields!AccSchedLineFilter.Value</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>7pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1298,7 +1298,7 @@
                     <TextRun>
                       <Value>=Fields!COMPANYNAME.Value</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1324,7 +1324,7 @@
                     <TextRun>
                       <Value>=Fields!PeriodText.Value</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1350,7 +1350,7 @@
                     <TextRun>
                       <Value>=Fields!AccScheduleName_Description.Value</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>14pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1376,7 +1376,7 @@
                     <TextRun>
                       <Value>=User!UserID</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1403,7 +1403,7 @@
                     <TextRun>
                       <Value>=First(Fields!TodayFormatted.Value, "DataSet_Result")</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                         <Format>d</Format>
                       </Style>
@@ -1432,7 +1432,7 @@
                       <Label>PageNumber</Label>
                       <Value>=Fields!CurrReport_PAGENOCaption.Value &amp; " " &amp; Globals!PageNumber &amp; " / " &amp; Globals!TotalPages</Value>
                       <Style>
-                        <FontFamily />
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1463,7 +1463,7 @@
                     <TextRun>
                       <Value />
                       <Style>
-                        <FontFamily>Segoe UI</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>2pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1494,7 +1494,7 @@
                     <TextRun>
                       <Value />
                       <Style>
-                        <FontFamily>Segoe UI</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
@@ -1523,7 +1523,7 @@
                     <TextRun>
                       <Value />
                       <Style>
-                        <FontFamily>Segoe UI</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -1550,7 +1550,7 @@
                     <TextRun>
                       <Value />
                       <Style>
-                        <FontFamily>Segoe UI</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                       </Style>
                     </TextRun>
                   </TextRuns>

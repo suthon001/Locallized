@@ -4,6 +4,17 @@
 codeunit 80005 "NCT EventFunction"
 {
     Permissions = TableData "G/L Entry" = rimd;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Financial Report Mgt.", 'OnBeforePrint', '', false, false)]
+    local procedure OnBeforePrintFinancial(var FinancialReport: Record "Financial Report"; var IsHandled: Boolean)
+    var
+        AccountSchedule: Report "NCT Account Schedule";
+    begin
+        AccountSchedule.SetFinancialReportName(FinancialReport.Name);
+        AccountSchedule.Run();
+        IsHandled := true;
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"FA Depreciation Book", 'OnBeforeValidateNoOfDepreYears', '', false, false)]
     local procedure OnBeforeValidateNoOfDepreYears(var IsHandled: Boolean)
     begin
@@ -306,6 +317,8 @@ codeunit 80005 "NCT EventFunction"
             NewReportId := REPORT::"NCT Calculate Depreciation";
         if ReportId = report::"Inventory - List" then
             NewReportId := REPORT::"NCT Inventory - List";
+        if ReportId = Report::"Account Schedule" then
+            NewReportId := report::"NCT Account Schedule";
 
 
     end;
