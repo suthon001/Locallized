@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension NCT FA Depreciation Book (ID 80053) extends Record FA Depreciation Book.
+/// </summary>
 tableextension 80053 "NCT FA Depreciation Book" extends "FA Depreciation Book"
 {
     fields
@@ -35,6 +38,10 @@ tableextension 80053 "NCT FA Depreciation Book" extends "FA Depreciation Book"
             end;
         }
     }
+    /// <summary>
+    /// NCT CalcEndingDate2.
+    /// </summary>
+    /// <returns>Return value of type Date.</returns>
     procedure "NCT CalcDeprPeriod"()
     var
         DeprBook2: Record "Depreciation Book";
