@@ -17,6 +17,15 @@ Table 80001 "NCT Billing Receipt Header"
         {
             Caption = 'No.';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                NoSeriesMgt: Codeunit NoSeriesManagement;
+            begin
+                if rec."No." <> xRec."No." then begin
+                    NoSeriesMgt.TestManual(GetNoSeriesCode());
+                    "No. Series" := '';
+                end;
+            end;
         }
         field(3; "Posting Date"; Date)
         {

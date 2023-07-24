@@ -17,6 +17,15 @@ table 80004 "NCT Tax & WHT Header"
         {
             Caption = 'Document No.';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                NoSeriesMgt: Codeunit NoSeriesManagement;
+            begin
+                if rec."Document No." <> xRec."Document No." then begin
+                    NoSeriesMgt.TestManual(GetNoSeriesCode());
+                    "No. Series" := '';
+                end;
+            end;
         }
         field(3; "End date of Month"; Date)
         {
@@ -184,7 +193,40 @@ table 80004 "NCT Tax & WHT Header"
     end;
 
 
-
+    /// <summary> 
+    /// Description for GetNoSeriesCode.
+    /// </summary>
+    /// <returns>Return variable "Code[20]".</returns>
+    local procedure "GetNoSeriesCode"(): Code[20]
+    var
+        SalesSetup: Record "Sales & Receivables Setup";
+        PurchSetup: Record "Purchases & Payables Setup";
+    begin
+        PurchSetup.get();
+        SalesSetup.get();
+        CASE "Tax Type" OF
+            "Tax Type"::Sale:
+                begin
+                    SalesSetup.TestField("NCT Sales VAT Nos.");
+                    EXIT(SalesSetup."NCT Sales VAT Nos.");
+                end;
+            "Tax Type"::Purchase:
+                begin
+                    PurchSetup.TestField("NCT Purchase VAT Nos.");
+                    EXIT(PurchSetup."NCT Purchase VAT Nos.");
+                end;
+            "Tax Type"::WHT03:
+                begin
+                    PurchSetup.TestField("NCT WHT03 Nos.");
+                    EXIT(PurchSetup."NCT WHT03 Nos.");
+                end;
+            "Tax Type"::WHT53:
+                begin
+                    PurchSetup.TestField("NCT WHT53 Nos.");
+                    EXIT(PurchSetup."NCT WHT53 Nos.");
+                end;
+        END;
+    end;
 
     /// <summary> 
     /// Description for AssistEdit.
