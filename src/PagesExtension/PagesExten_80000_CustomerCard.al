@@ -22,6 +22,7 @@ pageextension 80000 "NCT ExtenCustomer Card" extends "Customer Card"
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the WHT Business Posting Group field.';
+                ShowMandatory = true;
             }
             field("Head Office"; rec."NCT Head Office")
             {

@@ -95,11 +95,25 @@ page 80028 "NCT Sales Receipt Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Document Date field.';
                 }
-
+                field("Due Date"; Rec."Due Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Due Date field.';
+                }
                 field("Currency Code"; Rec."Currency Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Currency Code field.';
+                }
+                field("VAT Bus. Posting Group"; rec."VAT Bus. Posting Group")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the VAT Bus. Posting Group field.';
+                }
+                field("WHT Business Posting Group"; rec."WHT Business Posting Group")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the WHT Business Posting Group field.';
                 }
                 field("Amount"; Rec."Amount")
                 {
@@ -111,6 +125,7 @@ page 80028 "NCT Sales Receipt Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Amount (LCY) field.';
                 }
+
 
                 field("Head Office"; Rec."Head Office")
                 {
@@ -127,10 +142,11 @@ page 80028 "NCT Sales Receipt Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Vat Registration No. field.';
                 }
-                field("Due Date"; Rec."Due Date")
+
+                field(Remark; rec.Remark)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Due Date field.';
+                    ToolTip = 'Specifies the value of the Remark field.';
                 }
 
                 field("Status"; Rec."Status")

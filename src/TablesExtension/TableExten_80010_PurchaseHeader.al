@@ -126,6 +126,7 @@ tableextension 80010 "NCT ExtenPurchase Header" extends "Purchase Header"
 
                 "NCT Head Office" := Vend."NCT Head Office";
                 "NCT VAT Branch Code" := Vend."NCT VAT Branch Code";
+                "NCT WHT Business Posting Group" := Vend."NCT WHT Business Posting Group";
                 if (NOT "NCT Head Office") AND ("NCT VAT Branch Code" = '') then
                     "NCT Head Office" := true;
             end;

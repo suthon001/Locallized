@@ -78,6 +78,7 @@ Table 80001 "NCT Billing Receipt Header"
                             rec."Vat Registration No." := cust."VAT Registration No.";
                             rec."Head Office" := cust."NCT Head Office";
                             rec."VAT Branch Code" := Cust."NCT VAT Branch Code";
+                            rec."WHT Business Posting Group" := Cust."NCT WHT Business Posting Group";
                             if (NOT rec."Head Office") AND (rec."VAT Branch Code" = '') then
                                 rec."Head Office" := true;
                             if rec."Document Date" = 0D then
@@ -103,6 +104,7 @@ Table 80001 "NCT Billing Receipt Header"
                             rec."Vat Registration No." := Vend."VAT Registration No.";
                             rec."Head Office" := Vend."NCT Head Office";
                             rec."VAT Branch Code" := Vend."NCT VAT Branch Code";
+                            rec."WHT Business Posting Group" := Vend."NCT WHT Business Posting Group";
                             if (NOT rec."Head Office") AND (rec."VAT Branch Code" = '') then
                                 rec."Head Office" := true;
                             if rec."Document Date" = 0D then
@@ -452,6 +454,11 @@ Table 80001 "NCT Billing Receipt Header"
             Caption = 'WHT Business Posting Group';
             TableRelation = "NCT WHT Business Posting Group"."Code";
             DataClassification = CustomerContent;
+        }
+        field(55; "Remark"; Text[250])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Remark';
         }
     }
     keys

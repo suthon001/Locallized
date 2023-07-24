@@ -137,6 +137,7 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
 
                 "NCT Head Office" := Cust."NCT Head Office";
                 "NCT VAT Branch Code" := Cust."NCT VAT Branch Code";
+                "NCT WHT Business Posting Group" := Cust."NCT WHT Business Posting Group";
                 if (NOT "NCT Head Office") AND ("NCT VAT Branch Code" = '') then
                     "NCT Head Office" := true;
             end;
