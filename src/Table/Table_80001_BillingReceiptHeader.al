@@ -66,7 +66,7 @@ Table 80001 "NCT Billing Receipt Header"
                             IF NOT Cust.GET("Bill/Pay-to Cust/Vend No.") THEN
                                 Cust.INIT();
                             rec."Bill/Pay-to Cust/Vend Name" := Cust.Name;
-                            rec."Bill/Pay-to Cus/Vend Name 2" := Cust."Name 2";
+                            rec."Bill/Pay-to Cust/Vend Name 2" := Cust."Name 2";
                             rec."Bill/Pay-to Address" := Cust.Address;
                             rec."Bill/Pay-to Address 2" := Cust."Address 2";
                             rec."Bill/Pay-to Post Code" := Cust."Post Code";
@@ -91,7 +91,7 @@ Table 80001 "NCT Billing Receipt Header"
                             IF NOT Vend.GET("Bill/Pay-to Cust/Vend No.") THEN
                                 Vend.INIT();
                             rec."Bill/Pay-to Cust/Vend Name" := Vend.Name;
-                            rec."Bill/Pay-to Cus/Vend Name 2" := Vend."Name 2";
+                            rec."Bill/Pay-to Cust/Vend Name 2" := Vend."Name 2";
                             rec."Bill/Pay-to Address" := Vend.Address;
                             rec."Bill/Pay-to Address 2" := Vend."Address 2";
                             rec."Bill/Pay-to Post Code" := Vend."Post Code";
@@ -119,7 +119,7 @@ Table 80001 "NCT Billing Receipt Header"
             Caption = 'Bill/Pay-to Cust/Vend Name';
             DataClassification = CustomerContent;
         }
-        field(7; "Bill/Pay-to Cus/Vend Name 2"; Text[50])
+        field(7; "Bill/Pay-to Cust/Vend Name 2"; Text[50])
         {
             Caption = 'Bill/Pay-to Cust/Vend Name 2';
             DataClassification = CustomerContent;

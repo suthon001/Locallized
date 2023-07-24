@@ -52,7 +52,7 @@ page 80024 "NCT Sales Billing List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Bill/Pay-to Cust/Vend Address 2 field.';
                 }
-                field("Bill/Pay-to Cus/Vend Name 2"; Rec."Bill/Pay-to Cus/Vend Name 2")
+                field("Bill/Pay-to Cust/Vend Name 2"; Rec."Bill/Pay-to Cust/Vend Name 2")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Bill/Pay-to Cus/Vend Name2 field.';
