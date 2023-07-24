@@ -447,6 +447,12 @@ Table 80001 "NCT Billing Receipt Header"
             Caption = 'Create to Journal';
 
         }
+        field(54; "WHT Business Posting Group"; Code[10])
+        {
+            Caption = 'WHT Business Posting Group';
+            TableRelation = "NCT WHT Business Posting Group"."Code";
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

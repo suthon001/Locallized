@@ -111,6 +111,7 @@ page 80028 "NCT Sales Receipt Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Amount (LCY) field.';
                 }
+
                 field("Head Office"; Rec."Head Office")
                 {
                     ApplicationArea = All;
