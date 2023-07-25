@@ -33,7 +33,6 @@ report 80037 "NCT FA G/L Journal Voucher"
                 column(DocumentNo; GenJournalLine."DOcument No.") { }
                 column(ExchangeRate; ExchangeRate) { }
                 column(PostingDescription; PostingDescription) { }
-                column(BW_Journal_Description; "NCT Journal Description") { }
                 column(ComText_1; ComText[1]) { }
                 column(ComText_2; ComText[2]) { }
                 column(ComText_3; ComText[3]) { }
