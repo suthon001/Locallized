@@ -5,6 +5,7 @@ pageextension 80020 "NCT JounralBatch" extends "FA Journal Batches"
 {
     layout
     {
+
         addafter("No. Series")
         {
             field("Document No. Series"; Rec."NCT Document No. Series")
@@ -12,6 +13,10 @@ pageextension 80020 "NCT JounralBatch" extends "FA Journal Batches"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Document No. Series field.';
             }
+        }
+        modify("No. Series")
+        {
+            Visible = false;
         }
 
     }

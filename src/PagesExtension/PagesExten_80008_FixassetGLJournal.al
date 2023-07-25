@@ -14,6 +14,14 @@ pageextension 80008 "NCT Asset G/L Journal" extends "Fixed Asset G/L Journal"
                     CurrPage.Update();
             end;
         }
+        // addafter("Document No.")
+        // {
+        //     field("External Document No."; rec."External Document No.")
+        //     {
+        //         ApplicationArea = All;
+        //         ToolTip = 'Specifies the value of the External Document No field.';
+        //     }
+        // }
         addafter(Description)
         {
             field("Journal Description"; Rec."NCT Journal Description")
@@ -22,10 +30,16 @@ pageextension 80008 "NCT Asset G/L Journal" extends "Fixed Asset G/L Journal"
                 ToolTip = 'Specifies the value of the Journal Description field.';
             }
         }
+        modify("External Document No.")
+        {
+            Visible = true;
+        }
+        moveafter("Document No."; "External Document No.")
     }
 
     actions
     {
+
         addlast("F&unctions")
         {
             action("SetNetBalance")

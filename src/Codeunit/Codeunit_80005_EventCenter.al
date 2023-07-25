@@ -5,6 +5,23 @@ codeunit 80005 "NCT EventFunction"
 {
     Permissions = TableData "G/L Entry" = rimd;
 
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Test Report-Print", 'OnBeforePrintGenJnlLine', '', false, false)]
+    local procedure OnBeforePrintGenJnlLine(var NewGenJnlLine: Record "Gen. Journal Line"; var IsHandled: Boolean)
+    var
+        GenJnlLine: Record "Gen. Journal Line";
+        GenJnlTemplate: Record "Gen. Journal Template";
+    begin
+        GenJnlLine.Copy(NewGenJnlLine);
+        GenJnlTemplate.Get(GenJnlLine."Journal Template Name");
+        if GenJnlTemplate.Type = GenJnlTemplate.Type::Assets then begin
+            GenJnlLine.SetRange("Journal Template Name", GenJnlLine."Journal Template Name");
+            GenJnlLine.SetRange("Journal Batch Name", GenJnlLine."Journal Batch Name");
+            REPORT.Run(REPORT::"NCT Fixed Asset Journal - Test", true, false, GenJnlLine);
+            IsHandled := true;
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Financial Report Mgt.", 'OnBeforePrint', '', false, false)]
     local procedure OnBeforePrintFinancial(var FinancialReport: Record "Financial Report"; var IsHandled: Boolean)
     var
