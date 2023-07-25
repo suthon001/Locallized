@@ -509,7 +509,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                     "NCT VAT Branch Code" := Vend."NCT VAT Branch Code";
                     "VAT Registration No." := Vend."VAT Registration No.";
                 end;
-
+                rec."NCT Journal Description" := rec.Description;
             end;
         }
         modify("Account Type")
