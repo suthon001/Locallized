@@ -17,7 +17,14 @@ pageextension 80080 "NCT FixedassetCard" extends "Fixed Asset Card"
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the Quantity field.';
             }
+            field("Price per Unit"; rec."NCT Price per Unit")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Price per Unit field.';
+            }
+
         }
+
     }
 
     actions

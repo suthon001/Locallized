@@ -1433,24 +1433,26 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox60">
+                        <Textbox Name="InvoiceNo">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!InvoiceNo.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox60</rd:DefaultName>
+                          <rd:DefaultName>InvoiceNo</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1465,24 +1467,26 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox48">
+                        <Textbox Name="InvoiceNo1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!InvoiceNo.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox48</rd:DefaultName>
+                          <rd:DefaultName>InvoiceNo1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -3003,6 +3007,9 @@ End Function
         </Field>
         <Field Name="FAPostingGroupAcquisitionCostAccount">
           <DataField>FAPostingGroupAcquisitionCostAccount</DataField>
+        </Field>
+        <Field Name="InvoiceNo">
+          <DataField>InvoiceNo</DataField>
         </Field>
       </Fields>
       <Query>

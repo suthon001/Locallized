@@ -56,12 +56,13 @@ report 80040 "NCT Fixed Asset Purchase"
             column(FAPostingGroupAcquisitionCostAccount; FAPostingGroup."Acquisition Cost Account")
             {
             }
+            column(InvoiceNo; InvoiceNo) { }
 
             trigger OnAfterGetRecord()
             begin
                 vgAcqCost := 0;
                 vgAcqDate := 0D;
-
+                InvoiceNo := '';
                 IF NOT FADeprBook.GET("No.", DeprBookCode) THEN
                     FADeprBook.init();
 
@@ -74,7 +75,7 @@ report 80040 "NCT Fixed Asset Purchase"
                     FALedgerEntry.CalcSums(Amount);
                     vgAcqDate := FALedgerEntry."Posting Date";
                     vgDcoumentNo := FALedgerEntry."Document No.";
-
+                    InvoiceNo := FALedgerEntry."External Document No.";
                     vgAcqCost := FALedgerEntry.Amount;
 
                 END;
@@ -130,6 +131,7 @@ report 80040 "NCT Fixed Asset Purchase"
         FALedgerEntry: Record "FA Ledger Entry";
         vgAcqDate: Date;
         vgAcqCost: Decimal;
+        InvoiceNo: code[35];
         FADeprBook: Record "FA Depreciation Book";
         DeprBookCode: Code[10];
         vgDcoumentNo: Code[30];
