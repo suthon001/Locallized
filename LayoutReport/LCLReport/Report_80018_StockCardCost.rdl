@@ -22,7 +22,7 @@
                   <Width>0.7874in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.02362in</Width>
+                  <Width>0.79445in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.9075in</Width>
@@ -3999,7 +3999,7 @@
             <Top>0.29771cm</Top>
             <Left>0.00002in</Left>
             <Height>1.5141in</Height>
-            <Width>10.90551in</Width>
+            <Width>10.67634in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -4010,7 +4010,7 @@
         <Height>4.32873cm</Height>
         <Style />
       </Body>
-      <Width>27.73937cm</Width>
+      <Width>27.2102cm</Width>
       <Page>
         <PageHeader>
           <Height>2.41792cm</Height>
@@ -4102,7 +4102,7 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox10</rd:DefaultName>
-              <Left>8.17128in</Left>
+              <Left>7.92128in</Left>
               <Height>0.6cm</Height>
               <Width>6.945cm</Width>
               <ZIndex>2</ZIndex>
@@ -4159,7 +4159,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.25212in</Top>
-              <Left>8.17128in</Left>
+              <Left>7.92128in</Left>
               <Height>0.6cm</Height>
               <Width>6.945cm</Width>
               <ZIndex>3</ZIndex>
@@ -4194,7 +4194,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.48834in</Top>
-              <Left>8.17128in</Left>
+              <Left>7.92128in</Left>
               <Height>0.6cm</Height>
               <Width>6.945cm</Width>
               <ZIndex>4</ZIndex>
@@ -4229,7 +4229,7 @@
               <Top>1.94167cm</Top>
               <Left>0cm</Left>
               <Height>11pt</Height>
-              <Width>27.7cm</Width>
+              <Width>27.06505cm</Width>
               <ZIndex>5</ZIndex>
               <DataElementOutput>NoOutput</DataElementOutput>
               <Style>
