@@ -5,11 +5,10 @@ report 80059 "NCT Fixed Asset - Book Value01"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/StandardReport/Report_80059_FixedAssetBookValue01.rdl';
-    //ApplicationArea = FixedAssets;
+    ApplicationArea = FixedAssets;
     Caption = 'Fixed Asset Book Value 01';
     PreviewMode = PrintLayout;
-    UsageCategory = None;
-    ApplicationArea = All;
+    UsageCategory = ReportsAndAnalysis;
 
     dataset
     {
@@ -208,26 +207,26 @@ report 80059 "NCT Fixed Asset - Book Value01"
                     i := i + 1;
                     case i of
                         1:
-                            gvPostingType := FADeprBook.FieldNo("Acquisition Cost");
+                            PostingType := FADeprBook.FieldNo("Acquisition Cost");
                         2:
-                            gvPostingType := FADeprBook.FieldNo(Depreciation);
+                            PostingType := FADeprBook.FieldNo(Depreciation);
                         3:
-                            gvPostingType := FADeprBook.FieldNo("Write-Down");
+                            PostingType := FADeprBook.FieldNo("Write-Down");
                         4:
-                            gvPostingType := FADeprBook.FieldNo(Appreciation);
+                            PostingType := FADeprBook.FieldNo(Appreciation);
                         5:
-                            gvPostingType := FADeprBook.FieldNo("Custom 1");
+                            PostingType := FADeprBook.FieldNo("Custom 1");
                         6:
-                            gvPostingType := FADeprBook.FieldNo("Custom 2");
+                            PostingType := FADeprBook.FieldNo("Custom 2");
                     end;
                     if StartingDate <= 00000101D then
                         StartAmounts[i] := 0
                     else
-                        StartAmounts[i] := FAGenReport.CalcFAPostedAmount("No.", gvPostingType, Period1, StartingDate,
+                        StartAmounts[i] := FAGenReport.CalcFAPostedAmount("No.", PostingType, Period1, StartingDate,
                             EndingDate, DeprBookCode, BeforeAmount, EndingAmount, false, true);
                     NetChangeAmounts[i] :=
                       FAGenReport.CalcFAPostedAmount(
-                        "No.", gvPostingType, Period2, StartingDate, EndingDate,
+                        "No.", PostingType, Period2, StartingDate, EndingDate,
                         DeprBookCode, BeforeAmount, EndingAmount, false, true);
                     if GetPeriodDisposal() then
                         DisposalAmounts[i] := -(StartAmounts[i] + NetChangeAmounts[i])
@@ -351,11 +350,11 @@ report 80059 "NCT Fixed Asset - Book Value01"
         if GroupTotals = GroupTotals::"FA Posting Group" then
             FAGenReport.SetFAPostingGroup("Fixed Asset", DeprBook.Code);
         FAGenReport.AppendFAPostingFilter("Fixed Asset", StartingDate, EndingDate);
-        FAFilter := "Fixed Asset".GetFilters;
+        FAFilter := "Fixed Asset".GetFilters();
         MainHeadLineText := Text000;
         if BudgetReport then
             MainHeadLineText := StrSubstNo('%1 %2', MainHeadLineText, Text001);
-        DeprBookText := StrSubstNo('%1%2 %3', DeprBook.TableCaption, ':', DeprBookCode);
+        DeprBookText := StrSubstNo('%1%2 %3', DeprBook.TableCaption(), ':', DeprBookCode);
         MakeGroupTotalText();
         FAGenReport.ValidateDates(StartingDate, EndingDate);
         MakeDateText();
@@ -369,31 +368,21 @@ report 80059 "NCT Fixed Asset - Book Value01"
     end;
 
     var
-        Text000: Label 'Fixed Asset - Book Value 01';
-        Text001: Label '(Budget Report)';
-        Text002: Label 'Group Total';
-        Text003: Label 'Group Totals';
-        Text004: Label 'in Period';
-        Text005: Label 'Disposal';
-        Text006: Label 'Addition';
-        Text007: Label '%1 has been modified in fixed asset %2.';
         FASetup: Record "FA Setup";
         DeprBook: Record "Depreciation Book";
-        FADeprBook: Record "FA Depreciation Book";
         FA: Record "Fixed Asset";
         FAPostingTypeSetup: Record "FA Posting Type Setup";
         FAGenReport: Codeunit "FA General Report";
         BudgetDepreciation: Codeunit "Budget Depreciation";
-        DeprBookCode: Code[10];
         FAFilter: Text;
-        MainHeadLineText: Text;
-        DeprBookText: Text;
+        MainHeadLineText: Text[100];
+        DeprBookText: Text[50];
         GroupCodeName: Text[50];
         GroupHeadLine: Text[50];
-        FANo: Text;
-        FADescription: Text;
+        FANo: Text[50];
+        FADescription: Text[100];
         GroupTotals: Option " ","FA Class","FA Subclass","FA Location","Main Asset","Global Dimension 1","Global Dimension 2","FA Posting Group";
-        HeadLineText: array[10] of Text;
+        HeadLineText: array[10] of Text[50];
         StartAmounts: array[6] of Decimal;
         NetChangeAmounts: array[6] of Decimal;
         DisposalAmounts: array[6] of Decimal;
@@ -409,12 +398,11 @@ report 80059 "NCT Fixed Asset - Book Value01"
         i: Integer;
         j: Integer;
         NumberOfTypes: Integer;
-        gvPostingType: Integer;
+        PostingType: Integer;
         Period1: Option "Before Starting Date","Net Change","at Ending Date";
         Period2: Option "Before Starting Date","Net Change","at Ending Date";
         StartingDate: Date;
         EndingDate: Date;
-        PrintDetails: Boolean;
         BudgetReport: Boolean;
         BeforeAmount: Decimal;
         EndingAmount: Decimal;
@@ -422,9 +410,23 @@ report 80059 "NCT Fixed Asset - Book Value01"
         DisposalDate: Date;
         StartText: Text[30];
         EndText: Text[30];
+
+        Text000: Label 'Fixed Asset - Book Value 01';
+        Text001: Label '(Budget Report)';
+        Text002: Label 'Group Total';
+        Text003: Label 'Group Totals';
+        Text004: Label 'in Period';
+        Text005: Label 'Disposal';
+        Text006: Label 'Addition';
+        Text007: Label '%1 has been modified in fixed asset %2.';
         PageCaptionLbl: Label 'Page';
         TotalCaptionLbl: Label 'Total';
         GroupTotalsTxt: Label ' ,FA Class,FA Subclass,FA Location,Main Asset,Global Dimension 1,Global Dimension 2,FA Posting Group';
+
+    protected var
+        FADeprBook: Record "FA Depreciation Book";
+        DeprBookCode: Code[10];
+        PrintDetails: Boolean;
 
     local procedure AddPostingType(PostingType: Option "Write-Down",Appreciation,"Custom 1","Custom 2")
     var
@@ -432,23 +434,23 @@ report 80059 "NCT Fixed Asset - Book Value01"
         j: Integer;
     begin
         i := PostingType + 3;
-        //   with FAPostingTypeSetup do begin
-        case PostingType of
-            PostingType::"Write-Down":
-                FAPostingTypeSetup.Get(DeprBookCode, FAPostingTypeSetup."FA Posting Type"::"Write-Down");
-            PostingType::Appreciation:
-                FAPostingTypeSetup.Get(DeprBookCode, FAPostingTypeSetup."FA Posting Type"::Appreciation);
-            PostingType::"Custom 1":
-                FAPostingTypeSetup.Get(DeprBookCode, FAPostingTypeSetup."FA Posting Type"::"Custom 1");
-            PostingType::"Custom 2":
-                FAPostingTypeSetup.Get(DeprBookCode, FAPostingTypeSetup."FA Posting Type"::"Custom 2");
+        with FAPostingTypeSetup do begin
+            case PostingType of
+                PostingType::"Write-Down":
+                    Get(DeprBookCode, "FA Posting Type"::"Write-Down");
+                PostingType::Appreciation:
+                    Get(DeprBookCode, "FA Posting Type"::Appreciation);
+                PostingType::"Custom 1":
+                    Get(DeprBookCode, "FA Posting Type"::"Custom 1");
+                PostingType::"Custom 2":
+                    Get(DeprBookCode, "FA Posting Type"::"Custom 2");
+            end;
+            if "Depreciation Type" then
+                j := 2
+            else
+                if "Acquisition Type" then
+                    j := 1;
         end;
-        if FAPostingTypeSetup."Depreciation Type" then
-            j := 2
-        else
-            if FAPostingTypeSetup."Acquisition Type" then
-                j := 1;
-        //    end;
         if j > 0 then begin
             StartAmounts[j] := StartAmounts[j] + StartAmounts[i];
             StartAmounts[i] := 0;
@@ -533,31 +535,31 @@ report 80059 "NCT Fixed Asset - Book Value01"
             GroupNetChangeAmounts[j] := 0;
             GroupDisposalAmounts[j] := 0;
         end;
-        //  with "Fixed Asset" do
-        case GroupTotals of
-            GroupTotals::"FA Class":
-                GroupHeadLine := Format("Fixed Asset"."FA Class Code");
-            GroupTotals::"FA Subclass":
-                GroupHeadLine := Format("Fixed Asset"."FA Subclass Code");
-            GroupTotals::"FA Location":
-                GroupHeadLine := Format("Fixed Asset"."FA Location Code");
-            GroupTotals::"Main Asset":
-                begin
-                    FA."Main Asset/Component" := FA."Main Asset/Component"::"Main Asset";
-                    GroupHeadLine :=
-                      Format(StrSubstNo('%1 %2', Format(FA."Main Asset/Component"), "Fixed Asset"."Component of Main Asset"));
-                    if "Fixed Asset"."Component of Main Asset" = '' then
-                        GroupHeadLine := Format(StrSubstNo('%1 %2', GroupHeadLine, '*****'));
-                end;
-            GroupTotals::"Global Dimension 1":
-                GroupHeadLine := Format("Fixed Asset"."Global Dimension 1 Code");
-            GroupTotals::"Global Dimension 2":
-                GroupHeadLine := Format("Fixed Asset"."Global Dimension 2 Code");
-            GroupTotals::"FA Posting Group":
-                //   end;
-                if GroupHeadLine = '' then
-                    GroupHeadLine := Format('*****');
-        end;
+        with "Fixed Asset" do
+            case GroupTotals of
+                GroupTotals::"FA Class":
+                    GroupHeadLine := Format("FA Class Code");
+                GroupTotals::"FA Subclass":
+                    GroupHeadLine := Format("FA Subclass Code");
+                GroupTotals::"FA Location":
+                    GroupHeadLine := Format("FA Location Code");
+                GroupTotals::"Main Asset":
+                    begin
+                        FA."Main Asset/Component" := FA."Main Asset/Component"::"Main Asset";
+                        GroupHeadLine :=
+                          Format(StrSubstNo('%1 %2', Format(FA."Main Asset/Component"), "Component of Main Asset"));
+                        if "Component of Main Asset" = '' then
+                            GroupHeadLine := Format(StrSubstNo('%1 %2', GroupHeadLine, '*****'));
+                    end;
+                GroupTotals::"Global Dimension 1":
+                    GroupHeadLine := Format("Global Dimension 1 Code");
+                GroupTotals::"Global Dimension 2":
+                    GroupHeadLine := Format("Global Dimension 2 Code");
+                GroupTotals::"FA Posting Group":
+                    GroupHeadLine := Format("FA Posting Group");
+            end;
+        if GroupHeadLine = '' then
+            GroupHeadLine := Format('*****');
     end;
 
     local procedure UpdateTotals()

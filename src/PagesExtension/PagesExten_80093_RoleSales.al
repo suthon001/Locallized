@@ -213,6 +213,31 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
 
                 }
             }
+            group(FixedAssets2)
+            {
+                Caption = 'Fixed Assets';
+                action(FixedAssets)
+                {
+                    Caption = 'Fixed Asset List';
+                    ApplicationArea = all;
+                    RunObject = page "Fixed Asset List";
+                    ToolTip = 'Executes the Fixed Asset List action.';
+                }
+                action(FixedAssetsJournal)
+                {
+                    Caption = 'Fixed Asset Journal';
+                    ApplicationArea = all;
+                    RunObject = page "Fixed Asset Journal";
+                    ToolTip = 'Executes the Fixed Asset Journalaction.';
+                }
+                action(FixedAssetsGLJournal)
+                {
+                    Caption = 'Fixed Asset G/L Journal';
+                    ApplicationArea = all;
+                    RunObject = page "Fixed Asset G/L Journal";
+                    ToolTip = 'Executes the Fixed Asset G/L Journal Journalaction.';
+                }
+            }
 
 
         }

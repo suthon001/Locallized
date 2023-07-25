@@ -25,7 +25,7 @@
                   <Width>1.11967in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.5844in</Width>
+                  <Width>1.24065in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.7874in</Width>
@@ -52,7 +52,7 @@
                   <Width>0.7874in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.7874in</Width>
+                  <Width>0.88114in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -719,7 +719,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Opening Bal</Value>
+                                  <Value>Opening Balance</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>6pt</FontSize>
@@ -1348,7 +1348,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Closing Bal</Value>
+                                  <Value>Closing Balance</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>6pt</FontSize>
@@ -1911,7 +1911,7 @@
             </SortExpressions>
             <Top>0.23421cm</Top>
             <Height>0.93414in</Height>
-            <Width>10.90552in</Width>
+            <Width>10.65551in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1922,7 +1922,7 @@
         <Height>2.87667cm</Height>
         <Style />
       </Body>
-      <Width>27.70002cm</Width>
+      <Width>27.1444cm</Width>
       <Page>
         <PageHeader>
           <Height>2.70896cm</Height>
@@ -2009,7 +2009,7 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox10</rd:DefaultName>
-              <Left>8.17126in</Left>
+              <Left>7.92126in</Left>
               <Height>0.6cm</Height>
               <Width>6.945cm</Width>
               <ZIndex>2</ZIndex>
@@ -2065,7 +2065,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.23622in</Top>
-              <Left>8.17126in</Left>
+              <Left>7.92126in</Left>
               <Height>0.6cm</Height>
               <Width>6.945cm</Width>
               <ZIndex>3</ZIndex>
@@ -2100,7 +2100,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.47244in</Top>
-              <Left>8.17126in</Left>
+              <Left>7.92126in</Left>
               <Height>0.6cm</Height>
               <Width>6.945cm</Width>
               <ZIndex>4</ZIndex>
