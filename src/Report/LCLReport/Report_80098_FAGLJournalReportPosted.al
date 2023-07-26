@@ -40,7 +40,7 @@ report 80098 "NCT FA G/L Journal Voucher (P)"
                 column(ComText_4; ComText[4]) { }
                 column(ComText_5; ComText[5]) { }
                 column(ComText_6; ComText[6]) { }
-                column(CreateDocBy; GenJournalLine."NCT Create By") { }
+                column(CreateDocBy; UserName) { }
                 column(SplitDate_1; SplitDate[1]) { }
                 column(SplitDate_2; SplitDate[2]) { }
                 column(SplitDate_3; SplitDate[3]) { }
@@ -72,10 +72,18 @@ report 80098 "NCT FA G/L Journal Voucher (P)"
                 GetExchange();
                 FunctionCenter."ConvExchRate"(CurrencyCode, CurrencyFactor, ExchangeRate);
                 AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';
-                NewDate := DT2Date(GenJournalLine."NCT Create DateTime");
-                SplitDate[1] := Format(NewDate, 0, '<Day,2>');
-                SplitDate[2] := Format(NewDate, 0, '<Month,2>');
-                SplitDate[3] := Format(NewDate, 0, '<Year4>');
+                gvGenLine.reset();
+                gvGenLine.SetRange("Journal Template Name", "Journal Template Name");
+                gvGenLine.SetRange("Journal Batch Name", "Journal Batch Name");
+                gvGenLine.SetRange("Document No.", "Document No.");
+                gvGenLine.SetFilter("NCT Create By", '<>%1', '');
+                if gvGenLine.FindFirst() then begin
+                    UserName := gvGenLine."NCT Create By";
+                    NewDate := DT2Date(gvGenLine."NCT Create DateTime");
+                    SplitDate[1] := Format(NewDate, 0, '<Day,2>');
+                    SplitDate[2] := Format(NewDate, 0, '<Month,2>');
+                    SplitDate[3] := Format(NewDate, 0, '<Year4>');
+                end;
                 FindPostingDescription();
                 ltGenjournalTemplate.Get(GenJournalLine."Journal Template Name");
                 GenJournalBatchName.GET(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name");
@@ -159,6 +167,8 @@ report 80098 "NCT FA G/L Journal Voucher (P)"
         GenJournalBatchName: Record "Gen. Journal Batch";
         HaveItemVAT, groupping : Boolean;
         glName: Text;
+        UserName: Code[50];
+        gvGenLine: Record "Posted Gen. Journal Line";
 
 
 }

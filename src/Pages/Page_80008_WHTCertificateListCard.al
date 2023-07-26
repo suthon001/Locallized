@@ -168,7 +168,7 @@ page 80008 "NCT WHT Certificate"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the ชั้น field.';
                 }
-                field("NCT WHT No."; rec."WHT No.")
+                field("WHT of No."; rec."WHT of No.")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the เลขที่ field.';

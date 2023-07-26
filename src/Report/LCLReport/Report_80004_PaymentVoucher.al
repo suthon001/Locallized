@@ -50,7 +50,7 @@ report 80004 "NCT Payment Voucher"
                 column(VendText_5; VendText[5]) { }
                 column(VendText_9; VendText[9]) { }
                 column(VendText_10; VendText[10]) { }
-                column(CreateDocBy; GenJournalLine."NCT Create By") { }
+                column(CreateDocBy; UserName) { }
                 column(SplitDate_1; SplitDate[1]) { }
                 column(SplitDate_2; SplitDate[2]) { }
                 column(SplitDate_3; SplitDate[3]) { }
@@ -228,12 +228,22 @@ report 80004 "NCT Payment Voucher"
                 GetVendorExchange();
                 FunctionCenter."VendInfo"(VendorCode, VendText);
 
+
                 FunctionCenter."ConvExchRate"(CurrencyCode, CurrencyFactor, ExchangeRate);
                 AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';
-                NewDate := DT2Date(GenJournalLine."NCT Create DateTime");
-                SplitDate[1] := Format(NewDate, 0, '<Day,2>');
-                SplitDate[2] := Format(NewDate, 0, '<Month,2>');
-                SplitDate[3] := Format(NewDate, 0, '<Year4>');
+
+                gvGenLine.reset();
+                gvGenLine.SetRange("Journal Template Name", "Journal Template Name");
+                gvGenLine.SetRange("Journal Batch Name", "Journal Batch Name");
+                gvGenLine.SetRange("Document No.", "Document No.");
+                gvGenLine.SetFilter("NCT Create By", '<>%1', '');
+                if gvGenLine.FindFirst() then begin
+                    UserName := gvGenLine."NCT Create By";
+                    NewDate := DT2Date(gvGenLine."NCT Create DateTime");
+                    SplitDate[1] := Format(NewDate, 0, '<Day,2>');
+                    SplitDate[2] := Format(NewDate, 0, '<Month,2>');
+                    SplitDate[3] := Format(NewDate, 0, '<Year4>');
+                end;
                 CheckLineData();
                 FindPostingDescription();
 
@@ -250,6 +260,9 @@ report 80004 "NCT Payment Voucher"
                 FunctionCenter.JnlFindApplyEntries(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name", GenJournalLine."Posting Date",
                 GenJournalLine."Document No.", CVBufferEntry);
                 HaveApply := CVBufferEntry.Count <> 0;
+
+
+
             end;
         }
 
@@ -370,6 +383,9 @@ report 80004 "NCT Payment Voucher"
         groupping: Boolean;
         AccountName: text[100];
         glAccount: Record "G/L Account";
+        UserName: Code[50];
+        gvGenLine: Record "Gen. Journal Line";
+
 
 
 }

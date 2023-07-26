@@ -255,7 +255,7 @@ table 80009 "NCT WHT Header"
         }
         field(26; "Wht Post Code"; Text[20])
         {
-            Caption = 'Wht Post Code';
+            Caption = 'รหัสไปรษณีย์';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
@@ -409,8 +409,8 @@ table 80009 "NCT WHT Header"
             i := CheckLen(Addr[i], VTxT, i);
             Addr[i] += VTxT;
         end;
-        if "WHT No." <> '' then begin
-            VTxT := 'ห้องเลขที่ ' + "WHT No." + ' ';
+        if "WHT of No." <> '' then begin
+            VTxT := 'ห้องเลขที่ ' + "WHT of No." + ' ';
             i := CheckLen(Addr[i], VTxT, i);
             Addr[i] += VTxT;
         end;
