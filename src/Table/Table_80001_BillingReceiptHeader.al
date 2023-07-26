@@ -672,6 +672,7 @@ Table 80001 "NCT Billing Receipt Header"
         GenJournalTem: Record "Gen. Journal Template";
         PurchaseBillingLine, PurchaseBillingLineInvoice : Record "NCT Billing Receipt Line";
         ltVendorLedger: Record "Vendor Ledger Entry";
+        ltGeneralSetup: Record "General Ledger Setup";
         WHTAppliedFunc: codeunit "NCT EventFunction";
         DocumentNo: code[20];
         TotalAmt: Decimal;
@@ -681,6 +682,7 @@ Table 80001 "NCT Billing Receipt Header"
         TotalAmt := 0;
         InvoiceNO := '';
         whtBus := '';
+        ltGeneralSetup.GET();
         rec.TestField("Journal Template Name");
         rec.TestField("Journal Batch Name");
         rec.TestField("Account No.");
@@ -712,7 +714,8 @@ Table 80001 "NCT Billing Receipt Header"
                 GenJournalLine."External Document No." := PurchaseBillingLine."Document No.";
                 GenJournalLine.Validate(Amount, PurchaseBillingLine."Amount");
                 GenJournalLine."NCT Ref. Billing & Receipt No." := rec."No.";
-
+                GenJournalLine."NCT Create By" := COPYSTR(UserId(), 1, 50);
+                GenJournalLine."NCT Create DateTime" := CurrentDateTime();
                 if PurchaseBillingLine."Source Document Type" = PurchaseBillingLine."Source Document Type"::Invoice then
                     GenJournalLine."Applies-to Doc. Type" := GenJournalLine."Applies-to Doc. Type"::Invoice
                 else
@@ -729,30 +732,32 @@ Table 80001 "NCT Billing Receipt Header"
                         ltVendorLedger.Validate("Amount to Apply", abs(PurchaseBillingLine."Amount"));
                     ltVendorLedger.Modify();
                 end;
-
-                PurchaseBillingLineInvoice.reset();
-                PurchaseBillingLineInvoice.SetRange("Document Type", PurchaseBillingLine."Document Type");
-                PurchaseBillingLineInvoice.SetFilter("Document No.", '<>%1', PurchaseBillingLine."Document No.");
-                PurchaseBillingLineInvoice.SetRange("Source Document No.", PurchaseBillingLine."Source Document No.");
-                PurchaseBillingLineInvoice.SetFilter(Status, '>%1', 2);
-                if PurchaseBillingLineInvoice.IsEmpty then
-                    if StrPos(InvoiceNO, PurchaseBillingLine."Source Document No.") = 0 then begin
-                        if InvoiceNO <> '' then
-                            InvoiceNO := InvoiceNO + '|';
-                        InvoiceNO := InvoiceNO + PurchaseBillingLine."Source Document No.";
-                    end;
-
+                if ltGeneralSetup."NCT Auto WHT Purchase Bill." then begin
+                    PurchaseBillingLineInvoice.reset();
+                    PurchaseBillingLineInvoice.SetRange("Document Type", PurchaseBillingLine."Document Type");
+                    PurchaseBillingLineInvoice.SetFilter("Document No.", '<>%1', PurchaseBillingLine."Document No.");
+                    PurchaseBillingLineInvoice.SetRange("Source Document No.", PurchaseBillingLine."Source Document No.");
+                    PurchaseBillingLineInvoice.SetFilter(Status, '>%1', 2);
+                    if PurchaseBillingLineInvoice.IsEmpty then
+                        if StrPos(InvoiceNO, PurchaseBillingLine."Source Document No.") = 0 then begin
+                            if InvoiceNO <> '' then
+                                InvoiceNO := InvoiceNO + '|';
+                            InvoiceNO := InvoiceNO + PurchaseBillingLine."Source Document No.";
+                        end;
+                end;
 
 
             until PurchaseBillingLine.Next() = 0;
-            if InvoiceNO <> '' then begin
-                GenJournalLine.reset();
-                GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
-                GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
-                GenJournalLine.SetRange("Document No.", DocumentNo);
-                if GenJournalLine.FindFirst() then
-                    WHTAppliedFunc.InsertWHTCertificate(GenJournalLine, InvoiceNO);
-            end;
+
+            if ltGeneralSetup."NCT Auto WHT Purchase Bill." then
+                if InvoiceNO <> '' then begin
+                    GenJournalLine.reset();
+                    GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
+                    GenJournalLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                    GenJournalLine.SetRange("Document No.", DocumentNo);
+                    if GenJournalLine.FindFirst() then
+                        WHTAppliedFunc.InsertWHTCertificate(GenJournalLine, InvoiceNO);
+                end;
 
             GenJournalLine.reset();
             GenJournalLine.SetRange("Journal Template Name", rec."Journal Template Name");
@@ -778,6 +783,8 @@ Table 80001 "NCT Billing Receipt Header"
             GenJournalLine."NCT Ref. Billing & Receipt No." := rec."No.";
             GenJournalLine.Validate("Account No.", rec."Account No.");
             GenJournalLine.Validate(Amount, -TotalAmt);
+            GenJournalLine."NCT Create By" := COPYSTR(UserId(), 1, 50);
+            GenJournalLine."NCT Create DateTime" := CurrentDateTime();
             GenJournalLine.Modify();
 
 

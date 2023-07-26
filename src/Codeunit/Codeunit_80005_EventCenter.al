@@ -48,6 +48,7 @@ codeunit 80005 "NCT EventFunction"
     local procedure AppliesToDocNo(var Rec: Record "Gen. Journal Line"; var xRec: Record "Gen. Journal Line")
     var
         PurchaseBillingLine: Record "NCT Billing Receipt Line";
+        ltGeneralSetup: Record "General Ledger Setup";
     begin
 
         if rec."Applies-to Doc. No." <> xRec."Applies-to Doc. No." then
@@ -59,7 +60,9 @@ codeunit 80005 "NCT EventFunction"
                     if not PurchaseBillingLine.IsEmpty then
                         rec.FieldError("Applies-to Doc. No.", StrSubstNo('this record process by puchase billing'));
                 end;
-                InsertWHTCertificate(Rec, rec."Applies-to Doc. No.");
+                ltGeneralSetup.GET();
+                if ltGeneralSetup."NCT Auto WHT Applies" then
+                    InsertWHTCertificate(Rec, rec."Applies-to Doc. No.");
             end;
 
     end;
@@ -71,6 +74,7 @@ codeunit 80005 "NCT EventFunction"
         VendLdgEntry: Record "Vendor Ledger Entry";
         PurchaseBillingLine: Record "NCT Billing Receipt Line";
         InvoiceNo: Text;
+        ltGeneralSetup: Record "General Ledger Setup";
     begin
         if GenJournalLine."Document No." <> '' then begin
 
@@ -93,7 +97,9 @@ codeunit 80005 "NCT EventFunction"
                         InvoiceNO := InvoiceNO + VendLdgEntry."Document No.";
                     end;
                 until VendLdgEntry.Next() = 0;
-                InsertWHTCertificate(GenJournalLine, InvoiceNo);
+                ltGeneralSetup.GET();
+                if ltGeneralSetup."NCT Auto WHT Applies" then
+                    InsertWHTCertificate(GenJournalLine, InvoiceNo);
             end;
         end;
     end;
