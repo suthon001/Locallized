@@ -4,6 +4,17 @@
 pageextension 80047 "NCT PostedReturnReceipt" extends "Posted Return Receipts"
 {
     PromotedActionCategories = 'New,Process,Print';
+    layout
+    {
+        addafter("No.")
+        {
+            field("Return Order No."; rec."Return Order No.")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the number of the return order that will post a return shipment.';
+            }
+        }
+    }
     actions
     {
         addlast(Reporting)

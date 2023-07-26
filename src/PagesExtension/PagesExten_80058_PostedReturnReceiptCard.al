@@ -3,6 +3,13 @@
 /// </summary>
 pageextension 80058 "NCT PostedReturnReceiptCard" extends "Posted Return Receipt"
 {
+    layout
+    {
+        modify("Return Order No.")
+        {
+            Importance = Standard;
+        }
+    }
 
     actions
     {
