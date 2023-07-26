@@ -1206,6 +1206,10 @@ page 80020 "NCT Goods Receipt Note Subform"
         DimVisible8: Boolean;
         ExcelFileNameTxt: Label 'Purchase Order %1 - Lines', Comment = '%1 = document number, ex. 10000';
 
+    trigger OnOpenPage()
+    begin
+        SetDimensionsVisibility();
+    end;
     /// <summary> 
     /// Description for ApproveCalcInvDisc.
     /// </summary>
