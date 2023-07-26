@@ -211,11 +211,6 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
         {
             Caption = 'Cheque No.';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                "External Document No." := "NCT Cheque No.";
-                "NCT Cheque Date" := TODAY;
-            end;
 
         }
         field(80038; "NCT Cheque Date"; Date)
