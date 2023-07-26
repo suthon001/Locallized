@@ -6,6 +6,7 @@ page 80007 "NCT WHT Certificate List"
     PageType = List;
     SourceTable = "NCT WHT Header";
     CardPageId = "NCT WHT Certificate";
+    SourceTableView = sorting("WHT No.") where(Posted = const(true));
     UsageCategory = Lists;
     ApplicationArea = all;
     Caption = 'WHT Certificate';

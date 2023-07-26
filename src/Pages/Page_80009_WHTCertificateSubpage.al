@@ -20,6 +20,18 @@ page 80009 "NCT WHT Certificate Subform"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the WHT Product Posting Group field.';
+                    trigger OnValidate()
+                    begin
+                        UpdateName();
+                        CurrPage.Update();
+                    end;
+                }
+                field(WHTPostingName; WHTPostingName)
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the WHT Product Posting Group field.';
+                    Editable = false;
+                    Caption = 'Description';
                 }
                 field("WHT %"; Rec."WHT %")
                 {
@@ -44,5 +56,22 @@ page 80009 "NCT WHT Certificate Subform"
             }
         }
     }
+    trigger OnAfterGetRecord()
+    begin
+        UpdateName();
+    end;
+
+    local procedure UpdateName()
+    begin
+        if not WHTPostingGroup.GET(rec."WHT Product Posting Group") then
+            WHTPostingGroup.init();
+
+        WHTPostingName := WHTPostingGroup.Description;
+    end;
+
+    var
+
+        WHTPostingGroup: Record "NCT WHT Product Posting Group";
+        WHTPostingName: Text;
 
 }

@@ -18,6 +18,7 @@ page 80008 "NCT WHT Certificate"
             group("General")
             {
                 Caption = 'General';
+                Enabled = rec.Posted = false;
                 field("WHT No."; Rec."WHT No.")
                 {
                     ApplicationArea = all;
@@ -134,10 +135,12 @@ page 80008 "NCT WHT Certificate"
                 ShowFilter = false;
                 SubPageLink = "WHT No." = field("WHT No.");
                 UpdatePropagation = Both;
+                Enabled = rec.Posted = false;
             }
             group(AddressInfor)
             {
                 Caption = 'Address Information';
+                Enabled = rec.Posted = false;
                 field("NCT WHT Title Name"; rec."WHT Title Name")
                 {
                     ApplicationArea = all;
