@@ -19,25 +19,25 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.29871in</Width>
+                  <Width>0.26746in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.70718in</Width>
+                  <Width>0.59259in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.86536in</Width>
+                  <Width>0.62578in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.82982in</Width>
+                  <Width>0.6944in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.60249in</Width>
+                  <Width>1.91499in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.78319in</Width>
+                  <Width>0.76236in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.3666in</Width>
+                  <Width>0.33535in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.42238in</Width>
@@ -68,7 +68,7 @@
                                   <Value>ลำ</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -118,7 +118,7 @@
                                   <Value>ใบกำกับภาษี</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -175,7 +175,7 @@
                                   <Value />
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -221,7 +221,7 @@
                                   <Value>ชื่อผู้ขายสินค้า</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -263,7 +263,7 @@
                                   <Value>เลขประจำตัว</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -313,7 +313,7 @@
                                   <Value>สถาน</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -328,7 +328,7 @@
                                   <Value>ประกอบการ</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -376,7 +376,7 @@
                                   <Value>มูลค่าสินค้า</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -426,7 +426,7 @@
                                   <Value>ภาษี</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -468,7 +468,7 @@
                                   <Value>มูลค่า</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -509,7 +509,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.39507in</Height>
+                  <Height>0.31174in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -523,7 +523,7 @@
                                   <Value>ดับ</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -552,7 +552,7 @@
                               <Width>0.5pt</Width>
                             </RightBorder>
                             <BackgroundColor>WhiteSmoke</BackgroundColor>
-                            <VerticalAlign>Top</VerticalAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -573,7 +573,7 @@
                                   <Value>วัน/เดือน/ปี</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -628,7 +628,7 @@
                                   <Value>เล่มที่/เลขที่</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -683,7 +683,7 @@
                                   <Value>เอกสารอ้างอิง</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -708,7 +708,7 @@
                               <Width>0.5pt</Width>
                             </RightBorder>
                             <BackgroundColor>WhiteSmoke</BackgroundColor>
-                            <VerticalAlign>Top</VerticalAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -729,7 +729,7 @@
                                   <Value>หรือผู้ให้บริการ</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -750,7 +750,7 @@
                               <Width>0.5pt</Width>
                             </BottomBorder>
                             <BackgroundColor>WhiteSmoke</BackgroundColor>
-                            <VerticalAlign>Top</VerticalAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -771,7 +771,7 @@
                                   <Value>ผู้เสียภาษีอากร</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -800,7 +800,7 @@
                               <Width>0.5pt</Width>
                             </RightBorder>
                             <BackgroundColor>WhiteSmoke</BackgroundColor>
-                            <VerticalAlign>Top</VerticalAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -821,7 +821,7 @@
                                   <Value>สนญ</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -863,7 +863,7 @@
                                   <Value>สาขา</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -909,7 +909,7 @@
                                   <Value>หรือบริการ</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -938,7 +938,7 @@
                               <Width>0.5pt</Width>
                             </RightBorder>
                             <BackgroundColor>WhiteSmoke</BackgroundColor>
-                            <VerticalAlign>Top</VerticalAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -959,7 +959,7 @@
                                   <Value>มูลค่าเพิ่ม</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -980,7 +980,7 @@
                               <Width>0.5pt</Width>
                             </BottomBorder>
                             <BackgroundColor>WhiteSmoke</BackgroundColor>
-                            <VerticalAlign>Top</VerticalAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1001,7 +1001,7 @@
                                   <Value>รวมภาษี</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -1030,7 +1030,7 @@
                               <Width>0.5pt</Width>
                             </RightBorder>
                             <BackgroundColor>WhiteSmoke</BackgroundColor>
-                            <VerticalAlign>Top</VerticalAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1995,8 +1995,8 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>0.075in</Top>
             <Left>0.16056in</Left>
-            <Height>1.51683in</Height>
-            <Width>7.71559in</Width>
+            <Height>1.4335in</Height>
+            <Width>7.45517in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2012,7 +2012,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>20.23cm</Width>
+      <Width>19.37042cm</Width>
       <Page>
         <PageHeader>
           <Height>5.07683cm</Height>
@@ -2029,7 +2029,7 @@
                       <Value>=First(Fields!Name_CompanyInformation.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2042,7 +2042,7 @@
               <Top>0.91541in</Top>
               <Left>1.50708in</Left>
               <Height>0.23958in</Height>
-              <Width>4.45151in</Width>
+              <Width>4.33478in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -2059,7 +2059,7 @@
                       <Value>="หน้า : " &amp; Globals!PageNumber &amp; "/" &amp; Globals!TotalPages</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2070,7 +2070,7 @@
               </Paragraphs>
               <rd:DefaultName>TotalPages</rd:DefaultName>
               <Top>0.21125in</Top>
-              <Left>6.93831in</Left>
+              <Left>6.63831in</Left>
               <Height>0.36111in</Height>
               <Width>0.94826in</Width>
               <ZIndex>1</ZIndex>
@@ -2094,7 +2094,7 @@
                       <Value>=First(Fields!Address_CompanyInformation.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2105,7 +2105,7 @@
               <Top>1.43277in</Top>
               <Left>1.50708in</Left>
               <Height>0.25in</Height>
-              <Width>4.45151in</Width>
+              <Width>4.33478in</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border>
@@ -2139,7 +2139,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.18625in</Top>
-              <Left>2.01919in</Left>
+              <Left>1.51919in</Left>
               <Height>0.33333in</Height>
               <Width>4.5625in</Width>
               <ZIndex>3</ZIndex>
@@ -2163,7 +2163,7 @@
                       <Value>ชื่อผู้ประกอบการ</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2197,7 +2197,7 @@
                       <Value>=First(Fields!Name_CompanyInformation.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2208,7 +2208,7 @@
               <Top>1.16888in</Top>
               <Left>1.50708in</Left>
               <Height>0.25in</Height>
-              <Width>4.45151in</Width>
+              <Width>4.33478in</Width>
               <ZIndex>5</ZIndex>
               <Style>
                 <Border>
@@ -2230,7 +2230,7 @@
                       <Value>ชื่อสถานประกอบการ</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2264,7 +2264,7 @@
                       <Value>ที่อยู่</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2310,7 +2310,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>0.51958in</Top>
-              <Left>3.04225in</Left>
+              <Left>2.54225in</Left>
               <Height>0.25in</Height>
               <Width>0.59722in</Width>
               <ZIndex>8</ZIndex>
@@ -2346,7 +2346,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>0.51958in</Top>
-              <Left>4.68189in</Left>
+              <Left>4.18189in</Left>
               <Height>0.25in</Height>
               <Width>0.35764in</Width>
               <ZIndex>9</ZIndex>
@@ -2370,7 +2370,7 @@
                       <Value>เลขประจำตัวผู้เสียภาษีอากร</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2380,7 +2380,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>0.96736in</Top>
-              <Left>6.2113in</Left>
+              <Left>5.9113in</Left>
               <Height>0.25in</Height>
               <Width>1.67527in</Width>
               <ZIndex>10</ZIndex>
@@ -2416,7 +2416,7 @@
               </Paragraphs>
               <rd:DefaultName>YesrPS</rd:DefaultName>
               <Top>0.51958in</Top>
-              <Left>5.11607in</Left>
+              <Left>4.61607in</Left>
               <Height>0.25in</Height>
               <Width>0.48958in</Width>
               <ZIndex>11</ZIndex>
@@ -2451,7 +2451,7 @@
               </Paragraphs>
               <rd:DefaultName>MonthName_TaxReportHeader</rd:DefaultName>
               <Top>0.51958in</Top>
-              <Left>3.65336in</Left>
+              <Left>3.15336in</Left>
               <Height>0.25in</Height>
               <Width>1in</Width>
               <ZIndex>12</ZIndex>
@@ -2475,7 +2475,7 @@
                       <Value>=Fields!VATRegistrationNo_CompanyInformation.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2484,7 +2484,7 @@
               </Paragraphs>
               <rd:DefaultName>VATRegistrationNo_CompanyInformation</rd:DefaultName>
               <Top>1.21736in</Top>
-              <Left>6.2113in</Left>
+              <Left>5.9113in</Left>
               <Height>0.25in</Height>
               <Width>1.67527in</Width>
               <ZIndex>13</ZIndex>
@@ -2508,21 +2508,21 @@
                       <Value>=Fields!var_BrandName.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value xml:space="preserve">  </Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>=Fields!var_BrandNo.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2531,7 +2531,7 @@
               </Paragraphs>
               <rd:DefaultName>VATRegistrationNo_CompanyInformation</rd:DefaultName>
               <Top>1.46736in</Top>
-              <Left>6.2113in</Left>
+              <Left>5.9113in</Left>
               <Height>0.40291in</Height>
               <Width>1.67527in</Width>
               <ZIndex>14</ZIndex>
@@ -2555,7 +2555,7 @@
                       <Value>=First(Fields!Address2_CompanyInformation.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2566,7 +2566,7 @@
               <Top>1.62027in</Top>
               <Left>1.50708in</Left>
               <Height>0.25in</Height>
-              <Width>4.45151in</Width>
+              <Width>4.33478in</Width>
               <ZIndex>15</ZIndex>
               <Style>
                 <Border>
@@ -2594,7 +2594,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox69</rd:DefaultName>
               <Top>1.78654cm</Top>
-              <Left>19.09293cm</Left>
+              <Left>18.33093cm</Left>
               <Height>0.6cm</Height>
               <Width>0.93896cm</Width>
               <ZIndex>16</ZIndex>

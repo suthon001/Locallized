@@ -84,7 +84,7 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
                 ToolTip = 'Executes the WHT Certificate action.';
                 trigger OnAction()
                 begin
-                    // TestField("Require Screen Detail", "Require Screen Detail"::WHT);
+                    //rec.TestField("NCT Require Screen Detail", rec."NCT Require Screen Detail"::WHT);
                     InsertWHTCertificate();
                 end;
             }
@@ -235,6 +235,7 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
         WHTHeader: Record "NCT WHT Header";
         NosMgt: Codeunit NoSeriesManagement;
         GenJnlLine: Record "Gen. Journal Line";
+        GEnTemplate: Record "Gen. Journal Template";
         Vendor: Record Vendor;
         Customer: Record Customer;
         WHTDocNo: Code[30];
@@ -257,13 +258,17 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
         IF Rec."NCT WHT Document No." = '' THEN BEGIN
             IF NOT CONFIRM('Do you want to create wht certificated') THEN
                 EXIT;
-
+            GEnTemplate.GET(rec."Journal Template Name");
             GenJnlLine.RESET();
             GenJnlLine.SETRANGE("Journal Template Name", Rec."Journal Template Name");
             GenJnlLine.SETRANGE("Journal Batch Name", Rec."Journal Batch Name");
             GenJnlLine.SETRANGE("Document No.", Rec."Document No.");
-            GenJnlLine.SETRANGE("NCT Require Screen Detail", GenJnlLine."NCT Require Screen Detail"::WHT);
-            GenJnlLine.SETFILTER("Account Type", '%1|%2|%3', GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Customer, GenJnlLine."Account Type"::"G/L Account");
+            if GEnTemplate.Type = GEnTemplate.Type::Payments then
+                GenJnlLine.SETFILTER("Account Type", '%1|%2', GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::"G/L Account");
+            if GEnTemplate.Type = GEnTemplate.Type::"Cash Receipts" then
+                GenJnlLine.SETFILTER("Account Type", '%1|%2', GenJnlLine."Account Type"::Customer, GenJnlLine."Account Type"::"G/L Account");
+            if GEnTemplate.Type = GEnTemplate.Type::General then
+                GenJnlLine.SETFILTER("Account Type", '%1|%2|%3', GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Customer, GenJnlLine."Account Type"::"G/L Account");
             GenJnlLine.SETFILTER("Account No.", '<>%1', '');
             IF GenJnlLine.FindFirst() THEN BEGIN
                 WHTHeader.INIT();
@@ -322,7 +327,8 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
         WHTEader.SetRange("Gen. Journal Template Code", Rec."Journal Template Name");
         WHTEader.SetRange("Gen. Journal Batch Code", Rec."Journal Batch Name");
         WHTEader.SetRange("Gen. Journal Line No.", Rec."Line No.");
-        if WHTEader.Find() then
+        WHTEader.SetRange(Posted, false);
+        if WHTEader.FindFirst() then
             WHTEader.Delete(True);
     end;
 

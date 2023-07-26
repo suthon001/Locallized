@@ -388,6 +388,7 @@ table 80009 "NCT WHT Header"
         Addr: array[4] of text[100];
     begin
         Clear(VTxT);
+        i := 1;
         if "WHT Building" <> '' then begin
             VTxT := 'อาคาร/หมู่บ้าน ' + "WHT Building" + ' ';
             i := CheckLen(Addr[i], VTxT, i);
@@ -463,7 +464,7 @@ table 80009 "NCT WHT Header"
 
     local procedure CheckLen(Txt: text; inTxt: text; i: Integer): Integer
     begin
-        if StrLen(Txt) + StrLen(inTxt) >= 100 then
+        if StrLen(Txt) + StrLen(inTxt) > 100 then
             exit(i + 1);
         exit(i);
     end;

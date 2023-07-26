@@ -248,6 +248,21 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
                     RunObject = page "Fixed Asset G/L Journal";
                     ToolTip = 'Executes the Fixed Asset G/L Journal Journalaction.';
                 }
+                action(FixedAssetsSetup)
+                {
+                    Caption = 'Fixed Asset Setup';
+                    ApplicationArea = all;
+                    RunObject = page "Fixed Asset Setup";
+                    ToolTip = 'Executes the Fixed Fixed Asset Setup Journalaction.';
+                }
+                action(FixedFixedAssetBookValue01)
+                {
+                    Caption = 'Fixed Fixed Asset - Book Value 01';
+                    ApplicationArea = all;
+                    RunObject = report "NCT Fixed Asset - Book Value01";
+                    ToolTip = 'Executes the Fixed Fixed Asset - Book Value 01.';
+                }
+
             }
 
 

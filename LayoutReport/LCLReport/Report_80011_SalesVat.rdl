@@ -22,13 +22,13 @@
                   <Width>0.36722in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.67541in</Width>
+                  <Width>0.62333in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.79208in</Width>
+                  <Width>0.66708in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.86742in</Width>
+                  <Width>1.81534in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.85859in</Width>
@@ -1862,7 +1862,7 @@
             <Top>0.06597in</Top>
             <Left>0.10137in</Left>
             <Height>1.38978in</Height>
-            <Width>7.79116in</Width>
+            <Width>7.56199in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1878,7 +1878,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>20.17934cm</Width>
+      <Width>19.51786cm</Width>
       <Page>
         <PageHeader>
           <Height>4.91526cm</Height>
@@ -1894,7 +1894,7 @@
                       <Value>="หน้า : " &amp; Globals!PageNumber &amp; "/" &amp; Globals!TotalPages</Value>
                       <Style>
                         <FontFamily />
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -1905,7 +1905,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox10</rd:DefaultName>
               <Top>0.18625in</Top>
-              <Left>6.93061in</Left>
+              <Left>6.55561in</Left>
               <Height>0.33333in</Height>
               <Width>0.96193in</Width>
               <Style>
@@ -1937,9 +1937,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.18625in</Top>
-              <Left>0.62518in</Left>
+              <Left>0.75018in</Left>
               <Height>0.33333in</Height>
-              <Width>6.30923in</Width>
+              <Width>5.73869in</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -1962,6 +1962,7 @@
                       <Value>เดือนภาษี</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
+                        <FontSize>9pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -1973,7 +1974,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>0.51958in</Top>
-              <Left>2.13451in</Left>
+              <Left>2.25951in</Left>
               <Height>0.25in</Height>
               <Width>1.15972in</Width>
               <ZIndex>2</ZIndex>
@@ -1998,6 +1999,7 @@
                       <Value>ปี</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
+                        <FontSize>9pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2009,7 +2011,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>0.51958in</Top>
-              <Left>4.64145in</Left>
+              <Left>4.76645in</Left>
               <Height>0.25in</Height>
               <Width>0.56325in</Width>
               <ZIndex>3</ZIndex>
@@ -2034,6 +2036,7 @@
                       <Value>=First(Fields!YesrPS.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
+                        <FontSize>9pt</FontSize>
                         <Language>en-us</Language>
                       </Style>
                     </TextRun>
@@ -2045,7 +2048,7 @@
               </Paragraphs>
               <rd:DefaultName>YesrPS</rd:DefaultName>
               <Top>0.51958in</Top>
-              <Left>5.24637in</Left>
+              <Left>5.37137in</Left>
               <Height>0.25in</Height>
               <Width>0.76404in</Width>
               <ZIndex>4</ZIndex>
@@ -2070,6 +2073,7 @@
                       <Value>=First(Fields!MonthName_TaxReportHeader.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
+                        <FontSize>9pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2080,7 +2084,7 @@
               </Paragraphs>
               <rd:DefaultName>MonthName_TaxReportHeader</rd:DefaultName>
               <Top>0.51958in</Top>
-              <Left>3.30812in</Left>
+              <Left>3.43312in</Left>
               <Height>0.25in</Height>
               <Width>1.29167in</Width>
               <ZIndex>5</ZIndex>
@@ -2105,7 +2109,7 @@
                       <Value>=Fields!Name_CompanyInformation.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2136,7 +2140,7 @@
                       <Value>=First(Fields!Address_CompanyInformation.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2147,7 +2151,7 @@
               <Top>1.49764in</Top>
               <Left>1.41236in</Left>
               <Height>0.25in</Height>
-              <Width>4.45151in</Width>
+              <Width>4.09805in</Width>
               <ZIndex>7</ZIndex>
               <Style>
                 <Border>
@@ -2169,7 +2173,7 @@
                       <Value>ชื่อผู้ประกอบการ</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2203,7 +2207,7 @@
                       <Value>=Fields!Name_CompanyInformation.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2236,7 +2240,7 @@
                       <Value>ชื่อสถานประกอบการ</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2270,7 +2274,7 @@
                       <Value>ที่อยู่</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2304,7 +2308,7 @@
                       <Value>เลขประจำตัวผู้เสียภาษีอากร</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -2314,7 +2318,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>1.03223in</Top>
-              <Left>6.11658in</Left>
+              <Left>5.74158in</Left>
               <Height>0.25in</Height>
               <Width>1.77596in</Width>
               <ZIndex>12</ZIndex>
@@ -2338,7 +2342,7 @@
                       <Value>=First(Fields!VATRegistrationNo_CompanyInformation.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2347,7 +2351,7 @@
               </Paragraphs>
               <rd:DefaultName>VATRegistrationNo_CompanyInformation</rd:DefaultName>
               <Top>1.28223in</Top>
-              <Left>6.11658in</Left>
+              <Left>5.74158in</Left>
               <Height>0.25in</Height>
               <Width>1.77596in</Width>
               <ZIndex>13</ZIndex>
@@ -2371,21 +2375,21 @@
                       <Value>=Fields!var_BrandName.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value xml:space="preserve">  </Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>=Fields!var_BrandNo.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2394,7 +2398,7 @@
               </Paragraphs>
               <rd:DefaultName>VATRegistrationNo_CompanyInformation</rd:DefaultName>
               <Top>1.53223in</Top>
-              <Left>6.11658in</Left>
+              <Left>5.74158in</Left>
               <Height>0.37513in</Height>
               <Width>1.77596in</Width>
               <ZIndex>14</ZIndex>
@@ -2418,7 +2422,7 @@
                       <Value>=First(Fields!Address2_CompanyInformation.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>9pt</FontSize>
+                        <FontSize>8pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2429,7 +2433,7 @@
               <Top>1.68514in</Top>
               <Left>1.41236in</Left>
               <Height>0.25in</Height>
-              <Width>4.45151in</Width>
+              <Width>4.09805in</Width>
               <ZIndex>15</ZIndex>
               <Style>
                 <Border>
@@ -2449,7 +2453,9 @@
                   <TextRuns>
                     <TextRun>
                       <Value />
-                      <Style />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
                     </TextRun>
                   </TextRuns>
                   <Style />
@@ -2457,7 +2463,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox69</rd:DefaultName>
               <Top>1.98659cm</Top>
-              <Left>19.10809cm</Left>
+              <Left>18.15559cm</Left>
               <Height>0.6cm</Height>
               <Width>0.93896cm</Width>
               <ZIndex>16</ZIndex>
