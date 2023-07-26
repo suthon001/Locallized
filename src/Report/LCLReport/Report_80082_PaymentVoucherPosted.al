@@ -125,7 +125,7 @@ report 80082 "NCT Payment Voucher (Post)"
             dataitem(GenJournalLineWHT; "NCT WHT Header")
             {
 
-                DataItemTableView = sorting("WHT No.") where("posted" = const(FALSE));
+                DataItemTableView = sorting("WHT No.") where("posted" = const(true));
                 dataitem("WHT Lines"; "NCT WHT Line")
                 {
                     DataItemTableView = sorting("WHT No.", "WHT Line No.");

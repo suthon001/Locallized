@@ -10,6 +10,16 @@ pageextension 80006 "NCT ExtenGeneralSetup" extends "General Ledger Setup"
             group("WHT Information")
             {
                 Caption = 'WHT Information';
+                field("NCT Auto WHT Applies"; rec."NCT Auto WHT Applies")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Auto WHT Applies field.';
+                }
+                field("NCT Auto WHT Purchase Bill."; rec."NCT Auto WHT Purchase Bill.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Auto WHT Purchase Bill. field.';
+                }
 
                 field("No. of Copy WHT Cert."; Rec."NCT No. of Copy WHT Cert.")
                 {

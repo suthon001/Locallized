@@ -37,5 +37,15 @@ tableextension 80003 "NCT ExtenGeneral Ledger Setup" extends "General Ledger Set
             TableRelation = "No. Series";
             DataClassification = CustomerContent;
         }
+        field(80007; "NCT Auto WHT Purchase Bill."; Boolean)
+        {
+            Caption = 'Auto WHT Purchase Bill.';
+            TableRelation = "No. Series";
+        }
+        field(80008; "NCT Auto WHT Applies"; Boolean)
+        {
+            Caption = 'Auto WHT Applies';
+            TableRelation = "No. Series";
+        }
     }
 }

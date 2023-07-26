@@ -5,6 +5,7 @@ report 80090 "NCT Fixed Asset Journal - Test"
 {
     Caption = 'Fixed Asset Journal - Test';
     DefaultLayout = RDLC;
+    UsageCategory = None;
     RDLCLayout = './LayoutReport/StandardReport/Report_80090_FixedAssetJournalTest.rdl';
     dataset
     {

@@ -321,6 +321,8 @@ page 80008 "NCT WHT Certificate"
                 GenJnlLine."External Document No." := Rec."WHT Certificate No.";
                 GenJnlLine."NCT WHT Document No." := Rec."WHT No.";
                 GenJnlLine."NCT Require Screen Detail" := GenJnlLine."NCT Require Screen Detail"::WHT;
+                GenJnlLine."NCT Create By" := COPYSTR(UserId(), 1, 50);
+                GenJnlLine."NCT Create DateTime" := CurrentDateTime();
                 SumAmt := 0;
                 WHTEntry.RESET();
                 WHTEntry.SETRANGE("WHT No.", Rec."WHT No.");

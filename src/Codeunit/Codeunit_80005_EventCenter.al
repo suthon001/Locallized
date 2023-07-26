@@ -261,7 +261,8 @@ codeunit 80005 "NCT EventFunction"
             GenJnlLine."Document No." := pGenJournalLine."Document No.";
             GenJnlLine."External Document No." := WHTHeader."WHT Certificate No.";
             GenJnlLine."NCT WHT Document No." := WHTHeader."WHT No.";
-
+            GenJnlLine."NCT Create By" := COPYSTR(UserId(), 1, 50);
+            GenJnlLine."NCT Create DateTime" := CurrentDateTime();
             WHTEntry.RESET();
             WHTEntry.SETRANGE("WHT No.", WHTHeader."WHT No.");
             WHTEntry.CalcSums("WHT Amount");
