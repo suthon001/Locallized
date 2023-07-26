@@ -146,7 +146,7 @@ page 80031 "NCT Purchase Billing Card"
             }
             group(ReceiveInfor)
             {
-                Caption = 'Receive Information';
+                Caption = 'Payment Information';
                 field("Account Type"; Rec."Account Type")
                 {
                     ApplicationArea = all;
@@ -213,7 +213,7 @@ page 80031 "NCT Purchase Billing Card"
     {
         area(Reporting)
         {
-            action("Purchase Receipt")
+            action("Purchase Billing")
             {
                 Caption = 'Purchase Billing';
                 Image = PrintReport;

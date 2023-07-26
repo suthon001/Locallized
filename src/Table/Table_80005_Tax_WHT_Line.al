@@ -432,13 +432,24 @@ table 80005 "NCT Tax & WHT Line"
                                 TaxReportLine."Base Amount" := VatBase;
                                 TaxReportLine."VAT Amount" := VatAmt;
                             end;
-                        TaxReportLine."Cust. Amount" := TaxReportLine."Base Amount" + TaxReportLine."VAT Amount";
+
                         if VatTransection.Type = VatTransection.Type::Sale then
                             TaxReportLine."Customer No." := VatTransection."Bill-to/Pay-to No."
                         else
                             TaxReportLine."Vendor No." := VatTransection."Bill-to/Pay-to No.";
                         TaxReportLine."Send to Report" := true;
                         TaxReportLine."Ref. Entry No." := VatTransection."Entry No.";
+
+                        if VatTransection."Document Type" = VatTransection."Document Type"::Invoice then begin
+                            TaxReportLine."Base Amount" := ABS(TaxReportLine."Base Amount");
+                            TaxReportLine."VAT Amount" := ABS(TaxReportLine."VAT Amount");
+                        end;
+                        if VatTransection."Document Type" = VatTransection."Document Type"::"Credit Memo" then begin
+                            TaxReportLine."Base Amount" := -ABS(TaxReportLine."Base Amount");
+                            TaxReportLine."VAT Amount" := -ABS(TaxReportLine."VAT Amount");
+                        end;
+                        TaxReportLine."Cust. Amount" := TaxReportLine."Base Amount" + TaxReportLine."VAT Amount";
+
                         OnBeforeInsertVatLine(TaxReportLine, VatTransection);
                         TaxReportLine.Insert();
                         TaxINvoiceLine := TaxReportLine."Entry No.";
@@ -449,7 +460,6 @@ table 80005 "NCT Tax & WHT Line"
                             TaxReportLine."VAT Amount" += ABS(VatTransection."Remaining Unrealized Amt.");
                         end else
                             if VatTransection."Tax Invoice No." <> '' then begin
-                                TaxReportLine."Tax Invoice No." += VatTransection."Tax Invoice No.";
                                 TaxReportLine."Base Amount" += ABS(VatTransection."Tax Invoice Base");
                                 TaxReportLine."VAT Amount" += ABS(VatTransection."Tax Invoice Amount");
                             end else begin
@@ -457,7 +467,18 @@ table 80005 "NCT Tax & WHT Line"
                                 TaxReportLine."Base Amount" += VatBase;
                                 TaxReportLine."VAT Amount" += VatAmt;
                             end;
+                        if VatTransection."Document Type" = VatTransection."Document Type"::Invoice then begin
+                            TaxReportLine."Base Amount" := ABS(TaxReportLine."Base Amount");
+                            TaxReportLine."VAT Amount" := ABS(TaxReportLine."VAT Amount");
+                        end;
+                        if VatTransection."Document Type" = VatTransection."Document Type"::"Credit Memo" then begin
+                            TaxReportLine."Base Amount" := -ABS(TaxReportLine."Base Amount");
+                            TaxReportLine."VAT Amount" := -ABS(TaxReportLine."VAT Amount");
+                        end;
+
                         TaxReportLine."Cust. Amount" := TaxReportLine."Base Amount" + TaxReportLine."VAT Amount";
+
+
                         TaxReportLine.Modify();
                     end;
                     VatTransection."Ref. Tax Type" := "Tax Type";
