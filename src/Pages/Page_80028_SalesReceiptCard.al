@@ -160,6 +160,7 @@ page 80028 "NCT Sales Receipt Card"
             group(ReceiveInfor)
             {
                 Caption = 'Receipt Information';
+                Editable = rec.Status = rec.Status::Open;
                 field("Account Type"; Rec."Account Type")
                 {
                     ApplicationArea = all;
