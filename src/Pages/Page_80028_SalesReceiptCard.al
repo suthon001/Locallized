@@ -120,11 +120,7 @@ page 80028 "NCT Sales Receipt Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Amount field.';
                 }
-                field("Amount (LCY)"; Rec."Amount (LCY)")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Amount (LCY) field.';
-                }
+
                 field("Head Office"; Rec."Head Office")
                 {
                     ApplicationArea = All;
@@ -265,10 +261,20 @@ page 80028 "NCT Sales Receipt Card"
                     ToolTip = 'Specifies the value of the Receive Amount field.';
                     Caption = 'Receive Amount';
                 }
+                field("Bank Fee Acc."; rec."Bank Fee Acc.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the BBank Fee Acc. field.';
+                }
                 field("Bank Fee Amount (LCY)"; Rec."Bank Fee Amount (LCY)")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Bank Fee Amount (LCY) field.';
+                }
+                field("Diff Amount Acc."; rec."Diff Amount Acc.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Diff Amount Acc. field.';
                 }
                 field("Diff Amount (LCY)"; Rec."Diff Amount (LCY)")
                 {
