@@ -360,6 +360,9 @@ table 80005 "NCT Tax & WHT Line"
                 var_Skip := false;
                 if not VATProdPostingGroup.Get(VatTransection."VAT Prod. Posting Group") then
                     VATProdPostingGroup.init();
+                if not varPostingSsetup.GET(VatTransection."VAT Bus. Posting Group", VatTransection."VAT Prod. Posting Group") then
+                    varPostingSsetup.Init();
+
                 VatTransection.CalcFields("Unrealized VAT Type");
                 VatAmt := ABS(VatTransection."Amount");
                 VatBase := ABS(VatTransection.Base);
@@ -378,7 +381,9 @@ table 80005 "NCT Tax & WHT Line"
                                 VendorDetail.SetRange("Document Type", VendorDetail."Document Type"::Payment);
                                 if not VendorDetail.IsEmpty then
                                     var_Skip := true;
-                            end;
+                            end else
+                                if (VatTransection."Remaining Unrealized Base" <> 0) OR (VatTransection."Remaining Unrealized Amt." <> 0) then
+                                    var_Skip := true;
                         end;
 
                 IF VATProdPostingGroup."NCT Direct VAT" THEN
@@ -420,18 +425,15 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLine."Tax Invoice Name 2" := VatTransection."Tax Invoice Name 2";
                         TaxReportLine."Tax Invoice Date" := VatTransection."Tax Invoice Date";
                         TaxReportLine."Tax Invoice No." := TaxInvoiceNo;
-                        if VatTransection."Unrealized VAT Type" = VatTransection."Unrealized VAT Type"::Percentage then begin
-                            TaxReportLine."Base Amount" := ABS(VatTransection."Remaining Unrealized Base");
-                            TaxReportLine."VAT Amount" := ABS(VatTransection."Remaining Unrealized Amt.");
-                        end else
-                            if VatTransection."Tax Invoice No." <> '' then begin
-                                TaxReportLine."Tax Invoice No." := VatTransection."Tax Invoice No.";
-                                TaxReportLine."Base Amount" := ABS(VatTransection."Tax Invoice Base");
-                                TaxReportLine."VAT Amount" := ABS(VatTransection."Tax Invoice Amount");
-                            end else begin
-                                TaxReportLine."Base Amount" := VatBase;
-                                TaxReportLine."VAT Amount" := VatAmt;
-                            end;
+
+                        if VatTransection."Tax Invoice No." <> '' then begin
+                            TaxReportLine."Tax Invoice No." := VatTransection."Tax Invoice No.";
+                            TaxReportLine."Base Amount" := ABS(VatTransection."Tax Invoice Base");
+                            TaxReportLine."VAT Amount" := ABS(VatTransection."Tax Invoice Amount");
+                        end else begin
+                            TaxReportLine."Base Amount" := VatBase;
+                            TaxReportLine."VAT Amount" := VatAmt;
+                        end;
 
                         if VatTransection.Type = VatTransection.Type::Sale then
                             TaxReportLine."Customer No." := VatTransection."Bill-to/Pay-to No."

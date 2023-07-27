@@ -6,6 +6,10 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
     actions
     {
         moveafter("Item Reclassification Journals"; "Transfer Orders")
+        modify(Action68)
+        {
+            Visible = false;
+        }
         addafter("Posted Sales Shipments")
         {
             action("Cash Receipt Journal")

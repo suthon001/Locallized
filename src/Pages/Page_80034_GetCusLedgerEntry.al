@@ -56,7 +56,7 @@ page 80034 "NCT Get Cus. Ledger Entry"
                     ApplicationArea = all;
                     ToolTip = 'Specifies a description of the vendor entry.';
                 }
-                field("Original Amount"; -Rec."Original Amount")
+                field("Original Amount"; Rec."Original Amount")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Original Amount field.';
@@ -134,13 +134,14 @@ page 80034 "NCT Get Cus. Ledger Entry"
                 BillRcptLine."Source Amount" := ABS(CUstLedger."Original Amount");
                 BillRcptLine."Source Description" := CUstLedger.Description;
                 BillRcptLine."Source Currency Code" := CUstLedger."Currency Code";
-                BillRcptLine."Source Document Type" := BillRcptLine."Source Document Type"::Invoice;
                 if CUstLedger."Document Type" = CUstLedger."Document Type"::Invoice then begin
-                    BillRcptLine."Amount" := ABS(CUstLedger."NCT Remaining Amt.") * -1;
+                    BillRcptLine."Source Document Type" := BillRcptLine."Source Document Type"::Invoice;
+                    BillRcptLine."Amount" := ABS(CUstLedger."NCT Remaining Amt.");
                     if ltPuchaseInvoiceHeader.GET(CUstLedger."Document No.") then
                         BillRcptLine."Source Ext. Document No." := ltPuchaseInvoiceHeader."Vendor Invoice No.";
                 end else begin
-                    BillRcptLine."Amount" := ABS(CUstLedger."NCT Remaining Amt.");
+                    BillRcptLine."Source Document Type" := BillRcptLine."Source Document Type"::"Credit Memo";
+                    BillRcptLine."Amount" := -ABS(CUstLedger."NCT Remaining Amt.");
                     if ltPurchaseCRHeader.GET(CUstLedger."Document No.") then
                         BillRcptLine."Source Ext. Document No." := ltPurchaseCRHeader."Vendor Cr. Memo No.";
 
@@ -188,9 +189,9 @@ page 80034 "NCT Get Cus. Ledger Entry"
                         rec.Init();
                         rec.TransferFields(CustLedger);
                         if CustLedger."Document Type" = CustLedger."Document Type"::Invoice then
-                            rec."NCT Remaining Amt." := -(ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Billing Amount"))
+                            rec."NCT Remaining Amt." := (ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Billing Amount"))
                         else
-                            rec."NCT Remaining Amt." := (ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Billing Amount"));
+                            rec."NCT Remaining Amt." := -(ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Billing Amount"));
                         rec.Insert();
                     end;
                 if pDocumentType = pDocumentType::"Sales Receipt" then
@@ -198,9 +199,9 @@ page 80034 "NCT Get Cus. Ledger Entry"
                         rec.Init();
                         rec.TransferFields(CustLedger);
                         if CustLedger."Document Type" = CustLedger."Document Type"::Invoice then
-                            rec."NCT Remaining Amt." := -(ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Receipt Amount"))
+                            rec."NCT Remaining Amt." := (ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Receipt Amount"))
                         else
-                            rec."NCT Remaining Amt." := (ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Receipt Amount"));
+                            rec."NCT Remaining Amt." := -(ABS(CustLedger."Remaining Amount") - abs(CustLedger."NCT Receipt Amount"));
                         rec.Insert();
                     end;
             until CustLedger.Next() = 0;
