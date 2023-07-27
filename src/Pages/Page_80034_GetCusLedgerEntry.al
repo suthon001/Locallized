@@ -104,16 +104,16 @@ page 80034 "NCT Get Cus. Ledger Entry"
     procedure SetDocument(BillingRcptHeader: Record "NCT Billing Receipt Header")
     begin
         BillRcptHeader.GET(BillingRcptHeader."Document Type", BillingRcptHeader."No.");
-
     end;
 
     local procedure CreateLines()
     var
         CUstLedger: Record "Cust. Ledger Entry" temporary;
         BillRcptLine: Record "NCT Billing Receipt Line";
-        ltPuchaseInvoiceHeader: Record "Purch. Inv. Header";
-        ltPurchaseCRHeader: Record "Purch. Cr. Memo Hdr.";
+        ltBillRcptLHeader: Record "NCT Billing Receipt Header";
+        TOtalReceipt: Decimal;
     begin
+        TOtalReceipt := 0;
         CUstLedger.COPY(Rec, true);
         CurrPage.SETSELECTIONFILTER(CUstLedger);
         IF CUstLedger.FindSet() THEN
@@ -128,27 +128,27 @@ page 80034 "NCT Get Cus. Ledger Entry"
                 BillRcptLine."Source Ledger Entry No." := CUstLedger."Entry No.";
                 BillRcptLine."Source Document Date" := CUstLedger."Document Date";
                 BillRcptLine."Source Document No." := CUstLedger."Document No.";
-                BillRcptLine."Source Ext. Document No." := CUstLedger."External Document No.";
                 BillRcptLine."Source Due Date" := CUstLedger."Due Date";
                 BillRcptLine."Source Amount (LCY)" := ABS(CUstLedger."Original Amt. (LCY)");
                 BillRcptLine."Source Amount" := ABS(CUstLedger."Original Amount");
                 BillRcptLine."Source Description" := CUstLedger.Description;
                 BillRcptLine."Source Currency Code" := CUstLedger."Currency Code";
+                BillRcptLine."Source Ext. Document No." := CUstLedger."External Document No.";
                 if CUstLedger."Document Type" = CUstLedger."Document Type"::Invoice then begin
                     BillRcptLine."Source Document Type" := BillRcptLine."Source Document Type"::Invoice;
                     BillRcptLine."Amount" := ABS(CUstLedger."NCT Remaining Amt.");
-                    if ltPuchaseInvoiceHeader.GET(CUstLedger."Document No.") then
-                        BillRcptLine."Source Ext. Document No." := ltPuchaseInvoiceHeader."Vendor Invoice No.";
                 end else begin
                     BillRcptLine."Source Document Type" := BillRcptLine."Source Document Type"::"Credit Memo";
                     BillRcptLine."Amount" := -ABS(CUstLedger."NCT Remaining Amt.");
-                    if ltPurchaseCRHeader.GET(CUstLedger."Document No.") then
-                        BillRcptLine."Source Ext. Document No." := ltPurchaseCRHeader."Vendor Cr. Memo No.";
-
                 end;
                 BillRcptLine.Modify();
+                TOtalReceipt := TOtalReceipt + BillRcptLine."Amount";
             UNTIL CUstLedger.NEXT() = 0;
-
+        if TOtalReceipt <> 0 then begin
+            ltBillRcptLHeader.GET(DocumentType, DocumentNo);
+            ltBillRcptLHeader."Receive & Payment Amount" := TotalReceipt;
+            ltBillRcptLHeader.Modify();
+        end;
     end;
 
 

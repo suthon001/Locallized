@@ -120,36 +120,82 @@ table 80002 "NCT Billing Receipt Line"
             trigger OnValidate()
             var
                 VendorLedger: Record "Vendor Ledger Entry";
+                CustLedger: Record "Cust. Ledger Entry";
                 PurchaseBilling: Record "NCT Billing Receipt Line";
                 PurchaseBillingHeader: Record "NCT Billing Receipt Header";
                 TOtalAmt: Decimal;
             begin
                 PurchaseBillingHeader.GET(rec."Document Type", rec."Document No.");
                 PurchaseBillingHeader.TestField("Status", PurchaseBillingHeader."Status"::Open);
-                if not VendorLedger.GET("Source Ledger Entry No.") then
-                    VendorLedger.Init();
-                VendorLedger.CalcFields("Remaining Amount");
-                PurchaseBilling.reset();
-                PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
-                PurchaseBilling.SetRange("Document No.", rec."Document No.");
-                PurchaseBilling.SetFilter("Line No.", '<>%1', rec."Line No.");
-                PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
+                if PurchaseBillingHeader."Document Type" = PurchaseBillingHeader."Document Type"::"Purchase Billing" then begin
+                    if not VendorLedger.GET("Source Ledger Entry No.") then
+                        VendorLedger.Init();
+                    VendorLedger.CalcFields("Remaining Amount");
+                    PurchaseBilling.reset();
+                    PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
+                    PurchaseBilling.SetRange("Document No.", rec."Document No.");
+                    PurchaseBilling.SetFilter("Line No.", '<>%1', rec."Line No.");
+                    PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
 
-                PurchaseBilling.CalcSums("Amount");
+                    PurchaseBilling.CalcSums("Amount");
 
-                TOtalAmt := PurchaseBilling."Amount";
+                    TOtalAmt := PurchaseBilling."Amount";
 
-                PurchaseBilling.reset();
-                PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
-                PurchaseBilling.SetFilter("Document No.", '<>%1', rec."Document No.");
-                PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
-                PurchaseBilling.SetFilter("Status", '<>%1', PurchaseBilling."Status"::"Posted");
-                PurchaseBilling.CalcSums("Amount");
-                TOtalAmt := TOtalAmt + rec."Amount" + PurchaseBilling."Amount";
+                    PurchaseBilling.reset();
+                    PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
+                    PurchaseBilling.SetFilter("Document No.", '<>%1', rec."Document No.");
+                    PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
+                    PurchaseBilling.SetFilter("Status", '<>%1', PurchaseBilling."Status"::"Posted");
+                    PurchaseBilling.CalcSums("Amount");
+                    TOtalAmt := TOtalAmt + rec."Amount" + PurchaseBilling."Amount";
 
 
-                if (ABS(VendorLedger."Remaining Amount") - TOtalAmt) < 0 then
-                    VendorLedger.FieldError("Remaining Amount", strsubstno('remaining amount is %1', ABS(VendorLedger."Remaining Amount")));
+                    if (ABS(VendorLedger."Remaining Amount") - TOtalAmt) < 0 then
+                        VendorLedger.FieldError("Remaining Amount", strsubstno('remaining amount is %1', ABS(VendorLedger."Remaining Amount")));
+                end;
+
+                if PurchaseBillingHeader."Document Type" = PurchaseBillingHeader."Document Type"::"Sales Receipt" then begin
+
+                    if not CustLedger.GET("Source Ledger Entry No.") then
+                        CustLedger.Init();
+                    CustLedger.CalcFields("Remaining Amount");
+
+                    PurchaseBilling.reset();
+                    PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
+                    PurchaseBilling.SetRange("Document No.", rec."Document No.");
+                    PurchaseBilling.SetFilter("Line No.", '<>%1', rec."Line No.");
+                    PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
+
+                    PurchaseBilling.CalcSums("Amount");
+
+                    TOtalAmt := PurchaseBilling."Amount";
+
+                    PurchaseBilling.reset();
+                    PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
+                    PurchaseBilling.SetFilter("Document No.", '<>%1', rec."Document No.");
+                    PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
+                    PurchaseBilling.SetFilter("Status", '<>%1', PurchaseBilling."Status"::"Posted");
+                    PurchaseBilling.CalcSums("Amount");
+                    TOtalAmt := TOtalAmt + rec."Amount" + PurchaseBilling."Amount";
+
+
+                    if (ABS(CustLedger."Remaining Amount") - TOtalAmt) < 0 then
+                        CustLedger.FieldError("Remaining Amount", strsubstno('remaining amount is %1', ABS(CustLedger."Remaining Amount")));
+
+
+                    TOtalAmt := 0;
+                    PurchaseBilling.reset();
+                    PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
+                    PurchaseBilling.SetRange("Document No.", rec."Document No.");
+                    PurchaseBilling.SetFilter("Line No.", '<>%1', rec."Line No.");
+                    PurchaseBilling.CalcSums("Amount");
+
+                    TOtalAmt := PurchaseBilling.Amount + rec.Amount;
+
+                    PurchaseBillingHeader."Receive & Payment Amount" := TOtalAmt;
+                    PurchaseBillingHeader.Modify();
+                end;
+
 
             end;
         }
