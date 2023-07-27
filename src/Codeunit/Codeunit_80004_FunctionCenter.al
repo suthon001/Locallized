@@ -2724,7 +2724,7 @@ codeunit 80004 "NCT Function Center"
     procedure RereleaseBilling(BillingHeader: Record "NCT Billing Receipt Header")
 
     begin
-        IF BillingHeader."Status" = BillingHeader."Status"::Released THEN
+        IF BillingHeader."Status" IN [BillingHeader."Status"::Released, BillingHeader.Status::"Created to Journal", BillingHeader.Status::Posted] THEN
             EXIT;
         BillingHeader.CheckBeforRelease();
         BillingHeader.TESTFIELD("Bill/Pay-to Cust/Vend No.");
@@ -2744,7 +2744,7 @@ codeunit 80004 "NCT Function Center"
     procedure "ReopenBilling"(BillingHeader: Record "NCT Billing Receipt Header")
     begin
         //  WITH BillingHeader DO BEGIN
-        IF BillingHeader."Status" = BillingHeader."Status"::Open THEN
+        IF BillingHeader."Status" in [BillingHeader."Status"::Open, BillingHeader.Status::"Created to Journal", BillingHeader.Status::Posted] THEN
             EXIT;
         BillingHeader.CheckbeforReOpen();
         BillingHeader."Status" := BillingHeader."Status"::Open;

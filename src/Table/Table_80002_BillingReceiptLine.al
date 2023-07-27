@@ -193,6 +193,7 @@ table 80002 "NCT Billing Receipt Line"
                     TOtalAmt := PurchaseBilling.Amount + rec.Amount;
 
                     PurchaseBillingHeader."Receive & Payment Amount" := TOtalAmt;
+                    PurchaseBillingHeader.CalDiffAmt();
                     PurchaseBillingHeader.Modify();
                 end;
 

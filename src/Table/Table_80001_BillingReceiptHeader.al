@@ -331,6 +331,10 @@ Table 80001 "NCT Billing Receipt Header"
         {
             Caption = 'Prepaid WHT Amount (LCY)';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalDiffAmt();
+            end;
         }
         field(35; "Diff Amount Acc."; Code[20])
         {
@@ -347,6 +351,10 @@ Table 80001 "NCT Billing Receipt Header"
         {
             Caption = 'Bank Fee Amount (LCY)';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalDiffAmt();
+            end;
         }
         field(38; "Prepaid WHT Date"; Date)
         {
@@ -433,7 +441,7 @@ Table 80001 "NCT Billing Receipt Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                TestStatusOpen();
+                CalDiffAmt();
             end;
         }
 
@@ -658,6 +666,7 @@ Table 80001 "NCT Billing Receipt Header"
         NoWorkflowEnbMsg: Label 'No workflow Enabled for this Record type';
     begin
         BillingReceiptHeader.TestField("No.");
+        BillingReceiptHeader.TestField(Status, BillingReceiptHeader.Status::Open);
         if not IsItemBillingReceiptEnabled(BillingReceiptHeader) then
             Error(NoWorkflowEnbMsg);
         exit(true);
@@ -797,6 +806,16 @@ Table 80001 "NCT Billing Receipt Header"
         end else
             Message('Nothing to Create');
 
+    end;
+
+    /// <summary>
+    /// CalDiffAmt.
+    /// </summary>
+    procedure CalDiffAmt()
+    begin
+
+        TestStatusOpen();
+        rec."Diff Amount (LCY)" := rec."Receive & Payment Amount" - rec."Bank Fee Amount (LCY)" - rec."Prepaid WHT Amount (LCY)" - rec.Amount;
     end;
 
     var

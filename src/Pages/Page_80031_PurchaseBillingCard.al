@@ -144,7 +144,7 @@ page 80031 "NCT Purchase Billing Card"
                 ApplicationArea = all;
                 Editable = rec.Status = rec.Status::Open;
             }
-            group(ReceiveInfor)
+            group(PaymentInfor)
             {
                 Caption = 'Payment Information';
                 field("Account Type"; Rec."Account Type")

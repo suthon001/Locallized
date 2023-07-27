@@ -25,6 +25,21 @@ page 80030 "NCT Purchase Billing List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the No. field.';
                 }
+                field("Status"; Rec."Status")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Status field.';
+                }
+                field("Posting Date"; Rec."Posting Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Posting Date field.';
+                }
+                field("Document Date"; Rec."Document Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Document Date field.';
+                }
 
                 field("Bill/Pay-to Cust/Vend No."; Rec."Bill/Pay-to Cust/Vend No.")
                 {
@@ -67,11 +82,7 @@ page 80030 "NCT Purchase Billing List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Bill/Pay-to Post Code field.';
                 }
-                field("Posting Date"; Rec."Posting Date")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Posting Date field.';
-                }
+
                 field("Payment Terms Code"; Rec."Payment Terms Code")
                 {
                     ApplicationArea = All;
@@ -87,16 +98,7 @@ page 80030 "NCT Purchase Billing List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Posting Description field.';
                 }
-                field("Document Date"; Rec."Document Date")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Document Date field.';
-                }
-                field("Status"; Rec."Status")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Status field.';
-                }
+
                 field("Currency Code"; Rec."Currency Code")
                 {
                     ApplicationArea = All;
