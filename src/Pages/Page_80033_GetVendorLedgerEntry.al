@@ -105,7 +105,9 @@ page 80033 "NCT Get Vendor Ledger Entry"
         VendEntry: Record "Vendor Ledger Entry" temporary;
         BillRcptLine: Record "NCT Billing Receipt Line";
         ltPuchaseInvoiceHeader: Record "Purch. Inv. Header";
+        PurchaseInvoiceLine: Record "Purch. Inv. Line";
         ltPurchaseCRHeader: Record "Purch. Cr. Memo Hdr.";
+        PurchaseCRLine: Record "Purch. Cr. Memo Line";
     begin
         VendEntry.COPY(Rec, true);
         CurrPage.SETSELECTIONFILTER(VendEntry);
@@ -132,12 +134,26 @@ page 80033 "NCT Get Vendor Ledger Entry"
                     BillRcptLine."Amount" := ABS(VendEntry."NCT Billing Remaining Amt.");
                     if ltPuchaseInvoiceHeader.GET(VendEntry."Document No.") then
                         BillRcptLine."Source Ext. Document No." := ltPuchaseInvoiceHeader."Vendor Invoice No.";
+
+                    PurchaseInvoiceLine.reset();
+                    PurchaseInvoiceLine.SetRange("Document No.", BillRcptLine."Source Document No.");
+                    PurchaseInvoiceLine.SetFilter("VAT %", '<>%1', 0);
+                    if PurchaseInvoiceLine.FindFirst() then
+                        BillRcptLine."Vat %" := PurchaseInvoiceLine."VAT %";
+
                 end else begin
                     BillRcptLine."Amount" := ABS(VendEntry."NCT Billing Remaining Amt.") * -1;
                     if ltPurchaseCRHeader.GET(VendEntry."Document No.") then
                         BillRcptLine."Source Ext. Document No." := ltPurchaseCRHeader."Vendor Cr. Memo No.";
 
+                    PurchaseCRLine.reset();
+                    PurchaseCRLine.SetRange("Document No.", BillRcptLine."Source Document No.");
+                    PurchaseCRLine.SetFilter("VAT %", '<>%1', 0);
+                    if PurchaseCRLine.FindFirst() then
+                        BillRcptLine."Vat %" := PurchaseCRLine."VAT %";
+
                 end;
+                BillRcptLine.CalAmtExcludeVat();
                 BillRcptLine.Modify();
             UNTIL VendEntry.NEXT() = 0;
 

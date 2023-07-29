@@ -111,6 +111,8 @@ page 80034 "NCT Get Cus. Ledger Entry"
         CUstLedger: Record "Cust. Ledger Entry" temporary;
         BillRcptLine: Record "NCT Billing Receipt Line";
         ltBillRcptLHeader: Record "NCT Billing Receipt Header";
+        SalesInvoiceLine: Record "Sales Invoice Line";
+        SalesCrLine: Record "Sales Cr.Memo Line";
         TOtalReceipt: Decimal;
     begin
         TOtalReceipt := 0;
@@ -137,10 +139,25 @@ page 80034 "NCT Get Cus. Ledger Entry"
                 if CUstLedger."Document Type" = CUstLedger."Document Type"::Invoice then begin
                     BillRcptLine."Source Document Type" := BillRcptLine."Source Document Type"::Invoice;
                     BillRcptLine."Amount" := ABS(CUstLedger."NCT Remaining Amt.");
+
+                    SalesInvoiceLine.reset();
+                    SalesInvoiceLine.SetRange("Document No.", BillRcptLine."Source Document No.");
+                    SalesInvoiceLine.SetFilter("VAT %", '<>%1', 0);
+                    if SalesInvoiceLine.FindFirst() then
+                        BillRcptLine."Vat %" := SalesInvoiceLine."VAT %";
+
                 end else begin
                     BillRcptLine."Source Document Type" := BillRcptLine."Source Document Type"::"Credit Memo";
                     BillRcptLine."Amount" := -ABS(CUstLedger."NCT Remaining Amt.");
+
+                    SalesCrLine.reset();
+                    SalesCrLine.SetRange("Document No.", BillRcptLine."Source Document No.");
+                    SalesCrLine.SetFilter("VAT %", '<>%1', 0);
+                    if SalesCrLine.FindFirst() then
+                        BillRcptLine."Vat %" := SalesCrLine."VAT %";
                 end;
+
+                BillRcptLine.CalAmtExcludeVat();
                 BillRcptLine.Modify();
                 TOtalReceipt := TOtalReceipt + BillRcptLine."Amount";
             UNTIL CUstLedger.NEXT() = 0;
