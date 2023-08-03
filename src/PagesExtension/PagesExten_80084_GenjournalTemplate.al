@@ -7,11 +7,6 @@ pageextension 80084 "NCT GenjournalTemplate" extends "General Journal Templates"
     {
         addafter(Description)
         {
-            field("Description Eng"; rec."NCT Description Eng")
-            {
-                ApplicationArea = all;
-                ToolTip = 'Specifies the value of the Description Eng field.';
-            }
             field("Description Thai"; rec."NCT Description Thai")
             {
                 ApplicationArea = all;
