@@ -5,7 +5,7 @@ page 80040 "NCT WHT53 Lists"
 {
     PageType = List;
     SourceTable = "NCT Tax & WHT Header";
-    Caption = 'Withholding tax';
+    Caption = 'WHT53 Lists';
     CardPageId = "NCT WHT53 Card";
     UsageCategory = Lists;
     ApplicationArea = all;

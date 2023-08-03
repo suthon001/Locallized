@@ -241,8 +241,8 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
             GenJnlLine.SETRANGE("Journal Template Name", rec."Journal Template Name");
             GenJnlLine.SETRANGE("Journal Batch Name", rec."Journal Batch Name");
             GenJnlLine.SETFILTER("Document No.", '%1', rec."Document No.");
-            GenJnlLine.SETFILTER("Account Type", '%1|%2', GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Customer);
-            GenJnlLine.SETFILTER("Account No.", '<>%1', '');
+            GenJnlLine.SETFILTER("Account Type", '%1|%2|%3', GenJnlLine."Account Type"::"G/L Account", GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Customer);
+            // GenJnlLine.SETFILTER("Account No.", '<>%1', '');
             IF GenJnlLine.FindFirst() THEN BEGIN
                 WHTHeader.INIT();
                 WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."NCT WHT Document Nos.", rec."Posting Date", TRUE);

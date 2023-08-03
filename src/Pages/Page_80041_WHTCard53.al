@@ -5,7 +5,7 @@ page 80041 "NCT WHT53 Card"
 {
     PageType = Document;
     SourceTable = "NCT Tax & WHT Header";
-    Caption = 'Withholding tax Card';
+    Caption = 'WHT53 Card';
     PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Request Approval,Approval,Print/Send,Navigate';
     RefreshOnActivate = true;
     SourceTableView = sorting("Tax Type", "Document No.") where("Tax Type" = filter(WHT53));
