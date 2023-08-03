@@ -237,49 +237,16 @@ table 80004 "NCT Tax & WHT Header"
     var
         VatHeader: Record "NCT Tax & WHT Header";
         NoSeriesMgt: Codeunit NoSeriesManagement;
-        purchaseSetup: Record "Purchases & Payables Setup";
-        SalesSetup: Record "Sales & Receivables Setup";
     begin
-        purchaseSetup.GET();
-        VatHeader.COPY(Rec);
-        if VatHeader."Tax Type" = VatHeader."Tax Type"::Purchase then begin
-            purchaseSetup.TESTFIELD("NCT Purchase VAT Nos.");
-            IF NoSeriesMgt.SelectSeries(purchaseSetup."NCT Purchase VAT Nos.", OldVatHeader."No. Series",
-              VatHeader."No. Series") THEN BEGIN
-                NoSeriesMgt.SetSeries(VatHeader."Document No.");
-                Rec := VatHeader;
-                EXIT(TRUE);
-            END;
-        end;
-        if VatHeader."Tax Type" = VatHeader."Tax Type"::Sale then begin
-            SalesSetup.GET();
-            SalesSetup.TESTFIELD("NCT Sales VAT Nos.");
-            IF NoSeriesMgt.SelectSeries(SalesSetup."NCT Sales VAT Nos.", OldVatHeader."No. Series",
-              VatHeader."No. Series") THEN BEGIN
-                NoSeriesMgt.SetSeries(VatHeader."Document No.");
-                Rec := VatHeader;
-                EXIT(TRUE);
-            END;
-        end;
-        if VatHeader."Tax Type" = VatHeader."Tax Type"::WHT03 then begin
-            purchaseSetup.TESTFIELD("NCT WHT03 Nos.");
-            IF NoSeriesMgt.SelectSeries(purchaseSetup."NCT WHT03 Nos.", OldVatHeader."No. Series",
-              VatHeader."No. Series") THEN BEGIN
-                NoSeriesMgt.SetSeries(VatHeader."Document No.");
-                Rec := VatHeader;
-                EXIT(TRUE);
-            END;
 
-        end;
-        if VatHeader."Tax Type" = VatHeader."Tax Type"::WHT53 then begin
-            purchaseSetup.TESTFIELD("NCT WHT53 Nos.");
-            IF NoSeriesMgt.SelectSeries(purchaseSetup."NCT WHT53 Nos.", OldVatHeader."No. Series", VatHeader."No. Series") THEN BEGIN
-                NoSeriesMgt.SetSeries(VatHeader."Document No.");
-                Rec := VatHeader;
-                EXIT(TRUE);
-            END;
-        end;
-    END;
+        VatHeader.COPY(Rec);
+        IF NoSeriesMgt.SelectSeries(GetNoSeriesCode(), OldVatHeader."No. Series",
+          VatHeader."No. Series") THEN BEGIN
+            NoSeriesMgt.SetSeries(VatHeader."Document No.");
+            Rec := VatHeader;
+            EXIT(TRUE);
+        END;
+    end;
 
     var
         TaxReportLine: Record "NCT Tax & WHT Line";
