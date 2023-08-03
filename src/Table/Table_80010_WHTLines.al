@@ -93,23 +93,23 @@ table 80010 "NCT WHT Line"
             trigger OnValidate()
             begin
                 if "Head Office" then
-                    "Vat VAT Branch Code" := '';
+                    "VAT Branch Code" := '';
             end;
         }
-        field(16; "VAT VAT Branch Code"; Code[5])
+        field(16; "VAT Branch Code"; Code[5])
         {
-            Caption = 'VAT VAT Branch Code';
+            Caption = 'VAT Branch Code';
             DataClassification = SystemMetadata;
             trigger OnValidate()
             begin
-                if "Vat VAT Branch Code" <> '' then begin
-                    if StrLen("Vat VAT Branch Code") < 5 then
+                if "VAT Branch Code" <> '' then begin
+                    if StrLen("VAT Branch Code") < 5 then
                         Error('VAT Branch Code must be 5 characters');
                     "Head Office" := false;
                 end;
-                if "Vat VAT Branch Code" = '00000' then begin
+                if "VAT Branch Code" = '00000' then begin
                     "Head Office" := TRUE;
-                    "Vat VAT Branch Code" := '';
+                    "VAT Branch Code" := '';
                 end;
             end;
 
@@ -274,7 +274,7 @@ table 80010 "NCT WHT Line"
         "WHT Post Code" := WHTHeader."WHT Post Code";
         "VAT Registration No." := WHTHeader."VAT Registration No.";
         "Head Office" := WhtHeader."Head Office";
-        "Vat VAT Branch Code" := WHTHeader."Vat VAT Branch Code";
+        "VAT Branch Code" := WHTHeader."VAT Branch Code";
         "Gen. Journal Template Code" := WHTHeader."Gen. Journal Template Code";
         "Gen. Journal Batch Code" := WHTHeader."Gen. Journal Batch Code";
         "Gen. Journal Line No." := WHTHeader."Gen. Journal Line No.";

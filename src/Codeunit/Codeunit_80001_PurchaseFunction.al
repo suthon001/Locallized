@@ -69,6 +69,10 @@ codeunit 80001 "NCT Purchase Function"
                     WHTAppEntry."VAT Branch Code" := PurchHeader."NCT VAT Branch Code";
                     WHTAppEntry."Head Office" := PurchHeader."NCT Head Office";
                     WHTAppEntry."WHT Post Code" := PurchHeader."Buy-from Post Code";
+                    if PurchaseLine."Document Type" = PurchaseLine."Document Type"::Invoice then
+                        WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::Invoice;
+                    if PurchaseLine."Document Type" = PurchaseLine."Document Type"::"Credit Memo" then
+                        WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::"Credit Memo";
                     WHTAppEntry.Insert(true);
                 until PurchaseLine.Next() = 0;
         end;

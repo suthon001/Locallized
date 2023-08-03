@@ -114,6 +114,14 @@ table 80012 "NCT WHT Applied Entry"
             Caption = 'WHT Option';
             DataClassification = CustomerContent;
         }
+        field(22; "WHT Document Type"; Option)
+        {
+            OptionCaption = 'Invoice,Credit Memo,Payment,Cash Receipt';
+            OptionMembers = Invoice,"Credit Memo",Payment,"Cash Receipt";
+            DataClassification = CustomerContent;
+            Editable = false;
+
+        }
     }
     keys
     {

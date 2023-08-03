@@ -75,10 +75,10 @@ page 80008 "NCT WHT Certificate"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Head Office field.';
                 }
-                field("VAT VAT Branch Code"; Rec."VAT VAT Branch Code")
+                field("VAT Branch Code"; Rec."VAT Branch Code")
                 {
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the VAT VAT Branch Code field.';
+                    ToolTip = 'Specifies the value of the VAT Branch Code field.';
                 }
                 field("WHT Type"; Rec."WHT Type")
                 {

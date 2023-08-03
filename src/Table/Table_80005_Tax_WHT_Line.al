@@ -558,7 +558,7 @@ table 80005 "NCT Tax & WHT Line"
                         TaxReportLineFind."WHT Registration No." := WHTHeader."VAT Registration No.";
                         TaxReportLineFind."WHT %" := WHTLine."WHT %";
                         TaxReportLineFind."Head Office" := WHTHeader."Head Office";
-                        TaxReportLineFind."VAT Branch Code" := WHTHeader."VAT VAT Branch Code";
+                        TaxReportLineFind."VAT Branch Code" := WHTHeader."VAT Branch Code";
                         TaxReportLineFind."VAT Registration No." := WHTHeader."VAT Registration No.";
                         TaxReportLineFind."Ref. Wht Line" := WHTLine."WHT Line No.";
                         TaxReportLineFind."WHT Certificate No." := WHTHeader."WHT Certificate No.";
