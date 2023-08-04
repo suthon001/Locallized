@@ -46,6 +46,13 @@ codeunit 80006 "WHT Preview Event Handler"
         TempWHTApplied.deleteall();
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"NCT Journal Function", 'OnbeforInsertWHTAPPLYGL', '', false, false)]
+    local procedure OnbeforInsertWHTAPPLYGL()
+    begin
+        TempWHTApplied.reset();
+        TempWHTApplied.deleteall();
+    end;
+
     [EventSubscriber(ObjectType::Report, Report::"Carry Out Action Msg. - Req.", 'SetPODocumentNo', '', false, false)]
     local procedure SetPODocumentNo(PONoSeries: Code[20])
     begin

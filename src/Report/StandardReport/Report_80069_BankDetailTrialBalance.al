@@ -37,7 +37,7 @@ report 80069 "NCT Bank Acc.Detail Trial Bal."
             column(PrintOnlyOnePerPage; PrintOnlyOnePerPage)
             {
             }
-            column(ReportFilter; StrSubstNo('%1: %2', TableCaption, BankAccFilter))
+            column(ReportFilter; StrSubstNo('%1: %2', TableCaption(), BankAccFilter))
             {
             }
             column(No_BankAccount; "No.")
@@ -173,7 +173,7 @@ report 80069 "NCT Bank Acc.Detail Trial Bal."
                         StartBalanceLCY := "Net Change (LCY)";
                         SetFilter("Date Filter", DateFilter_BankAccount);
                     end;
-                //CurrReport.PrintOnlyIfDetail := ExcludeBalanceOnly or (StartBalance = 0);
+                CurrReport.PrintOnlyIfDetail := ExcludeBalanceOnly or (StartBalance = 0);
                 BankAccBalance := StartBalance;
                 BankAccBalanceLCY := StartBalanceLCY;
 
@@ -238,7 +238,7 @@ report 80069 "NCT Bank Acc.Detail Trial Bal."
 
     trigger OnPreReport()
     begin
-        BankAccFilter := "Bank Account".GetFilters;
+        BankAccFilter := "Bank Account".GetFilters();
         DateFilter_BankAccount := "Bank Account".GetFilter("Date Filter");
     end;
 

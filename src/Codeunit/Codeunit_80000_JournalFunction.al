@@ -3,7 +3,7 @@
 /// </summary>
 codeunit 80000 "NCT Journal Function"
 {
-    EventSubscriberInstance = StaticAutomatic;
+
 
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforeUpdateAndDeleteLines', '', true, true)]
@@ -27,12 +27,14 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine2.SetFilter("NCT WHT Document No.", '<>%1', '');
         if GenJnlLine2.FindSet() then
             repeat
+
                 WHTHeader.reset();
                 WHTHeader.setrange("WHT No.", GenJnlLine2."NCT WHT Document No.");
                 if WHTHeader.FindFirst() then begin
                     WHTHeader."Posted" := true;
                     WHTHeader.Modify();
                     LastLineNo := 0;
+                    OnbeforInsertWHTAPPLYGL();
                     WHTLines.reset();
                     WHTLines.SetRange("WHT No.", WHTHeader."WHT No.");
                     WHTLines.SetFilter("WHT Product Posting Group", '<>%1', '');
@@ -64,7 +66,7 @@ codeunit 80000 "NCT Journal Function"
                                 WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::Payment;
                             if GenJournalTemplate.Type = GenJournalTemplate.Type::"Cash Receipts" then
                                 WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::"Cash Receipt";
-                            WHTAppEntry.Insert(true);
+                            WHTAppEntry.Insert();
                         until WHTLines.Next() = 0;
                 end;
             until GenJnlLine2.Next() = 0;
@@ -308,16 +310,58 @@ codeunit 80000 "NCT Journal Function"
     local procedure "AfterCopyFromGen"(GenJournalLine: Record "Gen. Journal Line"; var BankAccountLedgerEntry: Record "Bank Account Ledger Entry")
     begin
         //   with BankAccountLedgerEntry do begin
-        BankAccountLedgerEntry."Bank Account No." := GenJournalLine."NCT Bank Account No.";
         BankAccountLedgerEntry."NCT Bank Branch No." := GenJournalLine."NCT Bank Branch No.";
         BankAccountLedgerEntry."NCT Bank Code" := GenJournalLine."NCT Bank Code";
         BankAccountLedgerEntry."NCT Bank Name" := GenJournalLine."NCT Bank Name";
-        BankAccountLedgerEntry."NCT Cheque Name" := GenJournalLine."NCT Cheque Name";
+        BankAccountLedgerEntry."NCT Cheque Name" := GenJournalLine."NCT Pay Name";
         BankAccountLedgerEntry."NCT Cheque No." := GenJournalLine."NCT Cheque No.";
         BankAccountLedgerEntry."NCT Customer/Vendor No." := GenJournalLine."NCT Customer/Vendor No.";
         BankAccountLedgerEntry."NCT Cheque Date" := GenJournalLine."NCT Cheque Date";
         "NCT OnAfterBankAccountLedgerEntryCopyFromGenJnlLine"(BankAccountLedgerEntry, GenJournalLine);
         //  end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnPostBankAccOnAfterBankAccLedgEntryInsert', '', false, false)]
+    local procedure OnPostBankAccOnAfterBankAccLedgEntryInsert(var BankAccountLedgerEntry: Record "Bank Account Ledger Entry"; var GenJournalLine: Record "Gen. Journal Line"; BankAccount: Record "Bank Account")
+    var
+        CheckLedgEntry: Record "Check Ledger Entry";
+        NextCheckEntryNo: Integer;
+        DocNoMustBeEnteredErr: Label 'Document No. must be entered when Bank Payment Type is %1.', Comment = '%1 - option value';
+        CheckAlreadyExistsErr: Label 'Check %1 already exists for this Bank Account.', Comment = '%1 - document no.';
+    begin
+        if ((GenJournalLine.Amount < 0) and (GenJournalLine."Bank Payment Type" = "Bank Payment Type"::" ") and (GenJournalLine."NCT Cheque No." <> ''))
+     then begin
+            if GenJournalLine."Document No." = '' then
+                Error(DocNoMustBeEnteredErr, GenJournalLine."Bank Payment Type");
+            CheckLedgEntry.Reset();
+            CheckLedgEntry.LockTable();
+            if CheckLedgEntry.FindLast() then
+                NextCheckEntryNo := CheckLedgEntry."Entry No." + 1
+            else
+                NextCheckEntryNo := 1;
+
+
+            CheckLedgEntry.SetRange("Bank Account No.", GenJournalLine."Account No.");
+            CheckLedgEntry.SetFilter(
+              "Entry Status", '%1|%2|%3',
+              CheckLedgEntry."Entry Status"::Printed,
+              CheckLedgEntry."Entry Status"::Posted,
+              CheckLedgEntry."Entry Status"::"Financially Voided");
+            CheckLedgEntry.SetRange("Check No.", GenJournalLine."Document No.");
+            if not CheckLedgEntry.IsEmpty() then
+                Error(CheckAlreadyExistsErr, GenJournalLine."Document No.");
+
+            CheckLedgEntry.Init();
+            CheckLedgEntry.CopyFromBankAccLedgEntry(BankAccountLedgerEntry);
+            CheckLedgEntry."Entry No." := NextCheckEntryNo;
+
+            CheckLedgEntry."Bank Payment Type" := CheckLedgEntry."Bank Payment Type"::"Manual Check";
+            if BankAccount."Currency Code" <> '' then
+                CheckLedgEntry.Amount := -GenJournalLine.Amount
+            else
+                CheckLedgEntry.Amount := -GenJournalLine."Amount (LCY)";
+            CheckLedgEntry.Insert(true);
+        end;
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Check Ledger Entry", 'OnAfterCopyFromBankAccLedgEntry', '', TRUE, TRUE)]
@@ -593,4 +637,10 @@ codeunit 80000 "NCT Journal Function"
     local procedure "NCT OnCopyItemLedgerFromItemJournal"(var ItemLedgerEntry: record "Item Ledger Entry"; ItemJournalLine: Record "Item Journal Line")
     begin
     end;
+
+    [BusinessEvent(false)]
+    local procedure OnbeforInsertWHTAPPLYGL()
+    begin
+    end;
+
 }

@@ -367,6 +367,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             DataClassification = CustomerContent;
 
 
+
         }
         field(80045; "NCT Customer/Vendor No."; code[20])
         {
