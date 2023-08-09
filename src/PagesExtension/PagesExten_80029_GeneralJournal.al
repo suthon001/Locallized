@@ -288,7 +288,7 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
         WHTEader.SetRange("Gen. Journal Template Code", rec."Journal Template Name");
         WHTEader.SetRange("Gen. Journal Batch Code", rec."Journal Batch Name");
         WHTEader.SetRange("Gen. Journal Line No.", rec."Line No.");
-        if WHTEader.Find() then
+        if WHTEader.FindFirst() then
             WHTEader.Delete(True);
     end;
 
