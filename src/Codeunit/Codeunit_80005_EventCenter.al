@@ -4,7 +4,30 @@
 codeunit 80005 "NCT EventFunction"
 {
     Permissions = TableData "G/L Entry" = rimd;
+    [EventSubscriber(ObjectType::Page, Page::"Acc. Schedule Overview", 'OnBeforePrint', '', false, false)]
+    local procedure OnBeforePrintAccSheduleOverview(var AccScheduleLine: Record "Acc. Schedule Line"; var IsHandled: Boolean; var TempFinancialReport: Record "Financial Report" temporary)
+    var
+        AccSched: Report "NCT Account Schedule";
+        DateFilter2: Text;
+        GLBudgetFilter2: Text;
+        BusUnitFilter: Text;
+        CostBudgetFilter2: Text;
+    begin
+        if TempFinancialReport.Name <> '' then
+            AccSched.SetFinancialReportName(TempFinancialReport.Name);
+        if TempFinancialReport."Financial Report Row Group" <> '' then
+            AccSched.SetAccSchedName(TempFinancialReport."Financial Report Row Group");
+        if TempFinancialReport."Financial Report Column Group" <> '' then
+            AccSched.SetColumnLayoutName(TempFinancialReport."Financial Report Column Group");
+        DateFilter2 := AccScheduleLine.GetFilter("Date Filter");
+        GLBudgetFilter2 := AccScheduleLine.GetFilter("G/L Budget Filter");
+        CostBudgetFilter2 := AccScheduleLine.GetFilter("Cost Budget Filter");
+        BusUnitFilter := AccScheduleLine.GetFilter("Business Unit Filter");
+        AccSched.SetFilters(DateFilter2, GLBudgetFilter2, CostBudgetFilter2, BusUnitFilter, TempFinancialReport.Dim1Filter, TempFinancialReport.Dim2Filter, TempFinancialReport.Dim3Filter, TempFinancialReport.Dim4Filter, TempFinancialReport.CashFlowFilter);
+        AccSched.Run();
 
+        IsHandled := true;
+    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Test Report-Print", 'OnBeforePrintGenJnlLine', '', false, false)]
     local procedure OnBeforePrintGenJnlLine(var NewGenJnlLine: Record "Gen. Journal Line"; var IsHandled: Boolean)
@@ -343,6 +366,8 @@ codeunit 80005 "NCT EventFunction"
             NewReportId := REPORT::"NCT Inventory - List";
         if ReportId = Report::"Account Schedule" then
             NewReportId := report::"NCT Account Schedule";
+        if ReportId = Report::"Fixed Asset - Acquisition List" then
+            NewReportId := report::"NCT Fixed Asset - Acquisition";
 
 
     end;
