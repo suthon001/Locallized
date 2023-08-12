@@ -144,8 +144,9 @@ report 80037 "NCT FA G/L Journal Voucher"
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
+        GenLine.SetFilter("NCT Journal Description", '<>%1', '');
         if GenLine.FindFirst() then
-            PostingDescription := GenLine.Description;
+            PostingDescription := GenLine."NCT Journal Description";
     end;
 
 

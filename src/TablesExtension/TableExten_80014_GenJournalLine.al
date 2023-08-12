@@ -513,6 +513,13 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                 rec."NCT Journal Description" := rec.Description;
             end;
         }
+        modify(Description)
+        {
+            trigger OnAfterValidate()
+            begin
+                rec."NCT Journal Description" := rec.Description;
+            end;
+        }
         modify("Account Type")
         {
             trigger OnAfterValidate()

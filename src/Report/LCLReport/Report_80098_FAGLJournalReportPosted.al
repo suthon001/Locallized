@@ -6,7 +6,7 @@ report 80098 "NCT FA G/L Journal Voucher (P)"
     Permissions = TableData "G/L Entry" = rimd;
     Caption = 'FA G/L Journal Voucher';
     DefaultLayout = RDLC;
-    RDLCLayout = './LayoutReport/LCLReport/Report_80098_FAGLJournalReportPosted.al.rdl';
+    RDLCLayout = './LayoutReport/LCLReport/Report_80098_FAGLJournalReportPosted.rdl';
     UsageCategory = None;
     dataset
     {
@@ -142,8 +142,9 @@ report 80098 "NCT FA G/L Journal Voucher (P)"
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
+        GenLine.SetFilter("NCT Journal Description", '<>%1', '');
         if GenLine.FindFirst() then
-            PostingDescription := GenLine.Description;
+            PostingDescription := GenLine."NCT Journal Description";
     end;
 
 
