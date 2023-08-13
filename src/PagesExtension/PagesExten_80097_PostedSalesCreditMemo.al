@@ -1,5 +1,52 @@
+/// <summary>
+/// PageExtension NCT Posted Sales Credit Memo (ID 80097) extends Record Posted Sales Credit Memo.
+/// </summary>
 pageextension 80097 "NCT Posted Sales Credit Memo" extends "Posted Sales Credit Memo"
 {
+    layout
+    {
+        addlast(General)
+        {
+            field("Head Office"; Rec."NCT Head Office")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
+            }
+            field("VAT Branch Code"; Rec."NCT VAT Branch Code")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies value of the field.';
+            }
+        }
+        modify("VAT Registration No.")
+        {
+            Visible = true;
+        }
+        moveafter("VAT Branch Code"; "VAT Registration No.")
+        modify("No.")
+        {
+            Visible = true;
+        }
+        addafter("Applies-to Doc. No.")
+        {
+            field("NCT Applies-to ID"; rec."NCT Applies-to ID")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Applies-to ID. field.';
+            }
+            field("NCT Ref. Tax Invoice Date"; rec."NCT Ref. Tax Invoice Date")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Ref. Tax Invoice Amount field.';
+            }
+            field("NCT Ref. Tax Invoice Amount"; rec."NCT Ref. Tax Invoice Amount")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Ref. Tax Invoice Amount field.';
+            }
+        }
+        moveafter("External Document No."; "Salesperson Code", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code")
+    }
     actions
     {
 
