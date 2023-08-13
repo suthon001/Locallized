@@ -58,7 +58,7 @@ report 80085 "NCT Debit Note (Post)"
             column(CaptionOptionThai; CaptionOptionThai) { }
             column(CaptionOptionEng; CaptionOptionEng) { }
             column(RefDocumentNo; RefDocumentNo) { }
-            column(var_RefDocumentNo; var_RefDocumentNo) { }
+            column(var_RefDocumentNo; RefDocumentNo) { }
             column(var_RefDocumentDate; format(var_RefDocumentDate, 0, '<Day,2>/<Month,2>/<Year4>')) { }
             column(ReturnReasonDescFirstLine; ReturnReasonDescFirstLine) { }
             dataitem(SalesLine; "Sales Invoice Line")
@@ -127,32 +127,23 @@ report 80085 "NCT Debit Note (Post)"
                         TotalAmt[100] := "NCT Ref. Tax Invoice Amount"
                     else
                         TotalAmt[100] := RecCustLedgEntry."Sales (LCY)";
-                END ELSE
+                    if "NCT Ref. Tax Invoice Date" <> 0D then
+                        var_RefDocumentDate := "NCT Ref. Tax Invoice Date"
+                    else
+                        var_RefDocumentDate := RecCustLedgEntry."Document Date";
+                END ELSE begin
+                    var_RefDocumentDate := "NCT Ref. Tax Invoice Date";
                     TotalAmt[100] := "NCT Ref. Tax Invoice Amount";
+                end;
                 TotalAmt[99] := TotalAmt[100] - TotalAmt[1];
 
                 IF "Applies-to Doc. No." <> '' THEN
-                    RefDocumentNo := "Applies-to Doc. No.";
-
-                IF "NCT Applies-to ID" <> '' THEN
+                    RefDocumentNo := "Applies-to Doc. No."
+                else
                     RefDocumentNo := "NCT Applies-to ID";
-
-                RecCustLedgEntry.RESET();
-                RecCustLedgEntry.SetRange("Document No.", RefDocumentNo);
-                RecCustLedgEntry.SetRange("Document Type", RecCustLedgEntry."Document Type"::Invoice);
-                IF RecCustLedgEntry.FindFirst() THEN BEGIN
-                    var_RefDocumentNo := RecCustLedgEntry."Document No.";
-                    var_RefDocumentDate := RecCustLedgEntry."Document Date";
-                END;
-
-                IF "NCT Ref. Tax Invoice No." <> '' then begin
-                    var_RefDocumentDate := "NCT Ref. Tax Invoice Date";
-                    var_RefDocumentNo := "NCT Ref. Tax Invoice No.";
-                end;
 
                 ReturnReasonDescFirstLine := '';
                 RecSaleLine.Reset();
-
                 RecSaleLine.SetRange("Document No.", SalesHeader."No.");
                 RecSaleLine.SetFilter("Return Reason Code", '<>%1', '');
                 if RecSaleLine.FindFirst() then begin
