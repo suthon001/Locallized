@@ -18,6 +18,21 @@ pageextension 80066 "NCT Sales Invoice Card" extends "Sales Invoice"
                 ApplicationArea = all;
                 ToolTip = 'Specifies value of the field.';
             }
+            field("NCT Ref. Tax Invoice No."; rec."NCT Ref. Tax Invoice No.")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Ref. Tax Invoice No. field.';
+            }
+            field("NCT Ref. Tax Invoice Date"; rec."NCT Ref. Tax Invoice Date")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Ref. Tax Invoice Amount field.';
+            }
+            field("NCT Ref. Tax Invoice Amount"; rec."NCT Ref. Tax Invoice Amount")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Ref. Tax Invoice Amount field.';
+            }
 
         }
         modify("Posting Description")

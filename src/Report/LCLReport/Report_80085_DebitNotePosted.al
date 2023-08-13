@@ -85,7 +85,6 @@ report 80085 "NCT Debit Note (Post)"
             trigger OnAfterGetRecord()
             var
                 NewDate: Date;
-                RecCustLedgEntry: Record "Cust. Ledger Entry";
                 RecReturnReason: Record "Return Reason";
                 RecSaleLine: Record "Sales Invoice Line";
                 ltDocumentType: Enum "Sales Comment Document Type";
@@ -114,33 +113,11 @@ report 80085 "NCT Debit Note (Post)"
                     AmtText := '(' + FunctionCenter."NumberEngToText"(TotalAmt[5], "Currency Code") + ')';
 
 
-                RecCustLedgEntry.RESET();
-                RecCustLedgEntry.SetRange("Document Type", RecCustLedgEntry."Document Type"::Invoice);
-                IF "Applies-to Doc. No." <> '' THEN
-                    RecCustLedgEntry.SetRange("Document No.", "Applies-to Doc. No.")
-                ELSE
-                    RecCustLedgEntry.SetRange("Document No.", "NCT Applies-to ID");
 
-                IF RecCustLedgEntry.FindFirst() THEN BEGIN
-                    RecCustLedgEntry.CALCFIELDS("Original Amt. (LCY)");
-                    if "NCT Ref. Tax Invoice Amount" <> 0 then
-                        TotalAmt[100] := "NCT Ref. Tax Invoice Amount"
-                    else
-                        TotalAmt[100] := RecCustLedgEntry."Sales (LCY)";
-                    if "NCT Ref. Tax Invoice Date" <> 0D then
-                        var_RefDocumentDate := "NCT Ref. Tax Invoice Date"
-                    else
-                        var_RefDocumentDate := RecCustLedgEntry."Document Date";
-                END ELSE begin
-                    var_RefDocumentDate := "NCT Ref. Tax Invoice Date";
-                    TotalAmt[100] := "NCT Ref. Tax Invoice Amount";
-                end;
+                TotalAmt[100] := "NCT Ref. Tax Invoice Amount";
                 TotalAmt[99] := TotalAmt[100] - TotalAmt[1];
-
-                IF "Applies-to Doc. No." <> '' THEN
-                    RefDocumentNo := "Applies-to Doc. No."
-                else
-                    RefDocumentNo := "NCT Applies-to ID";
+                var_RefDocumentDate := "NCT Ref. Tax Invoice Date";
+                RefDocumentNo := "NCT Ref. Tax Invoice No.";
 
                 ReturnReasonDescFirstLine := '';
                 RecSaleLine.Reset();
