@@ -57,8 +57,8 @@ report 80027 "NCT Report Sales Credit Memo"
             column(ShipMethod_Description; ShipMethod.Description) { }
             column(CaptionOptionThai; CaptionOptionThai) { }
             column(CaptionOptionEng; CaptionOptionEng) { }
-            column(RefDocumentNo; var_RefDocumentNo) { }
-            column(var_RefDocumentNo; var_RefDocumentNo) { }
+            column(RefDocumentNo; RefDocumentNo) { }
+            column(var_RefDocumentNo; RefDocumentNo) { }
             column(var_RefDocumentDate; format(var_RefDocumentDate, 0, '<Day,2>/<Month,2>/<Year4>')) { }
             column(ReturnReasonDescFirstLine; ReturnReasonDescFirstLine) { }
             dataitem(SalesLine; "Sales Line")
