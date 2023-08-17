@@ -13,8 +13,10 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
             var
                 UOMMgt: Codeunit "Unit of Measure Management";
             begin
-                if not Confirm('Do you want to Cancel Qty. ? ') then
+                if not Confirm('Do you want to Cancel Qty. ? ') then begin
+                    rec."NCT Qty. to Cancel" := xRec."NCT Qty. to Cancel";
                     exit;
+                end;
                 IF ("Document Type" = "Document Type"::Order) THEN BEGIN
                     IF "Outstanding Quantity" = 0 THEN
                         ERROR('Outstanding Quantity must not be 0');
@@ -36,7 +38,7 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
                         InitOutstanding();
                     END;
                     IF ("Document Type" = "Document Type"::Quote) THEN BEGIN
-
+                        checkBeforQtyToCancal();
                         "NCT Qty. to Cancel (Base)" := UOMMgt.CalcBaseQty("NCT Qty. to Cancel", "Qty. per Unit of Measure");
                         InitOutstanding();
                     END;
@@ -388,7 +390,25 @@ tableextension 80011 "NCT ExtenPurchase Line" extends "Purchase Line"
         END;
     end;
 
+    local procedure checkBeforQtyToCancal()
+    var
+        POLine: Record "Purchase Line";
+        TempQty: Decimal;
+    begin
+        POLine.reset();
+        POLine.SetRange("Document Type", POLine."Document Type"::Order);
+        POLine.SetRange("NCT Ref. PQ No.", "Document No.");
+        POLine.SetRange("NCT Ref. PQ Line No.", "Line No.");
+        if POLine.FindFirst() then begin
+            POLine.CalcSums(Quantity);
+            TempQty := POLine.Quantity;
+            if (TempQty + "NCT Qty. to Cancel") > rec."Outstanding Quantity" then
+                FieldError("Outstanding Quantity", StrSubstNo(PrRemainingOutStdErr, rec."Outstanding Quantity"));
+        end;
+    end;
+
     var
         PrRemainingErr: Label 'PR No. %1 ,Remaining Quantity is %2', Locked = true;
+        PrRemainingOutStdErr: Label 'Remaining Quantity is %1', Locked = true;
 
 }
