@@ -1411,6 +1411,8 @@ codeunit 80004 "NCT Function Center"
         GenJnlLine: Record "Posted Gen. Journal Line";
         VendLedgEntry: Record "Vendor Ledger Entry";
         CustLedgEntry: Record "Cust. Ledger Entry";
+        DetailVendor: Record "Detailed Vendor Ledg. Entry";
+        DetailCust: Record "Detailed Cust. Ledg. Entry";
         CvNo: Code[30];
     begin
         GenJnlLine.RESET();
@@ -1427,20 +1429,22 @@ codeunit 80004 "NCT Function Center"
                     IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor THEN
                         CVNo := GenJnlLine."Account No.";
                     IF GenJnlLine."Applies-to ID" <> '' THEN BEGIN
-                        VendLedgEntry.RESET();
-                        VendLedgEntry.SETCURRENTKEY("Vendor No.", "Applies-to ID", Open, Positive, "Due Date");
-                        VendLedgEntry.SETRANGE("Vendor No.", CVNo);
-                        VendLedgEntry.SETRANGE("Applies-to ID", GenJnlLine."Applies-to ID");
-                        //VendLedgEntry.SETRANGE(Open,TRUE);
-                        IF VendLedgEntry.FINDFIRST() THEN
-                            REPEAT
+                        DetailVendor.reset();
+                        DetailVendor.SETRANGE("Vendor No.", CVNo);
+                        DetailVendor.SetRange("Document No.", GenJnlLine."Applies-to ID");
+                        DetailVendor.SetFilter("NCT Invoice Entry No.", '<>%1', 0);
+                        if DetailVendor.FindSet() then
+                            repeat
+                                DetailVendor.CalcSums(Amount);
+                                DetailVendor.CalcFields("NCT Invoice Entry No.");
+                                VendLedgEntry.GET(DetailVendor."NCT Invoice Entry No.");
                                 VendLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
-                                    "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
+                                  "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
                                 CVLedgEntryBuf.CopyFromVendLedgEntry(VendLedgEntry);
-                                //GenPostLine.TransferVendLedgEntry(CVLedgEntryBuf,VendLedgEntry,TRUE);
+                                CVLedgEntryBuf."Amount to Apply" := DetailVendor.Amount;
                                 if not CVLedgEntryBuf.INSERT() then
                                     CVLedgEntryBuf.Modify();
-                            UNTIL VendLedgEntry.NEXT() = 0;
+                            until DetailVendor.Next() = 0;
                     END ELSE
                         IF GenJnlLine."Applies-to Doc. No." <> '' THEN BEGIN
                             VendLedgEntry.RESET();
@@ -1466,20 +1470,23 @@ codeunit 80004 "NCT Function Center"
                     IF GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer THEN
                         CVNo := GenJnlLine."Account No.";
                     IF GenJnlLine."Applies-to ID" <> '' THEN BEGIN
-                        CustLedgEntry.RESET();
-                        CustLedgEntry.SETCURRENTKEY("Customer No.", "Applies-to ID", Open, Positive, "Due Date");
-                        CustLedgEntry.SETRANGE("Customer No.", CVNo);
-                        CustLedgEntry.SETRANGE("Applies-to ID", GenJnlLine."Applies-to ID");
-                        //CustLedgEntry.SETRANGE(Open,TRUE);
-                        IF CustLedgEntry.FINDFIRST() THEN
+                        DetailCust.reset();
+                        DetailCust.SETRANGE("Customer No.", CVNo);
+                        DetailCust.SetRange("Document No.", GenJnlLine."Applies-to ID");
+                        DetailCust.SetFilter("NCT Invoice Entry No.", '<>%1', 0);
+                        if DetailCust.FindSet() then
                             REPEAT
+                                DetailCust.CalcSums(Amount);
+                                DetailCust.CalcFields("NCT Invoice Entry No.");
+                                CustLedgEntry.GET(DetailVendor."NCT Invoice Entry No.");
                                 CustLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
                                     "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
                                 //TmpGenPostLine.TransferCustLedgEntry(CVLedgEntryBuf,CustLedgEntry,TRUE);
                                 CVLedgEntryBuf.CopyFromCustLedgEntry(CustLedgEntry);
+                                CVLedgEntryBuf."Amount to Apply" := CustLedgEntry.Amount;
                                 if not CVLedgEntryBuf.INSERT() then
                                     CVLedgEntryBuf.Modify();
-                            UNTIL CustLedgEntry.NEXT() = 0;
+                            UNTIL DetailCust.NEXT() = 0;
                     END ELSE
                         IF GenJnlLine."Applies-to Doc. No." <> '' THEN BEGIN
                             CustLedgEntry.RESET();

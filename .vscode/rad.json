@@ -1,1 +1,1 @@
-﻿{"Added":[],"Modified":[],"Removed":[]}
+﻿{"Added":[],"Modified":[{"Id":80055,"Kind":17,"Name":"NCT Detailed Cust. Ledg. Entry","PackagePath":"/src/src/TablesExtension/TableExten_80055_DetailedCustLedgEntry.al"},{"Id":80056,"Kind":17,"Name":"NCT Detailed Vendor Ledg.Entry","PackagePath":"/src/src/TablesExtension/TableExten_80056_DetailedVendorLedgEntry.al"},{"Id":80004,"Kind":11,"Name":"NCT Function Center","PackagePath":"/src/src/Codeunit/Codeunit_80004_FunctionCenter.al"}],"Removed":[]}

@@ -31,7 +31,7 @@
                   <Width>0.6944in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.91499in</Width>
+                  <Width>1.88583in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.76236in</Width>
@@ -1042,7 +1042,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.225in</Height>
+                  <Height>0.31955in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -1079,7 +1079,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1091,7 +1091,6 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="TaxInvoiceDate_TaxReportLine">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -1125,7 +1124,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1137,7 +1136,6 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="TaxInvoiceNo_TaxReportLine">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -1169,7 +1167,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1181,7 +1179,6 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="VoucherNo_TaxReportLine">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -1213,7 +1210,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1256,7 +1253,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1268,7 +1265,6 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="VATRegistrationNo_TaxReportLine">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -1300,7 +1296,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1344,7 +1340,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1388,7 +1384,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1433,7 +1429,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1478,7 +1474,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </LeftBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1527,7 +1523,7 @@
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </RightBorder>
-                            <VerticalAlign>Middle</VerticalAlign>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1969,7 +1965,7 @@
                 <TablixMember>
                   <Group Name="Group1">
                     <GroupExpressions>
-                      <GroupExpression>=Ceiling((RowNumber(Nothing))/30)</GroupExpression>
+                      <GroupExpression>=Ceiling((RowNumber(Nothing))/17)</GroupExpression>
                     </GroupExpressions>
                     <PageBreak>
                       <BreakLocation>Between</BreakLocation>
@@ -1995,8 +1991,8 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>0.075in</Top>
             <Left>0.16056in</Left>
-            <Height>1.4335in</Height>
-            <Width>7.45517in</Width>
+            <Height>1.52805in</Height>
+            <Width>7.42601in</Width>
             <Style>
               <Border>
                 <Style>None</Style>

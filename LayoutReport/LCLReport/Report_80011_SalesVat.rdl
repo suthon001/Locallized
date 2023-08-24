@@ -962,12 +962,11 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.23622in</Height>
+                  <Height>0.31955in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="LineNo">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -1015,7 +1014,6 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox4">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -1061,7 +1059,6 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox6">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -1105,13 +1102,24 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox8">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!TaxInvoiceName_TaxReportLine.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>7pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -1147,7 +1155,6 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox16">
-                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -1840,7 +1847,7 @@
                 <TablixMember>
                   <Group Name="Group1">
                     <GroupExpressions>
-                      <GroupExpression>=Ceiling((RowNumber(Nothing))/30)</GroupExpression>
+                      <GroupExpression>=Ceiling((RowNumber(Nothing))/17)</GroupExpression>
                     </GroupExpressions>
                     <PageBreak>
                       <BreakLocation>Between</BreakLocation>
@@ -1861,8 +1868,8 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>0.06597in</Top>
             <Left>0.10137in</Left>
-            <Height>1.38978in</Height>
-            <Width>7.56199in</Width>
+            <Height>1.47311in</Height>
+            <Width>7.562in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
