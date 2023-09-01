@@ -87,6 +87,46 @@ codeunit 80000 "NCT Journal Function"
             until GenJnlLine3.Next() = 0;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromSalesHeaderPrepmt', '', true, true)]
+    local procedure "NCT CopyHeaderFromPropmtInvoiceBuff"(SalesHeader: Record "Sales Header"; var GenJournalLine: Record "Gen. Journal Line")
+    begin
+
+        GenJournalLine."NCT Head Office" := SalesHeader."NCT Head Office";
+        GenJournalLine."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
+        GenJournalLine."NCT Tax Invoice No." := SalesHeader."No.";
+        GenJournalLine."VAT Registration No." := SalesHeader."VAT Registration No.";
+        GenJournalLine."Document Date" := SalesHeader."Document Date";
+        GenJournalLine."NCT Tax Invoice Date" := SalesHeader."Posting Date";
+        GenJournalLine."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
+        GenJournalLine."NCT Tax Invoice Name 2" := SalesHeader."Sell-to Customer Name 2";
+
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromPrepmtInvBuffer', '', false, false)]
+    local procedure OnAfterCopyGenJnlLineFromPrepmtInvBuffer(PrepmtInvLineBuffer: Record "Prepayment Inv. Line Buffer"; var GenJournalLine: Record "Gen. Journal Line")
+    begin
+        if PrepmtInvLineBuffer."NCT Tax Invoice No." <> '' then
+            GenJournalLine."NCT Tax Invoice No." := PrepmtInvLineBuffer."NCT Tax Invoice No.";
+        GenJournalLine."VAT Registration No." := PrepmtInvLineBuffer."NCT Vat Registration No.";
+        GenJournalLine."NCT Tax Invoice Name" := PrepmtInvLineBuffer."NCT Tax Invoice Name";
+        GenJournalLine."NCT Tax Invoice Name 2" := PrepmtInvLineBuffer."NCT Tax Invoice Name 2";
+        GenJournalLine."NCT VAT Branch Code" := PrepmtInvLineBuffer."NCT VAT Branch Code";
+        GenJournalLine."NCT Head Office" := PrepmtInvLineBuffer."NCT Head Office";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Prepayment Inv. Line Buffer", 'OnAfterCopyFromSalesLine', '', false, false)]
+    local procedure OnAfterCopyFromSalesLine(SalesLine: Record "Sales Line"; var PrepaymentInvLineBuffer: Record "Prepayment Inv. Line Buffer")
+    var
+        SalesHeader: Record "Sales Header";
+    begin
+        SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.");
+        PrepaymentInvLineBuffer."NCT Tax Invoice No." := SalesHeader."Prepayment No.";
+        PrepaymentInvLineBuffer."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
+        PrepaymentInvLineBuffer."NCT Tax Invoice Name 2" := SalesHeader."Sell-to Customer Name 2";
+        PrepaymentInvLineBuffer."NCT Vat Registration No." := SalesHeader."VAT Registration No.";
+        PrepaymentInvLineBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
+        PrepaymentInvLineBuffer."NCT Head Office" := SalesHeader."NCT Head Office";
+    end;
 
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnBeforeInsertPostUnrealVATEntry', '', true, true)]
@@ -99,6 +139,11 @@ codeunit 80000 "NCT Journal Function"
     begin
         VATEntry."NCT Tax Invoice Base" := VATEntry.Base;
         VATEntry."NCT Tax Invoice Amount" := VATEntry.Amount;
+        VATEntry."NCT Tax Invoice No." := GenJournalLine."NCT Tax Invoice No.";
+        VATEntry."NCT Tax Invoice Date" := GenJournalLine."NCT Tax Invoice Date";
+        VATEntry."NCT Tax Vendor No." := GenJournalLine."NCT Tax Vendor No.";
+        VATEntry."NCT Tax Invoice Name" := GenJournalLine."NCT Tax Invoice Name";
+        VATEntry."NCT Tax Invoice Name 2" := GenJournalLine."NCT Tax Invoice Name 2";
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]

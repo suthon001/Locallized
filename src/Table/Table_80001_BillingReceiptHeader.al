@@ -477,12 +477,20 @@ Table 80001 "NCT Billing Receipt Header"
         }
     }
     trigger OnInsert()
+    var
+        SalesSetup: Record "Sales & Receivables Setup";
     begin
+        SalesSetup.GET();
         TestField("No.");
         "Create By User" := COPYSTR(UserId(), 1, 50);
         "Create DateTime" := CurrentDateTime;
         "Posting Date" := Today();
         "Document Date" := Today();
+        "Bank Fee Acc." := SalesSetup."NCT Default Bank Fee Acc.";
+        "Prepaid WHT Acc." := SalesSetup."NCT Default Prepaid WHT Acc.";
+        if "Prepaid WHT Acc." <> '' then
+            "Prepaid WHT Date" := Today();
+        "Diff Amount Acc." := SalesSetup."NCT Default Diff Amount Acc.";
 
     end;
 
