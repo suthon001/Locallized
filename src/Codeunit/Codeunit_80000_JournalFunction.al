@@ -22,6 +22,8 @@ codeunit 80000 "NCT Journal Function"
         LastLineNo: Integer;
     begin
         if not PreviewMode then begin
+            if not GenJournalTemplate.GET(GenJournalLine."Journal Template Name") then
+                GenJournalLine.Init();
             GenJnlLine2.reset();
             GenJnlLine2.Copy(GenJournalLine);
             GenJnlLine2.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
