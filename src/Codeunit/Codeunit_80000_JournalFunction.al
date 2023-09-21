@@ -11,7 +11,7 @@ codeunit 80000 "NCT Journal Function"
     /// Description for InsertPostedGenLine.
     /// </summary>
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
-    local procedure "OnBeforeUpdateAndDeleteLines"(var GenJournalLine: Record "Gen. Journal Line"; PreviewMode: Boolean)
+    local procedure "OnProcessLinesOnAfterPostGenJnlLines"(var GenJournalLine: Record "Gen. Journal Line"; PreviewMode: Boolean)
     var
         WHTHeader: Record "NCT WHT Header";
         WHTLines: Record "NCT WHT Line";
