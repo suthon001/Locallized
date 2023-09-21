@@ -195,6 +195,24 @@ page 80041 "NCT WHT53 Card"
                     Clear(WithholdingReport);
                 end;
             }
+            action("WHT 53")
+            {
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedCategory = Report;
+                PromotedIsBig = true;
+                Image = PrintReport;
+                Caption = 'รายงานใบแนบ ภ.ง.ด.';
+                trigger OnAction()
+                var
+                    TaxReportHeader: Record "NCT Tax & WHT Header";
+                begin
+                    TaxReportHeader.Reset();
+                    TaxReportHeader.SetRange("Tax Type", rec."Tax Type");
+                    TaxReportHeader.SetRange("Document No.", rec."Document No.");
+                    REPORT.RUN(REPORT::"NCT WHT53 Report", TRUE, TRUE, TaxReportHeader);
+                end;
+            }
             action("PND 53")
             {
                 Caption = 'PND 53';

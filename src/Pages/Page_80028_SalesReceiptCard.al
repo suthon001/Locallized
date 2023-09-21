@@ -7,7 +7,7 @@ page 80028 "NCT Sales Receipt Card"
     PageType = Document;
     SourceTable = "NCT Billing Receipt Header";
     Caption = 'Sales Receipt Card';
-    PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Request Approval,Approval,Print/Send,Navigate';
+    PromotedActionCategories = 'New,Process,Print,Approve,Release,Posting,Prepare,Request Approval,Approval,Print/Send,Navigate,Approve Entries';
     RefreshOnActivate = true;
     SourceTableView = where("Document Type" = filter('Sales Receipt'));
     UsageCategory = None;
@@ -416,7 +416,24 @@ page 80028 "NCT Sales Receipt Card"
                     end;
                 }
             }
-
+            group(ApproveEntries)
+            {
+                Caption = 'Approve Entries';
+                action("Approve Entries")
+                {
+                    Caption = 'Approve Entries';
+                    Image = Approvals;
+                    Promoted = true;
+                    PromotedCategory = Category12;
+                    PromotedOnly = true;
+                    ApplicationArea = all;
+                    ToolTip = 'Executes the Approve Entries action.';
+                    trigger OnAction()
+                    begin
+                        ApprovalsMgmt.OpenApprovalEntriesPage(Rec.RecordId);
+                    end;
+                }
+            }
             group("Approval")
             {
                 Caption = 'Approval';
@@ -433,6 +450,57 @@ page 80028 "NCT Sales Receipt Card"
                     trigger OnAction()
                     begin
                         ApprovalsMgmt.ApproveRecordApprovalRequest(Rec.RecordId);
+                    end;
+                }
+                action(Reject)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Reject';
+                    Image = Reject;
+                    ToolTip = 'Reject the approval request.';
+                    Visible = OpenApprovalEntriesExistForCurrUser;
+                    Promoted = true;
+                    PromotedCategory = Category9;
+                    PromotedOnly = true;
+                    trigger OnAction()
+                    var
+                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+                    begin
+                        ApprovalsMgmt.RejectRecordApprovalRequest(rec.RecordId);
+                    end;
+                }
+                action(Delegate)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Delegate';
+                    Image = Delegate;
+                    ToolTip = 'Delegate the approval to a substitute approver.';
+                    Visible = OpenApprovalEntriesExistForCurrUser;
+                    Promoted = true;
+                    PromotedCategory = Category9;
+                    PromotedOnly = true;
+                    trigger OnAction()
+                    var
+                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+                    begin
+                        ApprovalsMgmt.DelegateRecordApprovalRequest(rec.RecordId);
+                    end;
+                }
+                action(Comment)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Comments';
+                    Image = ViewComments;
+                    ToolTip = 'View or add comments for the record.';
+                    Visible = OpenApprovalEntriesExistForCurrUser;
+                    Promoted = true;
+                    PromotedCategory = Category9;
+                    PromotedOnly = true;
+                    trigger OnAction()
+                    var
+                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+                    begin
+                        ApprovalsMgmt.GetApprovalComment(Rec);
                     end;
                 }
             }

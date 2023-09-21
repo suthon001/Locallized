@@ -130,6 +130,20 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
                         RunObject = page "NCT WHT53 Lists";
                         ToolTip = 'Executes the WHT53 action.';
                     }
+                    action(WHTTransaction)
+                    {
+                        Caption = 'WHT Transaction';
+                        ApplicationArea = all;
+                        RunObject = page "NCT WHT Transaction Entries";
+                        ToolTip = 'Executes the WHT Transaction Entries action.';
+                    }
+                    action(VatTransaction)
+                    {
+                        Caption = 'VAT Transaction';
+                        ApplicationArea = all;
+                        RunObject = page "NCT Vat Transaction Entries";
+                        ToolTip = 'Executes the VAT Transaction Entries action.';
+                    }
                 }
                 group("Billing&Receipt")
                 {

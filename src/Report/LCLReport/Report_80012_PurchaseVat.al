@@ -98,6 +98,15 @@ report 80012 "NCT Purchase Vat Report"
                 column(EntryNo_TaxReportLine; "Entry No.")
                 {
                 }
+                trigger OnPreDataItem()
+                begin
+                    if gvTempVatBus <> '' then
+                        "Tax Report Line".SetFilter("VAT Business Posting Group", gvTempVatBus);
+                    if gvTempProd <> '' then
+                        "Tax Report Line".SetFilter("VAT Product Posting Group", gvTempProd);
+                    if gvTempdate <> '' then
+                        "Tax Report Line".SetFilter("Tax Invoice Date", gvTempdate);
+                end;
 
                 trigger OnAfterGetRecord()
                 begin
@@ -176,12 +185,9 @@ report 80012 "NCT Purchase Vat Report"
     /// <param name="Tempdate">Parameter of type Text[100].</param>
     procedure "SetFilter"(TempVatBus: Code[250]; TemVatPro: Code[250]; Tempdate: Text)
     begin
-        if TempVatBus <> '' then
-            "Tax Report Line".SetFilter("VAT Business Posting Group", TempVatBus);
-        if TemVatPro <> '' then
-            "Tax Report Line".SetFilter("VAT Product Posting Group", TemVatPro);
-        if Tempdate <> '' then
-            "Tax Report Line".SetFilter("Tax Invoice Date", Tempdate);
+        gvTempVatBus := TempVatBus;
+        gvTempProd := TemVatPro;
+        gvTempdate := Tempdate;
 
         VatBus := TempVatBus;
     end;
@@ -199,6 +205,7 @@ report 80012 "NCT Purchase Vat Report"
         VATRegis: Text;
         VatBus: Code[250];
         Comtext: Array[10] of text[250];
+        gvTempVatBus, gvTempProd, gvTempdate : text;
 
 }
 
