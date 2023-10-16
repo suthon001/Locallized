@@ -61,24 +61,44 @@ report 80026 "NCT Debit Note"
             column(var_RefDocumentNo; RefDocumentNo) { }
             column(var_RefDocumentDate; format(var_RefDocumentDate, 0, '<Day,2>/<Month,2>/<Year4>')) { }
             column(ReturnReasonDescFirstLine; ReturnReasonDescFirstLine) { }
-            dataitem(SalesLine; "Sales Line")
+            dataitem(myLoop; Integer)
             {
-                DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
-                DataItemLink = "Document Type" = FIELD("Document Type"), "Document No." = FIELD("No.");
-                column(SalesLine_No_; "No.") { }
-                column(SalesLine_Description; Description) { }
-                column(SalesLine_Description_2; "Description 2") { }
-                column(SalesLine_Unit_Price; "Unit Price") { }
-                column(Line_Discount__; "Line Discount %") { }
-                column(SalesLine_Line_Amount; "Line Amount") { }
-                column(SalesLine_LineNo; LineNo) { }
-                column(SalesLine_Quantity; Quantity) { }
-                column(SalesLine_Unit_of_Measure_Code; "Unit of Measure Code") { }
+                DataItemTableView = sorting(Number) where(Number = filter(1 ..));
+                column(Number; Number) { }
+                column(OriginalCaption; OriginalCaption) { }
+                dataitem(SalesLine; "Sales Line")
+                {
+                    DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
+                    DataItemLink = "Document Type" = FIELD("Document Type"), "Document No." = FIELD("No.");
+                    DataItemLinkReference = SalesHeader;
+                    column(SalesLine_No_; "No.") { }
+                    column(SalesLine_Description; Description) { }
+                    column(SalesLine_Description_2; "Description 2") { }
+                    column(SalesLine_Unit_Price; "Unit Price") { }
+                    column(Line_Discount__; "Line Discount %") { }
+                    column(SalesLine_Line_Amount; "Line Amount") { }
+                    column(SalesLine_LineNo; LineNo) { }
+                    column(SalesLine_Quantity; Quantity) { }
+                    column(SalesLine_Unit_of_Measure_Code; "Unit of Measure Code") { }
+
+                    trigger OnAfterGetRecord()
+                    begin
+                        If "No." <> '' then
+                            LineNo += 1;
+                    end;
+                }
+                trigger OnPreDataItem()
+                begin
+                    SetRange(Number, 1, NoOfCopies + 1);
+                end;
 
                 trigger OnAfterGetRecord()
                 begin
-                    If "No." <> '' then
-                        LineNo += 1;
+                    LineNo := 0;
+                    if Number = 1 then
+                        OriginalCaption := 'Original'
+                    else
+                        OriginalCaption := 'Copy';
                 end;
             }
 
@@ -139,16 +159,31 @@ report 80026 "NCT Debit Note"
                 group("Options")
                 {
                     Caption = 'Options';
+                    field(NoOfCopies; NoOfCopies)
+                    {
+                        ApplicationArea = all;
+                        Caption = 'No. of Copies';
+                        ToolTip = 'Specifies the value of the No. of Copies field.';
+                        MinValue = 0;
+                    }
                     field(CaptionOptionThai; CaptionOptionThai)
                     {
                         ApplicationArea = all;
-                        Caption = 'Caption';
+                        Caption = 'Caption (Thai)';
                         ToolTip = 'Specifies the value of the Caption field.';
-                        OptionCaption = 'ใบเพิ่มหนี้,ใบเพิ่มหนี้/ใบกำกับภาษี';
-                        trigger OnValidate()
+                        trigger OnAssistEdit()
+                        var
+                            EvenCenter: Codeunit "NCT EventFunction";
+                            ltDocumentType: Enum "NCT Document Type Report";
                         begin
-                            CaptionOptionEng := CaptionOptionThai;
+                            EvenCenter.SelectCaptionReport(CaptionOptionThai, CaptionOptionEng, ltDocumentType::"Sales Invoice");
                         end;
+                    }
+                    field(CaptionOptionEng; CaptionOptionEng)
+                    {
+                        ApplicationArea = all;
+                        Caption = 'Caption (Eng)';
+                        ToolTip = 'Specifies the value of the Caption field.';
                     }
                 }
             }
@@ -185,7 +220,7 @@ report 80026 "NCT Debit Note"
         AmtText, ReturnReasonDescFirstLine : Text[250];
         ComText: Array[10] of Text[250];
         CustText: Array[10] of Text[250];
-        CaptionOptionEng: Option "DEBIT NOTE","DEBIT NOTE/TAX INVOICE";
-        CaptionOptionThai: Option ใบเพิ่มหนี้,"ใบเพิ่มหนี้/ใบกำกับภาษี";
+        NoOfCopies: Integer;
+        CaptionOptionEng, CaptionOptionThai, OriginalCaption : Text[50];
 
 }

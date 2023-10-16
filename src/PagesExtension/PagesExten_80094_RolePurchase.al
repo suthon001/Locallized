@@ -203,10 +203,10 @@ pageextension 80094 "NCT Role Purchase" extends "Purchasing Agent Role Center"
                         }
                         action("Compare Phys. Count FA")
                         {
-                            Caption = 'รายงานเปรียบทรัพย์สินระหว่างสถานที่เก็บ';
+                            Caption = 'รายงานเปรียบเทียบทรัพย์สินระหว่างสถานที่เก็บ';
                             ApplicationArea = all;
                             RunObject = report "NCT Compare Phys. Count FA";
-                            ToolTip = 'Executes the รายงานเปรียบทรัพย์สินระหว่างสถานที่เก็บ action.';
+                            ToolTip = 'Executes the รายงานเปรียบเทียบทรัพย์สินระหว่างสถานที่เก็บ action.';
                         }
 
                     }

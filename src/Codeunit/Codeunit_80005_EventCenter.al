@@ -4,6 +4,31 @@
 codeunit 80005 "NCT EventFunction"
 {
     Permissions = TableData "G/L Entry" = rimd;
+
+    /// <summary>
+    /// SelectCaptionReport.
+    /// </summary>
+    /// <param name="pNameThai">VAR text[50].</param>
+    /// <param name="pNameEng">VAR text[50].</param>
+    /// <param name="pDocumentType">Enum "NCT Document Type Report".</param>
+    procedure SelectCaptionReport(var pNameThai: text[50]; var pNameEng: text[50]; pDocumentType: Enum "NCT Document Type Report")
+    var
+        ltSelectCaptionReport: Record "NCT Caption Report Setup";
+        ltCaptionReport: Page "NCT Caption Report List";
+    begin
+        CLEAR(ltCaptionReport);
+        ltSelectCaptionReport.reset();
+        ltSelectCaptionReport.SetRange("Document Type", pDocumentType);
+        ltCaptionReport.SetTableView(ltSelectCaptionReport);
+        ltCaptionReport.LookupMode := true;
+        if ltCaptionReport.RunModal() = Action::LookupOK then begin
+            ltCaptionReport.GetRecord(ltSelectCaptionReport);
+            pNameThai := ltSelectCaptionReport."Name (Thai)";
+            pNameEng := ltSelectCaptionReport."Name (Eng)";
+        end;
+        Clear(ltCaptionReport);
+    end;
+
     [EventSubscriber(ObjectType::Page, Page::"Acc. Schedule Overview", 'OnBeforePrint', '', false, false)]
     local procedure OnBeforePrintAccSheduleOverview(var AccScheduleLine: Record "Acc. Schedule Line"; var IsHandled: Boolean; var TempFinancialReport: Record "Financial Report" temporary)
     var

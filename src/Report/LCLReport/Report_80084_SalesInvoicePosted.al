@@ -60,28 +60,47 @@ report 80084 "NCT Sales Invoice (Post)"
             column(CaptionOptionThai; CaptionOptionThai) { }
             column(CaptionOptionEng; CaptionOptionEng) { }
             column(VatText; VatText) { }
-            dataitem(SalesLine; "Sales Invoice Line")
+            dataitem(myLoop; Integer)
             {
-                DataItemTableView = sorting("Document No.", "Line No.");
-                DataItemLink = "Document No." = FIELD("No.");
-                column(SalesLine_No_; "No.") { }
-                column(SalesLine_Description; Description) { }
-                column(SalesLine_Description_2; "Description 2") { }
-                column(SalesLine_Unit_Price; "Unit Price") { }
-                column(Line_Discount__; "Line Discount %") { }
-                column(SalesLine_LineNo; LineNo) { }
-                column(SalesLine_Quantity; Quantity) { }
-                column(SalesLine_Unit_of_Measure_Code; "Unit of Measure Code") { }
-                column(Line_Amount; "Line Amount") { }
+                DataItemTableView = sorting(Number) where(Number = filter(1 ..));
+                column(Number; Number) { }
+                column(OriginalCaption; OriginalCaption) { }
+                dataitem(SalesLine; "Sales Invoice Line")
+                {
+                    DataItemTableView = sorting("Document No.", "Line No.");
+                    DataItemLink = "Document No." = FIELD("No.");
+                    DataItemLinkReference = SalesHeader;
+                    column(SalesLine_No_; "No.") { }
+                    column(SalesLine_Description; Description) { }
+                    column(SalesLine_Description_2; "Description 2") { }
+                    column(SalesLine_Unit_Price; "Unit Price") { }
+                    column(Line_Discount__; "Line Discount %") { }
+                    column(SalesLine_LineNo; LineNo) { }
+                    column(SalesLine_Quantity; Quantity) { }
+                    column(SalesLine_Unit_of_Measure_Code; "Unit of Measure Code") { }
+                    column(Line_Amount; "Line Amount") { }
 
+
+                    trigger OnAfterGetRecord()
+                    begin
+                        If "No." <> '' then
+                            LineNo += 1;
+                    end;
+                }
+                trigger OnPreDataItem()
+                begin
+                    SetRange(Number, 1, NoOfCopies + 1);
+                end;
 
                 trigger OnAfterGetRecord()
                 begin
-                    If "No." <> '' then
-                        LineNo += 1;
+                    LineNo := 0;
+                    if Number = 1 then
+                        OriginalCaption := 'Original'
+                    else
+                        OriginalCaption := 'Copy';
                 end;
             }
-
             trigger OnAfterGetRecord()
             var
                 NewDate: Date;
@@ -122,16 +141,31 @@ report 80084 "NCT Sales Invoice (Post)"
                 group("Options")
                 {
                     Caption = 'Options';
+                    field(NoOfCopies; NoOfCopies)
+                    {
+                        ApplicationArea = all;
+                        Caption = 'No. of Copies';
+                        ToolTip = 'Specifies the value of the No. of Copies field.';
+                        MinValue = 0;
+                    }
                     field(CaptionOptionThai; CaptionOptionThai)
                     {
                         ApplicationArea = all;
-                        OptionCaption = 'ใบแจ้งหนี้,ใบแจ้งหนี้/ใบกำกับภาษี';
-                        Caption = 'Caption';
+                        Caption = 'Caption (Thai)';
                         ToolTip = 'Specifies the value of the Caption field.';
-                        trigger OnValidate()
+                        trigger OnAssistEdit()
+                        var
+                            EvenCenter: Codeunit "NCT EventFunction";
+                            ltDocumentType: Enum "NCT Document Type Report";
                         begin
-                            CaptionOptionEng := CaptionOptionThai;
+                            EvenCenter.SelectCaptionReport(CaptionOptionThai, CaptionOptionEng, ltDocumentType::"Sales Invoice");
                         end;
+                    }
+                    field(CaptionOptionEng; CaptionOptionEng)
+                    {
+                        ApplicationArea = all;
+                        Caption = 'Caption (Eng)';
+                        ToolTip = 'Specifies the value of the Caption field.';
                     }
                 }
             }
@@ -166,7 +200,7 @@ report 80084 "NCT Sales Invoice (Post)"
         AmtText: Text[250];
         ComText: Array[10] of Text[250];
         CustText, CustTextShipment : Array[10] of Text[250];
-        CaptionOptionEng: Option INVOICE,"INVOICE/TAX INVOICE";
-        CaptionOptionThai: Option ใบแจ้งหนี้,"ใบแจ้งหนี้/ใบกำกับภาษี";
+        NoOfCopies: Integer;
+        CaptionOptionEng, CaptionOptionThai, OriginalCaption : Text[50];
 
 }
