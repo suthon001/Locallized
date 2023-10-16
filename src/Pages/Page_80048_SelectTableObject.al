@@ -7,7 +7,7 @@ page 80048 "NCT Select Table Object"
     Caption = 'Select Table Object';
     PageType = List;
     SourceTable = AllObjWithCaption;
-    UsageCategory = None;
+    UsageCategory = Administration;
     ModifyAllowed = false;
     Editable = false;
     DeleteAllowed = false;
