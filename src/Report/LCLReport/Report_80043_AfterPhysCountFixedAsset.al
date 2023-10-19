@@ -6,7 +6,7 @@ report 80043 "NCT After Phys.Count FA"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80043_AfterPhysCountFixedAsset.rdl';
     PreviewMode = PrintLayout;
-    Caption = 'After Phys. Count Fixed Asset';
+    Caption = 'รายงานตรวจนับทรัพย์สิน (หลังนับ)';
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     dataset
