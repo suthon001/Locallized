@@ -135,6 +135,7 @@ report 80025 "NCT Report Sales Invoice"
     }
     requestpage
     {
+        SaveValues = true;
         layout
         {
             area(content)

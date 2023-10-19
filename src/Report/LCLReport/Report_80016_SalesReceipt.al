@@ -134,6 +134,7 @@ report 80016 "NCT Sales Receipt"
     }
     requestpage
     {
+        SaveValues = true;
         layout
         {
             area(content)

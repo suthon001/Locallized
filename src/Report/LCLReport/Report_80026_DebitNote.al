@@ -152,6 +152,7 @@ report 80026 "NCT Debit Note"
     }
     requestpage
     {
+        SaveValues = true;
         layout
         {
             area(content)

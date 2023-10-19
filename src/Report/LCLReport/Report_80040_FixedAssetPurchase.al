@@ -5,7 +5,7 @@ report 80040 "NCT Fixed Asset Purchase"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80040_FixedAssetPurchase.rdl';
-    Caption = 'Assets Procurement Report';
+    Caption = 'รายงานซื้อทรัพย์สิน';
     PreviewMode = PrintLayout;
     ApplicationArea = all;
     UsageCategory = ReportsAndAnalysis;
@@ -66,6 +66,9 @@ report 80040 "NCT Fixed Asset Purchase"
                 IF NOT FADeprBook.GET("No.", DeprBookCode) THEN
                     FADeprBook.init();
 
+                IF (FADeprBook."Disposal Date" = 0D) OR ((FADeprBook."Disposal Date" < vgStartDateFilter) OR (FADeprBook."Disposal Date" > vgEndDateFilter)) THEN
+                    CurrReport.SKIP();
+
                 FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
                 FALedgerEntry.SETFILTER("FA Posting Type", '%1', FALedgerEntry."FA Posting Type"::"Acquisition Cost");
@@ -77,7 +80,6 @@ report 80040 "NCT Fixed Asset Purchase"
                     vgDcoumentNo := FALedgerEntry."Document No.";
                     InvoiceNo := FALedgerEntry."External Document No.";
                     vgAcqCost := FALedgerEntry.Amount;
-
                 END;
 
                 IF NOT FAPostingGroup.GET(FADeprBook."FA Posting Group") THEN
@@ -92,6 +94,7 @@ report 80040 "NCT Fixed Asset Purchase"
             begin
                 IF DeprBookCode = '' THEN
                     ERROR('Please Select Depreciation Book Code!!');
+
             end;
         }
     }
@@ -111,6 +114,18 @@ report 80040 "NCT Fixed Asset Purchase"
                         Caption = 'Depreciation Book';
                         TableRelation = "Depreciation Book";
                         ToolTip = 'Specifies the code for the depreciation book to be included in the report or batch job.';
+                    }
+                    field(vgStartDateFilter; vgStartDateFilter)
+                    {
+                        Caption = 'Start Date';
+                        ToolTip = 'Specifies the value of the Start Date field.';
+                        ApplicationArea = All;
+                    }
+                    field(vgEndDateFilter; vgEndDateFilter)
+                    {
+                        Caption = 'End Date';
+                        ToolTip = 'Specifies the value of the End Date field.';
+                        ApplicationArea = All;
                     }
                 }
             }
@@ -142,5 +157,8 @@ report 80040 "NCT Fixed Asset Purchase"
         vgFASubClassName: Text;
         CompanyInformation: Record "Company Information";
         vgGetFilters: Text;
+        vgStartDateFilter: Date;
+        vgEndDateFilter: Date;
+
 }
 

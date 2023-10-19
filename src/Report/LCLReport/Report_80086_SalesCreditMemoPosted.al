@@ -176,6 +176,7 @@ report 80086 "NCT Sales Credit Memo (Post)"
     }
     requestpage
     {
+        SaveValues = true;
         layout
         {
             area(content)

@@ -64,7 +64,7 @@ pageextension 80068 "NCT Purchase Order Lists" extends "Purchase Order List"
                 Caption = 'Purchase Order';
                 Image = PrintReport;
                 ApplicationArea = all;
-                PromotedCategory = Category5;
+                PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
                 ToolTip = 'Executes the Purchase Order action.';

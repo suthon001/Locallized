@@ -6,7 +6,7 @@ report 80044 "NCT Compare Phys. Count FA"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80044_ComparePhysCountFA.rdl';
     PreviewMode = PrintLayout;
-    Caption = 'Compare Phys. Count FA';
+    Caption = 'รายงานเปรียบเทียบทรัพย์สิน';
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     dataset

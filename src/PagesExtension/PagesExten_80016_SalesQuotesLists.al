@@ -95,7 +95,7 @@ pageextension 80016 "NCT Sales Quotes Lists" extends "Sales Quotes"
                 Image = PrintReport;
                 Promoted = true;
                 PromotedIsBig = true;
-                PromotedCategory = Category6;
+                PromotedCategory = Report;
                 ToolTip = 'Show Report';
                 trigger OnAction()
                 var

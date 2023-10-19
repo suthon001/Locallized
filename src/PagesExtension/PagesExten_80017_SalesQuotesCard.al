@@ -118,7 +118,7 @@ pageextension 80017 "NCT Sales Quote Card" extends "Sales Quote"
                 Image = PrintReport;
                 Promoted = true;
                 PromotedIsBig = true;
-                PromotedCategory = Category9;
+                PromotedCategory = Report;
                 ToolTip = 'Executes the Sales Quotes action.';
                 trigger OnAction()
                 var

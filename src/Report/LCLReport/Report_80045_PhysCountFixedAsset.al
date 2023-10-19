@@ -6,7 +6,7 @@ report 80045 "NCT Phys. Count Fixed Asset"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80045_PhysCountFixedAsset.rdl';
     PreviewMode = PrintLayout;
-    Caption = 'Phys. Count Fixed Asset';
+    Caption = 'รายงานตรวจนับทรัพย์สิน (ก่อนนับ)';
     ApplicationArea = All;
     UsageCategory = ReportsAndAnalysis;
     dataset

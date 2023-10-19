@@ -154,6 +154,7 @@ report 80085 "NCT Debit Note (Post)"
     }
     requestpage
     {
+        SaveValues = true;
         layout
         {
             area(content)

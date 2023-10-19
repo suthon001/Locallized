@@ -134,6 +134,7 @@ report 80084 "NCT Sales Invoice (Post)"
     }
     requestpage
     {
+        SaveValues = true;
         layout
         {
             area(content)

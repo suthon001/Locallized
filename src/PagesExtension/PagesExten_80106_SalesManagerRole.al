@@ -203,10 +203,10 @@ pageextension 80106 "NCT Sales Manager Role" extends "Sales Manager Role Center"
                         }
                         action("Compare Phys. Count FA")
                         {
-                            Caption = 'รายงานเปรียบเทียบทรัพย์สินระหว่างสถานที่เก็บ';
+                            Caption = 'รายงานเปรียบเทียบทรัพย์สิน';
                             ApplicationArea = all;
                             RunObject = report "NCT Compare Phys. Count FA";
-                            ToolTip = 'Executes the รายงานเปรียบเทียบทรัพย์สินระหว่างสถานที่เก็บ action.';
+                            ToolTip = 'Executes the รายงานเปรียบเทียบทรัพย์สิน action.';
                         }
 
                     }

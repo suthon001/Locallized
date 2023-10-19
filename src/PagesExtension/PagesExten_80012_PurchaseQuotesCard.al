@@ -87,7 +87,7 @@ pageextension 80012 "NCT Purchase Quote Card" extends "Purchase Quote"
                 Caption = 'Purchase Quote';
                 Image = PrintReport;
                 ApplicationArea = all;
-                PromotedCategory = Category6;
+                PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
                 ToolTip = 'Executes the Purchase Quote action.';

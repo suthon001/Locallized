@@ -66,7 +66,7 @@ pageextension 80011 "NCT Purchase Quotes Lists" extends "Purchase Quotes"
                 Caption = 'Purchase Quote';
                 Image = PrintReport;
                 ApplicationArea = all;
-                PromotedCategory = Category6;
+                PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
                 ToolTip = 'Executes the Purchase Quote action.';

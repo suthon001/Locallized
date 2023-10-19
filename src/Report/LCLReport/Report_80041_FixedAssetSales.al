@@ -5,7 +5,7 @@ report 80041 "NCT Fixed Asset Sales"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80041_FixedAssetSales.rdl';
-    Caption = 'Assets Write-Off Report';
+    Caption = 'รายงานการขายทรัพย์สิน';
     PreviewMode = PrintLayout;
     ApplicationArea = all;
     UsageCategory = ReportsAndAnalysis;

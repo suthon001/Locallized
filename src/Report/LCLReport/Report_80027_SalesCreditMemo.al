@@ -178,6 +178,7 @@ report 80027 "NCT Report Sales Credit Memo"
     }
     requestpage
     {
+        SaveValues = true;
         layout
         {
             area(content)

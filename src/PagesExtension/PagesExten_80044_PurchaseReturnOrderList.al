@@ -82,7 +82,7 @@ pageextension 80044 "NCT PurchaseReturnOrderLists" extends "Purchase Return Orde
                 Caption = 'Purchase Return Order';
                 Image = PrintReport;
                 ApplicationArea = all;
-                PromotedCategory = Category10;
+                PromotedCategory = Report;
                 Promoted = true;
                 PromotedIsBig = true;
                 ToolTip = 'Executes the Purchase Return Order action.';
