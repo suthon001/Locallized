@@ -1,4 +1,7 @@
 
+/// <summary>
+/// Page NCT WHT Applied Entry (ID 80042).
+/// </summary>
 page 80042 "NCT WHT Applied Entry"
 {
 

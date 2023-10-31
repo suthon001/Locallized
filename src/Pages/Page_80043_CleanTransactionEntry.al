@@ -1,4 +1,7 @@
-page 80043 "NCT Clear Transaction Entry"
+/// <summary>
+/// Page NCT Clean Transaction Entry (ID 80043).
+/// </summary>
+page 80043 "NCT Clean Transaction Entry"
 {
     InsertAllowed = True;
     PageType = List;
@@ -7,7 +10,7 @@ page 80043 "NCT Clear Transaction Entry"
     UsageCategory = Tasks;
     AccessByPermission = tabledata "NCT Record Deletion Table" = RIMD;
     ApplicationArea = All;
-    Caption = 'Clear Transection';
+    Caption = 'Clean Transection';
     layout
     {
         area(content)
@@ -76,7 +79,7 @@ page 80043 "NCT Clear Transaction Entry"
                 ToolTip = 'Executes the START DELETE RECORDS action.';
                 trigger OnAction()
                 var
-                    RecordDeletionMgt: Codeunit "NCT Clear Transactions";
+                    RecordDeletionMgt: Codeunit "NCT Clean Transactions";
                 begin
                     if not Confirm(StrSubstNo('Do you want clear transactions companyname %1', company)) then
                         exit;
@@ -98,7 +101,7 @@ page 80043 "NCT Clear Transaction Entry"
                 ToolTip = 'Executes the Generate Table action.';
                 trigger OnAction()
                 var
-                    RecordDeletionMgt: Codeunit "NCT Clear Transactions";
+                    RecordDeletionMgt: Codeunit "NCT Clean Transactions";
                 begin
                     Commit();
                     RecordDeletionMgt."Generate Table"();

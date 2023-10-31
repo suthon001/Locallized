@@ -1,7 +1,7 @@
 /// <summary>
 /// Codeunit NCT Clear Transactions (ID 80013).
 /// </summary>
-codeunit 80013 "NCT Clear Transactions"
+codeunit 80013 "NCT Clean Transactions"
 {
 
     //Std. Table

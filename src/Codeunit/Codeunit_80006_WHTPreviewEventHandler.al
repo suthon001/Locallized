@@ -105,7 +105,7 @@ codeunit 80006 "WHT Preview Event Handler"
     local procedure OnInsertHeaderOnBeforeValidateSellToCustNoFromReqLine(PurchOrderHeader: Record "Purchase Header")
     begin
         if CreatePONO <> '' then
-            CreatePONO := CreatePONO + '\n';
+            CreatePONO := CreatePONO + '\';
         CreatePONO := CreatePONO + PurchOrderHeader."No.";
     end;
 
