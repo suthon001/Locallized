@@ -1662,7 +1662,10 @@ codeunit 80004 "NCT Function Center"
                 if BillingReceiptHeader."Head Office" then
                     VatRegis += ' (สำนักงานใหญ่)'
                 else
-                    VatRegis += ' (' + BillingReceiptHeader."VAT Branch Code" + ')';
+                    if BillingReceiptHeader."VAT Branch Code" <> '' then
+                        VatRegis += ' (' + BillingReceiptHeader."VAT Branch Code" + ')'
+                    else
+                        VatRegis += ' (สำนักงานใหญ่)';
             end else begin
                 if Cust."Fax No." <> '' then
                     tel += 'Fax : ' + Cust."Fax No.";
@@ -1670,7 +1673,10 @@ codeunit 80004 "NCT Function Center"
                 if BillingReceiptHeader."Head Office" then
                     VatRegis += ' (Head Office)'
                 else
-                    VatRegis += ' (' + BillingReceiptHeader."VAT Branch Code" + ')';
+                    if BillingReceiptHeader."VAT Branch Code" <> '' then
+                        VatRegis += ' (' + BillingReceiptHeader."VAT Branch Code" + ')'
+                    else
+                        VatRegis += ' (Head Office)';
             end;
         end;
 
@@ -1961,12 +1967,18 @@ codeunit 80004 "NCT Function Center"
                         if PurchRcptHeader."NCT Head Office" then
                             Text[10] += ' (สำนักงานใหญ่)'
                         else
-                            Text[10] += ' (' + PurchRcptHeader."NCT VAT Branch Code" + ')';
+                            if PurchRcptHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + PurchRcptHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (สำนักงานใหญ่)';
                     end else
                         if PurchRcptHeader."NCT Head Office" then
                             Text[10] += ' (Head Office)'
                         else
-                            Text[10] += ' (' + PurchRcptHeader."NCT VAT Branch Code" + ')';
+                            if PurchRcptHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + PurchRcptHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (Head Office)';
                 END;
             DocumentType::"Return Shipment":
                 BEGIN
@@ -2105,6 +2117,28 @@ codeunit 80004 "NCT Function Center"
 
                             END;
                     end;
+                    Text[10] := PurchInvHeader."VAT Registration No.";
+                    if (PurchInvHeader."NCT VAT Branch Code" <> '') AND (NOT PurchInvHeader."NCT Head Office") then begin
+                        if not VendBranch.GET(VendBranch."Source Type"::Vendor, PurchInvHeader."Buy-from Vendor No.", PurchInvHeader."NCT Head Office", PurchInvHeader."NCT VAT Branch Code") then
+                            VendBranch.Init();
+                        Text[10] := VendBranch."VAT Registration No.";
+                    end;
+                    if PurchInvHeader."Currency Code" = '' then begin
+                        if PurchInvHeader."NCT Head Office" then
+                            Text[10] += ' (สำนักงานใหญ่)'
+                        else
+                            if PurchInvHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + PurchInvHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (สำนักงานใหญ่)';
+                    end else
+                        if PurchInvHeader."NCT Head Office" then
+                            Text[10] += ' (Head Office)'
+                        else
+                            if PurchInvHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + PurchInvHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (Head Office)';
                 END;
             DocumentType::"Posted Credit Memo":
                 BEGIN
@@ -2174,7 +2208,28 @@ codeunit 80004 "NCT Function Center"
 
                             END;
                     END;
-
+                    Text[10] := PurchCrMemoHeader."VAT Registration No.";
+                    if (PurchCrMemoHeader."NCT VAT Branch Code" <> '') AND (NOT PurchCrMemoHeader."NCT Head Office") then begin
+                        if not VendBranch.GET(VendBranch."Source Type"::Vendor, PurchCrMemoHeader."Buy-from Vendor No.", PurchCrMemoHeader."NCT Head Office", PurchCrMemoHeader."NCT VAT Branch Code") then
+                            VendBranch.Init();
+                        Text[10] := VendBranch."VAT Registration No.";
+                    end;
+                    if PurchCrMemoHeader."Currency Code" = '' then begin
+                        if PurchCrMemoHeader."NCT Head Office" then
+                            Text[10] += ' (สำนักงานใหญ่)'
+                        else
+                            if PurchCrMemoHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + PurchCrMemoHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (สำนักงานใหญ่)';
+                    end else
+                        if PurchCrMemoHeader."NCT Head Office" then
+                            Text[10] += ' (Head Office)'
+                        else
+                            if PurchCrMemoHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + PurchCrMemoHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (Head Office)';
                 end;
 
         END;
@@ -2298,12 +2353,18 @@ codeunit 80004 "NCT Function Center"
                         if SalesShptHeader."NCT Head Office" then
                             Text[10] += ' (สำนักงานใหญ่)'
                         else
-                            Text[10] += ' (' + SalesShptHeader."NCT VAT Branch Code" + ')';
+                            if SalesShptHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + SalesShptHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (สำนักงานใหญ่)';
                     end else
                         if SalesShptHeader."NCT Head Office" then
                             Text[10] += ' (Head Office)'
                         else
-                            Text[10] += ' (' + SalesShptHeader."NCT VAT Branch Code" + ')';
+                            if SalesShptHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + SalesShptHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (Head Office)';
                 end;
             DocumentType::"Return Receipt":
                 BEGIN
@@ -2444,6 +2505,28 @@ codeunit 80004 "NCT Function Center"
 
                             END;
                     end;
+                    Text[10] := SalesInvHeader."VAT Registration No.";
+                    if (SalesInvHeader."NCT VAT Branch Code" <> '') AND (NOT SalesInvHeader."NCT Head Office") then begin
+                        if not CustBranch.GET(CustBranch."Source Type"::customer, SalesInvHeader."Sell-to Customer No.", SalesInvHeader."NCT Head Office", SalesInvHeader."NCT VAT Branch Code") then
+                            CustBranch.Init();
+                        Text[10] := CustBranch."VAT Registration No.";
+                    end;
+                    if SalesInvHeader."Currency Code" = '' then begin
+                        if SalesInvHeader."NCT Head Office" then
+                            Text[10] += ' (สำนักงานใหญ่)'
+                        else
+                            if SalesInvHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + SalesInvHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (สำนักงานใหญ่)';
+                    end else
+                        if SalesInvHeader."NCT Head Office" then
+                            Text[10] += ' (Head Office)'
+                        else
+                            if SalesInvHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + SalesInvHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (Head Office)';
                 end;
             DocumentType::"Posted Credit Memo":
                 BEGIN
@@ -2514,6 +2597,28 @@ codeunit 80004 "NCT Function Center"
 
                             END;
                     end;
+                    Text[10] := SalesCrMemoHeader."VAT Registration No.";
+                    if (SalesCrMemoHeader."NCT VAT Branch Code" <> '') AND (NOT SalesCrMemoHeader."NCT Head Office") then begin
+                        if not CustBranch.GET(CustBranch."Source Type"::customer, SalesCrMemoHeader."Sell-to Customer No.", SalesCrMemoHeader."NCT Head Office", SalesCrMemoHeader."NCT VAT Branch Code") then
+                            CustBranch.Init();
+                        Text[10] := CustBranch."VAT Registration No.";
+                    end;
+                    if SalesCrMemoHeader."Currency Code" = '' then begin
+                        if SalesCrMemoHeader."NCT Head Office" then
+                            Text[10] += ' (สำนักงานใหญ่)'
+                        else
+                            if SalesCrMemoHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + SalesCrMemoHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (สำนักงานใหญ่)';
+                    end else
+                        if SalesCrMemoHeader."NCT Head Office" then
+                            Text[10] += ' (Head Office)'
+                        else
+                            if SalesCrMemoHeader."NCT VAT Branch Code" <> '' then
+                                Text[10] += ' (' + SalesCrMemoHeader."NCT VAT Branch Code" + ')'
+                            else
+                                Text[10] += ' (Head Office)';
                 end;
         end;
 
