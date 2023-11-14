@@ -257,8 +257,6 @@ report 80005 "NCT Receive Voucher"
                 JournalDescriptionEng := ltGenjournalTemplate."NCT Description Eng";
 
 
-                CVBufferEntry.Reset();
-                CVBufferEntry.DeleteAll();
                 FunctionCenter.JnlFindApplyEntries(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name", GenJournalLine."Posting Date",
                 GenJournalLine."Document No.", CVBufferEntry);
                 HaveApply := CVBufferEntry.Count <> 0;
@@ -376,7 +374,7 @@ report 80005 "NCT Receive Voucher"
         CurrencyCode: Code[10];
         CurrencyFactor: Decimal;
         PostingDescription: Text[250];
-        CVBufferEntry: Record "CV Ledger Entry Buffer";
+        CVBufferEntry: Record "CV Ledger Entry Buffer" temporary;
         OK: Boolean;
         BankName: Text[250];
         BankBranchNo: Code[30];
