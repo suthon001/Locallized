@@ -3,7 +3,7 @@
 /// </summary>
 codeunit 80005 "NCT EventFunction"
 {
-    Permissions = TableData "G/L Entry" = rimd;
+    Permissions = TableData "G/L Entry" = rimd, tabledata "VAT Entry" = rimd;
 
     /// <summary>
     /// SelectCaptionReport.
@@ -119,17 +119,22 @@ codeunit 80005 "NCT EventFunction"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Apply", 'OnApplyVendorLedgerEntryOnBeforeModify', '', false, false)]
     local procedure OnApplyVendorLedgerEntryOnBeforeModify(var GenJournalLine: Record "Gen. Journal Line")
     var
+        ltRecordRef: RecordRef;
+        ltFieldRef: FieldRef;
         VendLdgEntry: Record "Vendor Ledger Entry";
         PurchaseBillingLine: Record "NCT Billing Receipt Line";
-        InvoiceNo: Text;
         ltGeneralSetup: Record "General Ledger Setup";
+        SelectFilter: Codeunit SelectionFilterManagement;
+        InvoiceNo: Text;
+        ltLineNo: Integer;
     begin
-        if GenJournalLine."Document No." <> '' then begin
 
+        if GenJournalLine."Document No." <> '' then begin
             VendLdgEntry.reset();
             VendLdgEntry.SetRange("Vendor No.", GenJournalLine."Account No.");
             VendLdgEntry.SetRange("Applies-to ID", GenJournalLine."Document No.");
             if VendLdgEntry.FindSet() then begin
+                ltRecordRef.Open(Database::"Vendor Ledger Entry Buffer", true);
                 repeat
                     if GenJournalLine."NCT Ref. Billing & Receipt No." = '' then begin
 
@@ -143,8 +148,17 @@ codeunit 80005 "NCT EventFunction"
                         if InvoiceNO <> '' then
                             InvoiceNO := InvoiceNO + '|';
                         InvoiceNO := InvoiceNO + VendLdgEntry."Document No.";
+                        ltLineNo := ltLineNo + 1;
+                        ltRecordRef.Init();
+                        ltFieldRef := ltRecordRef.Field(1);
+                        ltFieldRef.Value := ltLineNo;
+                        ltFieldRef := ltRecordRef.Field(6);
+                        ltFieldRef.Value := VendLdgEntry."Document No.";
+                        ltRecordRef.Insert();
                     end;
                 until VendLdgEntry.Next() = 0;
+                InvoiceNo := SelectFilter.GetSelectionFilter(ltRecordRef, 6);
+                ltRecordRef.Close();
                 ltGeneralSetup.GET();
                 if ltGeneralSetup."NCT Auto WHT Applies" then
                     InsertWHTCertificate(GenJournalLine, InvoiceNo);
@@ -442,14 +456,15 @@ codeunit 80005 "NCT EventFunction"
             ERROR(TempErrorMessage.Message);
     end;
 
-    /// <summary> 
-    /// Description for GenLinePreviewVourcher.
+    /// <summary>
+    /// GenLinePreviewVourcher.
     /// </summary>
-    /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
-    /// <param name="TemporaryGL">Parameter of type Record "G/L Entry" temporary.</param>
-    procedure "GenLinePreviewVourcher"(GenJournalLine: Record "Gen. Journal Line"; var TemporaryGL: Record "G/L Entry" temporary)
+    /// <param name="GenJournalLine">Record "Gen. Journal Line".</param>
+    /// <param name="TemporaryGL">Temporary VAR Record "G/L Entry".</param>
+    /// <param name="pTempVatEntry">Temporary VAR Record "VAT Entry".</param>
+    procedure "GenLinePreviewVourcher"(GenJournalLine: Record "Gen. Journal Line"; var TemporaryGL: Record "G/L Entry" temporary; var pTempVatEntry: Record "VAT Entry" temporary)
     var
-        RecRef: RecordRef;
+        RecRef, RecRefVat : RecordRef;
         TempErrorMessage: Record "Error Message" temporary;
     begin
 
@@ -459,28 +474,31 @@ codeunit 80005 "NCT EventFunction"
         IF NOT GenJnlPostPreview.Run() AND GenJnlPostPreview.IsSuccess() THEN begin
             GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
             PostingPreviewEventHandler.GetEntries(Database::"G/L Entry", RecRef);
+            PostingPreviewEventHandler.GetEntries(Database::"VAT Entry", RecRefVat);
             InsertToTempGL(RecRef, TemporaryGL);
+            InsertToTempVAT(RecRefVat, pTempVatEntry);
         end;
         if ErrorMessageMgt.GetErrors(TempErrorMessage) then
             ERROR(TempErrorMessage.Message);
     end;
 
-    /// <summary> 
-    /// Description for InsertToTempGL.
-    /// </summary>
-    /// <param name="RecRef2">Parameter of type RecordRef.</param>
-    /// <param name="TempGLEntry">Parameter of type Record "G/L Entry" temporary.</param>
-    local procedure InsertToTempGL(RecRef2: RecordRef; var TempGLEntry: Record "G/L Entry" temporary)
+
+    local procedure InsertToTempGL(RecRef2: RecordRef; var pTempGLEntry: Record "G/L Entry" temporary)
     begin
-        if NOT TempGLEntry.IsTemporary then
-            Error('GL Entry must be Temporary Table!');
-        TempGLEntry.reset();
-        TempGLEntry.DeleteAll();
+
         if RecRef2.FindSet() then
             repeat
-                RecRef2.SetTable(TempGLEntry);
-                TempGLEntry.Insert();
+                RecRef2.SetTable(pTempGLEntry);
+                pTempGLEntry.Insert();
+            until RecRef2.next() = 0;
+    end;
 
+    local procedure InsertToTempVAT(RecRef2: RecordRef; var pTempVATEntry: Record "VAT Entry" temporary)
+    begin
+        if RecRef2.FindSet() then
+            repeat
+                RecRef2.SetTable(pTempVATEntry);
+                pTempVATEntry.Insert();
             until RecRef2.next() = 0;
     end;
 

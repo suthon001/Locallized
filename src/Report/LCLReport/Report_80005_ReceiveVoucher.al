@@ -227,7 +227,7 @@ report 80005 "NCT Receive Voucher"
                 ltGenjournalTemplate: Record "Gen. Journal Template";
                 NewDate: Date;
             begin
-                FunctionCenter.SetReportGLEntry(GenJournalLine, GLEntry, TempAmt, groupping);
+                FunctionCenter.SetReportGLEntry(GenJournalLine, GLEntry, VatEntryTemporary, TempAmt, groupping);
                 GetCustExchange();
                 FunctionCenter.CusInfo(CustCode, CustText);
 
@@ -360,7 +360,7 @@ report 80005 "NCT Receive Voucher"
     end;
 
     var
-
+        VatEntryTemporary: Record "Vat Entry" temporary;
         FunctionCenter: Codeunit "NCT Function Center";
         companyInfor: Record "Company Information";
         ExchangeRate: Text[30];

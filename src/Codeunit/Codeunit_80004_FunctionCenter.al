@@ -30,7 +30,7 @@ codeunit 80004 "NCT Function Center"
     /// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
     /// <param name="pTotalAmount">VAR Decimal.</param>
     /// <param name="pGroupping">Boolean.</param>
-    procedure SetReportGLEntry(GenLine: Record "Gen. Journal Line"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
+    procedure SetReportGLEntry(GenLine: Record "Gen. Journal Line"; var pTempGLEntry: Record "G/L Entry" temporary; var pTempVatEntry: Record "VAT Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
     var
         TempltGLEntry, TempGLEntry : Record "G/L Entry" temporary;
         PreviewPost: Codeunit "NCT EventFunction";
@@ -40,7 +40,7 @@ codeunit 80004 "NCT Function Center"
         ltIshandle := false;
         pTotalAmount := 0;
         EntryNo := 0;
-        PreviewPost."GenLinePreviewVourcher"(GenLine, TempGLEntry);
+        PreviewPost."GenLinePreviewVourcher"(GenLine, TempGLEntry, pTempVatEntry);
         BeforSetGenLineGLEntry(ltIshandle, GenLine, pGroupping, pTotalAmount, TempGLEntry, pTempGLEntry);
         if not ltIshandle then begin
             TempGLEntry.reset();
