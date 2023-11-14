@@ -142,7 +142,7 @@ codeunit 80005 "NCT EventFunction"
                         PurchaseBillingLine.SetRange("Document Type", PurchaseBillingLine."Document Type"::"Purchase Billing");
                         PurchaseBillingLine.SetRange("Source Document No.", VendLdgEntry."Document No.");
                         if not PurchaseBillingLine.IsEmpty then
-                            VendLdgEntry.FieldError("Document No.", StrSubstNo('this record process by puchase billing'));
+                            VendLdgEntry.FieldError("Document No.", StrSubstNo('the record process by puchase billing'));
                     end;
                     if StrPos(InvoiceNO, VendLdgEntry."Document No.") = 0 then begin
                         if InvoiceNO <> '' then
