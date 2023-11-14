@@ -66,8 +66,8 @@ report 80040 "NCT Fixed Asset Purchase"
                 IF NOT FADeprBook.GET("No.", DeprBookCode) THEN
                     FADeprBook.init();
 
-                IF (FADeprBook."Disposal Date" = 0D) OR ((FADeprBook."Disposal Date" < vgStartDateFilter) OR (FADeprBook."Disposal Date" > vgEndDateFilter)) THEN
-                    CurrReport.SKIP();
+                // IF (FADeprBook."Disposal Date" = 0D) OR ((FADeprBook."Disposal Date" < vgStartDateFilter) OR (FADeprBook."Disposal Date" > vgEndDateFilter)) THEN
+                //     CurrReport.SKIP();
 
                 FALedgerEntry.RESET();
                 FALedgerEntry.SETFILTER("FA No.", '%1', "No.");
