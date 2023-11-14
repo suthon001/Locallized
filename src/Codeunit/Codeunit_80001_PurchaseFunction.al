@@ -44,7 +44,7 @@ codeunit 80001 "NCT Purchase Function"
             PurchaseLine.SetRange("Document Type", PurchHeader."Document Type");
             PurchaseLine.SetRange("Document No.", PurchHeader."No.");
             PurchaseLine.SetFilter("NCT WHT %", '<>%1', 0);
-            OnbeforInsertWHTAPPLY(PurchHeader, PurchaseLine);
+            "NCT OnFilterWHTAPPLY"(PurchHeader, PurchaseLine);
             if PurchaseLine.FindSet() then
                 repeat
                     LastLineNo := LastLineNo + 10000;
@@ -73,6 +73,7 @@ codeunit 80001 "NCT Purchase Function"
                         WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::Invoice;
                     if PurchaseLine."Document Type" = PurchaseLine."Document Type"::"Credit Memo" then
                         WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::"Credit Memo";
+                    "NCT OnBeforInsertWHTAPPLY"(WHTAppEntry, PurchHeader, PurchaseLine);
                     WHTAppEntry.Insert(true);
                 until PurchaseLine.Next() = 0;
         end;
@@ -394,7 +395,12 @@ codeunit 80001 "NCT Purchase Function"
     end;
 
     [BusinessEvent(false)]
-    local procedure OnbeforInsertWHTAPPLY(var PurchaseHeader: Record "Purchase Header"; var PurchaseLine: Record "Purchase Line")
+    local procedure "NCT OnBeforInsertWHTAPPLY"(var pWHTAppentry: Record "NCT WHT Applied Entry"; pPurchaseHeader: Record "Purchase Header"; pPurchaseLine: Record "Purchase Line")
+    begin
+    end;
+
+    [BusinessEvent(false)]
+    local procedure "NCT OnFilterWHTAPPLY"(var PurchaseHeader: Record "Purchase Header"; var PurchaseLine: Record "Purchase Line")
     begin
     end;
 

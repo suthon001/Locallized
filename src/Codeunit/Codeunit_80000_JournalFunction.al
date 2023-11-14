@@ -31,17 +31,16 @@ codeunit 80000 "NCT Journal Function"
             GenJnlLine2.SetFilter("NCT WHT Document No.", '<>%1', '');
             if GenJnlLine2.FindSet() then
                 repeat
-
                     WHTHeader.reset();
                     WHTHeader.setrange("WHT No.", GenJnlLine2."NCT WHT Document No.");
                     if WHTHeader.FindFirst() then begin
                         WHTHeader."Posted" := true;
                         WHTHeader.Modify();
                         LastLineNo := 0;
-                        OnbeforInsertWHTAPPLYGL();
                         WHTLines.reset();
                         WHTLines.SetRange("WHT No.", WHTHeader."WHT No.");
                         WHTLines.SetFilter("WHT Product Posting Group", '<>%1', '');
+                        "NCT OnFilterWHTLineAPPLY"(WHTHeader, WHTLines, GenJnlLine2);
                         if WHTLines.FindSet() then
                             repeat
                                 LastLineNo := LastLineNo + 10000;
@@ -70,6 +69,7 @@ codeunit 80000 "NCT Journal Function"
                                     WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::Payment;
                                 if GenJournalTemplate.Type = GenJournalTemplate.Type::"Cash Receipts" then
                                     WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::"Cash Receipt";
+                                "NCT OnBeforInsertWHTAPPLY"(WHTAppEntry, WHTHeader, WHTLines, GenJnlLine2);
                                 WHTAppEntry.Insert();
                             until WHTLines.Next() = 0;
                     end;
@@ -689,7 +689,12 @@ codeunit 80000 "NCT Journal Function"
     end;
 
     [BusinessEvent(false)]
-    local procedure OnbeforInsertWHTAPPLYGL()
+    local procedure "NCT OnBeforInsertWHTAPPLY"(var pWHTAppentry: Record "NCT WHT Applied Entry"; pWHTHeader: Record "NCT WHT Header"; pWhtLine: Record "NCT WHT Line"; pGenLine: Record "Gen. Journal Line")
+    begin
+    end;
+
+    [BusinessEvent(false)]
+    local procedure "NCT OnFilterWHTLineAPPLY"(pWHTHeader: Record "NCT WHT Header"; var pWhtLine: Record "NCT WHT Line"; pGenLine: Record "Gen. Journal Line")
     begin
     end;
 

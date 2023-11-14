@@ -39,14 +39,14 @@ codeunit 80006 "WHT Preview Event Handler"
         TempWHTApplied.Insert();
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"NCT Purchase Function", 'OnbeforInsertWHTAPPLY', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"NCT Purchase Function", 'NCT OnFilterWHTAPPLY', '', false, false)]
     local procedure OnbeforInsertWHTAPPLY()
     begin
         TempWHTApplied.reset();
         TempWHTApplied.deleteall();
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"NCT Journal Function", 'OnbeforInsertWHTAPPLYGL', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"NCT Journal Function", 'NCT OnFilterWHTLineAPPLY', '', false, false)]
     local procedure OnbeforInsertWHTAPPLYGL()
     begin
         TempWHTApplied.reset();
