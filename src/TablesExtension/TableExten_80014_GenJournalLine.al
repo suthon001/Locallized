@@ -538,6 +538,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
         "NCT Create DateTime" := CurrentDateTime;
     end;
 
+
     /// <summary>
     /// AssistEdit.
     /// </summary>
