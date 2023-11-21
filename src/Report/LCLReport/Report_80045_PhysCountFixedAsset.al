@@ -6,7 +6,7 @@ report 80045 "NCT Phys. Count Fixed Asset"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80045_PhysCountFixedAsset.rdl';
     PreviewMode = PrintLayout;
-    Caption = 'รายงานตรวจนับทรัพย์สิน (ก่อนนับ)';
+    Caption = 'Fixed Asset - Count (Before)';
     ApplicationArea = All;
     UsageCategory = ReportsAndAnalysis;
     dataset
@@ -52,8 +52,7 @@ report 80045 "NCT Phys. Count Fixed Asset"
                     TenantMedia.CalcFields(Content);
 
                 vgFADepreciationBookRec.RESET();
-                vgFADepreciationBookRec.SETFILTER("FA No.", '%1', "No.");
-                vgFADepreciationBookRec.SETFILTER("Depreciation Book Code", '%1', 'COMPANY');
+                vgFADepreciationBookRec.SetRange("FA No.", "No.");
                 IF vgFADepreciationBookRec.FindFirst() THEN BEGIN
                     vgFADepreciationBookRec.CALCFIELDS("Acquisition Cost");
                     vgFADepreciationBookRec.CALCFIELDS("Book Value");

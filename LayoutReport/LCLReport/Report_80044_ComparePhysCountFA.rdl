@@ -1202,11 +1202,13 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>รายงานเปรียบทรัพย์สินระหว่างสถานที่เก็บ</Value>
+                      <Value>Fixed Asset - Property Comparison</Value>
                       <Style>
+                        <FontStyle>Normal</FontStyle>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>12pt</FontSize>
+                        <FontSize>0.14583in</FontSize>
                         <FontWeight>Bold</FontWeight>
+                        <TextDecoration>None</TextDecoration>
                       </Style>
                     </TextRun>
                   </TextRuns>

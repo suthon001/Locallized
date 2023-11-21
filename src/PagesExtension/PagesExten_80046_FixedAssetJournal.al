@@ -5,6 +5,25 @@ pageextension 80046 "NCT FixedJournalLIne" extends "Fixed Asset Journal"
 {
     layout
     {
+
+        addlast(Control1)
+        {
+            field("NCT Qty. Calculated"; rec."NCT Qty. Calculated")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Qty. Calculated field.';
+            }
+            field("NCT Qty. Phys. Inventory"; rec."NCT Qty. Phys. Inventory")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Qty. Phys. Inventory field.';
+            }
+            field("NCT Phys. Count Status"; rec."NCT Phys. Count Status")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Phys. Count Status field.';
+            }
+        }
         modify("Document No.")
         {
             trigger OnAssistEdit()

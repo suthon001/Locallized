@@ -464,13 +464,18 @@ codeunit 80005 "NCT EventFunction"
     /// <param name="pTempVatEntry">Temporary VAR Record "VAT Entry".</param>
     procedure "GenLinePreviewVourcher"(GenJournalLine: Record "Gen. Journal Line"; var TemporaryGL: Record "G/L Entry" temporary; var pTempVatEntry: Record "VAT Entry" temporary)
     var
+        ltGenLine: Record "Gen. Journal Line";
         RecRef, RecRefVat : RecordRef;
         TempErrorMessage: Record "Error Message" temporary;
     begin
-
+        ltGenLine.Reset();
+        ltGenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
+        ltGenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
+        ltGenLine.SetRange("Document No.", GenJournalLine."Document No.");
+        ltGenLine.FindFirst();
         ErrorMessageMgt.Activate(ErrorMessageHandler);
         BindSubscription(GenJnlPost);
-        GenJnlPostPreview.SetContext(GenJnlPost, GenJournalLine);
+        GenJnlPostPreview.SetContext(GenJnlPost, ltGenLine);
         IF NOT GenJnlPostPreview.Run() AND GenJnlPostPreview.IsSuccess() THEN begin
             GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
             PostingPreviewEventHandler.GetEntries(Database::"G/L Entry", RecRef);

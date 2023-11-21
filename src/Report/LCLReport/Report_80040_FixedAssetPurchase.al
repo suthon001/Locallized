@@ -5,7 +5,7 @@ report 80040 "NCT Fixed Asset Purchase"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80040_FixedAssetPurchase.rdl';
-    Caption = 'รายงานซื้อทรัพย์สิน';
+    Caption = 'Fixed Asset - Purchase';
     PreviewMode = PrintLayout;
     ApplicationArea = all;
     UsageCategory = ReportsAndAnalysis;

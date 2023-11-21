@@ -168,45 +168,45 @@ pageextension 80108 "NCT Finance Manager Role" extends "Finance Manager Role Cen
                         Caption = 'Fixed Asset Report';
                         action("Fixed Asset Write off")
                         {
-                            Caption = 'รายงานการตัดจำหน่ายทรัพย์สิน (Write-Off)';
+                            Caption = 'Fixed Asset - Write-Off';
                             ApplicationArea = all;
                             RunObject = report "NCT Fixed Asset Write off";
-                            ToolTip = 'Executes the รายงานการตัดจำหน่ายทรัพย์สิน (Write-Off) action.';
+                            ToolTip = 'Executes the Fixed Asset - Write-Off action.';
                         }
                         action("Fixed Asset Purchase")
                         {
-                            Caption = 'รายงานซื้อทรัพย์สิน';
+                            Caption = 'Fixed Asset - Purchase';
                             ApplicationArea = all;
                             RunObject = report "NCT Fixed Asset Purchase";
-                            ToolTip = 'Executes the รายงานซื้อทรัพย์สิน action.';
+                            ToolTip = 'Executes the Fixed Asset - Purchase action.';
                         }
                         action("Fixed Asset Sales")
                         {
-                            Caption = 'รายงานการขายทรัพย์สิน';
+                            Caption = 'Fixed Asset - Sale';
                             ApplicationArea = all;
                             RunObject = report "NCT Fixed Asset Sales";
-                            ToolTip = 'Executes the รายงานการขายทรัพย์สิน action.';
+                            ToolTip = 'Executes the Fixed Asset - Sale action.';
                         }
                         action("Phys. Count Fixed Asset")
                         {
-                            Caption = 'รายงานตรวจนับทรัพย์สิน (ก่อนนับ)';
+                            Caption = 'Fixed Asset - Count (Before)';
                             ApplicationArea = all;
                             RunObject = report "NCT Phys. Count Fixed Asset";
-                            ToolTip = 'Executes the รายงานตรวจนับทรัพย์สิน (ก่อนนับ) action.';
+                            ToolTip = 'Executes the Fixed Asset - Count (Before) action.';
                         }
                         action("After Phys.Count FA")
                         {
-                            Caption = 'รายงานตรวจนับทรัพย์สิน (หลังนับ)';
+                            Caption = 'Fixed Asset - Count (After)';
                             ApplicationArea = all;
                             RunObject = report "NCT After Phys.Count FA";
-                            ToolTip = 'Executes the รายงานตรวจนับทรัพย์สิน (หลังนับ) action.';
+                            ToolTip = 'Executes the Fixed Asset - Count (After) action.';
                         }
                         action("Compare Phys. Count FA")
                         {
-                            Caption = 'รายงานเปรียบเทียบทรัพย์สิน';
+                            Caption = 'Fixed Asset - Property Comparison';
                             ApplicationArea = all;
                             RunObject = report "NCT Compare Phys. Count FA";
-                            ToolTip = 'Executes the รายงานเปรียบเทียบทรัพย์สิน action.';
+                            ToolTip = 'Executes the Fixed Asset - Property Comparison action.';
                         }
 
                     }

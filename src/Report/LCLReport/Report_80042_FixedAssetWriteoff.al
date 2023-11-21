@@ -5,7 +5,7 @@ report 80042 "NCT Fixed Asset Write off"
 {
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80042_FixedAssetWriteoff.rdl';
-    Caption = 'รายงานการตัดจำหน่ายทรัพย์สิน (Write-Off)';
+    Caption = 'Fixed Asset - Write-Off';
     PreviewMode = PrintLayout;
     ApplicationArea = all;
     UsageCategory = ReportsAndAnalysis;

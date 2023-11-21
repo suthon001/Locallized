@@ -1222,11 +1222,13 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>รายงานตรวจนับทรัพย์สิน (หลังนับ)</Value>
+                      <Value>Fixed Asset - Count (After)</Value>
                       <Style>
+                        <FontStyle>Normal</FontStyle>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>12pt</FontSize>
+                        <FontSize>0.14583in</FontSize>
                         <FontWeight>Bold</FontWeight>
+                        <TextDecoration>None</TextDecoration>
                       </Style>
                     </TextRun>
                   </TextRuns>

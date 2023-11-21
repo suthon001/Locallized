@@ -6,7 +6,7 @@ report 80044 "NCT Compare Phys. Count FA"
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/LCLReport/Report_80044_ComparePhysCountFA.rdl';
     PreviewMode = PrintLayout;
-    Caption = 'รายงานเปรียบเทียบทรัพย์สิน';
+    Caption = 'Fixed Asset - Property Comparison';
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     dataset
@@ -70,9 +70,8 @@ report 80044 "NCT Compare Phys. Count FA"
                     if TenantMedia.GET(Image.MediaId) then
                         TenantMedia.CalcFields(Content);
                     vgFADepreciationBookRec.RESET();
-                    vgFADepreciationBookRec.SETFILTER("FA No.", '%1', "No.");
-                    vgFADepreciationBookRec.SETFILTER("Depreciation Book Code", '%1', 'COMPANY');
-                    IF vgFADepreciationBookRec.FIND('-') THEN BEGIN
+                    vgFADepreciationBookRec.SetRange("FA No.", "No.");
+                    IF vgFADepreciationBookRec.FindFirst() THEN BEGIN
                         vgFADepreciationBookRec.CALCFIELDS("Acquisition Cost");
                         vgFADepreciationBookRec.CALCFIELDS("Book Value");
                     END;
