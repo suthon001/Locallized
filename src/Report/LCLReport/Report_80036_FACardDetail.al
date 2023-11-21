@@ -16,10 +16,10 @@ report 80036 "NCT Fa Card Detail"
             column(No_; "No.") { }
             column(Description; Description) { }
             column(Description_2; "Description 2") { }
-            column(BW_Purchase_Order_No_; "NCT Purchase Order No.") { }
-            column(BW_Purchase_Invoice_No_; "NCT Purchase Invoice No.") { }
-            column(BW_Tax_Invoice_No_; "NCT Tax Invoice No.") { }
-            column(BW_Price_Exclude_Vat; "NCT Price Exclude Vat") { }
+            column(Purchase_Order_No_; "NCT Purchase Order No.") { }
+            column(Purchase_Invoice_No_; "NCT Purchase Invoice No.") { }
+            column(Tax_Invoice_No_; "NCT Tax Invoice No.") { }
+            column(Price_Exclude_Vat; "NCT Price Exclude Vat") { }
             column(FA_Class_Code; "FA Class Code") { }
             column(FA_Subclass_Code; "FA Subclass Code") { }
             column(FA_Location_Code; "FA Location Code") { }

@@ -109,7 +109,6 @@ permissionset 80000 "NCT LCL Permission"
         report "NCT Payment Voucher" = X,
         report "NCT Receive Voucher" = X,
         report "NCT Journal Voucher" = X,
-        report "NCT Posted Voucher" = X,
         report "NCT WHT Certificate" = X,
         report "NCT WHT Certificate Preprint" = X,
         report "NCT Withholding" = X,

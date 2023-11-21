@@ -22,8 +22,7 @@ report 80049 "NCT GL Journal Report"
             column(External_Document_No_; "External Document No.") { }
             column(Debit_Amount; "Debit Amount") { }
             column(Credit_Amount; "Credit Amount") { }
-            column(Description; Description) { }
-            column(BW_Journal_Description; "NCT Journal Description") { }
+            column(Description; gvDescription) { }
             column(G_L_Account_Name; "G/L Account Name") { }
             column(G_L_Account_No_; "G/L Account No.") { }
             column(USERID; USERID) { }
@@ -36,11 +35,19 @@ report 80049 "NCT GL Journal Report"
                 FilterDescription := GetFilters();
             end;
 
+            trigger OnAfterGetRecord()
+            begin
+                if "NCT Journal Description" <> '' then
+                    gvDescription := "NCT Journal Description"
+                else
+                    gvDescription := Description;
+            end;
+
         }
 
     }
     var
         CompanyInfor: Record "Company Information";
-        FilterDescription: Text;
+        FilterDescription, gvDescription : Text;
 
 }

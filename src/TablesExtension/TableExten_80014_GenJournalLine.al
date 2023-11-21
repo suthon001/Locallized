@@ -91,12 +91,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             Caption = 'Tax Invoice Name';
             DataClassification = CustomerContent;
         }
-        field(80009; "NCT Description Line"; Text[150])
-        {
-            Caption = 'Description Line';
-            DataClassification = CustomerContent;
-            Editable = false;
-        }
+
         field(80010; "NCT Head Office"; Boolean)
         {
             Caption = 'Head Office';

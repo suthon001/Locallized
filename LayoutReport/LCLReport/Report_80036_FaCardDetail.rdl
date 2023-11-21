@@ -405,7 +405,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!BW_Purchase_Invoice_No_.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!Purchase_Invoice_No_.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -475,7 +475,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!BW_Purchase_Order_No_.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!Purchase_Order_No_.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -615,7 +615,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!BW_Tax_Invoice_No_.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!Tax_Invoice_No_.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -2907,20 +2907,20 @@ End Function
         <Field Name="Description_2">
           <DataField>Description_2</DataField>
         </Field>
-        <Field Name="BW_Purchase_Order_No_">
-          <DataField>BW_Purchase_Order_No_</DataField>
+        <Field Name="Purchase_Order_No_">
+          <DataField>Purchase_Order_No_</DataField>
         </Field>
-        <Field Name="BW_Purchase_Invoice_No_">
-          <DataField>BW_Purchase_Invoice_No_</DataField>
+        <Field Name="Purchase_Invoice_No_">
+          <DataField>Purchase_Invoice_No_</DataField>
         </Field>
-        <Field Name="BW_Tax_Invoice_No_">
-          <DataField>BW_Tax_Invoice_No_</DataField>
+        <Field Name="Tax_Invoice_No_">
+          <DataField>Tax_Invoice_No_</DataField>
         </Field>
-        <Field Name="BW_Price_Exclude_Vat">
-          <DataField>BW_Price_Exclude_Vat</DataField>
+        <Field Name="Price_Exclude_Vat">
+          <DataField>Price_Exclude_Vat</DataField>
         </Field>
-        <Field Name="BW_Price_Exclude_VatFormat">
-          <DataField>BW_Price_Exclude_VatFormat</DataField>
+        <Field Name="Price_Exclude_VatFormat">
+          <DataField>Price_Exclude_VatFormat</DataField>
         </Field>
         <Field Name="FA_Class_Code">
           <DataField>FA_Class_Code</DataField>

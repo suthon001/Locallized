@@ -254,7 +254,7 @@ codeunit 80001 "NCT Purchase Function"
             InvoicePostingBuffer."NCT city" := VendCust."Province";
             InvoicePostingBuffer."NCT Post Code" := VendCust."Post Code";
         end;
-        InvoicePostingBuffer."NCT Description Line" := PurchaseLine.Description;
+
         InvoicePostingBuffer."NCT Tax Invoice Base" := PurchaseLine.Amount;
         InvoicePostingBuffer."NCT Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
         IF PurchaseLine."NCT Tax Invoice No." <> '' THEN BEGIN
@@ -278,7 +278,7 @@ codeunit 80001 "NCT Purchase Function"
                 InvoicePostingBuffer."NCT Tax Invoice Amount" := PurchaseLine."Line Amount";
             end;
         END;
-
+        InvoicePostingBuffer."NCT Description Line" := PurchaseLine.Description;
         IF PurchaseLine."NCT VAT Registration No." <> '' THEN
             InvoicePostingBuffer."NCT VAT Registration No." := PurchaseLine."NCT VAT Registration No."
         ELSE
@@ -329,7 +329,6 @@ codeunit 80001 "NCT Purchase Function"
             InvoicePostBuffer."NCT city" := VendCust."Province";
             InvoicePostBuffer."NCT Post Code" := VendCust."Post Code";
         end;
-        InvoicePostBuffer."NCT Description Line" := PurchaseLine.Description;
         InvoicePostBuffer."NCT Tax Invoice Base" := PurchaseLine.Amount;
         InvoicePostBuffer."NCT Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
         IF PurchaseLine."NCT Tax Invoice No." <> '' THEN BEGIN
@@ -354,7 +353,7 @@ codeunit 80001 "NCT Purchase Function"
                 InvoicePostBuffer."NCT Tax Invoice Amount" := PurchaseLine."Line Amount";
             end;
         END;
-
+        InvoicePostBuffer."NCT Description Line" := PurchaseLine.Description;
         IF PurchaseLine."NCT VAT Registration No." <> '' THEN
             InvoicePostBuffer."NCT VAT Registration No." := PurchaseLine."NCT VAT Registration No."
         ELSE

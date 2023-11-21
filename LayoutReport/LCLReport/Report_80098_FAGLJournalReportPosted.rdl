@@ -889,7 +889,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!BW_Journal_Description.Value, "DataSet_Result")</Value>
+                      <Value>=First(Fields!Journal_Description.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -1985,8 +1985,8 @@ End Function
         <Field Name="PostingDescription">
           <DataField>PostingDescription</DataField>
         </Field>
-        <Field Name="BW_Journal_Description">
-          <DataField>BW_Journal_Description</DataField>
+        <Field Name="Journal_Description">
+          <DataField>Journal_Description</DataField>
         </Field>
         <Field Name="ComText_1">
           <DataField>ComText_1</DataField>
