@@ -260,6 +260,7 @@ table 80004 "NCT Tax & WHT Header"
         while ltGrouppingWHTLine.Read() do begin
             Clear(TempTaxt);
             CLEAR(ltLineCheckRec);
+            LineNo := LineNo + 1;
             TaxReportLine.reset();
             TaxReportLine.SetRange("Tax Type", TaxReportHeader."Tax Type");
             TaxReportLine.SetRange("Document No.", TaxReportHeader."Document No.");
@@ -295,7 +296,6 @@ table 80004 "NCT Tax & WHT Header"
                         WHTProductPortingGroup.init();
 
                     if ltLineCheckRec = 1 then begin
-                        LineNo := LineNo + 1;
                         if (WHTBusinessPostingGroup."WHT Certificate Option" = WHTBusinessPostingGroup."WHT Certificate Option"::"ภ.ง.ด.3") then
                             TempTaxt := FORMAT(LineNo) + '|' + FORMAT(DelChr(TaxReportLine."VAT Registration No.", '=', '-')) + '|' +
                                         BranchCode + '|' + BranchData[1] + '|' + FORMAT(BranchData[2]) + '|' + '|' + FORMAT(BranchData[3]) + '|' +
@@ -319,9 +319,6 @@ table 80004 "NCT Tax & WHT Header"
                         TempTaxt := TempTaxt + '|' + FORMAT(TaxReportLine."WHT Date", 0, '<Day,2>/<Month,2>/<Year4>') + '|' + FORMAT(WHTProductPortingGroup."Description") + '|' +
                                                               DELCHR(FunctionCenter."ConverseDecimalToText"(TaxReportLine."WHT %"), '=', ',') + '|' + DELCHR(FORMAT(TaxReportLine."Base Amount", 0, '<Precision,2:2><Standard Format,0>'), '=', ',')
                                                               + '|' + DELCHR(FORMAT(TaxReportLine."VAT Amount", 0, '<Precision,2:2><Standard Format,0>'), '=', ',') + '|' + FORMAT(1);
-
-
-
 
                 Until TaxReportLine.Next() = 0;
                 for ltLoopLine := 1 to 3 - ltLineCheckRec do
