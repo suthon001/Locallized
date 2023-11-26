@@ -180,8 +180,6 @@ table 80004 "NCT Tax & WHT Header"
 
     trigger OnRename()
     begin
-
-
         ERROR('Can not Rename!');
     end;
 

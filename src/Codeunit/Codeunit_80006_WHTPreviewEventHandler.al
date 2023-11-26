@@ -110,8 +110,9 @@ codeunit 80006 "WHT Preview Event Handler"
     end;
 
     var
-        gvPONoNories: Code[20];
-        CreatePONO: Text;
+
         TempWHTApplied: Record "NCT WHT Applied Entry" temporary;
         PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler";
+        gvPONoNories: Code[20];
+        CreatePONO: Text;
 }
