@@ -54,7 +54,7 @@ table 80012 "NCT WHT Applied Entry"
             Caption = 'WHT Amount';
             DataClassification = CustomerContent;
         }
-        field(10; "WHT Name"; Text[100])
+        field(10; "WHT Name"; Text[160])
         {
             Caption = 'WHT Name';
             DataClassification = CustomerContent;
@@ -69,17 +69,17 @@ table 80012 "NCT WHT Applied Entry"
             Caption = 'WHT Address';
             DataClassification = CustomerContent;
         }
-        field(13; "WHT Address 2"; Text[50])
+        field(13; "WHT Address 2"; Text[100])
         {
             Caption = 'WHT Address 2';
             DataClassification = CustomerContent;
         }
-        field(14; "WHT Address 3"; Text[50])
+        field(14; "WHT Address 3"; Text[100])
         {
             Caption = 'WHT Address 3';
             DataClassification = CustomerContent;
         }
-        field(15; "WHT City"; Text[30])
+        field(15; "WHT City"; Text[50])
         {
             Caption = 'City';
             DataClassification = CustomerContent;
@@ -120,6 +120,12 @@ table 80012 "NCT WHT Applied Entry"
             OptionMembers = Invoice,"Credit Memo",Payment,"Cash Receipt";
             DataClassification = CustomerContent;
             Editable = false;
+
+        }
+        field(28; "WHT Title Name"; Enum "NCT Title Document Name")
+        {
+            Caption = 'คำนำหน้า';
+            DataClassification = CustomerContent;
 
         }
     }

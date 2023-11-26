@@ -55,11 +55,13 @@ codeunit 80000 "NCT Journal Function"
                                 WHTAppEntry."WHT %" := WHTLines."WHT %";
                                 WHTAppEntry."WHT Base" := WHTLines."WHT Base";
                                 WHTAppEntry."WHT Amount" := WHTLines."WHT Amount";
-                                WHTAppEntry."WHT Name" := COPYSTR(WHTHeader."WHT Name", 1, 100);
+                                WHTAppEntry."WHT Title Name" := WHTHeader."WHT Title Name";
+                                WHTAppEntry."WHT Name" := WHTHeader."WHT Name";
                                 WHTAppEntry."WHT Name 2" := WHTHeader."WHT Name 2";
                                 WHTAppEntry."WHT Address" := WHTHeader."WHT Address";
                                 WHTAppEntry."WHT Address 2" := WHTHeader."WHT Address 2";
-                                WHTAppEntry."WHT City" := COPYSTR(WHTHeader."WHT City", 1, 30);
+                                WHTAppEntry."WHT Address 3" := WHTHeader."WHT Address 3";
+                                WHTAppEntry."WHT City" := WHTHeader."WHT City";
                                 WHTAppEntry."VAT Registration No." := WHTHeader."VAT Registration No.";
                                 WHTAppEntry."WHT Option" := WHTHeader."WHT Option";
                                 WHTAppEntry."VAT Branch Code" := WHTHeader."VAT Branch Code";

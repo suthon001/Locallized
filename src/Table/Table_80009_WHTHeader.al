@@ -301,13 +301,7 @@ table 80009 "NCT WHT Header"
         {
             Caption = 'คำนำหน้า';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                if "WHT Title Name" <> "WHT Title Name"::" " then
-                    "WHT Name" := COPYSTR(format("WHT Title Name") + ' ' + "WHT Name", 1, 160)
-                else
-                    "WHT Name" := "WHT Name";
-            end;
+
         }
         field(29; "WHT Building"; Text[100])
         {
