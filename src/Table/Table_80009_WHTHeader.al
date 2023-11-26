@@ -57,12 +57,16 @@ table 80009 "NCT WHT Header"
                         if not VendCustomerBranch.GET(VendCustomerBranch."Source Type"::Vendor, rec."WHT Source No.", Vendor."NCT Head Office", Vendor."NCT VAT Branch Code") then
                             VendCustomerBranch.Init();
                         "WHT Source No." := Vendor."No.";
-                        if VendCustomerBranch.Name <> '' then
-                            "WHT Name" := VendCustomerBranch.Name
-                        else begin
-                            "WHT Name" := Vendor.Name;
-                            "WHT Name 2" := Vendor."Name 2";
-                        end;
+                        if Vendor."NCT WHT Name" <> '' then
+                            "WHT Name" := Vendor."NCT WHT Name"
+                        else
+                            if VendCustomerBranch.Name <> '' then
+                                "WHT Name" := VendCustomerBranch.Name
+                            else begin
+                                "WHT Name" := Vendor.Name;
+                                "WHT Name 2" := Vendor."Name 2";
+                            end;
+
                         if VendCustomerBranch.Address = '' then begin
                             "WHT Address" := Vendor.Address;
                             "WHT Address 2" := COPYSTR(Vendor."Address 2" + ' ' + Vendor.City + ' ' + Vendor."Post Code", 1, 100);
@@ -81,11 +85,7 @@ table 80009 "NCT WHT Header"
                             whtBusPostingGroup.init();
 
                         "WHT Type" := whtBusPostingGroup."WHT Type";
-                        if Vendor."NCT WHT Name" <> '' then
-                            if "WHT Title Name" <> "WHT Title Name"::" " then
-                                "WHT Name" := format("WHT Title Name") + ' ' + Vendor."NCT WHT Name"
-                            else
-                                "WHT Name" := Vendor."NCT WHT Name";
+
 
                         "WHT Title Name" := Vendor."NCT WHT Title Name";
                         "WHT Building" := Vendor."NCT WHT Building";
@@ -123,7 +123,6 @@ table 80009 "NCT WHT Header"
                             "WHT Address 2" := VendCustomerBranch."Address 2";
                             "VAT Registration No." := VendCustomerBranch."VAT Registration No.";
                         end;
-                        "VAT Registration No." := Customer."VAT Registration No.";
                         "Head Office" := Customer."NCT Head Office";
                         "VAT Branch Code" := Customer."NCT VAT Branch Code";
                         "WHT Business Posting Group" := Customer."NCT WHT Business Posting Group";
