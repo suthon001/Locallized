@@ -31,7 +31,7 @@ report 80008 "NCT WHT Certificate"
                 WHTRegID2 := WHTBus."VAT Registration No.";
                 WHTCerti := "WHT Certificate No.";
                 WHTDAte := "WHT Date";
-                whtVendorName := "WHT Name" + '  ' + "WHT Name 2";
+                whtVendorName := StrSubstNo('%1', format("WHT Title Name") + ' ' + "WHT Name" + '  ' + "WHT Name 2").TrimEnd();
                 whtVendorAddress := StrSubstNo('%1', "WHT Address" + ' ' + "WHT Address 2" + ' ' + "WHT Address 3").TrimEnd();
 
                 Currcount := 0;
@@ -328,7 +328,7 @@ report 80008 "NCT WHT Certificate"
         WHTName: Text;
         WHTAddress: Text;
         WHTCerti: Text[250];
-        whtVendorName: Text[250];
+        whtVendorName: Text;
         whtVendorAddress: Text;
         WHTDAte: date;
         generaledgersetup: Record "General Ledger Setup";

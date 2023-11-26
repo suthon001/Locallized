@@ -143,8 +143,6 @@ table 80009 "NCT WHT Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if "WHT Title Name" <> "WHT Title Name"::" " then
-                    "WHT Name" := COPYSTR(format("WHT Title Name") + ' ' + "WHT Name", 1, 160);
                 TrasnferToWHTLine();
             end;
         }
