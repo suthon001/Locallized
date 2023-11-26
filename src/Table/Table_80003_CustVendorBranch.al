@@ -143,7 +143,7 @@ table 80003 "NCT Customer & Vendor Branch"
             Caption = 'Fax No.';
             DataClassification = CustomerContent;
         }
-        field(23; "Address 2"; Text[50])
+        field(23; "Address 2"; Text[100])
         {
             Caption = 'Address 2';
             DataClassification = CustomerContent;

@@ -49,23 +49,38 @@ table 80009 "NCT WHT Header"
                 Vendor: Record Vendor;
                 Customer: Record Customer;
                 whtBusPostingGroup: Record "NCT WHT Business Posting Group";
+                VendCustomerBranch: Record "NCT Customer & Vendor Branch";
             begin
+
                 IF "WHT Source Type" = "WHT Source Type"::Vendor THEN BEGIN
                     IF Vendor.GET("WHT Source No.") THEN BEGIN
+                        if not VendCustomerBranch.GET(VendCustomerBranch."Source Type"::Vendor, rec."WHT Source No.", Vendor."NCT Head Office", Vendor."NCT VAT Branch Code") then
+                            VendCustomerBranch.Init();
                         "WHT Source No." := Vendor."No.";
-                        "WHT Name" := Vendor.Name;
-                        "WHT Name 2" := Vendor."Name 2";
-                        "WHT Address" := Vendor.Address;
-                        "WHT Address 2" := Vendor."Address 2";
-                        "VAT Registration No." := Vendor."VAT Registration No.";
+                        if VendCustomerBranch.Name <> '' then
+                            "WHT Name" := VendCustomerBranch.Name
+                        else begin
+                            "WHT Name" := Vendor.Name;
+                            "WHT Name 2" := Vendor."Name 2";
+                        end;
+                        if VendCustomerBranch.Address = '' then begin
+                            "WHT Address" := Vendor.Address;
+                            "WHT Address 2" := COPYSTR(Vendor."Address 2" + ' ' + Vendor.City + ' ' + Vendor."Post Code", 1, 100);
+                            "VAT Registration No." := Vendor."VAT Registration No.";
+                        end else begin
+                            "WHT Address" := VendCustomerBranch.Address;
+                            "WHT Address 2" := VendCustomerBranch."Address 2";
+                            "VAT Registration No." := VendCustomerBranch."VAT Registration No.";
+                        end;
+                        "WHT City" := Vendor.City;
+                        "WHT Post Code" := Vendor."Post Code";
                         "Head Office" := Vendor."NCT Head Office";
                         "VAT Branch Code" := Vendor."NCT VAT Branch Code";
                         "WHT Business Posting Group" := Vendor."NCT WHT Business Posting Group";
                         if NOT whtBusPostingGroup.GET(Vendor."NCT WHT Business Posting Group") then
                             whtBusPostingGroup.init();
+
                         "WHT Type" := whtBusPostingGroup."WHT Type";
-                        "WHT City" := Vendor.City;
-                        "WHT Post Code" := Vendor."Post Code";
                         if Vendor."NCT WHT Name" <> '' then
                             if "WHT Title Name" <> "WHT Title Name"::" " then
                                 "WHT Name" := format("WHT Title Name") + ' ' + Vendor."NCT WHT Name"
@@ -90,11 +105,24 @@ table 80009 "NCT WHT Header"
                     END;
                 END ELSE
                     IF Customer.GET("WHT Source No.") THEN BEGIN
+                        if not VendCustomerBranch.GET(VendCustomerBranch."Source Type"::Customer, rec."WHT Source No.", Customer."NCT Head Office", Customer."NCT VAT Branch Code") then
+                            VendCustomerBranch.Init();
                         "WHT Source No." := Customer."No.";
-                        "WHT Name" := Customer.Name;
-                        "WHT Name 2" := Customer."Name 2";
-                        "WHT Address" := Customer.Address;
-                        "WHT Address 2" := Customer."Address 2";
+                        if VendCustomerBranch.Name <> '' then
+                            "WHT Name" := VendCustomerBranch.Name
+                        else begin
+                            "WHT Name" := Customer.Name;
+                            "WHT Name 2" := Customer."Name 2";
+                        end;
+                        if VendCustomerBranch.Address = '' then begin
+                            "WHT Address" := Customer.Address;
+                            "WHT Address 2" := COPYSTR(Customer."Address 2" + ' ' + Customer.City + ' ' + Customer."Post Code", 1, 100);
+                            "VAT Registration No." := Customer."VAT Registration No.";
+                        end else begin
+                            "WHT Address" := VendCustomerBranch.Address;
+                            "WHT Address 2" := VendCustomerBranch."Address 2";
+                            "VAT Registration No." := VendCustomerBranch."VAT Registration No.";
+                        end;
                         "VAT Registration No." := Customer."VAT Registration No.";
                         "Head Office" := Customer."NCT Head Office";
                         "VAT Branch Code" := Customer."NCT VAT Branch Code";
@@ -135,12 +163,12 @@ table 80009 "NCT WHT Header"
                 TrasnferToWHTLine();
             end;
         }
-        field(10; "WHT Address 2"; Text[50])
+        field(10; "WHT Address 2"; Text[100])
         {
             Caption = 'WHT Address 2';
             DataClassification = CustomerContent;
         }
-        field(11; "WHT Address 3"; Text[50])
+        field(11; "WHT Address 3"; Text[100])
         {
             Caption = 'WHT Address 3';
             DataClassification = CustomerContent;
@@ -436,6 +464,15 @@ table 80009 "NCT WHT Header"
                 i := CheckLen(Addr[i], VTxT, i);
                 Addr[i] += VTxT;
             end;
+            if Addr[i] <> '' then
+                if "wht city" <> '' then begin
+                    VTxT := "wht city" + ' ';
+                    i := CheckLen(Addr[i], VTxT, i);
+                    Addr[i] += VTxT;
+                    VTxT := "Wht Post Code" + ' ';
+                    i := CheckLen(Addr[i], VTxT, i);
+                    Addr[i] += VTxT;
+                end;
         end else begin
             Clear(VTxT);
             if "WHT Sub-district" <> '' then begin
@@ -448,6 +485,15 @@ table 80009 "NCT WHT Header"
                 i := CheckLen(Addr[i], VTxT, i);
                 Addr[i] += VTxT;
             end;
+            if Addr[i] <> '' then
+                if "wht city" <> '' then begin
+                    VTxT := 'จังหวัด' + "wht city" + ' ';
+                    i := CheckLen(Addr[i], VTxT, i);
+                    Addr[i] += VTxT;
+                    VTxT := "Wht Post Code" + ' ';
+                    i := CheckLen(Addr[i], VTxT, i);
+                    Addr[i] += VTxT;
+                end;
         end;
 
         if Addr[1] <> '' then begin

@@ -147,6 +147,13 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
                 UpdateVendorCustBranch(6, Address, false);
             end;
         }
+        modify("Address 2")
+        {
+            trigger OnAfterValidate()
+            begin
+                UpdateVendorCustBranch(23, "Address 2", false);
+            end;
+        }
         modify(City)
         {
             trigger OnAfterValidate()
@@ -208,16 +215,16 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
             tempHeadOffice := WHTResult = '00000';
 
         if (xRec."No." <> '') AND (xRec."No." <> "No.") then begin
-            VendorCustBranch.reset();
-            VendorCustBranch.SetRange("Source Type", VendorCustBranch."Source Type"::Vendor);
-            VendorCustBranch.SetRange("Source No.", xrec."No.");
-            VendorCustBranch.DeleteAll();
-
+            if xrec."No." <> '' then begin
+                VendorCustBranch.reset();
+                VendorCustBranch.SetRange("Source Type", VendorCustBranch."Source Type"::Vendor);
+                VendorCustBranch.SetRange("Source No.", xrec."No.");
+                VendorCustBranch.DeleteAll();
+            end;
             VendorCustBranch.init();
             VendorCustBranch."Source Type" := VendorCustBranch."Source Type"::Vendor;
             VendorCustBranch."Source No." := "No.";
             VendorCustBranch."Head Office" := TRUE;
-
             VendorCustBranch.insert();
             VenCust.Get(VendorCustBranch.RecordId);
             MyFieldRef := VenCust.Field(FiledsNo);
@@ -233,11 +240,16 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
             VendorCustBranch.SetRange("Head Office", TRUE);
             if VendorCustBranch.FindFirst() then begin
                 VenCust.Get(VendorCustBranch.RecordId);
-                MyFieldRef := VenCust.Field(FiledsNo);
-                if FiledsNo = 3 then
-                    MyFieldRef.validate(tempHeadOffice)
-                else
-                    MyFieldRef.validate(WHTResult);
+                if FiledsNo in [16, 17, 23] then begin
+                    MyFieldRef := VenCust.Field(23);
+                    MyFieldRef.validate(StrSubstNo('%1', rec."Address 2" + ' ' + rec.City + ' ' + rec."Post Code").TrimEnd());
+                end else begin
+                    MyFieldRef := VenCust.Field(FiledsNo);
+                    if FiledsNo = 3 then
+                        MyFieldRef.validate(tempHeadOffice)
+                    else
+                        MyFieldRef.validate(WHTResult);
+                end;
                 VenCust.Modify();
             end else begin
                 VendorCustBranch.init();
@@ -247,11 +259,18 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
 
                 VendorCustBranch.insert();
                 VenCust.Get(VendorCustBranch.RecordId);
-                MyFieldRef := VenCust.Field(FiledsNo);
-                if FiledsNo = 3 then
-                    MyFieldRef.validate(tempHeadOffice)
-                else
-                    MyFieldRef.validate(WHTResult);
+
+
+                if FiledsNo in [16, 17, 23] then begin
+                    MyFieldRef := VenCust.Field(23);
+                    MyFieldRef.validate(StrSubstNo('%1', rec."Address 2" + ' ' + rec.City + ' ' + rec."Post Code").TrimEnd());
+                end else begin
+                    MyFieldRef := VenCust.Field(FiledsNo);
+                    if FiledsNo = 3 then
+                        MyFieldRef.validate(tempHeadOffice)
+                    else
+                        MyFieldRef.validate(WHTResult);
+                end;
                 VenCust.Modify();
             end;
         END;

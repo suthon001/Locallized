@@ -23,13 +23,14 @@ codeunit 80004 "NCT Function Center"
         BarcodeFontProvider.ValidateInput(BarcodeString, BarcodeSymbology);
         exit(BarcodeFontProvider.EncodeFont(BarcodeString, BarcodeSymbology));
     end;
-    /// <summary>
-    /// SetReportGLEntry.
-    /// </summary>
-    /// <param name="GenLine">Record "Gen. Journal Line".</param>
-    /// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
-    /// <param name="pTotalAmount">VAR Decimal.</param>
-    /// <param name="pGroupping">Boolean.</param>
+/// <summary>
+/// SetReportGLEntry.
+/// </summary>
+/// <param name="GenLine">Record "Gen. Journal Line".</param>
+/// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
+/// <param name="pTempVatEntry">Temporary VAR Record "VAT Entry".</param>
+/// <param name="pTotalAmount">VAR Decimal.</param>
+/// <param name="pGroupping">Boolean.</param>
     procedure SetReportGLEntry(GenLine: Record "Gen. Journal Line"; var pTempGLEntry: Record "G/L Entry" temporary; var pTempVatEntry: Record "VAT Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
     var
         TempltGLEntry, TempGLEntry : Record "G/L Entry" temporary;

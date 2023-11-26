@@ -25,13 +25,13 @@ report 80009 "NCT WHT Certificate Preprint"
                 IF "WHT Type" = "WHT Type"::PND3 THEN
                     PND3 := 'X';
                 PVNo := "Gen. Journal Document No.";
-                WHTName := WHTBus."Name" + ' ' + WHTBus."Name 2";
-                WHTAddress := WHTBus."Address" + ' ' + WHTBus."Address 2";
+                WHTName := StrSubstNo('%1', WHTBus."Name" + ' ' + WHTBus."Name 2").TrimEnd();
+                WHTAddress := StrSubstNo('%1', WHTBus."Address" + ' ' + WHTBus."Address 2").TrimEnd();
                 WHTRegID2 := WHTBus."VAT Registration No.";
                 WHTCerti := "WHT Certificate No.";
                 WHTDAte := "WHT Date";
                 whtVendorName := "WHT Name" + '  ' + "WHT Name 2";
-                whtVendorAddress := "WHT Address" + ' ' + "WHT Address 2" + ' ' + "WHT City" + ' ' + "WHT Post Code";
+                whtVendorAddress := StrSubstNo('%1', "WHT Address" + ' ' + "WHT Address 2" + ' ' + "WHT Address 3").TrimEnd();
 
                 Currcount := 0;
                 DigitCount := 1;
@@ -323,11 +323,11 @@ report 80009 "NCT WHT Certificate Preprint"
         WHT6Description: Text[250];
         WHT44Percent: Decimal;
         WHTOPtion: array[4] of Code[10];
-        WHTName: Text[250];
-        WHTAddress: Text[250];
+        WHTName: Text;
+        WHTAddress: Text;
         WHTCerti: Text[250];
         whtVendorName: Text[250];
-        whtVendorAddress: Text[1024];
+        whtVendorAddress: Text;
         WHTDAte: date;
         generaledgersetup: Record "General Ledger Setup";
         WHTHeaderText: array[4] of Text[1024];
