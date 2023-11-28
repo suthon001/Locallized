@@ -42,6 +42,12 @@ page 80000 "NCT Cust. & Vendor BranchLists"
                     Caption = 'Address';
                     ToolTip = 'Specifies the value of the Address field.';
                 }
+                field("Address 2"; rec."Address 2")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Address';
+                    ToolTip = 'Specifies the value of the Address 2 field.';
+                }
                 field("Building"; Rec."Building")
                 {
                     ApplicationArea = All;

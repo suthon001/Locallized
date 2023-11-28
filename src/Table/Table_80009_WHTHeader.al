@@ -188,6 +188,7 @@ table 80009 "NCT WHT Header"
             begin
                 if "Head Office" then
                     "VAT Branch Code" := '';
+                rec.UpdateAddressByBranch();
             end;
         }
         field(15; "VAT Branch Code"; Code[5])
@@ -208,6 +209,7 @@ table 80009 "NCT WHT Header"
                     "Head Office" := TRUE;
                     "VAT Branch Code" := '';
                 end;
+                rec.UpdateAddressByBranch();
             end;
 
         }
@@ -400,6 +402,32 @@ table 80009 "NCT WHT Header"
         }
     }
 
+    /// <summary>
+    /// UpdateAddressByBranch.
+    /// </summary>
+    procedure UpdateAddressByBranch()
+    var
+        VendorCustomerBranch: Record "NCT Customer & Vendor Branch";
+    begin
+        if not VendorCustomerBranch.GET(rec."WHT Source Type", rec."WHT Source No.", rec."Head Office", rec."VAT Branch Code") then
+            VendorCustomerBranch.Init();
+        "WHT Name" := VendorCustomerBranch."Name";
+        "VAT Registration No." := VendorCustomerBranch."Vat Registration No.";
+        "WHT Address" := VendorCustomerBranch.Address;
+        "WHT Address 2" := VendorCustomerBranch."Address 2";
+        "WHT Building" := VendorCustomerBranch."Building";
+        "WHT Alley/Lane" := VendorCustomerBranch."Alley/Lane";
+        "WHT District" := VendorCustomerBranch."District";
+        "WHT Floor" := VendorCustomerBranch."Floor";
+        "WHT House No." := VendorCustomerBranch."House No.";
+        "WHT Street" := VendorCustomerBranch."Street";
+        "WHT Title Name" := VendorCustomerBranch."Title Name";
+        "WHT Village No." := VendorCustomerBranch."Village No.";
+        "WHT City" := VendorCustomerBranch."Province";
+        "WHT Post Code" := VendorCustomerBranch."post Code";
+        OnCopyAddressbyBranch(rec, VendorCustomerBranch);
+    end;
+
     local procedure UpdateAddress()
     var
         VTxT: Text;
@@ -567,6 +595,11 @@ table 80009 "NCT WHT Header"
 
     [IntegrationEvent(true, false)]
 
+    /// <summary>
+    /// OnAfterinitWHTHeaderVend.
+    /// </summary>
+    /// <param name="WHTHeader">VAR Record "NCT WHT Header".</param>
+    /// <param name="Vend">Record Vendor.</param>
     procedure OnAfterinitWHTHeaderVend(var WHTHeader: Record "NCT WHT Header"; Vend: Record Vendor)
     begin
 
@@ -574,7 +607,24 @@ table 80009 "NCT WHT Header"
 
     [IntegrationEvent(true, false)]
 
+    /// <summary>
+    /// OnAfterinitWHTHeaderCust.
+    /// </summary>
+    /// <param name="WHTHeader">VAR Record "NCT WHT Header".</param>
+    /// <param name="Cust">Record Customer.</param>
     procedure OnAfterinitWHTHeaderCust(var WHTHeader: Record "NCT WHT Header"; Cust: Record Customer)
+    begin
+
+    end;
+
+    [IntegrationEvent(true, false)]
+
+    /// <summary>
+    /// OnCopyAddressbyBranch.
+    /// </summary>
+    /// <param name="WHTHeader">VAR Record "NCT WHT Header".</param>
+    /// <param name="CustomerVendorBranch">Record "NCT Customer Vendor Branch".</param>
+    procedure OnCopyAddressbyBranch(var WHTHeader: Record "NCT WHT Header"; CustomerVendorBranch: Record "NCT Customer & Vendor Branch")
     begin
 
     end;
