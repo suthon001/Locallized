@@ -61,51 +61,97 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
         {
             Caption = 'คำนำหน้า';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                CustomerVendorBranch: Record "NCT Customer & Vendor Branch";
+            begin
+                if CustomerVendorBranch.GET(CustomerVendorBranch."Source Type"::Vendor, rec."No.", rec."NCT Head Office", rec."NCT VAT Branch Code") then begin
+                    CustomerVendorBranch."Title Name" := rec."NCT WHT Title Name";
+                    CustomerVendorBranch.Modify();
+                end;
+
+            end;
         }
         field(80004; "NCT WHT Building"; Text[100])
         {
             Caption = 'ชื่ออาคาร/หมู่บ้าน';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(8, rec."NCT WHT Building", false);
+            end;
         }
         field(80005; "NCT WHT Alley/Lane"; Text[100])
         {
             Caption = 'ตรอก/ซอย';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(9, rec."NCT WHT Alley/Lane", false);
+            end;
         }
         field(80006; "NCT WHT Sub-district"; Text[100])
         {
             Caption = 'ตำบล/แขวง';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(10, rec."NCT WHT Sub-District", false);
+            end;
         }
         field(80007; "NCT WHT District"; Text[100])
         {
             Caption = 'อำเภอ/เขต';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(11, rec."NCT WHT District", false);
+            end;
         }
         field(80008; "NCT WHT Floor"; Text[10])
         {
             Caption = 'ชั้น';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(12, rec."NCT WHT Floor", false);
+            end;
         }
         field(80009; "NCT WHT House No."; Text[50])
         {
             Caption = 'เลขที่ห้อง';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(13, rec."NCT WHT House No.", false);
+            end;
         }
         field(80010; "NCT WHT Village No."; Text[15])
         {
             Caption = 'หมู่ที่';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(14, rec."NCT WHT Village No.", false);
+            end;
         }
         field(80011; "NCT WHT Street"; Text[50])
         {
             Caption = 'ถนน';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(15, rec."NCT WHT Street", false);
+            end;
         }
         field(80012; "NCT WHT Province"; Text[50])
         {
             Caption = 'จังหวัด';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(16, rec."NCT WHT Province", false);
+            end;
         }
         field(80013; "NCT WHT Post Code"; code[20])
         {
@@ -120,17 +166,26 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
                 ltPostCode.SetRange(code, rec."NCT WHT Post Code");
                 if ltPostCode.FindFirst() then
                     rec."NCT WHT Province" := ltPostCode.City;
+                UpdateVendorCustBranch(17, rec."NCT WHT No.", false);
             end;
         }
         field(80014; "NCT WHT No."; code[20])
         {
             Caption = 'เลขที่';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(18, rec."NCT WHT No.", false);
+            end;
         }
         field(80015; "NCT WHT Name"; text[100])
         {
             Caption = 'ชื่อ';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateVendorCustBranch(5, rec."NCT WHT Name", false);
+            end;
         }
         modify(Name)
         {
