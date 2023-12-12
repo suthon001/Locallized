@@ -121,6 +121,25 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Head Office" := PrepmtInvLineBuffer."NCT Head Office";
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Prepayment Inv. Line Buffer", 'OnAfterCopyFromPurchLine', '', false, false)]
+    local procedure OnAfterCopyFromPurchLine(PurchaseLine: Record "Purchase Line"; var PrepaymentInvLineBuffer: Record "Prepayment Inv. Line Buffer")
+    var
+        PurchHeader: Record "Purchase Header";
+    begin
+        PurchHeader.GET(PurchaseLine."Document Type", PurchaseLine."Document No.");
+        PrepaymentInvLineBuffer."NCT Tax Invoice No." := PurchHeader."Prepayment No.";
+        PrepaymentInvLineBuffer."NCT Tax Invoice Name" := PurchHeader."Buy-from Vendor Name";
+        PrepaymentInvLineBuffer."NCT Tax Invoice Name 2" := PurchHeader."Buy-from Vendor Name 2";
+        PrepaymentInvLineBuffer."NCT Vat Registration No." := PurchHeader."VAT Registration No.";
+        PrepaymentInvLineBuffer."NCT VAT Branch Code" := PurchHeader."NCT VAT Branch Code";
+        PrepaymentInvLineBuffer."NCT Head Office" := PurchHeader."NCT Head Office";
+        if PurchaseLine."NCT Tax Invoice No." <> '' then begin
+            PrepaymentInvLineBuffer."NCT Tax Invoice No." := PurchaseLine."NCT Tax Invoice No.";
+            PrepaymentInvLineBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
+            PrepaymentInvLineBuffer."NCT Tax Invoice Name 2" := PurchaseLine."NCT Tax Invoice Name 2";
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Prepayment Inv. Line Buffer", 'OnAfterCopyFromSalesLine', '', false, false)]
     local procedure OnAfterCopyFromSalesLine(SalesLine: Record "Sales Line"; var PrepaymentInvLineBuffer: Record "Prepayment Inv. Line Buffer")
     var
