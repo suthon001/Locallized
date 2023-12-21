@@ -57,6 +57,12 @@ pageextension 80067 "NCT Sales Invoice Subpage" extends "Sales Invoice Subform"
         }
         moveafter("VAT Bus. Posting Group"; "VAT Prod. Posting Group")
     }
-
+    trigger OnDeleteRecord(): Boolean
+    var
+        NCTFunctionCenter: Codeunit "NCT Function Center";
+    begin
+        if rec."Shipment No." <> '' then
+            NCTFunctionCenter.SetDefualtGetInvoiceSales(rec."Shipment No.", Rec."Shipment Line No.");
+    end;
 
 }

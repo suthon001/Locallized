@@ -142,6 +142,12 @@ tableextension 80029 "NCT Purchase Rcpt. Line" extends "Purch. Rcpt. Line"
             DataClassification = CustomerContent;
 
         }
+        field(95000; "NCT Get to Invoice"; Boolean)
+        {
+            Caption = 'Get to Invoice';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
 
     }
 }

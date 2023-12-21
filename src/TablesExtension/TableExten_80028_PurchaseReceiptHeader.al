@@ -51,5 +51,10 @@ tableextension 80028 "NCT Purchase Rcpt. Header" extends "Purch. Rcpt. Header"
             DataClassification = CustomerContent;
 
         }
+        field(95000; "NCT Vendor Invoice No."; Code[35])
+        {
+            Caption = 'Vendor Invoice No.';
+            DataClassification = CustomerContent;
+        }
     }
 }

@@ -56,4 +56,11 @@ pageextension 80076 "NCT Purch. Credit Memo Subpage" extends "Purch. Cr. Memo Su
         movebefore("Location Code"; "Gen. Bus. Posting Group", "Gen. Prod. Posting Group", "VAT Bus. Posting Group", "VAT Prod. Posting Group")
 
     }
+    trigger OnDeleteRecord(): Boolean
+    var
+        NCTFunctionCenter: Codeunit "NCT Function Center";
+    begin
+        if rec."Return Shipment No." <> '' then
+            NCTFunctionCenter.SetDefualtGetPurchCN(rec."Return Shipment No.", Rec."Return Shipment Line No.");
+    end;
 }

@@ -136,5 +136,6 @@ tableextension 80033 "NCT PurchaseCr.MemoLine" extends "Purch. Cr. Memo Line"
             DataClassification = CustomerContent;
         }
 
+
     }
 }

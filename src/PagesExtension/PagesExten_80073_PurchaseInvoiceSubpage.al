@@ -99,5 +99,11 @@ pageextension 80073 "NCT Purchase Invoice Subpage" extends "Purch. Invoice Subfo
         }
 
     }
-
+    trigger OnDeleteRecord(): Boolean
+    var
+        NCTFunctionCenter: Codeunit "NCT Function Center";
+    begin
+        if rec."Receipt No." <> '' then
+            NCTFunctionCenter.SetDefualtGetInvoicePurch(rec."Receipt No.", Rec."Receipt Line No.");
+    end;
 }

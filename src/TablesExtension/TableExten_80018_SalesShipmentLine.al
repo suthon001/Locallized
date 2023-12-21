@@ -43,6 +43,12 @@ tableextension 80018 "NCT ExtenSalesShipment Line" extends "Sales Shipment Line"
             Caption = 'Ref. SQ Line No.';
             DataClassification = CustomerContent;
         }
+        field(95000; "NCT Get to Invoice"; Boolean)
+        {
+            Caption = 'Get to Invoice';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 
 }
