@@ -233,11 +233,12 @@ pageextension 80031 "NCT Receipt Journal" extends "Cash Receipt Journal"
     var
         PurchaseBilling: Record "NCT Billing Receipt Header";
     begin
-        if PurchaseBilling.GET(PurchaseBilling."Document Type"::"Sales Receipt", rec."NCT Ref. Billing & Receipt No.") then begin
-            PurchaseBilling."Status" := PurchaseBilling."Status"::Released;
-            PurchaseBilling."Create to Journal" := false;
-            PurchaseBilling.Modify();
-        end;
+        if rec."NCT Ref. Billing & Receipt No." <> '' then
+            if PurchaseBilling.GET(PurchaseBilling."Document Type"::"Sales Receipt", rec."NCT Ref. Billing & Receipt No.") then begin
+                PurchaseBilling."Status" := PurchaseBilling."Status"::Released;
+                PurchaseBilling."Create to Journal" := false;
+                PurchaseBilling.Modify();
+            end;
     end;
 
     trigger OnOpenPage()
@@ -246,6 +247,10 @@ pageextension 80031 "NCT Receipt Journal" extends "Cash Receipt Journal"
             rec.SetRange("Document No.", gvDocument);
     end;
 
+    /// <summary>
+    /// SetDocumnet.
+    /// </summary>
+    /// <param name="pDocument">code[20].</param>
     procedure SetDocumnet(pDocument: code[20])
     begin
         gvDocument := pDocument;

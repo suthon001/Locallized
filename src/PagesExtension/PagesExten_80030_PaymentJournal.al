@@ -270,6 +270,7 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
             if GEnTemplate.Type = GEnTemplate.Type::General then
                 GenJnlLine.SETFILTER("Account Type", '%1|%2|%3', GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Customer, GenJnlLine."Account Type"::"G/L Account");
             GenJnlLine.SETFILTER("Account No.", '<>%1', '');
+            OnSetFIlterWhtCetificate(GenJnlLine, rec);
             IF GenJnlLine.FindFirst() THEN BEGIN
                 WHTHeader.INIT();
                 WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."NCT WHT Document Nos.", Rec."Posting Date", TRUE);
@@ -317,11 +318,12 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
         PurchaseBilling: Record "NCT Billing Receipt Header";
         WHTEader: Record "NCT WHT Header";
     begin
-        if PurchaseBilling.GET(PurchaseBilling."Document Type"::"Purchase Billing", rec."NCT Ref. Billing & Receipt No.") then begin
-            PurchaseBilling."Status" := PurchaseBilling."Status"::Released;
-            PurchaseBilling."Create to Journal" := false;
-            PurchaseBilling.Modify();
-        end;
+        if rec."NCT Ref. Billing & Receipt No." <> '' then
+            if PurchaseBilling.GET(PurchaseBilling."Document Type"::"Purchase Billing", rec."NCT Ref. Billing & Receipt No.") then begin
+                PurchaseBilling."Status" := PurchaseBilling."Status"::Released;
+                PurchaseBilling."Create to Journal" := false;
+                PurchaseBilling.Modify();
+            end;
 
         WHTEader.reset();
         WHTEader.SetRange("Gen. Journal Template Code", Rec."Journal Template Name");
@@ -340,16 +342,24 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
             rec.SetRange("Document No.", gvDocument);
     end;
 
+    /// <summary>
+    /// SetDocumnet.
+    /// </summary>
+    /// <param name="pDocument">code[20].</param>
     procedure SetDocumnet(pDocument: code[20])
     begin
         gvDocument := pDocument;
     end;
 
     [IntegrationEvent(true, false)]
-
     procedure OnbeforInsertWhtHeader(var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
     begin
 
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnSetFIlterWhtCetificate(var GenLineFilter: Record "Gen. Journal Line"; GenLine: Record "Gen. Journal Line")
+    begin
     end;
 
     var

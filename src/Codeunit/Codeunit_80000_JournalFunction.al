@@ -20,77 +20,87 @@ codeunit 80000 "NCT Journal Function"
         WHTAppEntry: Record "NCT WHT Applied Entry";
         GenJournalTemplate: Record "Gen. Journal Template";
         LastLineNo: Integer;
+        IsHandle, IsHandleBilling : Boolean;
     begin
+        IsHandle := false;
         if not PreviewMode then begin
-            if not GenJournalTemplate.GET(GenJournalLine."Journal Template Name") then
-                GenJournalLine.Init();
-            GenJnlLine2.reset();
-            GenJnlLine2.Copy(GenJournalLine);
-            GenJnlLine2.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
-            GenJnlLine2.SetFilter("Account No.", '<>%1', '');
-            GenJnlLine2.SetFilter("NCT WHT Document No.", '<>%1', '');
-            if GenJnlLine2.FindSet() then
-                repeat
-                    WHTHeader.reset();
-                    WHTHeader.setrange("WHT No.", GenJnlLine2."NCT WHT Document No.");
-                    if WHTHeader.FindFirst() then begin
-                        WHTHeader."Posted" := true;
-                        WHTHeader.Modify();
-                        LastLineNo := 0;
-                        WHTLines.reset();
-                        WHTLines.SetRange("WHT No.", WHTHeader."WHT No.");
-                        WHTLines.SetFilter("WHT Product Posting Group", '<>%1', '');
-                        "NCT OnFilterWHTLineAPPLY"(WHTHeader, WHTLines, GenJnlLine2);
-                        if WHTLines.FindSet() then
-                            repeat
-                                LastLineNo := LastLineNo + 10000;
-                                WHTAppEntry.init();
-                                WHTAppEntry."Document No." := GenJnlLine2."Document No.";
-                                WHTAppEntry."Document Line No." := WHTLines."WHT Line No.";
-                                WHTAppEntry."Entry Type" := WHTAppEntry."Entry Type"::Applied;
-                                WHTAppEntry."Line No." := LastLineNo;
-                                WHTAppEntry."WHT Bus. Posting Group" := WHTLines."WHT Business Posting Group";
-                                WHTAppEntry."WHT Prod. Posting Group" := WHTLines."WHT Product Posting Group";
-                                WHTAppEntry.Description := copystr(WHTLines.Description, 1, 100);
-                                WHTAppEntry."WHT %" := WHTLines."WHT %";
-                                WHTAppEntry."WHT Base" := WHTLines."WHT Base";
-                                WHTAppEntry."WHT Amount" := WHTLines."WHT Amount";
-                                WHTAppEntry."WHT Title Name" := WHTHeader."WHT Title Name";
-                                WHTAppEntry."WHT Name" := WHTHeader."WHT Name";
-                                WHTAppEntry."WHT Name 2" := WHTHeader."WHT Name 2";
-                                WHTAppEntry."WHT Address" := WHTHeader."WHT Address";
-                                WHTAppEntry."WHT Address 2" := WHTHeader."WHT Address 2";
-                                WHTAppEntry."WHT Address 3" := WHTHeader."WHT Address 3";
-                                WHTAppEntry."WHT City" := WHTHeader."WHT City";
-                                WHTAppEntry."VAT Registration No." := WHTHeader."VAT Registration No.";
-                                WHTAppEntry."WHT Option" := WHTHeader."WHT Option";
-                                WHTAppEntry."VAT Branch Code" := WHTHeader."VAT Branch Code";
-                                WHTAppEntry."Head Office" := WHTHeader."Head Office";
-                                WHTAppEntry."WHT Post Code" := WHTHeader."Wht Post Code";
-                                if GenJournalTemplate.Type = GenJournalTemplate.Type::Payments then
-                                    WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::Payment;
-                                if GenJournalTemplate.Type = GenJournalTemplate.Type::"Cash Receipts" then
-                                    WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::"Cash Receipt";
-                                "NCT OnBeforInsertWHTAPPLY"(WHTAppEntry, WHTHeader, WHTLines, GenJnlLine2);
-                                WHTAppEntry.Insert();
-                            until WHTLines.Next() = 0;
-                    end;
-                until GenJnlLine2.Next() = 0;
-            GenJnlLine3.reset();
-            GenJnlLine3.Copy(GenJournalLine);
-            GenJnlLine3.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
-            GenJnlLine3.SetFilter("Account No.", '<>%1', '');
-            GenJnlLine3.SetFilter("NCT Ref. Billing & Receipt No.", '<>%1', '');
-            if GenJnlLine3.FindSet() then
-                repeat
-                    BillingHeader.reset();
-                    BillingHeader.SetRange("No.", GenJnlLine3."NCT Ref. Billing & Receipt No.");
-                    if BillingHeader.FindFirst() then begin
-                        BillingHeader."Status" := BillingHeader."Status"::Posted;
-                        BillingHeader."Journal Document No." := GenJnlLine3."Document No.";
-                        BillingHeader.Modify();
-                    end;
-                until GenJnlLine3.Next() = 0;
+            "NCT OnBeforInsertWHTLine"(GenJournalLine, IsHandle);
+            if not IsHandle then begin
+                if not GenJournalTemplate.GET(GenJournalLine."Journal Template Name") then
+                    GenJournalLine.Init();
+                GenJnlLine2.reset();
+                GenJnlLine2.Copy(GenJournalLine);
+                GenJnlLine2.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
+                GenJnlLine2.SetFilter("Account No.", '<>%1', '');
+                GenJnlLine2.SetFilter("NCT WHT Document No.", '<>%1', '');
+                if GenJnlLine2.FindSet() then
+                    repeat
+                        WHTHeader.reset();
+                        WHTHeader.setrange("WHT No.", GenJnlLine2."NCT WHT Document No.");
+                        if WHTHeader.FindFirst() then begin
+                            WHTHeader."Posted" := true;
+                            WHTHeader.Modify();
+                            LastLineNo := 0;
+                            WHTLines.reset();
+                            WHTLines.SetRange("WHT No.", WHTHeader."WHT No.");
+                            WHTLines.SetFilter("WHT Product Posting Group", '<>%1', '');
+                            "NCT OnFilterWHTLineAPPLY"(WHTHeader, WHTLines, GenJnlLine2);
+                            if WHTLines.FindSet() then
+                                repeat
+                                    LastLineNo := LastLineNo + 10000;
+                                    WHTAppEntry.init();
+                                    WHTAppEntry."Document No." := GenJnlLine2."Document No.";
+                                    WHTAppEntry."Document Line No." := WHTLines."WHT Line No.";
+                                    WHTAppEntry."Entry Type" := WHTAppEntry."Entry Type"::Applied;
+                                    WHTAppEntry."Line No." := LastLineNo;
+                                    WHTAppEntry."WHT Bus. Posting Group" := WHTLines."WHT Business Posting Group";
+                                    WHTAppEntry."WHT Prod. Posting Group" := WHTLines."WHT Product Posting Group";
+                                    WHTAppEntry.Description := copystr(WHTLines.Description, 1, 100);
+                                    WHTAppEntry."WHT %" := WHTLines."WHT %";
+                                    WHTAppEntry."WHT Base" := WHTLines."WHT Base";
+                                    WHTAppEntry."WHT Amount" := WHTLines."WHT Amount";
+                                    WHTAppEntry."WHT Title Name" := WHTHeader."WHT Title Name";
+                                    WHTAppEntry."WHT Name" := WHTHeader."WHT Name";
+                                    WHTAppEntry."WHT Name 2" := WHTHeader."WHT Name 2";
+                                    WHTAppEntry."WHT Address" := WHTHeader."WHT Address";
+                                    WHTAppEntry."WHT Address 2" := WHTHeader."WHT Address 2";
+                                    WHTAppEntry."WHT Address 3" := WHTHeader."WHT Address 3";
+                                    WHTAppEntry."WHT City" := WHTHeader."WHT City";
+                                    WHTAppEntry."VAT Registration No." := WHTHeader."VAT Registration No.";
+                                    WHTAppEntry."WHT Option" := WHTHeader."WHT Option";
+                                    WHTAppEntry."VAT Branch Code" := WHTHeader."VAT Branch Code";
+                                    WHTAppEntry."Head Office" := WHTHeader."Head Office";
+                                    WHTAppEntry."WHT Post Code" := WHTHeader."Wht Post Code";
+                                    if GenJournalTemplate.Type = GenJournalTemplate.Type::Payments then
+                                        WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::Payment;
+                                    if GenJournalTemplate.Type = GenJournalTemplate.Type::"Cash Receipts" then
+                                        WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::"Cash Receipt";
+                                    "NCT OnBeforInsertWHTAPPLY"(WHTAppEntry, WHTHeader, WHTLines, GenJnlLine2);
+                                    WHTAppEntry.Insert();
+                                until WHTLines.Next() = 0;
+                        end;
+                    until GenJnlLine2.Next() = 0;
+            end;
+            IsHandleBilling := false;
+            "NCT OnBeforModifyBillingStatus"(GenJournalLine, IsHandleBilling);
+            if not IsHandleBilling then begin
+                GenJnlLine3.reset();
+                GenJnlLine3.Copy(GenJournalLine);
+                GenJnlLine3.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
+                GenJnlLine3.SetFilter("Account No.", '<>%1', '');
+                GenJnlLine3.SetFilter("NCT Ref. Billing & Receipt No.", '<>%1', '');
+                if GenJnlLine3.FindSet() then
+                    repeat
+                        BillingHeader.reset();
+                        BillingHeader.SetRange("No.", GenJnlLine3."NCT Ref. Billing & Receipt No.");
+                        if BillingHeader.FindFirst() then begin
+                            BillingHeader."Status" := BillingHeader."Status"::Posted;
+                            BillingHeader."Journal Document No." := GenJnlLine3."Document No.";
+                            "NCT OnAfterModifyBilling"(GenJnlLine3, BillingHeader);
+                            BillingHeader.Modify();
+                        end;
+                    until GenJnlLine3.Next() = 0;
+            end;
         end;
     end;
 
@@ -106,6 +116,7 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Tax Invoice Date" := SalesHeader."Posting Date";
         GenJournalLine."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
         GenJournalLine."NCT Tax Invoice Name 2" := SalesHeader."Sell-to Customer Name 2";
+        "NCT OnAfterCopyFromSalesHeaderPrepayment"(GenJournalLine, SalesHeader);
 
     end;
 
@@ -121,6 +132,7 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Head Office" := PrepmtInvLineBuffer."NCT Head Office";
         GenJournalLine."NCT Tax Invoice Base" := PrepmtInvLineBuffer."NCT Tax Invoice Base";
         GenJournalLine."NCT Tax Invoice Amount" := PrepmtInvLineBuffer."NCT Tax Invoice Amount";
+        "NCT OnAfterCopyFromPrepaymentInvoice"(PrepmtInvLineBuffer, GenJournalLine);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Prepayment Inv. Line Buffer", 'OnAfterCopyFromPurchLine', '', false, false)]
@@ -142,6 +154,7 @@ codeunit 80000 "NCT Journal Function"
             PrepaymentInvLineBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
             PrepaymentInvLineBuffer."NCT Tax Invoice Name 2" := PurchaseLine."NCT Tax Invoice Name 2";
         end;
+        "NCT OnAfterCopyFromPurchLinePrepayment"(PrepaymentInvLineBuffer, PurchaseLine, PurchHeader);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Prepayment Inv. Line Buffer", 'OnAfterCopyFromSalesLine', '', false, false)]
@@ -156,6 +169,7 @@ codeunit 80000 "NCT Journal Function"
         PrepaymentInvLineBuffer."NCT Vat Registration No." := SalesHeader."VAT Registration No.";
         PrepaymentInvLineBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
         PrepaymentInvLineBuffer."NCT Head Office" := SalesHeader."NCT Head Office";
+        "NCT OnAfterCopyFromSalesLinePrepayment"(PrepaymentInvLineBuffer, SalesLine, SalesHeader);
     end;
 
 
@@ -174,6 +188,7 @@ codeunit 80000 "NCT Journal Function"
         VATEntry."NCT Tax Vendor No." := GenJournalLine."NCT Tax Vendor No.";
         VATEntry."NCT Tax Invoice Name" := GenJournalLine."NCT Tax Invoice Name";
         VATEntry."NCT Tax Invoice Name 2" := GenJournalLine."NCT Tax Invoice Name 2";
+        "NCT AfterInsertToUnrealVat"(VATEntry, GenJournalLine);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
@@ -674,6 +689,12 @@ codeunit 80000 "NCT Journal Function"
     end;
 
     [IntegrationEvent(false, false)]
+    local procedure "NCT AfterInsertToUnrealVat"(var VatEntry: Record "VAT Entry"; GenJournalLine: Record "Gen. Journal Line")
+    begin
+    end;
+
+
+    [IntegrationEvent(false, false)]
     local procedure "NCT AfterCopyInvoicePostBufferToGL"(var GenJournalLine: Record "Gen. Journal Line"; InvoicePostBuffer: Record "Invoice Post. Buffer")
     begin
     end;
@@ -724,5 +745,44 @@ codeunit 80000 "NCT Journal Function"
     local procedure "NCT OnFilterWHTLineAPPLY"(pWHTHeader: Record "NCT WHT Header"; var pWhtLine: Record "NCT WHT Line"; pGenLine: Record "Gen. Journal Line")
     begin
     end;
+
+
+    [BusinessEvent(false)]
+    local procedure "NCT OnBeforInsertWHTLine"(pGenLine: Record "Gen. Journal Line"; var IsHandle: Boolean)
+    begin
+    end;
+
+
+    [BusinessEvent(false)]
+    local procedure "NCT OnBeforModifyBillingStatus"(pGenLine: Record "Gen. Journal Line"; var IsHandle: Boolean)
+    begin
+    end;
+
+    [BusinessEvent(false)]
+    local procedure "NCT OnAfterModifyBilling"(pGenLine: Record "Gen. Journal Line"; var BillingHeader: Record "NCT Billing Receipt Header")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnAfterCopyFromPurchLinePrepayment"(var PrepaymentInvoiceBuffer: Record "Prepayment Inv. Line Buffer"; purchaseLine: Record "Purchase Line"; PurchaseHeader: Record "Purchase Header")
+    begin
+    end;
+
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnAfterCopyFromSalesLinePrepayment"(var PrepaymentInvoiceBuffer: Record "Prepayment Inv. Line Buffer"; SalesLine: Record "Sales Line"; SalesHeader: Record "Sales Header")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnAfterCopyFromSalesHeaderPrepayment"(var GenLine: Record "Gen. Journal Line"; SalesHeader: Record "Sales Header")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnAfterCopyFromPrepaymentInvoice"(PrepaymentInvoiceBuffer: Record "Prepayment Inv. Line Buffer"; var GenLine: Record "Gen. Journal Line")
+    begin
+    end;
+
 
 }

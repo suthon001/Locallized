@@ -242,7 +242,7 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
             GenJnlLine.SETRANGE("Journal Batch Name", rec."Journal Batch Name");
             GenJnlLine.SETFILTER("Document No.", '%1', rec."Document No.");
             GenJnlLine.SETFILTER("Account Type", '%1|%2|%3', GenJnlLine."Account Type"::"G/L Account", GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Customer);
-            // GenJnlLine.SETFILTER("Account No.", '<>%1', '');
+            OnSetFIlterWhtCetificate(GenJnlLine, rec);
             IF GenJnlLine.FindFirst() THEN BEGIN
                 WHTHeader.INIT();
                 WHTHeader."WHT No." := NosMgt.GetNextNo(GeneralSetup."NCT WHT Document Nos.", rec."Posting Date", TRUE);
@@ -265,6 +265,7 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
                             WHTHeader.validate("WHT Source No.", Customer."No.");
                         END;
             END;
+            OnbeforInsertWhtHeader(WHTHeader, rec);
             WHTHeader.INSERT();
             rec.Modify();
         END ELSE
@@ -291,5 +292,17 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
         if WHTEader.FindFirst() then
             WHTEader.Delete(True);
     end;
+
+    [IntegrationEvent(true, false)]
+    procedure OnBeforInsertWhtHeader(var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
+    begin
+
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnSetFIlterWhtCetificate(var GenLineFilter: Record "Gen. Journal Line"; GenLine: Record "Gen. Journal Line")
+    begin
+    end;
+
 
 }
