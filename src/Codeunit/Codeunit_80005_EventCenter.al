@@ -5,6 +5,35 @@ codeunit 80005 "NCT EventFunction"
 {
     Permissions = TableData "G/L Entry" = rimd, tabledata "VAT Entry" = rimd, tabledata "Purch. Rcpt. Line" = imd, tabledata "Return Shipment Line" = imd, tabledata "Sales Shipment Line" = imd;
 
+    [EventSubscriber(ObjectType::Page, Page::"Fixed Asset Card", 'OnBeforeUpdateDepreciationBook', '', false, false)]
+    local procedure OnBeforeUpdateDepreciationBook(var IsHandled: Boolean; var FADepreciationBook: Record "FA Depreciation Book"; var FixedAssetNo: Code[20])
+    var
+        FixedAsset: Record "Fixed Asset";
+        ltFASubclass: Record "FA Subclass";
+    begin
+        if FixedAsset.Get(FixedAssetNo) then begin
+            IsHandled := true;
+            if not ltFASubclass.GET(FixedAsset."FA Subclass Code") then
+                ltFASubclass.Init();
+            if FADepreciationBook."Depreciation Book Code" <> '' then
+                if FADepreciationBook."FA No." = '' then begin
+                    FADepreciationBook.Validate("FA No.", FixedAssetNo);
+                    FADepreciationBook.Insert(true);
+                    FADepreciationBook.VALIDATE("Depreciation Starting Date", WORKDATE());
+                    if ltFASubclass."NCT No. of Depreciation Years" <> 0 then
+                        FADepreciationBook.VALIDATE("NCT No. of Years", ltFASubclass."NCT No. of Depreciation Years");
+                    FADepreciationBook.Modify(true);
+                end else begin
+                    FADepreciationBook.Description := FixedAsset.Description;
+                    if FADepreciationBook."Depreciation Starting Date" = 0D then
+                        FADepreciationBook.VALIDATE("Depreciation Starting Date", WORKDATE());
+                    if ltFASubclass."NCT No. of Depreciation Years" <> 0 then
+                        FADepreciationBook.VALIDATE("NCT No. of Years", ltFASubclass."NCT No. of Depreciation Years");
+                    FADepreciationBook.Modify(true);
+                end;
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Get Shipment", 'OnRunAfterFilterSalesShpLine', '', false, false)]
     local procedure OnRunAfterFilterSalesShpLine(var SalesShptLine: Record "Sales Shipment Line")
     begin

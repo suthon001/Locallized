@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension NCT Depreciation Book Card (ID 80101) extends Record Depreciation Book Card.
+/// </summary>
 pageextension 80101 "NCT Depreciation Book Card" extends "Depreciation Book Card"
 {
     layout
@@ -15,6 +18,27 @@ pageextension 80101 "NCT Depreciation Book Card" extends "Depreciation Book Card
                 ApplicationArea = all;
                 Caption = 'No. of Days in Fiscal Year';
                 ToolTip = 'Specifies the value of the No. of Days in Fiscal Year field.';
+            }
+        }
+    }
+    actions
+    {
+        addfirst(processing)
+        {
+            action(ClearNoOfYear)
+            {
+                ApplicationArea = all;
+                Caption = 'Clear No. Of Days in Fisical year';
+                Image = ClearLog;
+                ToolTip = 'Executes the Clear No. Of Days in Fisical year action.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                trigger OnAction()
+                begin
+                    rec."No. of Days in Fiscal Year" := 0;
+                    rec.Modify();
+                end;
             }
         }
     }

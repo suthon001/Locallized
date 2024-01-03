@@ -198,8 +198,9 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine."NCT Document Line No." := InvoicePostingBuffer."NCT Document Line No.";
         "NCT AfterCopyInvoicePostingBufferToGL"(GenJnlLine, InvoicePostingBuffer);
 
-
     end;
+
+
 
 
     [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
