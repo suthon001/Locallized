@@ -286,6 +286,8 @@ codeunit 80001 "NCT Purchase Function"
 
         IF (InvoicePostingBuffer.Type = InvoicePostingBuffer.Type::"G/L Account") OR (InvoicePostingBuffer.Type = InvoicePostingBuffer.Type::"Fixed Asset") THEN
             InvoicePostingBuffer."NCT Line No." := PurchaseLine."Line No.";
+
+        "NCT OnAfterPreparePurchaseToInvoicePostingBuffer"(InvoicePostingBuffer, PurchaseLine);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterInvPostBufferPreparePurchase', '', true, true)]
@@ -403,5 +405,9 @@ codeunit 80001 "NCT Purchase Function"
     begin
     end;
 
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnAfterPreparePurchaseToInvoicePostingBuffer"(var InvoicePostingBuffer: Record "Invoice Posting Buffer"; PurchaseLine: Record "Purchase Line")
+    begin
+    end;
 
 }
