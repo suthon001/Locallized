@@ -556,6 +556,34 @@ codeunit 80005 "NCT EventFunction"
             ERROR(TempErrorMessage.Message);
     end;
 
+    /// <summary>
+    /// ItemJournalPreviewVourcher.
+    /// </summary>
+    /// <param name="pItemJournalLIne">Record "Item Journal Line".</param>
+    /// <param name="TemporaryGL">Temporary VAR Record "G/L Entry".</param>
+    procedure "ItemJournalPreviewVourcher"(pItemJournalLIne: Record "Item Journal Line"; var TemporaryGL: Record "G/L Entry" temporary)
+    var
+        ItemJournalLine: Record "Item Journal Line";
+        RecRef: RecordRef;
+        TempErrorMessage: Record "Error Message" temporary;
+    begin
+        ItemJournalLine.Reset();
+        ItemJournalLine.SetRange("Journal Template Name", pItemJournalLIne."Journal Template Name");
+        ItemJournalLine.SetRange("Journal Batch Name", pItemJournalLIne."Journal Batch Name");
+        ItemJournalLine.SetRange("Document No.", pItemJournalLIne."Document No.");
+        ItemJournalLine.FindFirst();
+        ErrorMessageMgt.Activate(ErrorMessageHandler);
+        BindSubscription(ItemJnlPost);
+        GenJnlPostPreview.SetContext(ItemJnlPost, ItemJournalLine);
+        IF NOT GenJnlPostPreview.Run() AND GenJnlPostPreview.IsSuccess() THEN begin
+            GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
+            PostingPreviewEventHandler.GetEntries(Database::"G/L Entry", RecRef);
+            InsertToTempGL(RecRef, TemporaryGL);
+        end;
+        if ErrorMessageMgt.GetErrors(TempErrorMessage) then
+            ERROR(TempErrorMessage.Message);
+    end;
+
 
     local procedure InsertToTempGL(RecRef2: RecordRef; var pTempGLEntry: Record "G/L Entry" temporary)
     begin
@@ -1016,6 +1044,7 @@ codeunit 80005 "NCT EventFunction"
         GenJnlPostPreview: Codeunit "Gen. Jnl.-Post Preview";
         SalesPostYesNo: Codeunit "Sales-Post (Yes/No)";
         PurchasePostYesNo: Codeunit "Purch.-Post (Yes/No)";
+        ItemJnlPost: Codeunit "Item Jnl.-Post";
         GenJnlPost: Codeunit "Gen. Jnl.-Post";
         PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler";
         ErrorMessageMgt: Codeunit "Error Message Management";
