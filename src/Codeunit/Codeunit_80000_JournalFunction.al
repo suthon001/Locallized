@@ -119,6 +119,8 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Tax Invoice Name 2" := PrepmtInvLineBuffer."NCT Tax Invoice Name 2";
         GenJournalLine."NCT VAT Branch Code" := PrepmtInvLineBuffer."NCT VAT Branch Code";
         GenJournalLine."NCT Head Office" := PrepmtInvLineBuffer."NCT Head Office";
+        GenJournalLine."NCT Tax Invoice Base" := PrepmtInvLineBuffer."NCT Tax Invoice Base";
+        GenJournalLine."NCT Tax Invoice Amount" := PrepmtInvLineBuffer."NCT Tax Invoice Amount";
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Prepayment Inv. Line Buffer", 'OnAfterCopyFromPurchLine', '', false, false)]
@@ -133,6 +135,8 @@ codeunit 80000 "NCT Journal Function"
         PrepaymentInvLineBuffer."NCT Vat Registration No." := PurchHeader."VAT Registration No.";
         PrepaymentInvLineBuffer."NCT VAT Branch Code" := PurchHeader."NCT VAT Branch Code";
         PrepaymentInvLineBuffer."NCT Head Office" := PurchHeader."NCT Head Office";
+        PrepaymentInvLineBuffer."NCT Tax Invoice Base" := PurchaseLine.Amount;
+        PrepaymentInvLineBuffer."NCT Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
         if PurchaseLine."NCT Tax Invoice No." <> '' then begin
             PrepaymentInvLineBuffer."NCT Tax Invoice No." := PurchaseLine."NCT Tax Invoice No.";
             PrepaymentInvLineBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
