@@ -144,9 +144,11 @@ codeunit 80005 "NCT EventFunction"
     var
         AccountSchedule: Report "NCT Account Schedule";
     begin
+        CLEAR(AccountSchedule);
         AccountSchedule.SetFinancialReportName(FinancialReport.Name);
         AccountSchedule.Run();
         IsHandled := true;
+        CLEAR(AccountSchedule);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"FA Depreciation Book", 'OnBeforeValidateNoOfDepreYears', '', false, false)]
