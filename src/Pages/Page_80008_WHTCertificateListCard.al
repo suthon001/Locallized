@@ -156,11 +156,12 @@ page 80008 "NCT WHT Certificate"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the ชื่ออาคาร/หมู่บ้าน field.';
                 }
-                field("NCT WHT House No."; rec."WHT House No.")
+                field("WHT of No."; rec."WHT of No.")
                 {
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the เลขที่ห้อง field.';
+                    ToolTip = 'Specifies the value of the เลขที่ field.';
                 }
+
                 field("NCT WHT Village No."; rec."WHT Village No.")
                 {
                     ApplicationArea = all;
@@ -171,11 +172,12 @@ page 80008 "NCT WHT Certificate"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the ชั้น field.';
                 }
-                field("WHT of No."; rec."WHT of No.")
+                field("NCT WHT House No."; rec."WHT House No.")
                 {
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the เลขที่ field.';
+                    ToolTip = 'Specifies the value of the เลขที่ห้อง field.';
                 }
+
                 field("NCT WHT Street"; rec."WHT Street")
                 {
                     ApplicationArea = all;

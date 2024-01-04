@@ -66,10 +66,11 @@ pageextension 80001 "NCT ExtenVendor Card" extends "Vendor Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the ชื่ออาคาร/หมู่บ้าน field.';
                 }
-                field("NCT WHT House No."; rec."NCT WHT House No.")
+
+                field("NCT WHT No."; rec."NCT WHT No.")
                 {
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the เลขที่ห้อง field.';
+                    ToolTip = 'Specifies the value of the เลขที่ field.';
                 }
                 field("NCT WHT Village No."; rec."NCT WHT Village No.")
                 {
@@ -81,10 +82,11 @@ pageextension 80001 "NCT ExtenVendor Card" extends "Vendor Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the ชั้น field.';
                 }
-                field("NCT WHT No."; rec."NCT WHT No.")
+
+                field("NCT WHT House No."; rec."NCT WHT House No.")
                 {
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the เลขที่ field.';
+                    ToolTip = 'Specifies the value of the เลขที่ห้อง field.';
                 }
                 field("NCT WHT Street"; rec."NCT WHT Street")
                 {

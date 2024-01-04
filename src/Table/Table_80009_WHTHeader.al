@@ -296,7 +296,7 @@ table 80009 "NCT WHT Header"
             Editable = false;
             DataClassification = CustomerContent;
         }
-        field(28; "WHT Title Name"; Enum "NCT Title Document Name")
+        field(28; "WHT Title Name"; text[50])
         {
             Caption = 'คำนำหน้า';
             DataClassification = CustomerContent;
@@ -380,6 +380,7 @@ table 80009 "NCT WHT Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
+                "WHT City" := "WHT Province";
                 UpdateAddress();
             end;
         }
@@ -419,11 +420,13 @@ table 80009 "NCT WHT Header"
         "WHT Alley/Lane" := VendorCustomerBranch."Alley/Lane";
         "WHT District" := VendorCustomerBranch."District";
         "WHT Floor" := VendorCustomerBranch."Floor";
+        "WHT of No." := VendorCustomerBranch."No.";
         "WHT House No." := VendorCustomerBranch."House No.";
         "WHT Street" := VendorCustomerBranch."Street";
         "WHT Title Name" := VendorCustomerBranch."Title Name";
         "WHT Village No." := VendorCustomerBranch."Village No.";
         "WHT City" := VendorCustomerBranch."Province";
+        "WHT Province" := VendorCustomerBranch."Province";
         "WHT Post Code" := VendorCustomerBranch."post Code";
         OnCopyAddressbyBranch(rec, VendorCustomerBranch);
     end;
@@ -433,98 +436,102 @@ table 80009 "NCT WHT Header"
         VTxT: Text;
         i: Integer;
         Addr: array[4] of text[100];
+        Ishandle: Boolean;
     begin
-        Clear(VTxT);
-        i := 1;
-        if "WHT Building" <> '' then begin
-            VTxT := 'อาคาร/หมู่บ้าน ' + "WHT Building" + ' ';
-            i := CheckLen(Addr[i], VTxT, i);
-            Addr[i] += VTxT;
-        end;
-        if "WHT House No." <> '' then begin
-            VTxT := 'เลขที่บ้าน ' + "WHT House No." + ' ';
-            i := CheckLen(Addr[i], VTxT, i);
-            Addr[i] += VTxT;
-        end;
-        if "WHT Village No." <> '' then begin
-            VTxT := 'หมู่ที่ ' + "WHT Village No." + ' ';
-            i := CheckLen(Addr[i], VTxT, i);
-            Addr[i] += VTxT;
-        end;
-        if "WHT Floor" <> '' then begin
-            VTxT := 'ชั้น ' + "WHT Floor" + ' ';
-            i := CheckLen(Addr[i], VTxT, i);
-            Addr[i] += VTxT;
-        end;
-        if "WHT of No." <> '' then begin
-            VTxT := 'ห้องเลขที่ ' + "WHT of No." + ' ';
-            i := CheckLen(Addr[i], VTxT, i);
-            Addr[i] += VTxT;
-        end;
-        if "WHT Street" <> '' then begin
-            VTxT := 'ถนน' + "WHT Street" + ' ';
-            i := CheckLen(Addr[i], VTxT, i);
-            Addr[i] += VTxT;
-        end;
-        if "WHT Alley/Lane" <> '' then begin
-            VTxT := 'ซอย' + "WHT Alley/Lane" + ' ';
-            i := CheckLen(Addr[i], VTxT, i);
-            Addr[i] += VTxT;
-        end;
-        if StrPos("WHT City", 'กรุงเทพ') <> 0 then begin
+        Ishandle := false;
+        OnBeforUpdateAddress(rec, Ishandle);
+        if not Ishandle then begin
             Clear(VTxT);
-            if "WHT Sub-district" <> '' then begin
-                VTxT := 'แขวง' + "WHT Sub-district" + ' ';
+            i := 1;
+            if "WHT Building" <> '' then begin
+                VTxT := 'อาคาร/หมู่บ้าน ' + "WHT Building" + ' ';
                 i := CheckLen(Addr[i], VTxT, i);
                 Addr[i] += VTxT;
             end;
-            if "WHT District" <> '' then begin
-                VTxT := 'เขต' + "WHT District" + ' ';
+            if "WHT House No." <> '' then begin
+                VTxT := 'เลขที่บ้าน ' + "WHT House No." + ' ';
                 i := CheckLen(Addr[i], VTxT, i);
                 Addr[i] += VTxT;
             end;
-            if Addr[i] <> '' then
-                if "wht city" <> '' then begin
-                    VTxT := "wht city" + ' ';
-                    i := CheckLen(Addr[i], VTxT, i);
-                    Addr[i] += VTxT;
-                    VTxT := "Wht Post Code" + ' ';
+            if "WHT Village No." <> '' then begin
+                VTxT := 'หมู่ที่ ' + "WHT Village No." + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+            if "WHT Floor" <> '' then begin
+                VTxT := 'ชั้น ' + "WHT Floor" + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+            if "WHT of No." <> '' then begin
+                VTxT := 'ห้องเลขที่ ' + "WHT of No." + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+            if "WHT Street" <> '' then begin
+                VTxT := 'ถนน' + "WHT Street" + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+            if "WHT Alley/Lane" <> '' then begin
+                VTxT := 'ซอย' + "WHT Alley/Lane" + ' ';
+                i := CheckLen(Addr[i], VTxT, i);
+                Addr[i] += VTxT;
+            end;
+            if StrPos("WHT City", 'กรุงเทพ') <> 0 then begin
+                Clear(VTxT);
+                if "WHT Sub-district" <> '' then begin
+                    VTxT := 'แขวง' + "WHT Sub-district" + ' ';
                     i := CheckLen(Addr[i], VTxT, i);
                     Addr[i] += VTxT;
                 end;
-        end else begin
-            Clear(VTxT);
-            if "WHT Sub-district" <> '' then begin
-                VTxT := 'ตำบล' + "WHT Sub-district" + ' ';
-                i := CheckLen(Addr[i], VTxT, i);
-                Addr[i] += VTxT;
-            end;
-            if "WHT District" <> '' then begin
-                VTxT := 'อำเภอ' + "WHT District" + ' ';
-                i := CheckLen(Addr[i], VTxT, i);
-                Addr[i] += VTxT;
-            end;
-            if Addr[i] <> '' then
-                if "wht city" <> '' then begin
-                    VTxT := 'จังหวัด' + "wht city" + ' ';
-                    i := CheckLen(Addr[i], VTxT, i);
-                    Addr[i] += VTxT;
-                    VTxT := "Wht Post Code" + ' ';
+                if "WHT District" <> '' then begin
+                    VTxT := 'เขต' + "WHT District" + ' ';
                     i := CheckLen(Addr[i], VTxT, i);
                     Addr[i] += VTxT;
                 end;
-        end;
+                if Addr[i] <> '' then
+                    if "wht city" <> '' then begin
+                        VTxT := "wht city" + ' ';
+                        i := CheckLen(Addr[i], VTxT, i);
+                        Addr[i] += VTxT;
+                        VTxT := "Wht Post Code" + ' ';
+                        i := CheckLen(Addr[i], VTxT, i);
+                        Addr[i] += VTxT;
+                    end;
+            end else begin
+                Clear(VTxT);
+                if "WHT Sub-district" <> '' then begin
+                    VTxT := 'ตำบล' + "WHT Sub-district" + ' ';
+                    i := CheckLen(Addr[i], VTxT, i);
+                    Addr[i] += VTxT;
+                end;
+                if "WHT District" <> '' then begin
+                    VTxT := 'อำเภอ' + "WHT District" + ' ';
+                    i := CheckLen(Addr[i], VTxT, i);
+                    Addr[i] += VTxT;
+                end;
+                if Addr[i] <> '' then
+                    if "wht city" <> '' then begin
+                        VTxT := 'จังหวัด' + "wht city" + ' ';
+                        i := CheckLen(Addr[i], VTxT, i);
+                        Addr[i] += VTxT;
+                        VTxT := "Wht Post Code" + ' ';
+                        i := CheckLen(Addr[i], VTxT, i);
+                        Addr[i] += VTxT;
+                    end;
+            end;
 
-        if Addr[1] <> '' then begin
-            Rec."WHT Address" := Addr[1];
-            Rec."WHT Address 2" := '';
-            Rec."WHT Address 3" := '';
+            if Addr[1] <> '' then begin
+                Rec."WHT Address" := Addr[1];
+                Rec."WHT Address 2" := '';
+                Rec."WHT Address 3" := '';
+            end;
+            if Addr[2] <> '' then
+                Rec."WHT Address 2" := Addr[2];
+            if Addr[3] <> '' then
+                Rec."WHT Address 3" := Addr[3];
         end;
-        if Addr[2] <> '' then
-            Rec."WHT Address 2" := Addr[2];
-        if Addr[3] <> '' then
-            Rec."WHT Address 3" := Addr[3];
-
     end;
 
     local procedure CheckLen(Txt: text; inTxt: text; i: Integer): Integer
@@ -627,6 +634,11 @@ table 80009 "NCT WHT Header"
     procedure OnCopyAddressbyBranch(var WHTHeader: Record "NCT WHT Header"; CustomerVendorBranch: Record "NCT Customer & Vendor Branch")
     begin
 
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforUpdateAddress(var WHTHeader: Record "NCT WHT Header"; var IsHandle: Boolean)
+    begin
     end;
 
     var

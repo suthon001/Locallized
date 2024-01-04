@@ -152,24 +152,25 @@ codeunit 80002 "NCT Sales Function"
             InvoicePostingBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
             InvoicePostingBuffer."NCT VAT Registration No." := SalesHeader."VAT Registration No.";
             InvoicePostingBuffer."NCT Tax Invoice Date" := SalesHeader."Document Date";
-            InvoicePostingBuffer."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
-            InvoicePostingBuffer."NCT Tax Invoice Name 2" := SalesHeader."Sell-to Customer Name 2";
+            InvoicePostingBuffer."NCT Tax Invoice Name" := SalesHeader."Bill-to Name";
+            InvoicePostingBuffer."NCT Tax Invoice Name 2" := SalesHeader."Bill-to Name 2";
             InvoicePostingBuffer."NCT Tax Invoice Base" := SalesLine.Amount;
             InvoicePostingBuffer."NCT Tax Invoice Amount" := SalesLine."Amount Including VAT" - SalesLine.Amount;
-            InvoicePostingBuffer."NCT Address" := SalesHeader."Sell-to Address";
-            InvoicePostingBuffer."NCT Address 2" := SalesHeader."Sell-to Address 2";
-            InvoicePostingBuffer."NCT City" := SalesHeader."Sell-to city";
-            InvoicePostingBuffer."NCT Post Code" := SalesHeader."Sell-to Post Code";
-            if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then begin
-                if VendCust."Title Name" <> VendCust."Title Name"::" " then
-                    InvoicePostingBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
-                else
-                    InvoicePostingBuffer."NCT Tax Invoice Name" := VendCust."Name";
-                InvoicePostingBuffer."NCT Address" := VendCust."Address";
-                InvoicePostingBuffer."NCT Address 2" := VendCust."Address 2";
-                InvoicePostingBuffer."NCT city" := VendCust."Province";
-                InvoicePostingBuffer."NCT Post Code" := VendCust."Post Code";
-            end;
+            InvoicePostingBuffer."NCT Address" := SalesHeader."Bill-to Address";
+            InvoicePostingBuffer."NCT Address 2" := SalesHeader."Bill-to Address 2";
+            InvoicePostingBuffer."NCT City" := SalesHeader."Bill-to City";
+            InvoicePostingBuffer."NCT Post Code" := SalesHeader."Bill-to Post Code";
+            if not SalesHeader."NCT Head Office" then
+                if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Bill-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then begin
+                    if VendCust."Title Name" <> '' then
+                        InvoicePostingBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
+                    else
+                        InvoicePostingBuffer."NCT Tax Invoice Name" := VendCust."Name";
+                    InvoicePostingBuffer."NCT Address" := VendCust."Address";
+                    InvoicePostingBuffer."NCT Address 2" := VendCust."Address 2";
+                    InvoicePostingBuffer."NCT city" := VendCust."Province";
+                    InvoicePostingBuffer."NCT Post Code" := VendCust."Post Code";
+                end;
 
 
         END;
@@ -194,25 +195,25 @@ codeunit 80002 "NCT Sales Function"
             InvoicePostBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
             InvoicePostBuffer."NCT VAT Registration No." := SalesHeader."VAT Registration No.";
             InvoicePostBuffer."NCT Tax Invoice Date" := SalesHeader."Document Date";
-            InvoicePostBuffer."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
-            InvoicePostBuffer."NCT Tax Invoice Name 2" := SalesHeader."Sell-to Customer Name 2";
+            InvoicePostBuffer."NCT Tax Invoice Name" := SalesHeader."Bill-to Name";
+            InvoicePostBuffer."NCT Tax Invoice Name 2" := SalesHeader."Bill-to Name 2";
             InvoicePostBuffer."NCT Tax Invoice Base" := SalesLine.Amount;
             InvoicePostBuffer."NCT Tax Invoice Amount" := SalesLine."Amount Including VAT" - SalesLine.Amount;
-            InvoicePostBuffer."NCT Address" := SalesHeader."Sell-to Address";
-            InvoicePostBuffer."NCT Address 2" := SalesHeader."Sell-to Address 2";
-            InvoicePostBuffer."NCT City" := SalesHeader."Sell-to city";
-            InvoicePostBuffer."NCT Post Code" := SalesHeader."Sell-to Post Code";
-
-            if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then begin
-                if VendCust."Title Name" <> VendCust."Title Name"::" " then
-                    InvoicePostBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
-                else
-                    InvoicePostBuffer."NCT Tax Invoice Name" := VendCust."Name";
-                InvoicePostBuffer."NCT Address" := VendCust."Address";
-                InvoicePostBuffer."NCT Address 2" := VendCust."Address 2";
-                InvoicePostBuffer."NCT city" := VendCust."Province";
-                InvoicePostBuffer."NCT Post Code" := VendCust."Post Code";
-            end;
+            InvoicePostBuffer."NCT Address" := SalesHeader."Bill-to Address";
+            InvoicePostBuffer."NCT Address 2" := SalesHeader."Bill-to Address 2";
+            InvoicePostBuffer."NCT City" := SalesHeader."Bill-to City";
+            InvoicePostBuffer."NCT Post Code" := SalesHeader."Bill-to Post Code";
+            if not SalesHeader."NCT Head Office" then
+                if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Bill-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then begin
+                    if VendCust."Title Name" <> '' then
+                        InvoicePostBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
+                    else
+                        InvoicePostBuffer."NCT Tax Invoice Name" := VendCust."Name";
+                    InvoicePostBuffer."NCT Address" := VendCust."Address";
+                    InvoicePostBuffer."NCT Address 2" := VendCust."Address 2";
+                    InvoicePostBuffer."NCT city" := VendCust."Province";
+                    InvoicePostBuffer."NCT Post Code" := VendCust."Post Code";
+                end;
 
 
         END;

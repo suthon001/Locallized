@@ -122,7 +122,7 @@ table 80012 "NCT WHT Applied Entry"
             Editable = false;
 
         }
-        field(28; "WHT Title Name"; Enum "NCT Title Document Name")
+        field(28; "WHT Title Name"; text[50])
         {
             Caption = 'คำนำหน้า';
             DataClassification = CustomerContent;

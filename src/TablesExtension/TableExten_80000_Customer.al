@@ -25,7 +25,6 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
-                TempSendtoUpdate: Text[50];
                 CustVendBarch: Record "NCT Customer & Vendor Branch";
             begin
 
@@ -43,13 +42,11 @@ tableextension 80000 "NCT ExtenCustomer" extends Customer
                     if StrLen("NCT VAT Branch Code") < 5 then
                         Error('VAT Branch Code must be 5 characters');
                     "NCT Head Office" := false;
-                    UpdateVendorCustBranch(4, "NCT VAT Branch Code", false);
                 end;
                 if "NCT VAT Branch Code" = '00000' then begin
                     "NCT Head Office" := TRUE;
                     "NCT VAT Branch Code" := '';
                 end;
-                UpdateVendorCustBranch(4, TempSendtoUpdate, TRUE);
             end;
 
 

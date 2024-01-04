@@ -311,7 +311,7 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Head Office" := PurchaseHeader."NCT Head Office";
         GenJournalLine."NCT VAT Branch Code" := PurchaseHeader."NCT VAT Branch Code";
         if VendCust.Get(VendCust."Source Type"::Vendor, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."NCT Head Office", PurchaseHeader."NCT VAT Branch Code") then
-            if VendCust."Title Name" <> VendCust."Title Name"::" " then
+            if VendCust."Title Name" <> '' then
                 GenJournalLine."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
             else
                 GenJournalLine."NCT Tax Invoice Name" := VendCust."Name";

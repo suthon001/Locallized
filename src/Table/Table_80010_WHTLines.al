@@ -66,7 +66,7 @@ table 80010 "NCT WHT Line"
             Caption = 'WHT Address';
             DataClassification = SystemMetadata;
         }
-        field(11; "WHT Address 2"; Text[50])
+        field(11; "WHT Address 2"; Text[100])
         {
             Caption = 'WHT Address 2';
             DataClassification = SystemMetadata;

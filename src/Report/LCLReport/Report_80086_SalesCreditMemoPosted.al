@@ -116,7 +116,7 @@ report 80086 "NCT Sales Credit Memo (Post)"
                     FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
                 FunctionCenter.PostedSalesCrMemoStatistics("No.", TotalAmt, VatText);
                 FunctionCenter.GetSalesComment(ltDocumentType::"Posted Credit Memo", "No.", 0, CommentText);
-                FunctionCenter.SalesPostedCustomerInformation(3, "No.", CustText, 0);
+                FunctionCenter.SalesPostedCustomerInformation(3, "No.", CustText, 1);
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();

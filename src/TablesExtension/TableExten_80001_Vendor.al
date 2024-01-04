@@ -41,7 +41,6 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
                     if StrLen("NCT VAT Branch Code") < 5 then
                         Error('VAT Branch Code must be 5 characters');
                     "NCT Head Office" := false;
-                    UpdateVendorCustBranch(4, "NCT VAT Branch Code", false);
 
                 end;
                 if "NCT VAT Branch Code" = '00000' then begin
@@ -57,7 +56,7 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
             TableRelation = "NCT WHT Business Posting Group"."Code";
             DataClassification = CustomerContent;
         }
-        field(80003; "NCT WHT Title Name"; Enum "NCT Title Document Name")
+        field(80003; "NCT WHT Title Name"; text[50])
         {
             Caption = 'คำนำหน้า';
             DataClassification = CustomerContent;

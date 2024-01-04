@@ -93,7 +93,7 @@ tableextension 80016 "NCT Invoice Post. Buffer" extends "Invoice Post. Buffer"
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
-        field(80016; "NCT Address 2"; Text[50])
+        field(80016; "NCT Address 2"; Text[100])
         {
             Caption = 'Address 2';
             DataClassification = SystemMetadata;

@@ -39,6 +39,36 @@ pageextension 80008 "NCT Asset G/L Journal" extends "Fixed Asset G/L Journal"
 
     actions
     {
+        addafter(Preview)
+        {
+            action(YVSPreview)
+            {
+                ApplicationArea = Basic, Suite;
+                Caption = 'Preview Posting';
+                Image = ViewPostedOrder;
+                ShortCutKey = 'Ctrl+Alt+F9';
+                ToolTip = 'Review the different types of entries that will be created when you post the document or journal.';
+                PromotedCategory = Process;
+                Promoted = true;
+                PromotedIsBig = true;
+                trigger OnAction()
+                var
+                    GenJnlPost: Codeunit "Gen. Jnl.-Post";
+                    ltGenLine: Record "Gen. Journal Line";
+                begin
+                    ltGenLine.reset();
+                    ltGenLine.SetRange("Journal Template Name", rec."Journal Template Name");
+                    ltGenLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
+                    ltGenLine.SetRange("Document No.", rec."Document No.");
+                    if ltGenLine.FindFirst() then
+                        GenJnlPost.Preview(ltGenLine);
+                end;
+            }
+        }
+        modify(Preview)
+        {
+            Visible = false;
+        }
 
         addlast("F&unctions")
         {

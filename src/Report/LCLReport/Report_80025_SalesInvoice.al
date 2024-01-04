@@ -113,7 +113,7 @@ report 80025 "NCT Report Sales Invoice"
                     FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
 
                 FunctionCenter.SalesStatistic("Document Type", "No.", TotalAmt, VatText);
-                FunctionCenter.SalesInformation("Document Type", "No.", CustText, 0);
+                FunctionCenter.SalesInformation("Document Type", "No.", CustText, 1);
                 FunctionCenter.SalesInformation("Document Type", "No.", CustTextShipment, 2);
                 if "Currency Code" = '' then
                     AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')'

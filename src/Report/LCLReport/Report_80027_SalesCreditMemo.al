@@ -116,7 +116,7 @@ report 80027 "NCT Report Sales Credit Memo"
 
                 FunctionCenter.SalesStatistic("Document Type", "No.", TotalAmt, VatText);
                 FunctionCenter.GetSalesComment("Document Type", "No.", 0, CommentText);
-                FunctionCenter.SalesInformation("Document Type", "No.", CustText, 0);
+                FunctionCenter.SalesInformation("Document Type", "No.", CustText, 1);
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();
