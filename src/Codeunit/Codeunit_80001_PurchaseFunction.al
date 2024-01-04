@@ -4,6 +4,18 @@
 codeunit 80001 "NCT Purchase Function"
 {
     EventSubscriberInstance = StaticAutomatic;
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnAfterPurchOrderLineInsert', '', false, false)]
+    local procedure OnAfterPurchOrderLineInsertFromRequisition(var PurchOrderLine: Record "Purchase Line"; var RequisitionLine: Record "Requisition Line")
+    var
+        RequisitionPosted: Record "NCT Requisition Line Posted";
+    begin
+        RequisitionPosted.Init();
+        RequisitionPosted.TransferFields(RequisitionLine, false);
+        RequisitionPosted."Entry No." := RequisitionPosted.GetLastEntryNo();
+        RequisitionPosted."Ref. PO No." := PurchOrderLine."Document No.";
+        RequisitionPosted.Insert();
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnAfterInitPurchOrderLine', '', false, false)]
     local procedure OnAfterInitPurchOrderLine(var PurchaseLine: Record "Purchase Line")
     begin

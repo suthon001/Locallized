@@ -316,6 +316,7 @@ codeunit 80013 "NCT Clean Transactions"
         MyTable.add('NCT Billing Receipt Header');
         MyTable.add('NCT Billing Receipt Line');
         MyTable.add('NCT WHT Applied Entry');
+        MyTable.add('NCT Requisition Line Posted');
         RecordDeltetionEntry.reset();
         RecordDeltetionEntry.DeleteAll();
         foreach NyTableName in MyTable do begin

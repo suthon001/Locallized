@@ -10,5 +10,17 @@ tableextension 80058 "NCT Return Shipment Header" extends "Return Shipment Heade
             Caption = 'Vendor Cr. Memo No.';
             DataClassification = CustomerContent;
         }
+        field(80001; "NCT Head Office"; Boolean)
+        {
+            Caption = 'Head Office';
+            DataClassification = CustomerContent;
+
+        }
+        field(80002; "NCT VAT Branch Code"; Code[5])
+        {
+            Caption = 'VAT Branch Code';
+            DataClassification = CustomerContent;
+
+        }
     }
 }

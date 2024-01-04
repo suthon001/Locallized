@@ -1,3 +1,6 @@
+/// <summary>
+/// Table NCT Record Deletion Table (ID 80013).
+/// </summary>
 table 80013 "NCT Record Deletion Table"
 {
     Caption = 'Record Deletion Table';
