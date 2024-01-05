@@ -27,7 +27,7 @@ table 80006 "NCT WHT Business Posting Group"
             OptionMembers = " ","ภ.ง.ด.1ก.","ภ.ง.ด. 1ก.พิเศษ","ภ.ง.ด.2","ภ.ง.ด.3","ภ.ง.ด.2ก","ภ.ง.ด.3ก","ภ.ง.ด.53","ภ.ง.ด.54";
             DataClassification = CustomerContent;
         }
-        field(4; "WHT Certificate No. Series"; Code[10])
+        field(4; "WHT Certificate No. Series"; Code[20])
         {
             TableRelation = "No. Series";
             Caption = 'WHT Certificate No. Series';
