@@ -167,7 +167,7 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
             Caption = 'WHT Option';
             DataClassification = CustomerContent;
         }
-        field(80031; "NCT WHT No. Series"; Code[10])
+        field(80031; "NCT WHT No. Series"; Code[20])
         {
             Caption = 'WHT No. Series';
             DataClassification = CustomerContent;
