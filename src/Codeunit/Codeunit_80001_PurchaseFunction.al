@@ -256,28 +256,38 @@ codeunit 80001 "NCT Purchase Function"
         InvoicePostingBuffer."NCT Post Code" := PurchHeader."Pay-to Post Code";
         InvoicePostingBuffer."NCT Document Line No." := PurchaseLine."Line No.";
         if not PurchHeader."NCT Head Office" then
-            if VendCust.Get(VendCust."Source Type"::Vendor, PurchHeader."Pay-to Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then begin
-                if VendCust."Title Name" <> '' then
-                    InvoicePostingBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
-                else
-                    InvoicePostingBuffer."NCT Tax Invoice Name" := VendCust."Name";
-                InvoicePostingBuffer."NCT Address" := VendCust."Address";
-                InvoicePostingBuffer."NCT Address 2" := VendCust."Address 2";
-                InvoicePostingBuffer."NCT city" := VendCust."Province";
-                InvoicePostingBuffer."NCT Post Code" := VendCust."Post Code";
-            end;
+            if VendCust.Get(VendCust."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then begin
+                if VendCust."Name" <> '' then
+                    if VendCust."Title Name" <> '' then
+                        InvoicePostingBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
+                    else
+                        InvoicePostingBuffer."NCT Tax Invoice Name" := VendCust."Name";
 
+                if VendCust."Address" <> '' then
+                    InvoicePostingBuffer."NCT Address" := VendCust."Address";
+                if VendCust."Address 2" <> '' then
+                    InvoicePostingBuffer."NCT Address 2" := VendCust."Address 2";
+                if VendCust."Province" <> '' then
+                    InvoicePostingBuffer."NCT city" := VendCust."Province";
+                if VendCust."Post Code" <> '' then
+                    InvoicePostingBuffer."NCT Post Code" := VendCust."Post Code";
+            end;
+        InvoicePostingBuffer."NCT Description Line" := PurchaseLine.Description;
         InvoicePostingBuffer."NCT Tax Invoice Base" := PurchaseLine.Amount;
         InvoicePostingBuffer."NCT Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
         IF PurchaseLine."NCT Tax Invoice No." <> '' THEN BEGIN
             InvoicePostingBuffer."NCT Tax Vendor No." := PurchaseLine."NCT Tax Vendor No.";
             InvoicePostingBuffer."NCT Head Office" := PurchaseLine."NCT Head Office";
             InvoicePostingBuffer."NCT VAT Branch Code" := PurchaseLine."NCT VAT Branch Code";
-            InvoicePostingBuffer."NCT Tax Invoice No." := PurchaseLine."NCT Tax Invoice No.";
+            if PurchaseLine."NCT Tax Invoice No." <> '' then
+                InvoicePostingBuffer."NCT Tax Invoice No." := PurchaseLine."NCT Tax Invoice No.";
             InvoicePostingBuffer."Additional Grouping Identifier" := PurchaseLine."NCT Tax Invoice No.";
-            InvoicePostingBuffer."NCT Tax Invoice Date" := PurchaseLine."NCT Tax Invoice Date";
-            InvoicePostingBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
-            InvoicePostingBuffer."NCT Tax Invoice Name 2" := PurchaseLine."NCT Tax Invoice Name 2";
+            if PurchaseLine."NCT Tax Invoice Date" <> 0D then
+                InvoicePostingBuffer."NCT Tax Invoice Date" := PurchaseLine."NCT Tax Invoice Date";
+            if PurchaseLine."NCT Tax Invoice Name" <> '' then
+                InvoicePostingBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
+            if PurchaseLine."NCT Tax Invoice Name 2" <> '' then
+                InvoicePostingBuffer."NCT Tax Invoice Name 2" := PurchaseLine."NCT Tax Invoice Name 2";
             IF InvoicePostingBuffer."VAT %" <> 0 THEN BEGIN
                 InvoicePostingBuffer."NCT Tax Invoice Base" := PurchaseLine.Amount;
                 InvoicePostingBuffer."NCT Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
@@ -290,7 +300,6 @@ codeunit 80001 "NCT Purchase Function"
                 InvoicePostingBuffer."NCT Tax Invoice Amount" := PurchaseLine."Line Amount";
             end;
         END;
-        InvoicePostingBuffer."NCT Description Line" := PurchaseLine.Description;
         IF PurchaseLine."NCT VAT Registration No." <> '' THEN
             InvoicePostingBuffer."NCT VAT Registration No." := PurchaseLine."NCT VAT Registration No."
         ELSE
@@ -334,28 +343,38 @@ codeunit 80001 "NCT Purchase Function"
         InvoicePostBuffer."NCT Post Code" := PurchHeader."Pay-to Post Code";
         InvoicePostBuffer."NCT Document Line No." := PurchaseLine."Line No.";
         if not PurchHeader."NCT Head Office" then
-            if VendCust.Get(VendCust."Source Type"::Vendor, PurchHeader."Pay-to Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then begin
-                if VendCust."Title Name" <> '' then
-                    InvoicePostBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
-                else
-                    InvoicePostBuffer."NCT Tax Invoice Name" := VendCust."Name";
-                InvoicePostBuffer."NCT Address" := VendCust."Address";
-                InvoicePostBuffer."NCT Address 2" := VendCust."Address 2";
-                InvoicePostBuffer."NCT city" := VendCust."Province";
-                InvoicePostBuffer."NCT Post Code" := VendCust."Post Code";
+            if VendCust.Get(VendCust."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then begin
+                if VendCust."Name" <> '' then
+                    if VendCust."Title Name" <> '' then
+                        InvoicePostBuffer."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
+                    else
+                        InvoicePostBuffer."NCT Tax Invoice Name" := VendCust."Name";
+
+                if VendCust."Address" <> '' then
+                    InvoicePostBuffer."NCT Address" := VendCust."Address";
+                if VendCust."Address 2" <> '' then
+                    InvoicePostBuffer."NCT Address 2" := VendCust."Address 2";
+                if VendCust."Province" <> '' then
+                    InvoicePostBuffer."NCT city" := VendCust."Province";
+                if VendCust."Post Code" <> '' then
+                    InvoicePostBuffer."NCT Post Code" := VendCust."Post Code";
             end;
+        InvoicePostBuffer."NCT Description Line" := PurchaseLine.Description;
         InvoicePostBuffer."NCT Tax Invoice Base" := PurchaseLine.Amount;
         InvoicePostBuffer."NCT Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
         IF PurchaseLine."NCT Tax Invoice No." <> '' THEN BEGIN
-            if PurchaseLine."NCT Tax Vendor No." <> '' then
-                InvoicePostBuffer."NCT Tax Vendor No." := PurchaseLine."NCT Tax Vendor No.";
+            InvoicePostBuffer."NCT Tax Vendor No." := PurchaseLine."NCT Tax Vendor No.";
             InvoicePostBuffer."NCT Head Office" := PurchaseLine."NCT Head Office";
             InvoicePostBuffer."NCT VAT Branch Code" := PurchaseLine."NCT VAT Branch Code";
-            InvoicePostBuffer."NCT Tax Invoice No." := PurchaseLine."NCT Tax Invoice No.";
+            if PurchaseLine."NCT Tax Invoice No." <> '' then
+                InvoicePostBuffer."NCT Tax Invoice No." := PurchaseLine."NCT Tax Invoice No.";
             InvoicePostBuffer."Additional Grouping Identifier" := PurchaseLine."NCT Tax Invoice No.";
-            InvoicePostBuffer."NCT Tax Invoice Date" := PurchaseLine."NCT Tax Invoice Date";
-            InvoicePostBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
-            InvoicePostBuffer."NCT Tax Invoice Name 2" := PurchaseLine."NCT Tax Invoice Name 2";
+            if PurchaseLine."NCT Tax Invoice Date" <> 0D then
+                InvoicePostBuffer."NCT Tax Invoice Date" := PurchaseLine."NCT Tax Invoice Date";
+            if PurchaseLine."NCT Tax Invoice Name" <> '' then
+                InvoicePostBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
+            if PurchaseLine."NCT Tax Invoice Name 2" <> '' then
+                InvoicePostBuffer."NCT Tax Invoice Name 2" := PurchaseLine."NCT Tax Invoice Name 2";
             IF InvoicePostBuffer."VAT %" <> 0 THEN BEGIN
                 InvoicePostBuffer."NCT Tax Invoice Base" := PurchaseLine.Amount;
                 InvoicePostBuffer."NCT Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
@@ -368,7 +387,7 @@ codeunit 80001 "NCT Purchase Function"
                 InvoicePostBuffer."NCT Tax Invoice Amount" := PurchaseLine."Line Amount";
             end;
         END;
-        InvoicePostBuffer."NCT Description Line" := PurchaseLine.Description;
+
         IF PurchaseLine."NCT VAT Registration No." <> '' THEN
             InvoicePostBuffer."NCT VAT Registration No." := PurchaseLine."NCT VAT Registration No."
         ELSE
