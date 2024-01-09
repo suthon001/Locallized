@@ -116,6 +116,10 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Tax Invoice Date" := SalesHeader."Posting Date";
         GenJournalLine."NCT Tax Invoice Name" := SalesHeader."Sell-to Customer Name";
         GenJournalLine."NCT Tax Invoice Name 2" := SalesHeader."Sell-to Customer Name 2";
+        GenJournalLine."NCT Tax Invoice Address" := SalesHeader."Sell-to Address";
+        GenJournalLine."NCT Tax Invoice Address 2" := SalesHeader."Sell-to Address 2";
+        GenJournalLine."NCT Tax Invoice City" := SalesHeader."Sell-to City";
+        GenJournalLine."NCT Tax Invoice Post Code" := SalesHeader."Sell-to Post Code";
         "NCT OnAfterCopyFromSalesHeaderPrepayment"(GenJournalLine, SalesHeader);
 
     end;
@@ -132,6 +136,10 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Head Office" := PrepmtInvLineBuffer."NCT Head Office";
         GenJournalLine."NCT Tax Invoice Base" := PrepmtInvLineBuffer."NCT Tax Invoice Base";
         GenJournalLine."NCT Tax Invoice Amount" := PrepmtInvLineBuffer."NCT Tax Invoice Amount";
+        GenJournalLine."NCT Tax Invoice City" := PrepmtInvLineBuffer."NCT City";
+        GenJournalLine."NCT Tax Invoice Post Code" := PrepmtInvLineBuffer."NCT Post Code";
+        GenJournalLine."NCT Tax Invoice Address" := PrepmtInvLineBuffer."NCT Address";
+        GenJournalLine."NCT Tax Invoice Address 2" := PrepmtInvLineBuffer."NCT Address 2";
         "NCT OnAfterCopyFromPrepaymentInvoice"(PrepmtInvLineBuffer, GenJournalLine);
     end;
 
@@ -154,6 +162,9 @@ codeunit 80000 "NCT Journal Function"
             PrepaymentInvLineBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
             PrepaymentInvLineBuffer."NCT Tax Invoice Name 2" := PurchaseLine."NCT Tax Invoice Name 2";
         end;
+        PrepaymentInvLineBuffer."NCT Address 2" := PurchHeader."Buy-from Address 2";
+        PrepaymentInvLineBuffer."NCT City" := PurchHeader."Buy-from City";
+        PrepaymentInvLineBuffer."NCT Post Code" := PurchHeader."Buy-from Post Code";
         "NCT OnAfterCopyFromPurchLinePrepayment"(PrepaymentInvLineBuffer, PurchaseLine, PurchHeader);
     end;
 
@@ -169,6 +180,10 @@ codeunit 80000 "NCT Journal Function"
         PrepaymentInvLineBuffer."NCT Vat Registration No." := SalesHeader."VAT Registration No.";
         PrepaymentInvLineBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
         PrepaymentInvLineBuffer."NCT Head Office" := SalesHeader."NCT Head Office";
+        PrepaymentInvLineBuffer."NCT Address" := SalesHeader."Sell-to Address";
+        PrepaymentInvLineBuffer."NCT Address 2" := SalesHeader."Sell-to Address 2";
+        PrepaymentInvLineBuffer."NCT City" := SalesHeader."Sell-to City";
+        PrepaymentInvLineBuffer."NCT Post Code" := SalesHeader."Sell-to Post Code";
         "NCT OnAfterCopyFromSalesLinePrepayment"(PrepaymentInvLineBuffer, SalesLine, SalesHeader);
     end;
 
@@ -188,6 +203,18 @@ codeunit 80000 "NCT Journal Function"
         VATEntry."NCT Tax Vendor No." := GenJournalLine."NCT Tax Vendor No.";
         VATEntry."NCT Tax Invoice Name" := GenJournalLine."NCT Tax Invoice Name";
         VATEntry."NCT Tax Invoice Name 2" := GenJournalLine."NCT Tax Invoice Name 2";
+        VATEntry."NCT Tax Invoice No." := GenJournalLine."NCT Tax Invoice No.";
+        VATEntry."NCT Tax Invoice Date" := GenJournalLine."NCT Tax Invoice Date";
+        VATEntry."NCT Tax Vendor No." := GenJournalLine."NCT Tax Vendor No.";
+        VATEntry."NCT Tax Invoice Name" := GenJournalLine."NCT Tax Invoice Name";
+        VATEntry."NCT Tax Invoice Name 2" := GenJournalLine."NCT Tax Invoice Name 2";
+        VATEntry."NCT Tax Invoice Address" := GenJournalLine."NCT Tax Invoice Address";
+        VATEntry."NCT Tax Invoice Address 2" := GenJournalLine."NCT Tax Invoice Address 2";
+        VATEntry."NCT Head Office" := GenJournalLine."NCT Head Office";
+        VATEntry."NCT VAT Branch Code" := GenJournalLine."NCT VAT Branch Code";
+        VATEntry."VAT Registration No." := GenJournalLine."VAT Registration No.";
+        VATEntry."NCT Tax Invoice City" := GenJournalLine."NCT Tax Invoice City";
+        VATEntry."NCT Tax Invoice Post Code" := GenJournalLine."NCT Tax Invoice Post Code";
         "NCT AfterInsertToUnrealVat"(VATEntry, GenJournalLine);
     end;
 
