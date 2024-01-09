@@ -148,6 +148,7 @@ codeunit 80002 "NCT Sales Function"
         VendCust: Record "NCT Customer & Vendor Branch";
     begin
         IF SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.") THEN BEGIN
+            InvoicePostingBuffer."NCT Tax Invoice No." := SalesHeader."No.";
             InvoicePostingBuffer."NCT Head Office" := SalesHeader."NCT Head Office";
             InvoicePostingBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
             InvoicePostingBuffer."NCT VAT Registration No." := SalesHeader."VAT Registration No.";
@@ -196,6 +197,7 @@ codeunit 80002 "NCT Sales Function"
         VendCust: Record "NCT Customer & Vendor Branch";
     begin
         IF SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.") THEN BEGIN
+            InvoicePostBuffer."NCT Tax Invoice No." := SalesHeader."No.";
             InvoicePostBuffer."NCT Head Office" := SalesHeader."NCT Head Office";
             InvoicePostBuffer."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
             InvoicePostBuffer."NCT VAT Registration No." := SalesHeader."VAT Registration No.";

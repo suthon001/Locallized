@@ -382,6 +382,7 @@ codeunit 80000 "NCT Journal Function"
     var
         VendCust: Record "NCT Customer & Vendor Branch";
     begin
+        GenJournalLine."NCT Tax Invoice No." := SalesHeader."No.";
         GenJournalLine."NCT Description Voucher" := SalesHeader."Posting Description";
         GenJournalLine."NCT Head Office" := SalesHeader."NCT Head Office";
         GenJournalLine."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
