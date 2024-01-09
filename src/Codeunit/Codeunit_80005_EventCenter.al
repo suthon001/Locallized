@@ -4,6 +4,109 @@
 codeunit 80005 "NCT EventFunction"
 {
     Permissions = TableData "G/L Entry" = rimd, tabledata "VAT Entry" = rimd, tabledata "Purch. Rcpt. Line" = imd, tabledata "Return Shipment Line" = imd, tabledata "Sales Shipment Line" = imd;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnBeforeCheckGenPostingType', '', false, false)]
+    local procedure OnBeforeCheckGenPostingType(var IsHandled: Boolean; GenJnlLine: Record "Gen. Journal Line"; AccountType: Enum "Gen. Journal Account Type")
+    var
+
+    begin
+        if (AccountType = AccountType::Customer) and
+           (GenJnlLine."Gen. Posting Type" = GenJnlLine."Gen. Posting Type"::Purchase) or
+           (AccountType = AccountType::Vendor) and
+           (GenJnlLine."Gen. Posting Type" = GenJnlLine."Gen. Posting Type"::Sale)
+        then
+            IsHandled := true;
+
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Check Line", 'OnBeforeCheckAccountNo', '', false, false)]
+    local procedure OnBeforeCheckAccountNo(var CheckDone: Boolean; var GenJnlLine: Record "Gen. Journal Line")
+    var
+        GEnJnlCheckLine: Codeunit "Gen. Jnl.-Check Line";
+        Text003: Label 'must have the same sign as %1';
+    begin
+        case GenJnlLine."Account Type" of
+            GenJnlLine."Account Type"::Customer, GenJnlLine."Account Type"::Vendor, GenJnlLine."Account Type"::Employee:
+                begin
+                    GenJnlLine.TestField("Gen. Bus. Posting Group", '', ErrorInfo.Create());
+                    GenJnlLine.TestField("Gen. Prod. Posting Group", '', ErrorInfo.Create());
+                    GenJnlLine.TestField("VAT Bus. Posting Group", '', ErrorInfo.Create());
+                    GenJnlLine.TestField("VAT Prod. Posting Group", '', ErrorInfo.Create());
+
+                    IDGCheckAccountType(GenJnlLine);
+
+                    GEnJnlCheckLine.CheckDocType(GenJnlLine);
+
+                    if not GenJnlLine."System-Created Entry" and
+                       (((GenJnlLine.Amount < 0) xor (GenJnlLine."Sales/Purch. (LCY)" < 0)) and (GenJnlLine.Amount <> 0) and (GenJnlLine."Sales/Purch. (LCY)" <> 0))
+                    then
+                        GenJnlLine.FieldError("Sales/Purch. (LCY)", ErrorInfo.Create(StrSubstNo(Text003, GenJnlLine.FieldCaption(Amount)), true));
+                    GenJnlLine.TestField("Job No.", '', ErrorInfo.Create());
+                    CheckICPartner(GenJnlLine."Account Type", GenJnlLine."Account No.", GenJnlLine."Document Type", GenJnlLine);
+                    CheckDone := true;
+                end;
+        end;
+    end;
+
+    local procedure CheckICPartner(AccountType: Enum "Gen. Journal Account Type"; AccountNo: Code[20]; DocumentType: Enum "Gen. Journal Document Type"; GenJnlLine: Record "Gen. Journal Line")
+    var
+        GenJnlTemplate: Record "Gen. Journal Template";
+        Customer: Record Customer;
+        Vendor: Record Vendor;
+        ICPartner: Record "IC Partner";
+        Employee: Record Employee;
+    begin
+        if not GenJnlTemplate.GET(GenJnlLine."Journal Template Name") then
+            GenJnlTemplate.Init();
+
+        case AccountType of
+            AccountType::Customer:
+                if Customer.Get(AccountNo) then begin
+                    Customer.CheckBlockedCustOnJnls(Customer, DocumentType, true);
+                    if (Customer."IC Partner Code" <> '') and (GenJnlTemplate.Type = GenJnlTemplate.Type::Intercompany) and
+                       ICPartner.Get(Customer."IC Partner Code")
+                    then
+                        ICPartner.CheckICPartnerIndirect(Format(AccountType), AccountNo);
+                end;
+            AccountType::Vendor:
+                if Vendor.Get(AccountNo) then begin
+                    Vendor.CheckBlockedVendOnJnls(Vendor, DocumentType, true);
+                    if (Vendor."IC Partner Code" <> '') and (GenJnlTemplate.Type = GenJnlTemplate.Type::Intercompany) and
+                       ICPartner.Get(Vendor."IC Partner Code")
+                    then
+                        ICPartner.CheckICPartnerIndirect(Format(AccountType), AccountNo);
+                end;
+            AccountType::Employee:
+                if Employee.Get(AccountNo) then
+                    Employee.CheckBlockedEmployeeOnJnls(true)
+        end;
+    end;
+
+    local procedure IDGCheckAccountType(GenJnlLine: Record "Gen. Journal Line")
+    var
+        Text010: Label '%1 %2 and %3 %4 is not allowed.';
+    begin
+        if ((GenJnlLine."Account Type" = GenJnlLine."Account Type"::Customer) and
+            (GenJnlLine."Bal. Gen. Posting Type" = GenJnlLine."Bal. Gen. Posting Type"::Purchase)) or
+           ((GenJnlLine."Account Type" = GenJnlLine."Account Type"::Vendor) and
+            (GenJnlLine."Bal. Gen. Posting Type" = GenJnlLine."Bal. Gen. Posting Type"::Sale))
+        then
+            Error(
+                ErrorInfo.Create(
+                    StrSubstNo(
+                        Text010,
+                        GenJnlLine.FieldCaption("Account Type"), GenJnlLine."Account Type",
+                        GenJnlLine.FieldCaption("Bal. Gen. Posting Type"), GenJnlLine."Bal. Gen. Posting Type"),
+                    true,
+                    GenJnlLine));
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeValidateGenPostingType', '', false, false)]
+    local procedure OnBeforeValidateGenPostingType(var CheckIfFieldIsEmpty: Boolean)
+    begin
+        CheckIfFieldIsEmpty := false;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnBeforePostFixedAsset', '', false, false)]
     local procedure OnBeforePostFixedAsset(var GenJournalLine: Record "Gen. Journal Line"; var IsHandled: Boolean; sender: Codeunit "Gen. Jnl.-Post Line")
     begin
