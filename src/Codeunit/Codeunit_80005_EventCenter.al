@@ -4,6 +4,92 @@
 codeunit 80005 "NCT EventFunction"
 {
     Permissions = TableData "G/L Entry" = rimd, tabledata "VAT Entry" = rimd, tabledata "Purch. Rcpt. Line" = imd, tabledata "Return Shipment Line" = imd, tabledata "Sales Shipment Line" = imd;
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnBeforePostFixedAsset', '', false, false)]
+    local procedure OnBeforePostFixedAsset(var GenJournalLine: Record "Gen. Journal Line"; var IsHandled: Boolean; sender: Codeunit "Gen. Jnl.-Post Line")
+    begin
+        PostFixedAsset(GenJournalLine, sender);
+        IsHandled := true;
+    end;
+
+    local procedure PostFixedAsset(GenJnlLine: Record "Gen. Journal Line"; GenJnlPostLine: codeunit "Gen. Jnl.-Post Line")
+    var
+        GLEntry: Record "G/L Entry";
+        GLEntry2: Record "G/L Entry";
+        TempFAGLPostBuf: Record "FA G/L Posting Buffer" temporary;
+        FAGLPostBuf: Record "FA G/L Posting Buffer";
+        VATPostingSetup: Record "VAT Posting Setup";
+        GLReg: Record "G/L Register";
+        FAAutomaticEntry: Codeunit "FA Automatic Entry";
+        FAJnlPostLine: Codeunit "NCT FA Jnl.-Post Line";
+        ShortcutDim1Code: Code[20];
+        ShortcutDim2Code: Code[20];
+        Correction2: Boolean;
+        NetDisposalNo: Integer;
+        DimensionSetID: Integer;
+        VATEntryGLEntryNo: Integer;
+    begin
+        GenJnlPostLine.GetGLReg(GLReg);
+        GenJnlPostLine.InitGLEntry(GenJnlLine, GLEntry, '', GenJnlLine."Amount (LCY)", GenJnlLine."Source Currency Amount", true, GenJnlLine."System-Created Entry");
+        GLEntry."Gen. Posting Type" := GenJnlLine."Gen. Posting Type";
+        GLEntry."Bal. Account Type" := GenJnlLine."Bal. Account Type";
+        GLEntry."Bal. Account No." := GenJnlLine."Bal. Account No.";
+        GenJnlPostLine.InitVAT(GenJnlLine, GLEntry, VATPostingSetup);
+        GLEntry2 := GLEntry;
+        FAJnlPostLine.GenJnlPostLine(
+            GenJnlLine, GLEntry2.Amount, GLEntry2."VAT Amount", GenJnlPostLine.GetNextTransactionNo(), GenJnlPostLine.GetNextEntryNo(), GLReg."No.");
+        ShortcutDim1Code := GenJnlLine."Shortcut Dimension 1 Code";
+        ShortcutDim2Code := GenJnlLine."Shortcut Dimension 2 Code";
+        DimensionSetID := GenJnlLine."Dimension Set ID";
+        Correction2 := GenJnlLine.Correction;
+        if FAJnlPostLine.FindFirstGLAcc(TempFAGLPostBuf) then
+            repeat
+                GenJnlLine."Shortcut Dimension 1 Code" := TempFAGLPostBuf."Global Dimension 1 Code";
+                GenJnlLine."Shortcut Dimension 2 Code" := TempFAGLPostBuf."Global Dimension 2 Code";
+                GenJnlLine."Dimension Set ID" := TempFAGLPostBuf."Dimension Set ID";
+                GenJnlLine.Correction := TempFAGLPostBuf.Correction;
+                GenJnlPostLine.CheckDimValueForDisposal(GenJnlLine, TempFAGLPostBuf."Account No.");
+                if TempFAGLPostBuf."Original General Journal Line" then
+                    GenJnlPostLine.InitGLEntry(GenJnlLine, GLEntry, TempFAGLPostBuf."Account No.", TempFAGLPostBuf.Amount, GLEntry2."Additional-Currency Amount", true, true)
+                else begin
+                    GenJnlPostLine.CheckNonAddCurrCodeOccurred('');
+                    GenJnlPostLine.InitGLEntry(GenJnlLine, GLEntry, TempFAGLPostBuf."Account No.", TempFAGLPostBuf.Amount, 0, false, true);
+                end;
+                GLEntry.CopyPostingGroupsFromGLEntry(GLEntry2);
+                GLEntry."VAT Amount" := GLEntry2."VAT Amount";
+                GLEntry."Bal. Account Type" := GLEntry2."Bal. Account Type";
+                GLEntry."Bal. Account No." := GLEntry2."Bal. Account No.";
+                GLEntry."FA Entry Type" := TempFAGLPostBuf."FA Entry Type";
+                GLEntry."FA Entry No." := TempFAGLPostBuf."FA Entry No.";
+                if TempFAGLPostBuf."Net Disposal" then
+                    NetDisposalNo := NetDisposalNo + 1
+                else
+                    NetDisposalNo := 0;
+                if TempFAGLPostBuf."Automatic Entry" and not TempFAGLPostBuf."Net Disposal" then
+                    FAAutomaticEntry.AdjustGLEntry(GLEntry);
+                if NetDisposalNo > 1 then
+                    GLEntry."VAT Amount" := 0;
+                if TempFAGLPostBuf."FA Posting Group" <> '' then begin
+                    FAGLPostBuf := TempFAGLPostBuf;
+                    FAGLPostBuf."Entry No." := GenJnlPostLine.GetNextEntryNo();
+                    FAGLPostBuf.Insert();
+                end;
+                GenJnlPostLine.InsertGLEntry(GenJnlLine, GLEntry, true);
+                if (VATEntryGLEntryNo = 0) and (GLEntry."Gen. Posting Type" <> GLEntry."Gen. Posting Type"::" ") then
+                    VATEntryGLEntryNo := GLEntry."Entry No.";
+            until FAJnlPostLine.GetNextGLAcc(TempFAGLPostBuf) = 0;
+        GenJnlLine."Shortcut Dimension 1 Code" := ShortcutDim1Code;
+        GenJnlLine."Shortcut Dimension 2 Code" := ShortcutDim2Code;
+        GenJnlLine."Dimension Set ID" := DimensionSetID;
+        GenJnlLine.Correction := Correction2;
+        GenJnlLine."FA G/L Account No." := GLEntry."G/L Account No.";
+        GLEntry := GLEntry2;
+        if VATEntryGLEntryNo = 0 then
+            VATEntryGLEntryNo := GLEntry."Entry No.";
+        GenJnlPostLine.SetTempGLEntryBufEntryNo(VATEntryGLEntryNo);
+        GenJnlPostLine.PostVAT(GenJnlLine, GLEntry, VATPostingSetup);
+        FAJnlPostLine.UpdateRegNo(GLReg."No.");
+
+    end;
 
     [EventSubscriber(ObjectType::Page, Page::"Fixed Asset Card", 'OnBeforeUpdateDepreciationBook', '', false, false)]
     local procedure OnBeforeUpdateDepreciationBook(var IsHandled: Boolean; var FADepreciationBook: Record "FA Depreciation Book"; var FixedAssetNo: Code[20])

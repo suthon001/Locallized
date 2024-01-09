@@ -54,6 +54,7 @@ permissionset 80000 "NCT LCL Permission"
         codeunit "NCT Calculate Normal Dep" = X,
         codeunit "NCT Clean Transactions" = X,
         codeunit "NCT Journal Function" = X,
+        codeunit "NCT FA Jnl.-Post Line" = X,
         page "NCT Cust. & Vendor BranchLists" = X,
         page "NCT Requisition Line Posted" = X,
         page "NCT WHT Business Posting Group" = X,
