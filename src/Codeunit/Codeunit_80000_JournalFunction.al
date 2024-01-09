@@ -323,7 +323,7 @@ codeunit 80000 "NCT Journal Function"
 
 
 
-    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromPurchHeader', '', true, true)]
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromPurchHeader', '', false, false)]
     /// <summary> 
     /// Description for CopyHeaderFromPurchaseHeader.
     /// </summary>
@@ -333,18 +333,35 @@ codeunit 80000 "NCT Journal Function"
     var
         VendCust: Record "NCT Customer & Vendor Branch";
     begin
-
         GenJournalLine."NCT Journal Description" := PurchaseHeader."Posting Description";
+        GenJournalLine."NCT Tax Invoice Name" := PurchaseHeader."Pay-to Name";
+        GenJournalLine."NCT Tax Invoice Name 2" := PurchaseHeader."Pay-to Name 2";
         GenJournalLine."NCT Head Office" := PurchaseHeader."NCT Head Office";
         GenJournalLine."NCT VAT Branch Code" := PurchaseHeader."NCT VAT Branch Code";
-        if VendCust.Get(VendCust."Source Type"::Vendor, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."NCT Head Office", PurchaseHeader."NCT VAT Branch Code") then
-            if VendCust."Title Name" <> '' then
-                GenJournalLine."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
-            else
-                GenJournalLine."NCT Tax Invoice Name" := VendCust."Name";
+        GenJournalLine."NCT Tax Invoice Address" := PurchaseHeader."Pay-to Address";
+        GenJournalLine."NCT Tax Invoice Address 2" := PurchaseHeader."Pay-to Address 2";
+        GenJournalLine."NCT Tax Invoice City" := PurchaseHeader."Pay-to City";
+        GenJournalLine."NCT Tax Invoice Post Code" := PurchaseHeader."Pay-to Post Code";
+        if not PurchaseHeader."NCT Head Office" then
+            if VendCust.Get(VendCust."Source Type"::Vendor, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."NCT Head Office", PurchaseHeader."NCT VAT Branch Code") then begin
+                if VendCust."Name" <> '' then
+                    if VendCust."Title Name" <> '' then
+                        GenJournalLine."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
+                    else
+                        GenJournalLine."NCT Tax Invoice Name" := VendCust."Name";
 
-        if GenJournalLine."NCT Tax Invoice Name" = '' then
-            GenJournalLine."NCT Tax Invoice Name" := PurchaseHeader."Pay-to Name";
+                if VendCust."Address" <> '' then
+                    GenJournalLine."NCT Tax Invoice Address" := VendCust."Address";
+                if VendCust."Address 2" <> '' then
+                    GenJournalLine."NCT Tax Invoice Address 2" := VendCust."Address 2";
+                if VendCust."Province" <> '' then
+                    GenJournalLine."NCT Tax Invoice City" := VendCust."Province";
+                if VendCust."Post Code" <> '' then
+                    GenJournalLine."NCT Tax Invoice Post Code" := VendCust."Post Code";
+
+            end;
+
+
         if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::"Credit Memo" then
             if PurchaseHeader."Vendor Cr. Memo No." <> '' then
                 GenJournalLine."NCT Tax Invoice No." := PurchaseHeader."Vendor Cr. Memo No.";
@@ -362,11 +379,39 @@ codeunit 80000 "NCT Journal Function"
     /// <param name="SalesHeader">Parameter of type Record "Sales Header".</param>
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     local procedure "CopyHeaderFromSalesHeader"(SalesHeader: Record "Sales Header"; var GenJournalLine: Record "Gen. Journal Line")
+    var
+        VendCust: Record "NCT Customer & Vendor Branch";
     begin
-
-        GenJournalLine."NCT Journal Description" := SalesHeader."Posting Description";
+        GenJournalLine."NCT Description Voucher" := SalesHeader."Posting Description";
         GenJournalLine."NCT Head Office" := SalesHeader."NCT Head Office";
         GenJournalLine."NCT VAT Branch Code" := SalesHeader."NCT VAT Branch Code";
+        GenJournalLine."NCT Tax Invoice Date" := SalesHeader."Document Date";
+        GenJournalLine."NCT Tax Invoice Name" := SalesHeader."Bill-to Name";
+        GenJournalLine."NCT Tax Invoice Name 2" := SalesHeader."Bill-to Name 2";
+        GenJournalLine."NCT Tax Invoice Address" := SalesHeader."Bill-to Address";
+        GenJournalLine."NCT Tax Invoice Address 2" := SalesHeader."Bill-to Address 2";
+        GenJournalLine."NCT Tax Invoice City" := SalesHeader."Bill-to city";
+        GenJournalLine."NCT Tax Invoice Post Code" := SalesHeader."Bill-to Post Code";
+        if not SalesHeader."NCT Head Office" then
+            if VendCust.Get(VendCust."Source Type"::Customer, SalesHeader."Bill-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then begin
+                if VendCust."Name" <> '' then
+                    if VendCust."Title Name" <> '' then
+                        GenJournalLine."NCT Tax Invoice Name" := format(VendCust."Title Name") + ' ' + VendCust."Name"
+                    else
+                        GenJournalLine."NCT Tax Invoice Name" := VendCust."Name";
+                if VendCust."Address" <> '' then
+                    GenJournalLine."NCT Tax Invoice Address" := VendCust."Address";
+                if VendCust."Address 2" <> '' then
+                    GenJournalLine."NCT Tax Invoice Address 2" := VendCust."Address 2";
+                if VendCust."Province" <> '' then
+                    GenJournalLine."NCT Tax Invoice City" := VendCust."Province";
+                if VendCust."Post Code" <> '' then
+                    GenJournalLine."NCT Tax Invoice Post Code" := VendCust."Post Code";
+            end;
+
+
+
+
         "NCT AfterCopySalesHeaderToGenLine"(GenJournalLine, SalesHeader);
 
     end;

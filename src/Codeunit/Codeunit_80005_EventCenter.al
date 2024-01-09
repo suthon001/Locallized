@@ -33,7 +33,7 @@ codeunit 80005 "NCT EventFunction"
                     GenJnlLine.TestField("VAT Bus. Posting Group", '', ErrorInfo.Create());
                     GenJnlLine.TestField("VAT Prod. Posting Group", '', ErrorInfo.Create());
 
-                    IDGCheckAccountType(GenJnlLine);
+                    CheckAccountType(GenJnlLine);
 
                     GEnJnlCheckLine.CheckDocType(GenJnlLine);
 
@@ -82,7 +82,7 @@ codeunit 80005 "NCT EventFunction"
         end;
     end;
 
-    local procedure IDGCheckAccountType(GenJnlLine: Record "Gen. Journal Line")
+    local procedure CheckAccountType(GenJnlLine: Record "Gen. Journal Line")
     var
         Text010: Label '%1 %2 and %3 %4 is not allowed.';
     begin
