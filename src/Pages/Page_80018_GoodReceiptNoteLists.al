@@ -695,7 +695,7 @@ page 80018 "NCT Goods Receipt Note List"
 
     var
         TestReportPrint: Codeunit "Test Report-Print";
-        [InDataSet]
+
         JobQueueActive: Boolean;
 
         SkipLinesWithoutVAT: Boolean;

@@ -825,6 +825,16 @@ report 80060 "NCT Aged Accounts Payable"
         end;
     end;
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewEndingDate">Date.</param>
+    /// <param name="NewAgingBy">Option.</param>
+    /// <param name="NewPeriodLength">DateFormula.</param>
+    /// <param name="NewPrintAmountInLCY">Boolean.</param>
+    /// <param name="NewPrintDetails">Boolean.</param>
+    /// <param name="NewHeadingType">Option.</param>
+    /// <param name="NewNewPagePerVendor">Boolean.</param>
     procedure InitializeRequest(NewEndingDate: Date; NewAgingBy: Option; NewPeriodLength: DateFormula; NewPrintAmountInLCY: Boolean; NewPrintDetails: Boolean; NewHeadingType: Option; NewNewPagePerVendor: Boolean)
     begin
         EndingDate := NewEndingDate;

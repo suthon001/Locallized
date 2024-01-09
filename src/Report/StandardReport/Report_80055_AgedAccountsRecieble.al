@@ -906,6 +906,16 @@ report 80055 "NCT Aged Acc. Receivable"
         // end;
     end;
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewEndingDate">Date.</param>
+    /// <param name="NewAgingBy">Option.</param>
+    /// <param name="NewPeriodLength">DateFormula.</param>
+    /// <param name="NewPrintAmountInLCY">Boolean.</param>
+    /// <param name="NewPrintDetails">Boolean.</param>
+    /// <param name="NewHeadingType">Option.</param>
+    /// <param name="NewPagePercust">Boolean.</param>
     procedure InitializeRequest(NewEndingDate: Date; NewAgingBy: Option; NewPeriodLength: DateFormula; NewPrintAmountInLCY: Boolean; NewPrintDetails: Boolean; NewHeadingType: Option; NewPagePercust: Boolean)
     begin
         EndingDate := NewEndingDate;

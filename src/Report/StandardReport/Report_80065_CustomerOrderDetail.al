@@ -341,10 +341,15 @@ report 80065 "NCT Customer - Order Detail"
         OutstandingOrdersCaptionLbl: Label 'Outstanding Orders';
         TotalCaptionLbl: Label 'Total';
 
-    procedure InitializeRequest(ShowAmountInLCY: Boolean; NewPagePerCustomer: Boolean)
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="ShowAmountInLCY">Boolean.</param>
+    /// <param name="pNewPagePerCustomer">Boolean.</param>
+    procedure InitializeRequest(ShowAmountInLCY: Boolean; pNewPagePerCustomer: Boolean)
     begin
         PrintAmountsInLCY := ShowAmountInLCY;
-        PrintOnlyOnePerPage := NewPagePerCustomer;
+        PrintOnlyOnePerPage := pNewPagePerCustomer;
     end;
 }
 

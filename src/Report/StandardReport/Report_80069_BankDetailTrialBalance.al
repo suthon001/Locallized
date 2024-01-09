@@ -264,6 +264,12 @@ report 80069 "NCT Bank Acc.Detail Trial Bal."
         BankAccBalanceLCYCaptionLbl: Label 'Balance (LCY)';
         ContinuedCaptionLbl: Label 'Continued';
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewPrintOnlyOnePerPage">Boolean.</param>
+    /// <param name="NewExcludeBalanceOnly">Boolean.</param>
+    /// <param name="NewPrintReversedEntries">Boolean.</param>
     procedure InitializeRequest(NewPrintOnlyOnePerPage: Boolean; NewExcludeBalanceOnly: Boolean; NewPrintReversedEntries: Boolean)
     begin
         PrintOnlyOnePerPage := NewPrintOnlyOnePerPage;

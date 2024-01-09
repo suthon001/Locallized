@@ -1540,7 +1540,7 @@ page 80019 "NCT Goods Receipt Note Card"
         ShipToOptions: Option "Default (Company Address)",Location,"Customer Address","Custom Address";
         PayToOptions: Option "Default (Vendor)","Another Vendor","Custom Address";
 
-        [InDataSet]
+
         HasIncomingDocument: Boolean;
         DocNoVisible: Boolean;
         VendorInvoiceNoMandatory, RejectICPurchaseOrderEnabled : Boolean;

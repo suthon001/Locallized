@@ -390,6 +390,12 @@ report 80061 "NCT Vendor - Balance to Date"
         DtldVendLedgDocumentNo: Code[35];
         DocNoCaption: Text;
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewPrintAmountInLCY">Boolean.</param>
+    /// <param name="NewPrintOnePrPage">Boolean.</param>
+    /// <param name="NewPrintUnappliedEntries">Boolean.</param>
     procedure InitializeRequest(NewPrintAmountInLCY: Boolean; NewPrintOnePrPage: Boolean; NewPrintUnappliedEntries: Boolean)
     begin
         PrintAmountInLCY := NewPrintAmountInLCY;

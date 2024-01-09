@@ -375,14 +375,14 @@ report 80059 "NCT Fixed Asset - Book Value01"
         FAGenReport: Codeunit "FA General Report";
         BudgetDepreciation: Codeunit "Budget Depreciation";
         FAFilter: Text;
-        MainHeadLineText: Text[100];
-        DeprBookText: Text[50];
-        GroupCodeName: Text[50];
-        GroupHeadLine: Text[50];
-        FANo: Text[50];
-        FADescription: Text[100];
+        MainHeadLineText: Text;
+        DeprBookText: Text;
+        GroupCodeName: Text;
+        GroupHeadLine: Text;
+        FANo: Text;
+        FADescription: Text;
         GroupTotals: Option " ","FA Class","FA Subclass","FA Location","Main Asset","Global Dimension 1","Global Dimension 2","FA Posting Group";
-        HeadLineText: array[10] of Text[50];
+        HeadLineText: array[10] of Text;
         StartAmounts: array[6] of Decimal;
         NetChangeAmounts: array[6] of Decimal;
         DisposalAmounts: array[6] of Decimal;
@@ -428,34 +428,34 @@ report 80059 "NCT Fixed Asset - Book Value01"
         DeprBookCode: Code[10];
         PrintDetails: Boolean;
 
-    local procedure AddPostingType(PostingType: Option "Write-Down",Appreciation,"Custom 1","Custom 2")
+    local procedure AddPostingType(pPostingType: Option "Write-Down",Appreciation,"Custom 1","Custom 2")
     var
-        i: Integer;
-        j: Integer;
+        ii: Integer;
+        jj: Integer;
     begin
-        i := PostingType + 3;
-        case PostingType of
-            PostingType::"Write-Down":
+        ii := pPostingType + 3;
+        case pPostingType of
+            pPostingType::"Write-Down":
                 FAPostingTypeSetup.Get(DeprBookCode, FAPostingTypeSetup."FA Posting Type"::"Write-Down");
-            PostingType::Appreciation:
+            pPostingType::Appreciation:
                 FAPostingTypeSetup.Get(DeprBookCode, FAPostingTypeSetup."FA Posting Type"::Appreciation);
-            PostingType::"Custom 1":
+            pPostingType::"Custom 1":
                 FAPostingTypeSetup.Get(DeprBookCode, FAPostingTypeSetup."FA Posting Type"::"Custom 1");
-            PostingType::"Custom 2":
+            pPostingType::"Custom 2":
                 FAPostingTypeSetup.Get(DeprBookCode, FAPostingTypeSetup."FA Posting Type"::"Custom 2");
         end;
         if FAPostingTypeSetup."Depreciation Type" then
-            j := 2
+            jj := 2
         else
             if FAPostingTypeSetup."Acquisition Type" then
-                j := 1;
-        if j > 0 then begin
-            StartAmounts[j] := StartAmounts[j] + StartAmounts[i];
-            StartAmounts[i] := 0;
-            NetChangeAmounts[j] := NetChangeAmounts[j] + NetChangeAmounts[i];
-            NetChangeAmounts[i] := 0;
-            DisposalAmounts[j] := DisposalAmounts[j] + DisposalAmounts[i];
-            DisposalAmounts[i] := 0;
+                jj := 1;
+        if jj > 0 then begin
+            StartAmounts[jj] := StartAmounts[jj] + StartAmounts[ii];
+            StartAmounts[ii] := 0;
+            NetChangeAmounts[jj] := NetChangeAmounts[jj] + NetChangeAmounts[ii];
+            NetChangeAmounts[ii] := 0;
+            DisposalAmounts[jj] := DisposalAmounts[jj] + DisposalAmounts[ii];
+            DisposalAmounts[ii] := 0;
         end;
     end;
 
@@ -597,28 +597,40 @@ report 80059 "NCT Fixed Asset - Book Value01"
         end;
     end;
 
-    local procedure GetStartingDate(StartingDate: Date): Date
+    local procedure GetStartingDate(pStartingDate: Date): Date
     begin
-        if StartingDate <= 00000101D then
+        if pStartingDate <= 00000101D then
             exit(0D);
 
         exit(StartingDate - 1);
     end;
-
+    /// <summary>
+    /// SetMandatoryFields.
+    /// </summary>
+    /// <param name="DepreciationBookCodeFrom">Code[10].</param>
+    /// <param name="StartingDateFrom">Date.</param>
+    /// <param name="EndingDateFrom">Date.</param>
     procedure SetMandatoryFields(DepreciationBookCodeFrom: Code[10]; StartingDateFrom: Date; EndingDateFrom: Date)
     begin
         DeprBookCode := DepreciationBookCodeFrom;
         StartingDate := StartingDateFrom;
         EndingDate := EndingDateFrom;
     end;
-
+    /// <summary>
+    /// SetTotalFields.
+    /// </summary>
+    /// <param name="GroupTotalsFrom">Option.</param>
+    /// <param name="PrintDetailsFrom">Boolean.</param>
+    /// <param name="BudgetReportFrom">Boolean.</param>
     procedure SetTotalFields(GroupTotalsFrom: Option; PrintDetailsFrom: Boolean; BudgetReportFrom: Boolean)
     begin
         GroupTotals := GroupTotalsFrom;
         PrintDetails := PrintDetailsFrom;
         BudgetReport := BudgetReportFrom;
     end;
-
+    /// <summary>
+    /// GetDepreciationBookCode.
+    /// </summary>
     procedure GetDepreciationBookCode()
     begin
         if DeprBookCode = '' then begin

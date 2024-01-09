@@ -401,8 +401,8 @@ report 80063 "NCT Vend. Detail Trial Balance"
         PrintAmountsInLCY: Boolean;
         PrintOnlyOnePerPage: Boolean;
         VendLedgEntryExists: Boolean;
-        AmountCaption: Text[30];
-        RemainingAmtCaption: Text[30];
+        AmountCaption: Text;
+        RemainingAmtCaption: Text;
         VendCurrencyCode: Code[10];
         PageGroupNo: Integer;
         SumCorrections: Decimal;
@@ -419,6 +419,12 @@ report 80063 "NCT Vend. Detail Trial Balance"
         TotalLCYBeforePeriodCaptionLbl: Label 'Total (LCY) Before Period';
         ExternalDocNoCaptionLbl: Label 'External Doc. No.';
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewPrintAmountsInLCY">Boolean.</param>
+    /// <param name="NewPrintOnlyOnePerPage">Boolean.</param>
+    /// <param name="NewExcludeBalanceOnly">Boolean.</param>
     procedure InitializeRequest(NewPrintAmountsInLCY: Boolean; NewPrintOnlyOnePerPage: Boolean; NewExcludeBalanceOnly: Boolean)
     begin
         PrintAmountsInLCY := NewPrintAmountsInLCY;

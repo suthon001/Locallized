@@ -298,9 +298,9 @@ report 80058 "NCT Fixed Asset - List"
         PrintOnlyOnePerPage: Boolean;
         DeprBookCode: Code[10];
         FAFilter: Text;
-        ComponentFieldname: Text[100];
-        BudgetedAssetFieldname: Text[100];
-        DeprBookText: Text[50];
+        ComponentFieldname: Text;
+        BudgetedAssetFieldname: Text;
+        DeprBookText: Text;
         PageGroupNo: Integer;
         FAListCaptionLbl: Label 'Fixed Asset - List';
         CurrReportPageNoCaptionLbl: Label 'Page';

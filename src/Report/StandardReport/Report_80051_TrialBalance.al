@@ -165,7 +165,7 @@ report 80051 "NCT Trial Balance"
     var
         Text000: Label 'Period: %1';
         GLFilter: Text;
-        PeriodText: Text[30];
+        PeriodText: Text;
         Trial_BalanceCaptionLbl: Label 'Trial Balance';
         CurrReport_PAGENOCaptionLbl: Label 'Page';
         Net_ChangeCaptionLbl: Label 'Net Change';

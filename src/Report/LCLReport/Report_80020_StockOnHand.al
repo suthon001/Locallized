@@ -149,7 +149,7 @@ report 80020 "NCT Stock On Hand"
         CompanyInformation: Record "Company Information";
         ItemMo: Record Item;
         "Item Mo": Record Item;
-        [InDataSet]
+
         var_ShowItems: Boolean;
         EndingDate: Date;
         var_ZeroStock: Boolean;

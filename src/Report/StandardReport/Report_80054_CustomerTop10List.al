@@ -221,7 +221,7 @@ report 80054 "NCT Customer - Top 10 List"
         ChartType: Option "Bar chart","Pie chart";
         ChartTypeNo: Integer;
         ShowTypeNo: Integer;
-        [InDataSet]
+
         ChartTypeVisible: Boolean;
         CustomerTop10ListCaptionLbl: Label 'Customer - Top 10 List';
         CurrReportPageNoCaptionLbl: Label 'Page';
@@ -229,6 +229,12 @@ report 80054 "NCT Customer - Top 10 List"
         TotalSalesCaptionLbl: Label 'Total Sales';
         PercentofTotalSalesCaptionLbl: Label '% of Total Sales';
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="SetChartType">Option.</param>
+    /// <param name="SetShowType">Option.</param>
+    /// <param name="NoOfRecords">Integer.</param>
     procedure InitializeRequest(SetChartType: Option; SetShowType: Option; NoOfRecords: Integer)
     begin
         ChartType := SetChartType;

@@ -196,7 +196,7 @@ report 80074 "NCT Inv.Transaction Detail"
     var
         Text000: Label 'Period: %1';
         ItemFilter: Text;
-        ItemDateFilter: Text[30];
+        ItemDateFilter: Text;
         ItemOnHand: Decimal;
         StartOnHand: Decimal;
         IncreasesQty: Decimal;
@@ -212,6 +212,10 @@ report 80074 "NCT Inv.Transaction Detail"
         ItemOnHandCaptionLbl: Label 'Inventory';
         ContinuedCaptionLbl: Label 'Continued';
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewPrintOnlyOnePerPage">Boolean.</param>
     procedure InitializeRequest(NewPrintOnlyOnePerPage: Boolean)
     begin
         PrintOnlyOnePerPage := NewPrintOnlyOnePerPage;

@@ -376,6 +376,13 @@ report 80056 "NCT Customer Balance to Date"
         TotalCaptionLbl: Label 'Total';
         BlankMaxDateErr: Label 'Ending Date must have a value.';
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewPrintAmountInLCY">Boolean.</param>
+    /// <param name="NewPrintOnePrPage">Boolean.</param>
+    /// <param name="NewPrintUnappliedEntries">Boolean.</param>
+    /// <param name="NewEndingDate">Date.</param>
     procedure InitializeRequest(NewPrintAmountInLCY: Boolean; NewPrintOnePrPage: Boolean; NewPrintUnappliedEntries: Boolean; NewEndingDate: Date)
     begin
         PrintAmountInLCY := NewPrintAmountInLCY;

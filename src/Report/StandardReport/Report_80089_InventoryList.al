@@ -1,3 +1,6 @@
+/// <summary>
+/// Report NCT Inventory - List (ID 80089).
+/// </summary>
 report 80089 "NCT Inventory - List"
 {
     DefaultLayout = RDLC;
@@ -73,22 +76,6 @@ report 80089 "NCT Inventory - List"
             {
             }
         }
-    }
-
-    requestpage
-    {
-
-        layout
-        {
-        }
-
-        actions
-        {
-        }
-    }
-
-    labels
-    {
     }
 
     trigger OnPreReport()

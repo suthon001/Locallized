@@ -415,16 +415,30 @@ report 80071 "NCT Inventory Valuation"
         exit(not ItemLedgEntry.Find());
     end;
 
+    /// <summary>
+    /// SetStartDate.
+    /// </summary>
+    /// <param name="DateValue">Date.</param>
     procedure SetStartDate(DateValue: Date)
     begin
         StartDate := DateValue;
     end;
 
+    /// <summary>
+    /// SetEndDate.
+    /// </summary>
+    /// <param name="DateValue">Date.</param>
     procedure SetEndDate(DateValue: Date)
     begin
         EndDate := DateValue;
     end;
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewStartDate">Date.</param>
+    /// <param name="NewEndDate">Date.</param>
+    /// <param name="NewShowExpected">Boolean.</param>
     procedure InitializeRequest(NewStartDate: Date; NewEndDate: Date; NewShowExpected: Boolean)
     begin
         StartDate := NewStartDate;

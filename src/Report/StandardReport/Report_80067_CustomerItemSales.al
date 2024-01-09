@@ -284,6 +284,10 @@ report 80067 "NCT Customer/Item Sales"
         ProfitPct_Control47CaptionLbl: Label 'Profit %';
         TotalCaptionLbl: Label 'Total';
 
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="NewPagePerCustomer">Boolean.</param>
     procedure InitializeRequest(NewPagePerCustomer: Boolean)
     begin
         PrintOnlyOnePerPage := NewPagePerCustomer;

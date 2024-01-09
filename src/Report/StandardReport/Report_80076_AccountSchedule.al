@@ -988,6 +988,7 @@ Report 80076 "NCT Account Schedule"
         ColumnLayout.SetFilter("Rounding Factor", '<>%1&<>%2', ColumnLayout."Rounding Factor"::None, ColumnLayout."Rounding Factor"::"1");
         ShowRoundingHeader := not ColumnLayout.IsEmpty();
     end;
+
     /// <summary>
     /// SetAccSchedName.
     /// </summary>
@@ -997,6 +998,7 @@ Report 80076 "NCT Account Schedule"
         AccSchedNameHidden := NewAccSchedName;
         AccSchedNameEditable := true;
     end;
+
     /// <summary>
     /// SetAccSchedNameNonEditable.
     /// </summary>
@@ -1006,6 +1008,7 @@ Report 80076 "NCT Account Schedule"
         SetAccSchedName(NewAccSchedName);
         AccSchedNameEditable := false;
     end;
+
     /// <summary>
     /// SetFinancialReportNameNonEditable.
     /// </summary>
@@ -1015,6 +1018,7 @@ Report 80076 "NCT Account Schedule"
         SetFinancialReportName(NewAccSchedName);
         AccSchedNameEditable := false;
     end;
+
     /// <summary>
     /// SetFinancialReportName.
     /// </summary>
@@ -1029,6 +1033,7 @@ Report 80076 "NCT Account Schedule"
             AccSchedNameEditable := false;
         end;
     end;
+
     /// <summary>
     /// SetColumnLayoutName.
     /// </summary>
@@ -1037,6 +1042,7 @@ Report 80076 "NCT Account Schedule"
     begin
         ColumnLayoutNameHidden := ColLayoutName;
     end;
+
     /// <summary>
     /// SetFilters.
     /// </summary>
@@ -1062,6 +1068,7 @@ Report 80076 "NCT Account Schedule"
         ContextInitialized := false;
         OnAfterSetFilters(AccScheduleName, CostCenterFilter, CostObjectFilter, CashFlowFilter, CurrReport.UseRequestPage());
     end;
+
     /// <summary>
     /// SetFilters.
     /// </summary>
@@ -1093,6 +1100,7 @@ Report 80076 "NCT Account Schedule"
         UseHiddenFilters := true;
         OnAfterSetFilters(AccScheduleName, CostCenterFilter, CostObjectFilter, pCashFlowFilter, CurrReport.UseRequestPage());
     end;
+
     /// <summary>
     /// ShowLine.
     /// </summary>
@@ -1112,13 +1120,8 @@ Report 80076 "NCT Account Schedule"
 
         exit(true);
     end;
-    /// <summary>
-    /// FormLookUpDimFilter.
-    /// </summary>
-    /// <param name="Dim">Code[20].</param>
-    /// <param name="Text">VAR Text[1024].</param>
-    /// <returns>Return value of type Boolean.</returns>
-    local procedure FormLookUpDimFilter(Dim: Code[20]; var Text: Text[1024]): Boolean
+
+    local procedure FormLookUpDimFilter(Dim: Code[20]; var Text: Text): Boolean
     var
         DimVal: Record "Dimension Value";
         DimValList: Page "Dimension Value List";
@@ -1136,11 +1139,7 @@ Report 80076 "NCT Account Schedule"
         end;
         exit(false)
     end;
-    /// <summary>
-    /// FormGetCaptionClass.
-    /// </summary>
-    /// <param name="DimNo">Integer.</param>
-    /// <returns>Return value of type Text[250].</returns>
+
     local procedure FormGetCaptionClass(DimNo: Integer): Text[250]
     begin
         case DimNo of
@@ -1296,7 +1295,7 @@ Report 80076 "NCT Account Schedule"
             ValidateDateFilter(StrSubstNo('%1..%2', StartDate, EndDate));
     end;
 
-    local procedure ValidateDateFilter(NewDateFilter: Text[30])
+    local procedure ValidateDateFilter(NewDateFilter: Text)
     var
         FilterTokens: Codeunit "Filter Tokens";
     begin

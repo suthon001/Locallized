@@ -368,9 +368,15 @@ report 80053 "NCT Customer - Summary Aging"
         LineTotalCustBalanceCaptionLbl: Label 'Balance';
         Total_LCY_CaptionLbl: Label 'Total (LCY)';
 
-    procedure InitializeRequest(StartingDate: Date; SetPeriodLength: Text[1024]; ShowAmountInLCY: Boolean)
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="pStartingDate">Date.</param>
+    /// <param name="SetPeriodLength">Text[1024].</param>
+    /// <param name="ShowAmountInLCY">Boolean.</param>
+    procedure InitializeRequest(pStartingDate: Date; SetPeriodLength: Text[1024]; ShowAmountInLCY: Boolean)
     begin
-        PeriodStartDate[2] := StartingDate;
+        PeriodStartDate[2] := pStartingDate;
         Evaluate(PeriodLength, SetPeriodLength);
         PrintAmountsInLCY := ShowAmountInLCY;
     end;

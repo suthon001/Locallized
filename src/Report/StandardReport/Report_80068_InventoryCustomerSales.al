@@ -179,7 +179,7 @@ report 80068 "NCT Inventory Customer Sales"
         exit(0);
     end;
 
-    local procedure IncrLineAmounts(var ValueEntryBuf: Record "Value Entry"; CurrItemLedgEntry: Record "Item Ledger Entry")
+    local procedure IncrLineAmounts(var pValueEntryBuf: Record "Value Entry"; CurrItemLedgEntry: Record "Item Ledger Entry")
     var
         Profit: Decimal;
         DiscountAmount: Decimal;
@@ -188,24 +188,24 @@ report 80068 "NCT Inventory Customer Sales"
         Profit := CurrItemLedgEntry."Sales Amount (Actual)" + CurrItemLedgEntry."Cost Amount (Actual)" + CurrItemLedgEntry."Cost Amount (Non-Invtbl.)";
         DiscountAmount := CalcDiscountAmount(CurrItemLedgEntry."Entry No.");
 
-        if ValueEntryBuf."Item No." = '' then begin
-            ValueEntryBuf.Init();
-            ValueEntryBuf."Item No." := CurrItemLedgEntry."Item No.";
-            ValueEntryBuf."Source No." := CurrItemLedgEntry."Source No.";
+        if pValueEntryBuf."Item No." = '' then begin
+            pValueEntryBuf.Init();
+            pValueEntryBuf."Item No." := CurrItemLedgEntry."Item No.";
+            pValueEntryBuf."Source No." := CurrItemLedgEntry."Source No.";
         end;
-        ValueEntryBuf."Invoiced Quantity" += CurrItemLedgEntry."Invoiced Quantity";
-        ValueEntryBuf."Sales Amount (Actual)" += CurrItemLedgEntry."Sales Amount (Actual)";
-        ValueEntryBuf."Sales Amount (Expected)" += Profit;
-        ValueEntryBuf."Purchase Amount (Expected)" += DiscountAmount;
+        pValueEntryBuf."Invoiced Quantity" += CurrItemLedgEntry."Invoiced Quantity";
+        pValueEntryBuf."Sales Amount (Actual)" += CurrItemLedgEntry."Sales Amount (Actual)";
+        pValueEntryBuf."Sales Amount (Expected)" += Profit;
+        pValueEntryBuf."Purchase Amount (Expected)" += DiscountAmount;
     end;
 
-    local procedure AddReportLine(var ValueEntryBuf: Record "Value Entry")
+    local procedure AddReportLine(var pValueEntryBuf: Record "Value Entry")
     begin
-        TempValueEntryBuf := ValueEntryBuf;
+        TempValueEntryBuf := pValueEntryBuf;
         ReportLineNo += 1;
         TempValueEntryBuf."Entry No." := ReportLineNo;
         TempValueEntryBuf.Insert();
-        Clear(ValueEntryBuf);
+        Clear(pValueEntryBuf);
     end;
 
     local procedure IsNewGroup(): Boolean

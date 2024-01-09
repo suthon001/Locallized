@@ -297,9 +297,14 @@ report 80066 "NCT Customer - Order Summary"
         NewCustomer: Boolean;
         LastCurrencyCode: Code[10];
 
-    procedure InitializeRequest(StartingDate: Date; ShowAmountInLCY: Boolean)
+    /// <summary>
+    /// InitializeRequest.
+    /// </summary>
+    /// <param name="pStartingDate">Date.</param>
+    /// <param name="ShowAmountInLCY">Boolean.</param>
+    procedure InitializeRequest(pStartingDate: Date; ShowAmountInLCY: Boolean)
     begin
-        PeriodStartDate[1] := StartingDate;
+        PeriodStartDate[1] := pStartingDate;
         PrintAmountsInLCY := ShowAmountInLCY;
     end;
 
