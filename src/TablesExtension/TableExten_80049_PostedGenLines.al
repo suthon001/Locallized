@@ -302,7 +302,7 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80053; "NCT Tax Invoice Address 2"; text[50])
+        field(80053; "NCT Tax Invoice Address 2"; text[100])
         {
             DataClassification = CustomerContent;
             Caption = 'Tax Invoice Address 2';

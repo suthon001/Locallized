@@ -360,7 +360,53 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
         {
             Caption = 'Require Screen Detail';
             DataClassification = CustomerContent;
-
+            trigger OnValidate()
+            var
+                Cust: Record Customer;
+                Vendor: Record Vendor;
+            begin
+                if rec."NCT Require Screen Detail" = rec."NCT Require Screen Detail"::VAT then begin
+                    if rec."Account Type" = rec."Account Type"::Customer then begin
+                        Cust.INIT();
+                        "NCT Tax Vendor No." := "Account No.";
+                        "NCT Tax Invoice Name" := Cust.Name;
+                        "NCT Tax Invoice Name 2" := Cust."Name 2";
+                        "NCT Head Office" := Cust."NCT Head Office";
+                        "NCT VAT Branch Code" := Cust."NCT VAT Branch Code";
+                        if (NOT "NCT Head Office") AND ("NCT VAT Branch Code" = '') then
+                            "NCT Head Office" := true;
+                        "NCT Tax Invoice Address" := Cust.Address;
+                        "NCT Tax Invoice Address 2" := Cust."Address 2";
+                        "VAT Registration No." := Cust."VAT Registration No.";
+                        "NCT Tax Invoice City" := Cust.City;
+                        "NCT Tax Invoice Post Code" := Cust."Post Code";
+                    end;
+                    if rec."Account Type" = rec."Account Type"::Vendor then begin
+                        IF NOT Vendor.GET("NCT Tax Vendor No.") THEN
+                            Vendor.INIT();
+                        "NCT Tax Vendor No." := "Account No.";
+                        "NCT Tax Invoice Name" := Vendor.Name;
+                        "NCT Tax Invoice Name 2" := Vendor."Name 2";
+                        "NCT Head Office" := Vendor."NCT Head Office";
+                        "NCT VAT Branch Code" := Vendor."NCT VAT Branch Code";
+                        if (NOT "NCT Head Office") AND ("NCT VAT Branch Code" = '') then
+                            "NCT Head Office" := true;
+                        "NCT Tax Invoice Address" := Vendor.Address;
+                        "NCT Tax Invoice Address 2" := Vendor."Address 2";
+                        "VAT Registration No." := Vendor."VAT Registration No.";
+                        "NCT Tax Invoice City" := Vendor.City;
+                        "NCT Tax Invoice Post Code" := Vendor."Post Code";
+                    end;
+                end else begin
+                    "NCT Tax Vendor No." := '';
+                    "NCT Tax Invoice Name" := '';
+                    "NCT Tax Invoice Name 2" := '';
+                    "NCT Tax Invoice Address" := '';
+                    "NCT Tax Invoice Address 2" := '';
+                    "NCT Tax Invoice City" := '';
+                    "NCT Tax Invoice Post Code" := '';
+                end;
+            end;
 
 
         }
@@ -433,7 +479,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             DataClassification = SystemMetadata;
             Editable = false;
         }
-        field(80053; "NCT Tax Invoice Address 2"; text[50])
+        field(80053; "NCT Tax Invoice Address 2"; text[100])
         {
             DataClassification = CustomerContent;
             Caption = 'Tax Invoice Address 2';
@@ -520,7 +566,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             trigger OnAfterValidate()
             begin
                 if xRec."Account Type" <> "Account Type" then begin
-                    "NCT Require Screen Detail" := "NCT Require Screen Detail"::" ";
+                    validate("NCT Require Screen Detail", "NCT Require Screen Detail"::" ");
                     "NCT Head Office" := false;
                     "NCT VAT Branch Code" := '';
                 end;

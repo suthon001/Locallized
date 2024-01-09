@@ -83,7 +83,7 @@ tableextension 80026 "NCT Vat Entry" extends "VAT Entry"
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
-        field(80016; "NCT Tax Invoice Address 2"; Text[50])
+        field(80016; "NCT Tax Invoice Address 2"; Text[100])
         {
             Caption = 'Tax Invoice Address 2';
             DataClassification = SystemMetadata;

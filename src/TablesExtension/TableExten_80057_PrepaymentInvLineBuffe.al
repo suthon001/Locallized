@@ -93,7 +93,7 @@ tableextension 80057 "NCT Prepayment Inv. Line Buffe" extends "Prepayment Inv. L
             Caption = 'Tax Invoice Name 2';
             DataClassification = CustomerContent;
         }
-        field(80016; "NCT Address 2"; Text[50])
+        field(80016; "NCT Address 2"; Text[100])
         {
             Caption = 'Address 2';
             DataClassification = SystemMetadata;
