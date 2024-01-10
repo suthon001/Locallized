@@ -367,7 +367,8 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             begin
                 if rec."NCT Require Screen Detail" = rec."NCT Require Screen Detail"::VAT then begin
                     if rec."Account Type" = rec."Account Type"::Customer then begin
-                        Cust.INIT();
+                        IF NOT Cust.GET("Account No.") THEN
+                            Cust.INIT();
                         "NCT Tax Vendor No." := "Account No.";
                         "NCT Tax Invoice Name" := Cust.Name;
                         "NCT Tax Invoice Name 2" := Cust."Name 2";
@@ -382,7 +383,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
                         "NCT Tax Invoice Post Code" := Cust."Post Code";
                     end;
                     if rec."Account Type" = rec."Account Type"::Vendor then begin
-                        IF NOT Vendor.GET("NCT Tax Vendor No.") THEN
+                        IF NOT Vendor.GET("Account No.") THEN
                             Vendor.INIT();
                         "NCT Tax Vendor No." := "Account No.";
                         "NCT Tax Invoice Name" := Vendor.Name;

@@ -308,20 +308,25 @@ codeunit 80000 "NCT Journal Function"
         else
             VATEntry."NCT Document Line No." := GenJournalLine."Line No.";
 
-        if NOT VATProPostingGroup.get(VATEntry."VAT Prod. Posting Group") then
-            VATProPostingGroup.init();
-        IF VATProPostingGroup."NCT Direct VAT" then begin
-            VATEntry.Base := VATEntry."NCT Tax Invoice Base";
-            VATEntry.Amount := VATEntry."NCT Tax Invoice Amount";
-        end ELSE BEGIN
-            VATEntry."NCT Tax Invoice Base" := VATEntry.Base;
-            VATEntry."NCT Tax Invoice Amount" := VATEntry.Amount;
-        END;
         "NCT AfterCopyGenLineToVatEntry"(VATEntry, GenJournalLine);
     end;
 
 
-
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnInsertVATOnAfterSetVATAmounts', '', false, false)]
+    local procedure OnInsertVATOnAfterSetVATAmounts(var VATEntry: Record "VAT Entry"; GenJournalLine: Record "Gen. Journal Line"; var VATAmount: Decimal; var VATBase: Decimal)
+    var
+        VATProPostingGroup: Record "VAT Product Posting Group";
+    begin
+        if NOT VATProPostingGroup.get(VATEntry."VAT Prod. Posting Group") then
+            VATProPostingGroup.init();
+        IF VATProPostingGroup."NCT Direct VAT" then begin
+            VATBase := VATEntry."NCT Tax Invoice Base";
+            VATAmount := VATEntry."NCT Tax Invoice Amount";
+        end ELSE BEGIN
+            VATEntry."NCT Tax Invoice Base" := VATBase;
+            VATEntry."NCT Tax Invoice Amount" := VATAmount;
+        END;
+    end;
 
     [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromPurchHeader', '', false, false)]
     /// <summary> 
