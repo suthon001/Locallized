@@ -3,7 +3,7 @@
 /// </summary>
 pageextension 80072 "NCT Purchase Invoice Lists" extends "Purchase Invoices"
 {
-    PromotedActionCategories = 'New,Process,Print,Request Approval,Credit Memo,Release,Posting,Navigate';
+
     layout
     {
         modify(Status)

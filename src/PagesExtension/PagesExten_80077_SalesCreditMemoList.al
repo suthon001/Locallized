@@ -3,7 +3,7 @@
 /// </summary>
 pageextension 80077 "NCT Sales Creidt Lists" extends "Sales Credit Memos"
 {
-    PromotedActionCategories = 'New,Process,Print,Release,Posting,Credit Memo,Request Approval,Navigate';
+
     layout
     {
         addbefore(Status)

@@ -3,7 +3,7 @@
 /// </summary>
 pageextension 80071 "NCT Purchase Invoice Card" extends "Purchase Invoice"
 {
-    PromotedActionCategories = 'New,Process,Print,Approve,Invoice,Posting,View,Request Approval,Incoming Document,Release,Navigate';
+
     layout
     {
         addbefore(Status)
