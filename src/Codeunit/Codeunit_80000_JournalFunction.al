@@ -196,6 +196,8 @@ codeunit 80000 "NCT Journal Function"
     /// <param name="VATEntry">Parameter of type Record "VAT Entry".</param>
     local procedure "PostUnrealVatEntry"(GenJournalLine: Record "Gen. Journal Line"; var VATEntry: Record "VAT Entry")
     begin
+        VATEntry."NCT Tax Invoice Base" := VATEntry.Base;
+        VATEntry."NCT Tax Invoice Amount" := VATEntry.Amount;
         VATEntry."NCT Tax Invoice No." := GenJournalLine."NCT Tax Invoice No.";
         VATEntry."NCT Tax Invoice Date" := GenJournalLine."NCT Tax Invoice Date";
         VATEntry."NCT Tax Vendor No." := GenJournalLine."NCT Tax Vendor No.";
