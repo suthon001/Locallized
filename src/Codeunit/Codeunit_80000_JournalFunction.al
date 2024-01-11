@@ -284,8 +284,6 @@ codeunit 80000 "NCT Journal Function"
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     /// <param name="VATEntry">Parameter of type Record "VAT Entry".</param>
     local procedure "CopyVatFromGenLine"(GenJournalLine: Record "Gen. Journal Line"; var VATEntry: Record "VAT Entry")
-    var
-        VATProPostingGroup: Record "VAT Product Posting Group";
     begin
 
         VATEntry."NCT Head Office" := GenJournalLine."NCT Head Office";
