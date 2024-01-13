@@ -65,7 +65,7 @@ page 80034 "NCT Get Cus. Ledger Entry"
                 field(BillingReceiptAmount; BillingReceiptAmount)
                 {
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the NCT Billing Amount field.';
+                    ToolTip = 'Specifies the value of the NCT Amount field.';
                     Editable = false;
                     CaptionClass = captionField;
                 }
