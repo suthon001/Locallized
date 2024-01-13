@@ -66,8 +66,8 @@ page 80034 "NCT Get Cus. Ledger Entry"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the NCT Billing Amount field.';
-                    Caption = 'Billing Amount ';
                     Editable = false;
+                    CaptionClass = captionField;
                 }
                 field("NCT Remaining Amt."; Rec."NCT Remaining Amt.")
                 {
@@ -104,6 +104,10 @@ page 80034 "NCT Get Cus. Ledger Entry"
     procedure SetDocument(BillingRcptHeader: Record "NCT Billing Receipt Header")
     begin
         BillRcptHeader.GET(BillingRcptHeader."Document Type", BillingRcptHeader."No.");
+        if BillingRcptHeader."Document Type" = BillingRcptHeader."Document Type"::"Sales Receipt" then
+            captionField := 'Receipt Amount';
+        if BillingRcptHeader."Document Type" = BillingRcptHeader."Document Type"::"Sales Billing" then
+            captionField := 'Billing Amount';
     end;
 
     local procedure CreateLines()
@@ -161,11 +165,12 @@ page 80034 "NCT Get Cus. Ledger Entry"
                 BillRcptLine.Modify();
                 TOtalReceipt := TOtalReceipt + BillRcptLine."Amount";
             UNTIL CUstLedger.NEXT() = 0;
-        if TOtalReceipt <> 0 then begin
-            ltBillRcptLHeader.GET(DocumentType, DocumentNo);
-            ltBillRcptLHeader."Receive & Payment Amount" := TotalReceipt;
-            ltBillRcptLHeader.Modify();
-        end;
+        if DocumentType = DocumentType::"Sales Receipt" then
+            if TOtalReceipt <> 0 then begin
+                ltBillRcptLHeader.GET(DocumentType, DocumentNo);
+                ltBillRcptLHeader."Receive & Payment Amount" := TotalReceipt;
+                ltBillRcptLHeader.Modify();
+            end;
     end;
 
 
@@ -185,17 +190,17 @@ page 80034 "NCT Get Cus. Ledger Entry"
     /// <summary>
     /// SetTableData.
     /// </summary>
-    /// <param name="pVendorNo">code[20].</param>
+    /// <param name="pCustomer">code[20].</param>
     /// <param name="pDocumentType">Enum "Document Type".</param>
     /// <param name="pDocumentNo">code[30].</param>
-    procedure SetTableData(pVendorNo: code[20]; pDocumentType: Enum "NCT Billing Document Type"; pDocumentNo: code[20])
+    procedure SetTableData(pCustomer: code[20]; pDocumentType: Enum "NCT Billing Document Type"; pDocumentNo: code[20])
     var
         CustLedger: Record "Cust. Ledger Entry";
     begin
         DocumentType := pDocumentType;
         DocumentNo := pDocumentNo;
         CustLedger.reset();
-        CustLedger.SetRange("Customer No.", pVendorNo);
+        CustLedger.SetRange("Customer No.", pCustomer);
         CustLedger.SetFilter("Document Type", '%1|%2', CustLedger."Document Type"::Invoice, CustLedger."Document Type"::"Credit Memo");
         CustLedger.setrange(Open, true);
         if CustLedger.FindSet() then
@@ -231,4 +236,5 @@ page 80034 "NCT Get Cus. Ledger Entry"
         DocumentNo: code[20];
         DocumentType: Enum "NCT Billing Document Type";
         BillingReceiptAmount: Decimal;
+        captionField: Text;
 }
