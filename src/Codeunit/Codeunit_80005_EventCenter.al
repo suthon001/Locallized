@@ -263,6 +263,18 @@ codeunit 80005 "NCT EventFunction"
         ReturnShipmentLine.Modify();
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchRcptHeaderInsert', '', false, false)]
+    local procedure OnBeforePurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header")
+    begin
+        PurchRcptHeader."NCT Vendor Invoice No." := PurchaseHeader."Vendor Invoice No.";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeInsertReturnShipmentHeader', '', false, false)]
+    local procedure OnBeforeInsertReturnShipmentHeader(var PurchHeader: Record "Purchase Header"; var ReturnShptHeader: Record "Return Shipment Header")
+    begin
+        ReturnShptHeader."NCT Vendor Cr. Memo No." := PurchHeader."Vendor Cr. Memo No.";
+    end;
+
     /// <summary>
     /// SelectCaptionReport.
     /// </summary>

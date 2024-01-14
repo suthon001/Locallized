@@ -13,6 +13,7 @@ codeunit 80001 "NCT Purchase Function"
         RequisitionPosted.TransferFields(RequisitionLine, false);
         RequisitionPosted."Entry No." := RequisitionPosted.GetLastEntryNo();
         RequisitionPosted."Ref. PO No." := PurchOrderLine."Document No.";
+        NCTOnAfterInsertPostedRequisitionLine(RequisitionPosted, PurchOrderLine);
         RequisitionPosted.Insert();
     end;
 
@@ -169,9 +170,6 @@ codeunit 80001 "NCT Purchase Function"
                 HideDialog := false;
         end;
     end;
-
-
-
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Get Receipt", 'OnAfterInsertLines', '', true, true)]
     local procedure "OnAfterInsertLines"(var PurchHeader: Record "Purchase Header")
@@ -439,6 +437,11 @@ codeunit 80001 "NCT Purchase Function"
 
     [IntegrationEvent(false, false)]
     local procedure "NCT OnAfterPreparePurchaseToInvoicePostingBuffer"(var InvoicePostingBuffer: Record "Invoice Posting Buffer"; PurchaseLine: Record "Purchase Line")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure NCTOnAfterInsertPostedRequisitionLine(var PostedRequsitionLine: Record "NCT Requisition Line Posted"; puchaseOrderline: Record "Purchase Line")
     begin
     end;
 
