@@ -44,15 +44,21 @@ codeunit 80013 "NCT Clean Transactions"
     TableData "Production Forecast Entry" = rimd, TableData "Location" = rimd, TableData "Bin" = rimd,
     TableData "Customer" = rimd, TableData "Vendor" = rimd, TableData "Item" = rimd,
     TableData "Warehouse Entry" = rimd, tabledata "Post Value Entry to G/L" = rimd,
-    TableData "NCT VAT Transections" = rimd, TableData "Posted Gen. Journal Line" = rimd, tableData "Posted Gen. Journal Batch" = rimd, TableData "NCT Posted ItemJournal Lines" = rimd,
+    TableData "NCT VAT Transections" = rimd, TableData "Posted Gen. Journal Line" = rimd, tableData "Posted Gen. Journal Batch" = rimd,
     TableData "NCT Tax & WHT Header" = rimd, TableData "NCT Tax & WHT Line" = rimd, TableData "NCT WHT Header" = rimd,
-    TableData "NCT WHT Line" = rimd, TableData "NCT Billing Receipt Header" = rimd, TableData "NCT Billing Receipt Line" = rimd,
+    TableData "NCT WHT Line" = rimd,
     tabledata "NCT Record Deletion Table" = rimd,
     tabledata "g/l entry - vat Entry link" = rimd,
     tabledata "Change Log Entry" = ridm,
     tabledata "Fa Register" = ridm,
     tabledata "NCT WHT Applied Entry" = ridm,
-    tabledata "G/L - Item Ledger Relation" = ridm;
+    tabledata "G/L - Item Ledger Relation" = ridm,
+    tabledata "Bank Acc. Reconciliation Line" = rimd,
+    tabledata "NCT Billing Receipt Header" = rimd,
+    tabledata "NCT Billing Receipt Line" = rimd,
+    tabledata "Workflow Step Instance" = rimd,
+    tabledata "Workflow Step Instance Archive" = rimd,
+    tabledata "Workflow Step Argument Archive" = rimd;
     trigger OnRun()
     begin
     end;
@@ -64,15 +70,27 @@ codeunit 80013 "NCT Clean Transactions"
     /// </summary>
     /// <param name="pCompanyName">Text.</param>
     /// <param name="setdefultnoseries">Boolean.</param>
-    procedure DeleteRecords(pCompanyName: Text; setdefultnoseries: Boolean)
+    /// <param name="UseTransaction">Boolean.</param>
+    /// <param name="UseMaster">Boolean.</param>
+    procedure DeleteRecords(pCompanyName: Text; setdefultnoseries: Boolean; UseTransaction: Boolean; UseMaster: Boolean)
     var
         Window: Dialog;
         RecRef: RecordRef;
         RecordDeletionTable: Record "NCT Record Deletion Table";
         NoseriesLine: Record "No. Series Line";
     begin
+        if (NOT UseTransaction) and (NOT UseMaster) then
+            error('Suggest Transaction Or Suggest Master must be select');
         Window.Open(Text0002);
         RecordDeletionTable.reset();
+        if (UseTransaction) and (UseMaster) then
+            RecordDeletionTable.SetFilter("Transaction Type", '%1|%2', RecordDeletionTable."Transaction Type"::Transaction, RecordDeletionTable."Transaction Type"::Master)
+        else begin
+            if UseTransaction then
+                RecordDeletionTable.SetRange("Transaction Type", RecordDeletionTable."Transaction Type"::Transaction);
+            if UseMaster then
+                RecordDeletionTable.SetRange("Transaction Type", RecordDeletionTable."Transaction Type"::Master);
+        end;
         RecordDeletionTable.SetRange("Delete Records", true);
         if RecordDeletionTable.FindSet() then begin
             repeat
@@ -103,7 +121,7 @@ codeunit 80013 "NCT Clean Transactions"
     /// <summary>
     /// Generate Table.
     /// </summary>
-    procedure "Generate Table"()
+    procedure "Generate TableTansaction"()
     var
         MyTable: list of [text];
         RecordDeltetionEntry: Record "NCT Record Deletion Table";
@@ -310,14 +328,62 @@ codeunit 80013 "NCT Clean Transactions"
         MyTable.add('NCT VAT Transections');
         MyTable.add('NCT Tax & WHT Header');
         MyTable.add('NCT Tax & WHT Line');
-        MyTable.add('NCT Posted ItemJournal Lines');
         MyTable.add('NCT WHT Header');
         MyTable.add('NCT WHT Line');
+        MyTable.add('NCT WHT Applied Entry');
+        MyTable.add('Bank Acc. Reconciliation Line');
+        MyTable.add('IC Outbox Transaction');
+        MyTable.add('IC Outbox Jnl. Line');
+        MyTable.add('Handled IC Outbox Trans.');
+        MyTable.add('Handled IC Outbox Jnl. Line');
+        MyTable.add('IC Inbox Transaction');
+        MyTable.add('IC Inbox Jnl. Line');
+        MyTable.add('Handled IC Inbox Trans.');
+        MyTable.add('Handled IC Inbox Jnl. Line');
+        MyTable.add('IC Inbox/Outbox Jnl. Line Dim.');
+        MyTable.add('IC Comment Line');
+        MyTable.add('IC Outbox Sales Header');
+        MyTable.add('IC Outbox Sales Line');
+        MyTable.add('IC Outbox Purchase Header');
+        MyTable.add('IC Outbox Purchase Line');
+        MyTable.add('Handled IC Outbox Sales Header');
+        MyTable.add('Handled IC Outbox Sales Line');
+        MyTable.add('Handled IC Outbox Purch. Hdr');
+        MyTable.add('Handled IC Outbox Purch. Line');
+        MyTable.add('IC Inbox Sales Header');
+        MyTable.add('IC Inbox Sales Line');
+        MyTable.add('IC Inbox Purchase Header');
+        MyTable.add('IC Inbox Purchase Line');
+        MyTable.add('Handled IC Inbox Sales Header');
+        MyTable.add('Handled IC Inbox Sales Line');
+        MyTable.add('Handled IC Inbox Purch. Header');
+        MyTable.add('Handled IC Inbox Purch. Line');
+        MyTable.add('IC Document Dimension');
+        MyTable.add('Activities Cue');
+        MyTable.add('Top Customers By Sales Buffer');
+        MyTable.add('Deferral Header');
+        MyTable.add('Deferral Line');
+        MyTable.add('Posted Deferral Header');
+        MyTable.add('Posted Deferral Line');
+        MyTable.add('Deferral Header Archive');
+        MyTable.add('Deferral Line Archive');
+        MyTable.add('Team Member Cue');
+        MyTable.add('Service Cue');
+        MyTable.add('Sales Cue');
+        MyTable.add('Finance Cue');
+        MyTable.add('Purchase Cue');
+        MyTable.add('Manufacturing Cue');
+        MyTable.add('Job Cue');
+        MyTable.add('Warehouse Worker WMS Cue');
+        MyTable.add('Administration Cue');
+        MyTable.add('SB Owner Cue');
+        MyTable.add('RapidStart Services Cue');
+        MyTable.add('Relationship Mgmt. Cue');
         MyTable.add('NCT Billing Receipt Header');
         MyTable.add('NCT Billing Receipt Line');
-        MyTable.add('NCT WHT Applied Entry');
-        MyTable.add('NCT Requisition Line Posted');
+        OnAfterAddtableCleanMaster(MyTable);
         RecordDeltetionEntry.reset();
+        RecordDeltetionEntry.SetRange("Transaction Type", RecordDeltetionEntry."Transaction Type"::Transaction);
         RecordDeltetionEntry.DeleteAll();
         foreach NyTableName in MyTable do begin
             ObjectAll.reset();
@@ -328,10 +394,143 @@ codeunit 80013 "NCT Clean Transactions"
                 RecordDeltetionEntry."Table ID" := ObjectAll."Object ID";
                 RecordDeltetionEntry."Table Name" := ObjectAll."Object Name";
                 RecordDeltetionEntry."Delete Records" := true;
+                RecordDeltetionEntry."Transaction Type" := RecordDeltetionEntry."Transaction Type"::Transaction;
                 RecordDeltetionEntry.Insert();
             end;
         end;
     end;
 
+    /// <summary>
+    /// Generate Table.
+    /// </summary>
+    procedure "Generate TableMaster"()
+    var
+        MyTable: list of [text];
+        RecordDeltetionEntry: Record "NCT Record Deletion Table";
+        ObjectAll: Record AllObj;
+        NyTableName: Text[250];
+    begin
+        CLEAR(NyTableName);
+        CLEAR(MyTable);
+        MyTable.add('Payment Terms');
+        MyTable.add('Currency');
+        MyTable.add('Finance Charge Terms');
+        MyTable.add('Customer Price Group');
+        MyTable.add('Shipment Method');
+        MyTable.add('Salesperson/Purchaser');
+        MyTable.add('Location');
+        MyTable.add('G/L Account');
+        MyTable.add('Customer');
+        MyTable.add('Cust. Invoice Disc.');
+        MyTable.add('Vendor');
+        MyTable.add('Vendor Invoice Disc.');
+        MyTable.add('Item');
+        MyTable.add('Acc. Schedule Name');
+        MyTable.add('Acc. Schedule Line');
+        MyTable.add('Customer Posting Group');
+        MyTable.add('Vendor Posting Group');
+        MyTable.add('Inventory Posting Group');
+        MyTable.add('Item Vendor');
+        MyTable.add('Unit of Measure');
+        MyTable.add('Gen. Business Posting Group');
+        MyTable.add('Gen. Product Posting Group');
+        MyTable.add('General Posting Setup');
+        MyTable.add('Bank Account');
+        MyTable.add('Bank Account Posting Group');
+        MyTable.add('Customer Bank Account');
+        MyTable.add('Vendor Bank Account');
+        MyTable.add('Payment Method');
+        MyTable.add('Shipping Agent');
+        MyTable.add('No. Series');
+        MyTable.add('No. Series Line');
+        MyTable.add('No. Series Relationship');
+        MyTable.add('Resources Setup');
+        MyTable.add('VAT Business Posting Group');
+        MyTable.add('VAT Product Posting Group');
+        MyTable.add('VAT Posting Setup');
+        MyTable.add('Currency Exchange Rate');
+        MyTable.add('Column Layout Name');
+        MyTable.add('Column Layout');
+        MyTable.add('Customer Discount Group');
+        MyTable.add('Item Discount Group');
+        MyTable.add('Dimension');
+        MyTable.add('Dimension Value');
+        MyTable.add('Dimension Combination');
+        MyTable.add('Dimension Value Combination');
+        MyTable.add('Default Dimension');
+        MyTable.add('Dimension ID Buffer');
+        MyTable.add('Default Dimension Priority');
+        MyTable.add('Dimension Set ID Filter Line');
+        MyTable.add('Dim. Value per Account');
+        MyTable.add('Analysis View Filter');
+        MyTable.add('Selected Dimension');
+        MyTable.add('IC G/L Account');
+        MyTable.add('IC Dimension');
+        MyTable.add('IC Dimension Value');
+        MyTable.add('IC Partner');
+        MyTable.add('IC Bank Account');
+        MyTable.add('IC Setup');
+        MyTable.add('Customer Template');
+        MyTable.add('Item Template');
+        MyTable.add('Vendor Template');
+        MyTable.add('Employee Template');
+        MyTable.add('Workflow Step Instance');
+        MyTable.add('Workflow Step Instance Archive');
+        MyTable.add('Workflow Step Argument Archive');
+        MyTable.add('Deferral Template');
+        MyTable.add('Contact');
+        MyTable.add('Business Relation');
+        MyTable.add('Fixed Asset');
+        MyTable.add('FA Class');
+        MyTable.add('FA Subclass');
+        MyTable.add('FA Location');
+        MyTable.add('FA Depreciation Book');
+        MyTable.add('Item Charge');
+        MyTable.add('Price List');
+        MyTable.add('Price List Line');
+        MyTable.add('Sales Price');
+        MyTable.add('Sales Line Discount');
+        MyTable.add('Purchase Price');
+        MyTable.add('Purchase Line Discount');
+        MyTable.add('Bin');
+        MyTable.add('Item Attribute');
+        MyTable.add('Item Attribute Value');
+        MyTable.add('Item Attribute Translation');
+        MyTable.add('Item Attr. Value Translation');
+        MyTable.add('Item Attribute Value Selection');
+        MyTable.add('Item Attribute Value Mapping');
+        MyTable.add('Over-Receipt Code');
+        MyTable.add('NCT WHT Business Posting Group');
+        MyTable.add('NCT WHT Posting Setup');
+        MyTable.add('NCT WHT Product Posting Group');
+        MyTable.Add('NCT Caption Report Setup');
+        OnAfterAddtableCleanTransaction(MyTable);
+        RecordDeltetionEntry.reset();
+        RecordDeltetionEntry.SetRange("Transaction Type", RecordDeltetionEntry."Transaction Type"::Master);
+        RecordDeltetionEntry.DeleteAll();
+        foreach NyTableName in MyTable do begin
+            ObjectAll.reset();
+            ObjectAll.SetRange("Object Type", ObjectAll."Object Type"::Table);
+            ObjectAll.SetRange("Object Name", NyTableName);
+            if ObjectAll.FindFirst() then begin
+                RecordDeltetionEntry.init();
+                RecordDeltetionEntry."Table ID" := ObjectAll."Object ID";
+                RecordDeltetionEntry."Table Name" := ObjectAll."Object Name";
+                RecordDeltetionEntry."Delete Records" := true;
+                RecordDeltetionEntry."Transaction Type" := RecordDeltetionEntry."Transaction Type"::Master;
+                RecordDeltetionEntry.Insert();
+            end;
+        end;
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterAddtableCleanTransaction(var pMyTable: List of [text])
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnAfterAddtableCleanMaster(var pMyTable: List of [text])
+    begin
+    end;
 
 }

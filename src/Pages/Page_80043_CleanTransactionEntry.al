@@ -25,6 +25,18 @@ page 80043 "NCT Clean Transaction Entry"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the company field.';
                 }
+                field(ClearTransaction; ClearTransaction)
+                {
+                    Caption = 'Suggest Transaction';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Clean Transaction field.';
+                }
+                field(ClearMaster; ClearMaster)
+                {
+                    Caption = 'Suggest Master';
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Clean Master field.';
+                }
                 field(cleardetailNoseries; cleardetailNoseries)
                 {
                     Caption = 'Set Defualt No. series';
@@ -86,7 +98,7 @@ page 80043 "NCT Clean Transaction Entry"
                     if company = '' then
                         Message('Please select company!')
                     else
-                        RecordDeletionMgt.DeleteRecords(company, cleardetailNoseries); //START DELETE RECORDS
+                        RecordDeletionMgt.DeleteRecords(company, cleardetailNoseries, ClearTransaction, ClearMaster); //START DELETE RECORDS
                 end;
 
             }
@@ -104,7 +116,10 @@ page 80043 "NCT Clean Transaction Entry"
                     RecordDeletionMgt: Codeunit "NCT Clean Transactions";
                 begin
                     Commit();
-                    RecordDeletionMgt."Generate Table"();
+                    if ClearTransaction then
+                        RecordDeletionMgt."Generate TableTansaction"();
+                    if ClearMaster then
+                        RecordDeletionMgt."Generate TableMaster"();
                     CurrPage.Update();
                 end;
             }
@@ -124,6 +139,6 @@ page 80043 "NCT Clean Transaction Entry"
 
     var
         company: Text;
-        cleardetailNoseries: Boolean;
+        cleardetailNoseries, ClearTransaction, ClearMaster : Boolean;
         ErrrPermission: Label 'You don have to permission';
 }

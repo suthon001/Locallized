@@ -41,11 +41,22 @@ table 80013 "NCT Record Deletion Table"
             Caption = 'Last Time Clean By';
             Editable = false;
         }
+        field(6; "Transaction Type"; Option)
+        {
+            Caption = 'Transaction Type';
+            OptionCaption = 'Transaction,Master';
+            OptionMembers = "Transaction","Master";
+            Editable = false;
+        }
     }
 
     keys
     {
         key(Key1; "Table ID")
+        {
+            Clustered = true;
+        }
+        key(Key2; "Transaction Type")
         {
         }
     }
