@@ -253,20 +253,12 @@ table 80002 "NCT Billing Receipt Line"
         TestOpenStatus();
         CASE "Document Type" OF
             "Document Type"::"Sales Billing":
-
                 if CustLedgEntry.GET("Source Ledger Entry No.") then begin
-                    CustLedgEntry."NCT Completed Billing" := FALSE;
                     CustLedgEntry."NCT Aging Due Date" := CustLedgEntry."Due Date";
-                    CustLedgEntry.MODIFY();
-                end;
-            "Document Type"::"Sales Receipt":
-                if CustLedgEntry.GET("Source Ledger Entry No.") then begin
-                    CustLedgEntry."NCT Completed Receipt" := FALSE;
                     CustLedgEntry.MODIFY();
                 end;
             "Document Type"::"Purchase Billing":
                 if VendLedgEntry.GET("Source Ledger Entry No.") then begin
-                    VendLedgEntry."NCT Completed Billing" := FALSE;
                     VendLedgEntry."NCT Aging Due Date" := VendLedgEntry."Due Date";
                     VendLedgEntry.MODIFY();
                 end;
