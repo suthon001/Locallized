@@ -35,8 +35,10 @@ tableextension 80013 "NCT ExtenSales Line" extends "Sales Line"
                     IF "Outstanding Quantity" = 0 THEN
                         ERROR('Outstanding Quantity must not be 0');
 
-                    IF "NCT Qty. to Cancel" > (Quantity - "Quantity Shipped") THEN
-                        VALIDATE("NCT Qty. to Cancel", Quantity - "Quantity Shipped");
+                    IF "NCT Qty. to Cancel" <= (Quantity - "Quantity Shipped") THEN
+                        VALIDATE("NCT Qty. to Cancel", Quantity - "Quantity Shipped")
+                    else
+                        ERROR('Remaining Qty. is %1', rec.Quantity - rec."Quantity Shipped");
 
                     "NCT Qty. to Cancel (Base)" := UOMMgt.CalcBaseQty("NCT Qty. to Cancel", "Qty. per Unit of Measure");
                     InitOutstanding();
@@ -44,8 +46,10 @@ tableextension 80013 "NCT ExtenSales Line" extends "Sales Line"
                     VALIDATE("Qty. to Ship", "Outstanding Quantity");
                 END ELSE
                     IF ("Document Type" = "Document Type"::"Blanket Order") THEN BEGIN
-                        IF "NCT Qty. to Cancel" > Quantity THEN
-                            VALIDATE("NCT Qty. to Cancel", Quantity);
+                        IF "NCT Qty. to Cancel" <= Quantity THEN
+                            VALIDATE("NCT Qty. to Cancel", Quantity)
+                        else
+                            ERROR('Remaining Qty. is %1', rec.Quantity);
 
                         "NCT Qty. to Cancel (Base)" := UOMMgt.CalcBaseQty("NCT Qty. to Cancel", "Qty. per Unit of Measure");
                         InitOutstanding();
