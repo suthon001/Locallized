@@ -502,8 +502,8 @@ Table 80001 "NCT Billing Receipt Header"
         TESTFIELD("Status", "Status"::Open);
 
         BillingReceiptLine.reset();
-        BillingReceiptLine.SetRange("Document Type", BillingReceiptLine."Document Type");
-        BillingReceiptLine.SetRange("Document No.", "No.");
+        BillingReceiptLine.SetRange("Document Type", rec."Document Type");
+        BillingReceiptLine.SetRange("Document No.", rec."No.");
         BillingReceiptLine.DeleteAll();
         ApprovalsMgmt.OnDeleteRecordInApprovalRequest(RecordId);
     end;
