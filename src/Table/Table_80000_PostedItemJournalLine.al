@@ -895,6 +895,7 @@ table 80000 "NCT Posted ItemJournal Lines"
         postedItemLine: Record "NCT Posted ItemJournal Lines";
     begin
         postedItemLine.reset();
+        postedItemLine.ReadIsolation := IsolationLevel::UpdLock;
         if postedItemLine.FindLast() then
             EXIT(postedItemLine."Entry No." + 1);
         EXIT(1);

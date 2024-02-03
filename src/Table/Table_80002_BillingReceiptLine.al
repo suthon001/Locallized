@@ -132,6 +132,7 @@ table 80002 "NCT Billing Receipt Line"
                         VendorLedger.Init();
                     VendorLedger.CalcFields("Remaining Amount");
                     PurchaseBilling.reset();
+                    PurchaseBilling.ReadIsolation := IsolationLevel::ReadCommitted;
                     PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
                     PurchaseBilling.SetRange("Document No.", rec."Document No.");
                     PurchaseBilling.SetFilter("Line No.", '<>%1', rec."Line No.");
@@ -142,6 +143,7 @@ table 80002 "NCT Billing Receipt Line"
                     TOtalAmt := PurchaseBilling."Amount";
 
                     PurchaseBilling.reset();
+                    PurchaseBilling.ReadIsolation := IsolationLevel::ReadCommitted;
                     PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
                     PurchaseBilling.SetFilter("Document No.", '<>%1', rec."Document No.");
                     PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
@@ -161,6 +163,7 @@ table 80002 "NCT Billing Receipt Line"
                     CustLedger.CalcFields("Remaining Amount");
 
                     PurchaseBilling.reset();
+                    PurchaseBilling.ReadIsolation := IsolationLevel::ReadCommitted;
                     PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
                     PurchaseBilling.SetRange("Document No.", rec."Document No.");
                     PurchaseBilling.SetFilter("Line No.", '<>%1', rec."Line No.");
@@ -171,6 +174,7 @@ table 80002 "NCT Billing Receipt Line"
                     TOtalAmt := PurchaseBilling."Amount";
 
                     PurchaseBilling.reset();
+                    PurchaseBilling.ReadIsolation := IsolationLevel::ReadCommitted;
                     PurchaseBilling.SetRange("Document Type", PurchaseBillingHeader."Document Type");
                     PurchaseBilling.SetFilter("Document No.", '<>%1', rec."Document No.");
                     PurchaseBilling.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
@@ -197,6 +201,7 @@ table 80002 "NCT Billing Receipt Line"
                     CustLedger.CalcFields("Remaining Amount");
 
                     ltBillingLine.reset();
+                    ltBillingLine.ReadIsolation := IsolationLevel::ReadCommitted;
                     ltBillingLine.SetRange("Document Type", rec."Document Type");
                     ltBillingLine.SetRange("Document No.", rec."Document No.");
                     ltBillingLine.SetFilter("Line No.", '<>%1', rec."Line No.");
@@ -206,6 +211,7 @@ table 80002 "NCT Billing Receipt Line"
 
 
                     ltBillingLine.reset();
+                    ltBillingLine.ReadIsolation := IsolationLevel::ReadCommitted;
                     ltBillingLine.SetRange("Document Type", rec."Document Type");
                     ltBillingLine.SetFilter("Document No.", '<>%1', rec."Document No.");
                     ltBillingLine.setrange("Source Ledger Entry No.", rec."Source Ledger Entry No.");
@@ -320,6 +326,7 @@ table 80002 "NCT Billing Receipt Line"
         BillingLines: Record "NCT Billing Receipt Line";
     begin
         BillingLines.reset();
+        BillingLines.ReadIsolation := IsolationLevel::UpdLock;
         BillingLines.SetCurrentKey("Document Type", "Document No.", "Line No.");
         BillingLines.SetRange("Document Type", "Document Type");
         BillingLines.SetRange("Document No.", "Document No.");

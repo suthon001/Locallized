@@ -1224,18 +1224,36 @@ codeunit 80005 "NCT EventFunction"
         exit(StrSubstNo(BillingReceiptConditionTxt, workflowSetup.Encode(BillingReceipt.GetView(false)), workflowSetup.Encode(BillingReceiptLine.GetView(false))));
     end;
 
+    /// <summary>
+    /// OnbeforInsertWHTLine.
+    /// </summary>
+    /// <param name="WhtApplyLine">Record "NCT WHT Applied Entry".</param>
+    /// <param name="WHTHeader">Record "NCT WHT Header".</param>
+    /// <param name="GenLine">Record "Gen. Journal Line".</param>
+    /// <param name="WHTLine">VAR Record "NCT WHT Line".</param>
     [IntegrationEvent(true, false)]
     procedure OnbeforInsertWHTLine(WhtApplyLine: Record "NCT WHT Applied Entry"; WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line"; var WHTLine: Record "NCT WHT Line")
     begin
 
     end;
 
+    /// <summary>
+    /// OnbeforModifyWHTHeader.
+    /// </summary>
+    /// <param name="WhtApplyLine">Record "NCT WHT Applied Entry".</param>
+    /// <param name="WHTHeader">VAR Record "NCT WHT Header".</param>
+    /// <param name="GenLine">Record "Gen. Journal Line".</param>
     [IntegrationEvent(true, false)]
     procedure OnbeforModifyWHTHeader(WhtApplyLine: Record "NCT WHT Applied Entry"; var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
     begin
 
     end;
 
+    /// <summary>
+    /// OnbeformodifyCreateWHTCertificate.
+    /// </summary>
+    /// <param name="WHTHeader">Record "NCT WHT Header".</param>
+    /// <param name="GenLine">VAR Record "Gen. Journal Line".</param>
     [IntegrationEvent(true, false)]
     procedure OnbeformodifyCreateWHTCertificate(WHTHeader: Record "NCT WHT Header"; var GenLine: Record "Gen. Journal Line")
     begin

@@ -1,3 +1,6 @@
+/// <summary>
+/// Codeunit NCT FA Date Calculation (ID 80007).
+/// </summary>
 codeunit 80007 "NCT FA Date Calculation"
 {
 
@@ -10,6 +13,12 @@ codeunit 80007 "NCT FA Date Calculation"
         Text001: Label 'It was not possible to find a %1 in %2.';
         DeprBook: Record 5611;
 
+    /// <summary>
+    /// NCT GetFiscalYear.
+    /// </summary>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="EndingDate">Date.</param>
+    /// <returns>Return value of type Date.</returns>
     procedure "NCT GetFiscalYear"(DeprBookCode: Code[10]; EndingDate: Date): Date
     var
         AccountingPeriod: Record 50;
@@ -37,6 +46,14 @@ codeunit 80007 "NCT FA Date Calculation"
 
     end;
 
+    /// <summary>
+    /// NCT CalculateDate.
+    /// </summary>
+    /// <param name="StartingDate">Date.</param>
+    /// <param name="NumberOfDays">Integer.</param>
+    /// <param name="Year365Days">Boolean.</param>
+    /// <param name="Year366Days">Boolean.</param>
+    /// <returns>Return value of type Date.</returns>
     procedure "NCT CalculateDate"(StartingDate: Date; NumberOfDays: Integer; Year365Days: Boolean; Year366Days: Boolean): Date
     var
         Years: Integer;

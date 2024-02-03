@@ -246,12 +246,14 @@ report 80013 "NCT WHT PND 03"
                     {
                         Caption = 'นำส่งภาษีตาม';
                         ApplicationArea = all;
+                        OptionCaption = '3 เตรส,65 จัตวา,69 ทวิ';
                         ToolTip = 'Specifies the value of the นำส่งภาษีตาม field.';
                     }
                     field(Send_Option; Send_Option)
                     {
                         Caption = 'ประเภทการยื่น';
                         ApplicationArea = all;
+                        OptionCaption = 'ยื่นปกติ,ยื่นเพิ่มเติม';
                         ToolTip = 'Specifies the value of the ประเภทการยื่น field.';
                     }
                     field(Additional_No; Additional_No)
@@ -276,15 +278,13 @@ report 80013 "NCT WHT PND 03"
         CompanyInformation.CALCFIELDS(Picture);
     end;
 
-    /// <summary> 
-    /// Description for SetFilter.
+
+    /// <summary>
+    /// SetFilter.
     /// </summary>
-    /// <param name="TempWHT">Parameter of type Code[30].</param>
-    /// <param name="Tempdate">Parameter of type Text[100].</param>
+    /// <param name="Tempdate">Text[100].</param>
     procedure "SetFilter"(Tempdate: Text[100])
     begin
-
-
         DateFilter := Tempdate;
     end;
 

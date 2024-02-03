@@ -890,6 +890,7 @@ table 80016 "NCT Requisition Line Posted"
         RequisitionPosted: Record "NCT Requisition Line Posted";
     begin
         RequisitionPosted.reset();
+        RequisitionPosted.ReadIsolation := IsolationLevel::UpdLock;
         RequisitionPosted.SetCurrentKey("Entry No.");
         if RequisitionPosted.FindLast() then
             exit(RequisitionPosted."Entry No." + 1);

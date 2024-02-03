@@ -609,6 +609,7 @@ table 80005 "NCT Tax & WHT Line"
         TaxReportLine: Record "NCT Tax & WHT Line";
     begin
         TaxReportLine.reset();
+        TaxReportLine.ReadIsolation := IsolationLevel::UpdLock;
         TaxReportLine.SetCurrentKey("Tax Type", "Document No.", "Entry No.");
         TaxReportLine.SetRange("Tax Type", "Tax Type");
         TaxReportLine.SetRange("Document No.", "Document No.");
@@ -617,44 +618,71 @@ table 80005 "NCT Tax & WHT Line"
         exit(1);
     end;
 
+    /// <summary>
+    /// OnBeforeInsertVatLine.
+    /// </summary>
+    /// <param name="TaxReportLine">VAR Record "NCT Tax WHT Line".</param>
+    /// <param name="VatTransaction">Record "NCT VAT Transections".</param>
     [IntegrationEvent(true, false)]
-
     procedure OnBeforeInsertVatLine(var TaxReportLine: Record "NCT Tax & WHT Line"; VatTransaction: Record "NCT VAT Transections")
     begin
 
     end;
 
+    /// <summary>
+    /// OnAftersetfilterVatLine.
+    /// </summary>
+    /// <param name="TaxReportLine">VAR Record "NCT Tax  WHT Line".</param>
+    /// <param name="VatTransaction">Record "NCT VAT Transections".</param>
     [IntegrationEvent(true, false)]
-
     procedure OnAftersetfilterVatLine(var TaxReportLine: Record "NCT Tax & WHT Line"; VatTransaction: Record "NCT VAT Transections")
     begin
 
     end;
 
 
+    /// <summary>
+    /// OnAftersetfilterVatTransaction.
+    /// </summary>
+    /// <param name="VatTransaction">VAR Record "NCT VAT Transections".</param>
+    /// <param name="TaxWHT">Record "NCT Tax  WHT Header".</param>
     [IntegrationEvent(true, false)]
-
     procedure OnAftersetfilterVatTransaction(var VatTransaction: Record "NCT VAT Transections"; TaxWHT: Record "NCT Tax & WHT Header")
     begin
 
     end;
 
 
+    /// <summary>
+    /// OnAftersetfilterWHT.
+    /// </summary>
+    /// <param name="WHTHeader">VAR Record "NCT WHT Header".</param>
+    /// <param name="TaxWHT">Record "NCT Tax  WHT Header".</param>
     [IntegrationEvent(true, false)]
-
     procedure OnAftersetfilterWHT(var WHTHeader: Record "NCT WHT Header"; TaxWHT: Record "NCT Tax & WHT Header")
     begin
 
     end;
 
+    /// <summary>
+    /// OnAftersetfilterWHTLine.
+    /// </summary>
+    /// <param name="WHTLine">VAR Record "NCT WHT Line".</param>
+    /// <param name="WHTHeader">Record "NCT WHT Header".</param>
+    /// <param name="TaxWHT">Record "NCT Tax  WHT Header".</param>
     [IntegrationEvent(true, false)]
-
     procedure OnAftersetfilterWHTLine(var WHTLine: Record "NCT WHT Line"; WHTHeader: Record "NCT WHT Header"; TaxWHT: Record "NCT Tax & WHT Header")
     begin
 
     end;
 
 
+    /// <summary>
+    /// OnbeforInsertWHTLine.
+    /// </summary>
+    /// <param name="TaxWHTLine">VAR Record "NCT Tax WHT Line".</param>
+    /// <param name="WHTHeader">Record "NCT WHT Header".</param>
+    /// <param name="WHTLine">Record "NCT WHT Line".</param>
     [IntegrationEvent(true, false)]
     procedure OnbeforInsertWHTLine(var TaxWHTLine: Record "NCT Tax & WHT Line"; WHTHeader: Record "NCT WHT Header"; WHTLine: Record "NCT WHT Line")
     begin

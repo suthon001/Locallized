@@ -54,6 +54,32 @@ tableextension 80015 "NCT ExtenItem Journal Line" extends "Item Journal Line"
             DataClassification = SystemMetadata;
             Editable = false;
         }
+        field(80008; "NCT Temp. Bin Code"; code[20])
+        {
+            Caption = 'Temp. Bin Code';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(80009; "NCT Temp. New Bin Code"; code[20])
+        {
+            Caption = 'Temp. New Bin Code';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        modify("Bin Code")
+        {
+            trigger OnAfterValidate()
+            begin
+                "NCT Temp. Bin Code" := "Bin Code";
+            end;
+        }
+        modify("New Bin Code")
+        {
+            trigger OnAfterValidate()
+            begin
+                "NCT Temp. New Bin Code" := "New Bin Code";
+            end;
+        }
     }
 
 

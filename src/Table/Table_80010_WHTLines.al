@@ -285,8 +285,12 @@ table 80010 "NCT WHT Line"
     end;
 
 
+    /// <summary>
+    /// OnafterTransferFomHeader.
+    /// </summary>
+    /// <param name="WHTHeader">Record "NCT WHT Header".</param>
+    /// <param name="WhtLine">VAR Record "NCT WHT Line".</param>
     [IntegrationEvent(true, false)]
-
     procedure OnafterTransferFomHeader(WHTHeader: Record "NCT WHT Header"; var WhtLine: Record "NCT WHT Line")
     begin
 

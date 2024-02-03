@@ -246,11 +246,13 @@ report 80014 "NCT WHT PND 53"
                     {
                         Caption = 'นำส่งภาษีตาม';
                         ApplicationArea = all;
+                        OptionCaption = '3 เตรส,65 จัตวา,69 ทวิ';
                         ToolTip = 'Specifies the value of the นำส่งภาษีตาม field.';
                     }
                     field(Send_Option; Send_Option)
                     {
                         Caption = 'ประเภทการยื่น';
+                        OptionCaption = 'ยื่นปกติ,ยื่นเพิ่มเติม';
                         ApplicationArea = all;
                         ToolTip = 'Specifies the value of the ประเภทการยื่น field.';
                     }

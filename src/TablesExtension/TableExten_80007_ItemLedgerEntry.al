@@ -66,6 +66,11 @@ tableextension 80007 "NCT ExtenItem Ledger Entry" extends "Item Ledger Entry"
             CalcFormula = lookup("Value Entry"."Document No." WHERE("Item Ledger Entry No." = field("Entry No."), "Document Type" = filter("Purchase Credit Memo" | "Purchase Invoice" | "Sales Credit Memo" | "Sales Invoice")));
             Editable = false;
         }
+        field(80012; "NCT New Bin Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'New Bin Code';
+        }
 
     }
 }

@@ -1,8 +1,11 @@
+/// <summary>
+/// Codeunit NCT CalculateCustom1Depr (ID 80010).
+/// </summary>
 codeunit 80010 "NCT CalculateCustom1Depr"
 {
 
-    Permissions = TableData 5601 = r,
-                  TableData 5604 = r;
+    Permissions = TableData "FA Ledger Entry" = r,
+                  TableData "FA Posting Type Setup" = r;
 
     trigger OnRun()
     begin
@@ -14,11 +17,11 @@ codeunit 80010 "NCT CalculateCustom1Depr"
         Text002: Label '%2 must not be 100 for %1.';
         Text003: Label '%2 is later than %3 for %1.';
         Text004: Label 'You must not specify %2 together with %3 = %4 for %1.';
-        FA: Record 5600;
-        FALedgEntry: Record 5601;
-        DeprBook: Record 5611;
-        FADeprBook: Record 5612;
-        FAPostingTypeSetup: Record 5604;
+        FA: Record "Fixed Asset";
+        FALedgEntry: Record "FA Ledger Entry";
+        DeprBook: Record "Depreciation Book";
+        FADeprBook: Record "FA Depreciation Book";
+        FAPostingTypeSetup: Record "FA Posting Type Setup";
         DepreciationCalc: Codeunit "NCT Depreciation Calculation";
         DeprBookCode: Code[10];
         UntilDate: Date;
@@ -55,6 +58,19 @@ codeunit 80010 "NCT CalculateCustom1Depr"
         Custom1Depr: Decimal;
         ExtraDays: Integer;
 
+    /// <summary>
+    /// NCT Calculate.
+    /// </summary>
+    /// <param name="DeprAmount">VAR Decimal.</param>
+    /// <param name="Custom1DeprAmount">VAR Decimal.</param>
+    /// <param name="NumberOfDays3">VAR Integer.</param>
+    /// <param name="Custom1NumberOfDays3">VAR Integer.</param>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode2">Code[10].</param>
+    /// <param name="UntilDate2">Date.</param>
+    /// <param name="EntryAmounts2">array[4] of Decimal.</param>
+    /// <param name="DateFromProjection2">Date.</param>
+    /// <param name="DaysInPeriod2">Integer.</param>
     procedure "NCT Calculate"(var DeprAmount: Decimal; var Custom1DeprAmount: Decimal; var NumberOfDays3: Integer; var Custom1NumberOfDays3: Integer; FANo: Code[20]; DeprBookCode2: Code[10]; UntilDate2: Date; EntryAmounts2: array[4] of Decimal; DateFromProjection2: Date; DaysInPeriod2: Integer)
     var
         i: Integer;
@@ -311,23 +327,24 @@ codeunit 80010 "NCT CalculateCustom1Depr"
 
     local procedure CalcDeprBasis(): Decimal
     var
-        FALedgEntry: Record 5601;
+        ltFALedgEntry: Record "FA Ledger Entry";
     begin
         IF (Custom1DeprUntil = 0D) OR (UntilDate <= Custom1DeprUntil) THEN
             EXIT(AcquisitionCost);
-        FALedgEntry.SETCURRENTKEY("FA No.", "Depreciation Book Code", "Part of Book Value", "FA Posting Date");
-        FALedgEntry.SETRANGE("FA No.", FA."No.");
-        FALedgEntry.SETRANGE("Depreciation Book Code", DeprBookCode);
-        FALedgEntry.SETRANGE("Part of Book Value", TRUE);
-        FALedgEntry.SETRANGE("FA Posting Date", 0D, Custom1DeprUntil);
-        FALedgEntry.CALCSUMS(Amount);
-        IF (Sign = -1) AND (FALedgEntry.Amount > 0) THEN
+        ltFALedgEntry.ReadIsolation := IsolationLevel::ReadCommitted;
+        ltFALedgEntry.SETCURRENTKEY("FA No.", "Depreciation Book Code", "Part of Book Value", "FA Posting Date");
+        ltFALedgEntry.SETRANGE("FA No.", FA."No.");
+        ltFALedgEntry.SETRANGE("Depreciation Book Code", DeprBookCode);
+        ltFALedgEntry.SETRANGE("Part of Book Value", TRUE);
+        ltFALedgEntry.SETRANGE("FA Posting Date", 0D, Custom1DeprUntil);
+        ltFALedgEntry.CALCSUMS(Amount);
+        IF (Sign = -1) AND (ltFALedgEntry.Amount > 0) THEN
             ERROR(
               Text001,
               "NCT FAName"(), FADeprBook.FIELDCAPTION("Book Value"),
               FADeprBook.FIELDCAPTION("Depr. Ending Date (Custom 1)"), Custom1DeprUntil);
         IF DateFromProjection = 0D THEN
-            EXIT(ABS(FALedgEntry.Amount));
+            EXIT(ABS(ltFALedgEntry.Amount));
 
         EXIT(EntryAmounts[4]);
     end;

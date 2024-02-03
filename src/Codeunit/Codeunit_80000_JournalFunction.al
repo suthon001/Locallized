@@ -4,7 +4,18 @@
 codeunit 80000 "NCT Journal Function"
 {
 
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromPurchHeaderPrepmtPost', '', false, false)]
+    local procedure OnAfterCopyGenJnlLineFromPurchHeaderPrepmtPost(var GenJournalLine: Record "Gen. Journal Line"; PurchaseHeader: Record "Purchase Header")
+    begin
+        GenJournalLine."NCT Ref. Prepayment PO No." := PurchaseHeader."No.";
+    end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterInitVendLedgEntry', '', false, false)]
+    local procedure OnAfterInitVendLedgEntry(var VendorLedgerEntry: Record "Vendor Ledger Entry"; GenJournalLine: Record "Gen. Journal Line")
+    begin
+        if VendorLedgerEntry.Prepayment then
+            VendorLedgerEntry."NCT Ref. Prepayment PO No." := GenJournalLine."NCT Ref. Prepayment PO No.";
+    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", 'OnProcessLinesOnAfterPostGenJnlLines', '', true, true)]
     /// <summary> 
@@ -741,7 +752,8 @@ codeunit 80000 "NCT Journal Function"
         NewItemLedgEntry."NCT Gen. Bus. Posting Group" := ItemJournalLine."Gen. Bus. Posting Group";
         NewItemLedgEntry."NCT Vat Bus. Posting Group" := ItemJournalLine."NCT Vat Bus. Posting Group";
         NewItemLedgEntry."NCT Vendor/Customer Name" := ItemJournalLine."NCT Vendor/Customer Name";
-        NewItemLedgEntry."NCT Bin Code" := ItemJournalLine."Bin Code";
+        NewItemLedgEntry."NCT Bin Code" := ItemJournalLine."NCT Temp. Bin Code";
+        NewItemLedgEntry."NCT New Bin Code" := ItemJournalLine."NCT Temp. New Bin Code";
         "NCT OnCopyItemLedgerFromItemJournal"(NewItemLedgEntry, ItemJournalLine);
 
     end;
@@ -784,9 +796,23 @@ codeunit 80000 "NCT Journal Function"
         ItemJnlLine."NCT Vat Bus. Posting Group" := SalesLine."VAT Bus. Posting Group";
         ItemJnlLine."Gen. Prod. Posting Group" := SalesLine."Gen. Prod. Posting Group";
         ItemJnlLine."Gen. Bus. Posting Group" := SalesLine."Gen. Bus. Posting Group";
-        ItemJnlLine."Bin Code" := SalesLine."Bin Code";
+        ItemJnlLine."NCT Temp. Bin Code" := SalesLine."Bin Code";
         ItemJnlLine.Description := SalesLine.Description;
 
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post Shipment", 'OnAfterCreateItemJnlLine', '', false, false)]
+    local procedure OnAfterCreateItemJnlLineTransferShip(var ItemJournalLine: Record "Item Journal Line"; TransferLine: Record "Transfer Line")
+    begin
+        ItemJournalLine."NCT Temp. Bin Code" := TransferLine."Transfer-from Bin Code";
+        ItemJournalLine."NCT Temp. New Bin Code" := TransferLine."Transfer-To Bin Code";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post Receipt", 'OnBeforePostItemJournalLine', '', false, false)]
+    local procedure OnBeforePostItemJournalLineReceipt(var ItemJournalLine: Record "Item Journal Line"; TransLine: Record "Transfer Line")
+    begin
+        ItemJournalLine."NCT Temp. Bin Code" := TransLine."Transfer-from Bin Code";
+        ItemJournalLine."NCT Temp. New Bin Code" := TransLine."Transfer-To Bin Code";
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyItemJnlLineFromPurchLine', '', TRUE, TRUE)]
@@ -800,7 +826,7 @@ codeunit 80000 "NCT Journal Function"
         ItemJnlLine."NCT Vat Bus. Posting Group" := PurchLine."VAT Bus. Posting Group";
         ItemJnlLine."Gen. Prod. Posting Group" := PurchLine."Gen. Prod. Posting Group";
         ItemJnlLine."Gen. Bus. Posting Group" := PurchLine."Gen. Bus. Posting Group";
-        ItemJnlLine."Bin Code" := PurchLine."Bin Code";
+        ItemJnlLine."NCT Temp. Bin Code" := PurchLine."Bin Code";
         ItemJnlLine.Description := PurchLine.Description;
     end;
 

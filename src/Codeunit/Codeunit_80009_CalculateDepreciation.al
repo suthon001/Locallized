@@ -1,17 +1,32 @@
+/// <summary>
+/// Codeunit NCT Calculate Depreciation (ID 80009).
+/// </summary>
 codeunit 80009 "NCT Calculate Depreciation"
 {
-
     trigger OnRun()
     begin
     end;
 
     var
-        DeprBook: Record 5611;
-        FADeprBook: Record 5612;
+        DeprBook: Record "Depreciation Book";
+        FADeprBook: Record "FA Depreciation Book";
         CalculateNormalDepr: Codeunit "NCT Calculate Normal Dep";
         CalculateCustom1Depr: Codeunit "NCT CalculateCustom1Depr";
 
 
+    /// <summary>
+    /// NCT Calculate.
+    /// </summary>
+    /// <param name="DeprAmount">VAR Decimal.</param>
+    /// <param name="Custom1Amount">VAR Decimal.</param>
+    /// <param name="NumberOfDays">VAR Integer.</param>
+    /// <param name="Custom1NumberOfDays">VAR Integer.</param>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="UntilDate">Date.</param>
+    /// <param name="EntryAmounts">array[4] of Decimal.</param>
+    /// <param name="DateFromProjection">Date.</param>
+    /// <param name="DaysInPeriod">Integer.</param>
     procedure "NCT Calculate"(var DeprAmount: Decimal; var Custom1Amount: Decimal; var NumberOfDays: Integer; var Custom1NumberOfDays: Integer; FANo: Code[20]; DeprBookCode: Code[10]; UntilDate: Date; EntryAmounts: array[4] of Decimal; DateFromProjection: Date; DaysInPeriod: Integer)
     begin
         DeprAmount := 0;

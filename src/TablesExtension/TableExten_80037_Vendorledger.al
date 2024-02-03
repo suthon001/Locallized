@@ -92,5 +92,12 @@ tableextension 80037 "NCT ExtenVendorLedger Entry" extends "Vendor Ledger Entry"
             DataClassification = CustomerContent;
 
         }
+        field(80014; "NCT Ref. Prepayment PO No."; code[20])
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Prepayment PO No.';
+
+        }
     }
 }

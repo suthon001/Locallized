@@ -3,8 +3,6 @@
 /// </summary>
 codeunit 80014 "NCT FA Jnl.-Post Line"
 {
-
-
     Permissions = TableData "FA Ledger Entry" = r,
                   TableData "FA Register" = rm,
                   TableData "Maintenance Ledger Entry" = r,
@@ -46,6 +44,11 @@ codeunit 80014 "NCT FA Jnl.-Post Line"
         Text002: Label '%1 is not a %2.';
         Text003: Label '%1 = %2 already exists for %5 (%3 = %4).';
 
+    /// <summary>
+    /// FAJnlPostLine.
+    /// </summary>
+    /// <param name="FAJnlLine">Record "FA Journal Line".</param>
+    /// <param name="CheckLine">Boolean.</param>
     procedure FAJnlPostLine(FAJnlLine: Record "FA Journal Line"; CheckLine: Boolean)
     var
         IsHandled: Boolean;
@@ -83,6 +86,15 @@ codeunit 80014 "NCT FA Jnl.-Post Line"
         OnAfterFAJnlPostLine(FAJnlLine);
     end;
 
+    /// <summary>
+    /// GenJnlPostLine.
+    /// </summary>
+    /// <param name="GenJnlLine">Record "Gen. Journal Line".</param>
+    /// <param name="FAAmount">Decimal.</param>
+    /// <param name="VATAmount">Decimal.</param>
+    /// <param name="NextTransactionNo">Integer.</param>
+    /// <param name="NextGLEntryNo">Integer.</param>
+    /// <param name="GLRegisterNo">Integer.</param>
     procedure GenJnlPostLine(GenJnlLine: Record "Gen. Journal Line"; FAAmount: Decimal; VATAmount: Decimal; NextTransactionNo: Integer; NextGLEntryNo: Integer; GLRegisterNo: Integer)
     var
         IsHandled: Boolean;
@@ -383,7 +395,7 @@ codeunit 80014 "NCT FA Jnl.-Post Line"
 
     local procedure PostBudgetAsset()
     var
-        FA2: Record "Fixed Asset";
+        ltFixedAsset: Record "Fixed Asset";
         FAPostingType2: Enum "FA Ledger Entry FA Posting Type";
         IsHandled: Boolean;
     begin
@@ -392,9 +404,9 @@ codeunit 80014 "NCT FA Jnl.-Post Line"
         if IsHandled then
             exit;
 
-        FA2.Get(BudgetNo);
-        FA2.TestField(Blocked, false);
-        FA2.TestField(Inactive, false);
+        ltFixedAsset.Get(BudgetNo);
+        ltFixedAsset.TestField(Blocked, false);
+        ltFixedAsset.TestField(Inactive, false);
         if FAPostingType = FAPostingType::Maintenance then begin
             MaintenanceLedgEntry."Automatic Entry" := true;
             MaintenanceLedgEntry."G/L Entry No." := 0;
@@ -462,30 +474,30 @@ codeunit 80014 "NCT FA Jnl.-Post Line"
         end;
     end;
 
-    local procedure PostAllocation(var FALedgEntry: Record "FA Ledger Entry")
+    local procedure PostAllocation(var pFALedgEntry: Record "FA Ledger Entry")
     var
         FAPostingGr: Record "FA Posting Group";
     begin
-        if FALedgEntry."G/L Entry No." = 0 then
+        if pFALedgEntry."G/L Entry No." = 0 then
             exit;
-        case FALedgEntry."FA Posting Type" of
-            FALedgEntry."FA Posting Type"::"Gain/Loss":
+        case pFALedgEntry."FA Posting Type" of
+            pFALedgEntry."FA Posting Type"::"Gain/Loss":
                 if DeprBook."Disposal Calculation Method" = DeprBook."Disposal Calculation Method"::Net then begin
-                    FAPostingGr.GetPostingGroup(FALedgEntry."FA Posting Group", DeprBook.Code);
+                    FAPostingGr.GetPostingGroup(pFALedgEntry."FA Posting Group", DeprBook.Code);
                     FAPostingGr.CalcFields("Allocated Gain %", "Allocated Loss %");
-                    if FALedgEntry."Result on Disposal" = FALedgEntry."Result on Disposal"::Gain then
-                        PostGLBalAcc(FALedgEntry, FAPostingGr."Allocated Gain %")
+                    if pFALedgEntry."Result on Disposal" = pFALedgEntry."Result on Disposal"::Gain then
+                        PostGLBalAcc(pFALedgEntry, FAPostingGr."Allocated Gain %")
                     else
-                        PostGLBalAcc(FALedgEntry, FAPostingGr."Allocated Loss %");
+                        PostGLBalAcc(pFALedgEntry, FAPostingGr."Allocated Loss %");
                 end;
-            FALedgEntry."FA Posting Type"::"Book Value on Disposal":
+            pFALedgEntry."FA Posting Type"::"Book Value on Disposal":
                 begin
-                    FAPostingGr.GetPostingGroup(FALedgEntry."FA Posting Group", DeprBook.Code);
+                    FAPostingGr.GetPostingGroup(pFALedgEntry."FA Posting Group", DeprBook.Code);
                     FAPostingGr.CalcFields("Allocated Book Value % (Gain)", "Allocated Book Value % (Loss)");
-                    if FALedgEntry."Result on Disposal" = FALedgEntry."Result on Disposal"::Gain then
-                        PostGLBalAcc(FALedgEntry, FAPostingGr."Allocated Book Value % (Gain)")
+                    if pFALedgEntry."Result on Disposal" = pFALedgEntry."Result on Disposal"::Gain then
+                        PostGLBalAcc(pFALedgEntry, FAPostingGr."Allocated Book Value % (Gain)")
                     else
-                        PostGLBalAcc(FALedgEntry, FAPostingGr."Allocated Book Value % (Loss)");
+                        PostGLBalAcc(pFALedgEntry, FAPostingGr."Allocated Book Value % (Loss)");
                 end;
         end;
     end;
@@ -495,11 +507,21 @@ codeunit 80014 "NCT FA Jnl.-Post Line"
         exit((Amount2 = 0) and (FAPostingType = FAPostingType::Depreciation) and DeprUntilDate);
     end;
 
+    /// <summary>
+    /// FindFirstGLAcc.
+    /// </summary>
+    /// <param name="FAGLPostBuf">VAR Record "FA G/L Posting Buffer".</param>
+    /// <returns>Return value of type Boolean.</returns>
     procedure FindFirstGLAcc(var FAGLPostBuf: Record "FA G/L Posting Buffer"): Boolean
     begin
         exit(FAInsertLedgEntry.FindFirstGLAcc(FAGLPostBuf));
     end;
 
+    /// <summary>
+    /// GetNextGLAcc.
+    /// </summary>
+    /// <param name="FAGLPostBuf">VAR Record "FA G/L Posting Buffer".</param>
+    /// <returns>Return value of type Integer.</returns>
     procedure GetNextGLAcc(var FAGLPostBuf: Record "FA G/L Posting Buffer"): Integer
     begin
         exit(FAInsertLedgEntry.GetNextGLAcc(FAGLPostBuf));
@@ -512,6 +534,10 @@ codeunit 80014 "NCT FA Jnl.-Post Line"
         exit(DepreciationCalc.FAName(FA, DeprBookCode));
     end;
 
+    /// <summary>
+    /// SetResultOnDisposal.
+    /// </summary>
+    /// <param name="pFALedgEntry">VAR Record "FA Ledger Entry".</param>
     procedure SetResultOnDisposal(var pFALedgEntry: Record "FA Ledger Entry")
     var
         ltFADeprBook: Record "FA Depreciation Book";

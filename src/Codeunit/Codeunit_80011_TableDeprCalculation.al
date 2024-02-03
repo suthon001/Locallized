@@ -1,6 +1,8 @@
+/// <summary>
+/// Codeunit NCT Table Depr. Calculation (ID 80011).
+/// </summary>
 codeunit 80011 "NCT Table Depr. Calculation"
 {
-
     trigger OnRun()
     begin
     end;
@@ -11,11 +13,11 @@ codeunit 80011 "NCT Table Depr. Calculation"
         Text002: Label 'must be an unbroken sequence';
         Text003: Label 'Period must be specified in %1.';
         Text004: Label 'The number of days in an accounting period must not be less than 5.';
-        AccountingPeriod: Record 50;
-        DeprBook: Record 5611;
-        DeprTableHeader: Record 5642;
-        DeprTableBufferTmp: Record 5646 temporary;
-        DeprTableLine: Record 5643;
+        AccountingPeriod: Record "Accounting Period";
+        DeprBook: Record "Depreciation Book";
+        DeprTableHeader: Record "Depreciation Table Header";
+        DeprTableBufferTmp: Record "Depreciation Table Buffer" temporary;
+        DeprTableLine: Record "Depreciation Table Line";
         DepreciationCalc: Codeunit "NCT Depreciation Calculation";
         DaysInFiscalYear: Integer;
         StartingLimit: Integer;
@@ -28,6 +30,15 @@ codeunit 80011 "NCT Table Depr. Calculation"
         Year366Days: boolean;
         Text005: Label 'cannot be %1 when %2 is %3 in %4 %5';
 
+    /// <summary>
+    /// NCT GetTablePercent.
+    /// </summary>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="DeprTableCode">Code[10].</param>
+    /// <param name="FirstUserDefinedDeprDate">Date.</param>
+    /// <param name="StartingDate">Date.</param>
+    /// <param name="EndingDate">Date.</param>
+    /// <returns>Return value of type Decimal.</returns>
     procedure "NCT GetTablePercent"(DeprBookCode: Code[10]; DeprTableCode: Code[10]; FirstUserDefinedDeprDate: Date; StartingDate: Date; EndingDate: Date): Decimal
     begin
         CLEARALL();
@@ -97,7 +108,6 @@ codeunit 80011 "NCT Table Depr. Calculation"
     local procedure "NCT CreateTableBuffer"(FirstUserDefinedDeprDate: Date)
     var
         FADeprBook: Record 5612;
-        DepreciationCalc: Codeunit "NCT Depreciation Calculation";
         AccountingPeriodMgt: Codeunit 360;
         DaysInPeriod: Integer;
         TotalNoOfDays: Integer;

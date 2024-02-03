@@ -1,8 +1,11 @@
+/// <summary>
+/// Codeunit NCT Depreciation Calculation (ID 80008).
+/// </summary>
 codeunit 80008 "NCT Depreciation Calculation"
 {
-    Permissions = TableData 5601 = r,
-                  TableData 5604 = r,
-                  TableData 5625 = r;
+    Permissions = TableData "FA Ledger Entry" = r,
+                  TableData "FA Posting Type Setup" = r,
+                  TableData "Maintenance Ledger Entry" = r;
 
     trigger OnRun()
     begin
@@ -12,6 +15,14 @@ codeunit 80008 "NCT Depreciation Calculation"
         Text000: Label '%1 %2 = %3 in %4 %5 = %6';
         DeprBookCodeErr: Label ' in depreciation book code %1', Comment = '%1=value for code, e.g. COMAPNY';
 
+    /// <summary>
+    /// NCT DeprDays.
+    /// </summary>
+    /// <param name="StartingDate">Date.</param>
+    /// <param name="EndingDate">Date.</param>
+    /// <param name="Year365Days">Boolean.</param>
+    /// <param name="Year366Days">Boolean.</param>
+    /// <returns>Return value of type Integer.</returns>
     procedure "NCT DeprDays"(StartingDate: Date; EndingDate: Date; Year365Days: Boolean; Year366Days: Boolean): Integer
     var
         StartingDay: Integer;
@@ -51,6 +62,13 @@ codeunit 80008 "NCT Depreciation Calculation"
           360 * (EndingYear - StartingYear));
     end;
 
+    /// <summary>
+    /// NCT ToMorrow.
+    /// </summary>
+    /// <param name="ThisDate">Date.</param>
+    /// <param name="Year365Days">Boolean.</param>
+    /// <param name="Year366Days">Boolean.</param>
+    /// <returns>Return value of type Date.</returns>
     procedure "NCT ToMorrow"(ThisDate: Date; Year365Days: Boolean; Year366Days: Boolean): Date
     begin
         IF Year365Days OR Year366Days THEN //TPP.LCL
@@ -63,6 +81,13 @@ codeunit 80008 "NCT Depreciation Calculation"
 
     end;
 
+    /// <summary>
+    /// NCT Yesterday.
+    /// </summary>
+    /// <param name="ThisDate">Date.</param>
+    /// <param name="Year365Days">Boolean.</param>
+    /// <param name="Year366Days">Boolean.</param>
+    /// <returns>Return value of type Date.</returns>
     procedure "NCT Yesterday"(ThisDate: Date; Year365Days: Boolean; Year366Days: Boolean): Date
     begin
         IF Year365Days OR Year366Days THEN
@@ -75,7 +100,14 @@ codeunit 80008 "NCT Depreciation Calculation"
         EXIT(ThisDate);
     end;
 
-    procedure "NCT SetFAFilter"(var FALedgEntry: Record 5601; FANo: Code[20]; DeprBookCode: Code[10]; FAPostingTypeOrder: Boolean)
+    /// <summary>
+    /// NCT SetFAFilter.
+    /// </summary>
+    /// <param name="FALedgEntry">VAR Record "FA Ledger Entry".</param>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="FAPostingTypeOrder">Boolean.</param>
+    procedure "NCT SetFAFilter"(var FALedgEntry: Record "FA Ledger Entry"; FANo: Code[20]; DeprBookCode: Code[10]; FAPostingTypeOrder: Boolean)
     begin
 
         FALedgEntry.RESET();
@@ -92,9 +124,17 @@ codeunit 80008 "NCT Depreciation Calculation"
 
     end;
 
+    /// <summary>
+    /// NCT CalcEntryAmounts.
+    /// </summary>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="StartingDate">Date.</param>
+    /// <param name="EndingDate">Date.</param>
+    /// <param name="EntryAmounts">VAR array[4] of Decimal.</param>
     procedure "NCT CalcEntryAmounts"(FANo: Code[20]; DeprBookCode: Code[10]; StartingDate: Date; EndingDate: Date; var EntryAmounts: array[4] of Decimal)
     var
-        FALedgEntry: Record 5601;
+        FALedgEntry: Record "FA Ledger Entry";
         I: Integer;
     begin
         IF EndingDate = 0D THEN
@@ -122,7 +162,7 @@ codeunit 80008 "NCT Depreciation Calculation"
 
     local procedure "NCT GetLastEntryDates"(FANo: Code[20]; DeprBookCode: Code[10]; var EntryDates: array[4] of Date)
     var
-        FALedgEntry: Record 5601;
+        FALedgEntry: Record "FA Ledger Entry";
         i: Integer;
     begin
         CLEAR(EntryDates);
@@ -149,9 +189,15 @@ codeunit 80008 "NCT Depreciation Calculation"
         END;
     end;
 
+    /// <summary>
+    /// NCT UseDeprStartingDate.
+    /// </summary>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <returns>Return value of type Boolean.</returns>
     procedure "NCT UseDeprStartingDate"(FANo: Code[20]; DeprBookCode: Code[10]): Boolean
     var
-        FALedgEntry: Record 5601;
+        FALedgEntry: Record "FA Ledger Entry";
         EntryDates: array[4] of Date;
         i: Integer;
     begin
@@ -167,9 +213,16 @@ codeunit 80008 "NCT Depreciation Calculation"
         EXIT(TRUE);
     end;
 
+    /// <summary>
+    /// NCT GetFirstDeprDate.
+    /// </summary>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="Year365Days">Boolean.</param>
+    /// <returns>Return value of type Date.</returns>
     procedure "NCT GetFirstDeprDate"(FANo: Code[20]; DeprBookCode: Code[10]; Year365Days: Boolean): Date
     var
-        FALedgEntry: Record 5601;
+        FALedgEntry: Record "FA Ledger Entry";
         EntryDates: array[4] of Date;
         LocalDate: Date;
         i: Integer;
@@ -206,6 +259,14 @@ codeunit 80008 "NCT Depreciation Calculation"
         EXIT(LocalDate);
     end;
 
+    /// <summary>
+    /// NCT GetMinusBookValue.
+    /// </summary>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="StartingDate">Date.</param>
+    /// <param name="EndingDate">Date.</param>
+    /// <returns>Return value of type Decimal.</returns>
     procedure "NCT GetMinusBookValue"(FANo: Code[20]; DeprBookCode: Code[10]; StartingDate: Date; EndingDate: Date): Decimal
     var
         EntryAmounts: array[4] of Decimal;
@@ -231,9 +292,18 @@ codeunit 80008 "NCT Depreciation Calculation"
         EXIT(MaxDepr);
     end;
 
+    /// <summary>
+    /// NCT AdjustDepr.
+    /// </summary>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="Depreciation">VAR Decimal.</param>
+    /// <param name="BookValue">Decimal.</param>
+    /// <param name="SalvageValue">Decimal.</param>
+    /// <param name="EndingBookValue">Decimal.</param>
+    /// <param name="FinalRoundingAmount">Decimal.</param>
     procedure "NCT AdjustDepr"(DeprBookCode: Code[10]; var Depreciation: Decimal; BookValue: Decimal; SalvageValue: Decimal; EndingBookValue: Decimal; FinalRoundingAmount: Decimal)
     var
-        DeprBook: Record 5611;
+        DeprBook: Record "Depreciation Book";
         MaxDepr: Decimal;
     begin
         IF FinalRoundingAmount = 0 THEN BEGIN
@@ -255,9 +325,19 @@ codeunit 80008 "NCT Depreciation Calculation"
         END;
     end;
 
+    /// <summary>
+    /// NCT AdjustCustom1.
+    /// </summary>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="DeprAmount">VAR Decimal.</param>
+    /// <param name="Custom1Amount">VAR Decimal.</param>
+    /// <param name="BookValue">Decimal.</param>
+    /// <param name="SalvageValue">Decimal.</param>
+    /// <param name="EndingBookValue">Decimal.</param>
+    /// <param name="FinalRoundingAmount">Decimal.</param>
     procedure "NCT AdjustCustom1"(DeprBookCode: Code[10]; var DeprAmount: Decimal; var Custom1Amount: Decimal; BookValue: Decimal; SalvageValue: Decimal; EndingBookValue: Decimal; FinalRoundingAmount: Decimal)
     var
-        DeprBook: Record 5611;
+        DeprBook: Record "Depreciation Book";
         MaxDepr: Decimal;
     begin
         IF DeprAmount > 0 THEN
@@ -299,6 +379,14 @@ codeunit 80008 "NCT Depreciation Calculation"
             Custom1Amount := 0;
     end;
 
+    /// <summary>
+    /// NCT GetSign.
+    /// </summary>
+    /// <param name="BookValue">Decimal.</param>
+    /// <param name="DeprBasis">Decimal.</param>
+    /// <param name="SalvageValue">Decimal.</param>
+    /// <param name="MinusBookValue">Decimal.</param>
+    /// <returns>Return value of type Integer.</returns>
     procedure "NCT GetSign"(BookValue: Decimal; DeprBasis: Decimal; SalvageValue: Decimal; MinusBookValue: Decimal): Integer
     begin
         IF (SalvageValue <= 0) AND (DeprBasis >= 0) AND
@@ -312,6 +400,15 @@ codeunit 80008 "NCT Depreciation Calculation"
         EXIT(0);
     end;
 
+    /// <summary>
+    /// NCT GetCustom1Sign.
+    /// </summary>
+    /// <param name="BookValue">Decimal.</param>
+    /// <param name="AcquisitionCost">Decimal.</param>
+    /// <param name="Custom1">Decimal.</param>
+    /// <param name="SalvageValue">Decimal.</param>
+    /// <param name="MinusBookValue">Decimal.</param>
+    /// <returns>Return value of type Integer.</returns>
     procedure "NCT GetCustom1Sign"(BookValue: Decimal; AcquisitionCost: Decimal; Custom1: Decimal; SalvageValue: Decimal; MinusBookValue: Decimal): Integer
     begin
         IF (SalvageValue <= 0) AND (AcquisitionCost >= 0) AND
@@ -325,6 +422,13 @@ codeunit 80008 "NCT Depreciation Calculation"
         EXIT(0);
     end;
 
+    /// <summary>
+    /// NCT GetNewSigns.
+    /// </summary>
+    /// <param name="BookValue">VAR Decimal.</param>
+    /// <param name="DeprBasis">VAR Decimal.</param>
+    /// <param name="SalvageValue">VAR Decimal.</param>
+    /// <param name="MinusBookValue">VAR Decimal.</param>
     procedure "NCT GetNewSigns"(var BookValue: Decimal; var DeprBasis: Decimal; var SalvageValue: Decimal; var MinusBookValue: Decimal)
     begin
         BookValue := -BookValue;
@@ -333,6 +437,14 @@ codeunit 80008 "NCT Depreciation Calculation"
         MinusBookValue := -MinusBookValue;
     end;
 
+    /// <summary>
+    /// NCT GetNewCustom1Signs.
+    /// </summary>
+    /// <param name="BookValue">VAR Decimal.</param>
+    /// <param name="AcquisitionCost">VAR Decimal.</param>
+    /// <param name="Custom1">VAR Decimal.</param>
+    /// <param name="SalvageValue">VAR Decimal.</param>
+    /// <param name="MinusBookValue">VAR Decimal.</param>
     procedure "NCT GetNewCustom1Signs"(var BookValue: Decimal; var AcquisitionCost: Decimal; var Custom1: Decimal; var SalvageValue: Decimal; var MinusBookValue: Decimal)
     begin
         BookValue := -BookValue;
@@ -342,9 +454,15 @@ codeunit 80008 "NCT Depreciation Calculation"
         MinusBookValue := -MinusBookValue;
     end;
 
+    /// <summary>
+    /// NCT CalcRounding.
+    /// </summary>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="DeprAmount">Decimal.</param>
+    /// <returns>Return value of type Decimal.</returns>
     procedure "NCT CalcRounding"(DeprBookCode: Code[10]; DeprAmount: Decimal): Decimal
     var
-        DeprBook: Record 5611;
+        DeprBook: Record "Depreciation Book";
     begin
 
         DeprBook.GET(DeprBookCode);
@@ -355,9 +473,21 @@ codeunit 80008 "NCT Depreciation Calculation"
 
     end;
 
+    /// <summary>
+    /// NCT CalculateDeprInPeriod.
+    /// </summary>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="EndingDate">Date.</param>
+    /// <param name="CalculatedDepr">Decimal.</param>
+    /// <param name="Sign">Integer.</param>
+    /// <param name="NewBookValue">VAR Decimal.</param>
+    /// <param name="DeprBasis">VAR Decimal.</param>
+    /// <param name="SalvageValue">VAR Decimal.</param>
+    /// <param name="MinusBookValue">VAR Decimal.</param>
     procedure "NCT CalculateDeprInPeriod"(FANo: Code[20]; DeprBookCode: Code[10]; EndingDate: Date; CalculatedDepr: Decimal; Sign: Integer; var NewBookValue: Decimal; var DeprBasis: Decimal; var SalvageValue: Decimal; var MinusBookValue: Decimal)
     var
-        FALedgEntry: Record 5601;
+        FALedgEntry: Record "FA Ledger Entry";
     begin
 
         FALedgEntry.SETCURRENTKEY("FA No.", "Depreciation Book Code", "Part of Book Value", "FA Posting Date");
@@ -384,9 +514,19 @@ codeunit 80008 "NCT Depreciation Calculation"
 
     end;
 
+    /// <summary>
+    /// NCT GetDeprPeriod.
+    /// </summary>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="UntilDate">Date.</param>
+    /// <param name="StartingDate">VAR Date.</param>
+    /// <param name="EndingDate">VAR Date.</param>
+    /// <param name="NumberOfDays">VAR Integer.</param>
+    /// <param name="Year365Days">Boolean.</param>
     procedure "NCT GetDeprPeriod"(FANo: Code[20]; DeprBookCode: Code[10]; UntilDate: Date; var StartingDate: Date; var EndingDate: Date; var NumberOfDays: Integer; Year365Days: Boolean)
     var
-        FALedgEntry: Record 5601;
+        FALedgEntry: Record "FA Ledger Entry";
         FADeprBook: Record 5612;
         UsedDeprStartingDate: Boolean;
         Year366Days: Boolean;
@@ -438,9 +578,16 @@ codeunit 80008 "NCT Depreciation Calculation"
         NumberOfDays := "NCT DeprDays"(StartingDate, EndingDate, Year365Days, Year366Days);
     end;
 
+    /// <summary>
+    /// NCT DeprInFiscalYear.
+    /// </summary>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <param name="StartingDate">Date.</param>
+    /// <returns>Return value of type Decimal.</returns>
     procedure "NCT DeprInFiscalYear"(FANo: Code[20]; DeprBookCode: Code[10]; StartingDate: Date): Decimal
     var
-        FALedgEntry: Record 5601;
+        FALedgEntry: Record "FA Ledger Entry";
         FADateCalc: Codeunit "NCT FA Date Calculation";
         LocalAmount: Decimal;
         EntryAmounts: array[4] of Decimal;
@@ -464,9 +611,16 @@ codeunit 80008 "NCT Depreciation Calculation"
         EXIT(LocalAmount);
     end;
 
+    /// <summary>
+    /// NCT GetPartOfCalculation.
+    /// </summary>
+    /// <param name="Type">Option IncludeInDeprCalc,IncludeInGainLoss,DepreciationType,ReverseType.</param>
+    /// <param name="PostingType">Option "Write-Down",Appreciation,"Custom 1","Custom 2".</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <returns>Return value of type Boolean.</returns>
     procedure "NCT GetPartOfCalculation"(Type: Option IncludeInDeprCalc,IncludeInGainLoss,DepreciationType,ReverseType; PostingType: Option "Write-Down",Appreciation,"Custom 1","Custom 2"; DeprBookCode: Code[10]): Boolean
     var
-        FAPostingTypeSetup: Record 5604;
+        FAPostingTypeSetup: Record "FA Posting Type Setup";
     begin
 
         CASE PostingType OF
@@ -491,7 +645,7 @@ codeunit 80008 "NCT Depreciation Calculation"
 
     end;
 
-    local procedure GetPartOfDeprCalculation(var FALedgEntry: Record 5601): Boolean
+    local procedure GetPartOfDeprCalculation(var FALedgEntry: Record "FA Ledger Entry"): Boolean
     var
         i: Integer;
     begin
@@ -513,9 +667,15 @@ codeunit 80008 "NCT Depreciation Calculation"
 
     end;
 
+    /// <summary>
+    /// NCT FAName.
+    /// </summary>
+    /// <param name="FA">VAR Record 5600.</param>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <returns>Return value of type Text.</returns>
     procedure "NCT FAName"(var FA: Record 5600; DeprBookCode: Code[10]): Text
     var
-        DeprBook: Record 5611;
+        DeprBook: Record "Depreciation Book";
     begin
         IF DeprBookCode = '' THEN
             EXIT(STRSUBSTNO('%1 %2 = %3', FA.TABLECAPTION, FA.FIELDCAPTION("No."), FA."No."));
@@ -527,6 +687,11 @@ codeunit 80008 "NCT Depreciation Calculation"
             DeprBook.TABLECAPTION, DeprBook.FIELDCAPTION(Code), DeprBookCode));
     end;
 
+    /// <summary>
+    /// FADeprBookName.
+    /// </summary>
+    /// <param name="DeprBookCode">Code[10].</param>
+    /// <returns>Return value of type Text[200].</returns>
     procedure FADeprBookName(DeprBookCode: Code[10]): Text[200]
     begin
         IF DeprBookCode = '' THEN
@@ -590,7 +755,7 @@ codeunit 80008 "NCT Depreciation Calculation"
         EXIT(ThisDate);
     end;
 
-    local procedure "NCT CheckEntryDate"(FALedgerEntry: Record 5601; FAPostingType: Option): Date
+    local procedure "NCT CheckEntryDate"(FALedgerEntry: Record "FA Ledger Entry"; FAPostingType: Option): Date
     begin
 
         IF "NCT IsDepreciationTypeEntry"(FALedgerEntry."Depreciation Book Code", FAPostingType) THEN

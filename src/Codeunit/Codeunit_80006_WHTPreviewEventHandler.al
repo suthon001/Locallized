@@ -1,3 +1,6 @@
+/// <summary>
+/// Codeunit WHT Preview Event Handler (ID 80006).
+/// </summary>
 codeunit 80006 "WHT Preview Event Handler"
 {
     SingleInstance = true;

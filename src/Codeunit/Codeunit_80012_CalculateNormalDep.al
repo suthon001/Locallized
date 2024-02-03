@@ -1,8 +1,10 @@
+/// <summary>
+/// Codeunit NCT Calculate Normal Dep (ID 80012).
+/// </summary>
 codeunit 80012 "NCT Calculate Normal Dep"
 {
-
-    Permissions = TableData 5601 = r,
-                  TableData 5604 = r;
+    Permissions = TableData "FA Ledger Entry" = r,
+                  TableData "FA Posting Type Setup" = r;
 
     trigger OnRun()
     begin
@@ -14,10 +16,10 @@ codeunit 80012 "NCT Calculate Normal Dep"
         Text002: Label '%2 must be %3 if %4 %5 = %6 for %1.';
         Text003: Label '%2 must not be later than %3 for %1.';
         Text004: Label '%1 %2 must not be used together with the Half-Year Convention for %3.';
-        FA: Record 5600;
-        FALedgEntry: Record 5601;
-        DeprBook: Record 5611;
-        FADeprBook: Record 5612;
+        FA: Record "Fixed Asset";
+        FALedgEntry: Record "FA Ledger Entry";
+        DeprBook: Record "Depreciation Book";
+        FADeprBook: Record "FA Depreciation Book";
         DepreciationCalc: Codeunit "NCT Depreciation Calculation";
         DeprBookCode: Code[10];
         DaysInFiscalYear: Integer;
@@ -65,6 +67,17 @@ codeunit 80012 "NCT Calculate Normal Dep"
         Year365Days: Boolean;
         Year366Days: Boolean;
 
+    /// <summary>
+    /// NCT Calculate.
+    /// </summary>
+    /// <param name="DeprAmount">VAR Decimal.</param>
+    /// <param name="NumberOfDays4">VAR Integer.</param>
+    /// <param name="FANo">Code[20].</param>
+    /// <param name="DeprBookCode2">Code[10].</param>
+    /// <param name="UntilDate2">Date.</param>
+    /// <param name="EntryAmounts2">array[4] of Decimal.</param>
+    /// <param name="DateFromProjection2">Date.</param>
+    /// <param name="DaysInPeriod2">Integer.</param>
     procedure "NCT Calculate"(var DeprAmount: Decimal; var NumberOfDays4: Integer; FANo: Code[20]; DeprBookCode2: Code[10]; UntilDate2: Date; EntryAmounts2: array[4] of Decimal; DateFromProjection2: Date; DaysInPeriod2: Integer)
     var
         i: Integer;
