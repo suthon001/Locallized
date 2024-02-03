@@ -59,20 +59,6 @@ codeunit 80006 "WHT Preview Event Handler"
         gvPONoNories := PONoSeries;
     end;
 
-    [EventSubscriber(ObjectType::Report, Report::"Carry Out Action Msg. - Req.", 'OnUseOneJnlOnBeforeSetReqWkshMakeOrdersParameters', '', false, false)]
-    local procedure OnUseOneJnlOnBeforeSetReqWkshMakeOrdersParameters()
-    var
-        NoSeriesMgt: Codeunit NoSeriesManagement;
-        newPoNoSeries: Code[20];
-    begin
-        if gvPONoNories <> '' then
-            if NoSeriesMgt.SelectSeries(gvPONoNories, gvPONoNories, newPoNoSeries) then
-                gvPONoNories := newPoNoSeries
-            else
-                ERROR('');
-    end;
-
-
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnBeforePurchOrderHeaderInsert', '', false, false)]
     local procedure OnBeforePurchOrderHeaderInsert(var PurchaseHeader: Record "Purchase Header")
     var

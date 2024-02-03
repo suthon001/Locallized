@@ -28,6 +28,23 @@ tableextension 80049 "NCT Requisition WorkSheet" extends "Requisition Line"
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
+        field(80005; "NCT Document Date"; date)
+        {
+            Caption = 'Document Date';
+            DataClassification = CustomerContent;
+        }
+        modify(Type)
+        {
+            trigger OnAfterValidate()
+            begin
+                if xrec.Type <> rec.Type then begin
+                    if xrec."NCT Document No." <> '' then
+                        rec."NCT Document No." := xrec."NCT Document No.";
+                    if xrec."NCT Document Date" <> 0D then
+                        rec."NCT Document Date" := xrec."NCT Document Date";
+                end;
+            end;
+        }
     }
     /// <summary> 
     /// Description for AssistEdit.
@@ -55,6 +72,7 @@ tableextension 80049 "NCT Requisition WorkSheet" extends "Requisition Line"
     trigger OnInsert()
     begin
         TestField("No.");
+        "NCT Document Date" := Today();
         "NCT Create By" := COPYSTR(UserId, 1, 50);
         "NCT Create DateTime" := CurrentDateTime();
     end;

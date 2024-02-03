@@ -542,10 +542,11 @@ codeunit 80005 "NCT EventFunction"
         end;
     end;
 
+
     /// <summary>
     /// CreateWHTCertificate.
     /// </summary>
-    /// <param name="rec">VAR WHTHeader "NCT WHT Header".</param>
+    /// <param name="WHTHeader">VAR Record "NCT WHT Header".</param>
     /// <param name="pGenJournalLine">Record "Gen. Journal Line".</param>
     procedure CreateWHTCertificate(var WHTHeader: Record "NCT WHT Header"; pGenJournalLine: Record "Gen. Journal Line")
     var

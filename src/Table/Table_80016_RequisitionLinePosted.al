@@ -476,6 +476,35 @@ table 80016 "NCT Requisition Line Posted"
         {
             Caption = 'Custom Sorting Order';
         }
+
+        field(80000; "NCT Document No."; Code[20])
+        {
+            Caption = 'Document No.';
+            DataClassification = CustomerContent;
+        }
+        field(80002; "NCT Create By"; Code[50])
+        {
+            Caption = 'Create By';
+            DataClassification = SystemMetadata;
+            Editable = false;
+        }
+        field(80003; "NCT Create DateTime"; DateTime)
+        {
+            Caption = 'Create DateTime';
+            DataClassification = SystemMetadata;
+            Editable = false;
+        }
+        field(80004; "NCT PR No. Series"; Code[20])
+        {
+            Caption = 'PR No. Series';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(80005; "NCT Document Date"; date)
+        {
+            Caption = 'Document Date';
+            DataClassification = CustomerContent;
+        }
         field(99998; "Ref. PO No."; code[20])
         {
             Caption = 'Ref. PO No.';

@@ -348,7 +348,7 @@ table 80005 "NCT Tax & WHT Line"
         TaxReportHeader.TestField("End date of Month");
         VatTransection.reset();
         VatTransection.SetRange("Type", "Tax Type".AsInteger() + 1);
-        VatTransection.SetFilter("Posting Date", '%1..%2', DMY2Date(01, TaxReportHeader."Month No.", TaxReportHeader."Year No."), CalcDate('<CM>', TaxReportHeader."End date of Month"));
+        VatTransection.SetFilter("Posting Date", '%1..%2', 10010101D, CalcDate('<CM>', TaxReportHeader."End date of Month"));
         if "Tax Type" = "Tax Type"::Purchase then
             VatTransection.SetRange("Allow Generate to Purch. Vat", true)
         else

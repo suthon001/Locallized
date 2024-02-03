@@ -3,7 +3,13 @@
 /// </summary>
 codeunit 80001 "NCT Purchase Function"
 {
-    EventSubscriberInstance = StaticAutomatic;
+    [EventSubscriber(ObjectType::Table, Database::"Requisition Line", 'OnAfterSetUpNewLine', '', false, false)]
+    local procedure OnAfterSetUpNewLine(var RequisitionLine: Record "Requisition Line"; LastReqLine: Record "Requisition Line")
+    begin
+        RequisitionLine."NCT Document No." := LastReqLine."NCT Document No.";
+        RequisitionLine."NCT Document Date" := LastReqLine."NCT Document Date";
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnAfterPurchOrderLineInsert', '', false, false)]
     local procedure OnAfterPurchOrderLineInsertFromRequisition(var PurchOrderLine: Record "Purchase Line"; var RequisitionLine: Record "Requisition Line")
     var
