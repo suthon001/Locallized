@@ -93,6 +93,7 @@ tableextension 80013 "NCT ExtenSales Line" extends "Sales Line"
         salesLine: Record "Sales Line";
     begin
         salesLine.reset();
+        salesLine.ReadIsolation := IsolationLevel::UpdLock;
         salesLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
         salesLine.SetRange("Document Type", "Document Type");
         salesLine.SetRange("Document No.", "Document No.");

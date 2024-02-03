@@ -636,6 +636,7 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
         genJournalLine: Record "Gen. Journal Line";
     begin
         genJournalLine.reset();
+        genJournalLine.ReadIsolation := IsolationLevel::UpdLock;
         genJournalLine.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
         genJournalLine.SetRange("Journal Template Name", "Journal Template Name");
         genJournalLine.SetRange("Journal Batch Name", "Journal Batch Name");
