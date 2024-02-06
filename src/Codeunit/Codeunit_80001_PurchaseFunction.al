@@ -31,11 +31,17 @@ codeunit 80001 "NCT Purchase Function"
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnBeforeDeletePurchQuote', '', false, false)]
     local procedure OnBeforeDeletePurchQuote(var QuotePurchHeader: Record "Purchase Header"; var IsHandled: Boolean; var OrderPurchHeader: Record "Purchase Header")
+    var
+        IsHandle: Boolean;
     begin
-        IsHandled := true;
-        QuotePurchHeader."NCT Purchase Order No." := OrderPurchHeader."No.";
-        QuotePurchHeader.Modify();
-        MESSAGE('Create to Document No. ' + OrderPurchHeader."No.");
+        IsHandle := false;
+        NCTOnBeforeDeletePurchQuote(IsHandle);
+        if not IsHandle then begin
+            IsHandled := true;
+            QuotePurchHeader."NCT Purchase Order No." := OrderPurchHeader."No.";
+            QuotePurchHeader.Modify();
+            MESSAGE('Create to Document No. ' + OrderPurchHeader."No.");
+        end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnCreatePurchHeaderOnBeforePurchOrderHeaderInsert', '', false, false)]
@@ -54,48 +60,50 @@ codeunit 80001 "NCT Purchase Function"
         PurchaseLine: Record "Purchase Line";
         WHTAppEntry: Record "NCT WHT Applied Entry";
         LastLineNo: Integer;
+        IsHandle: Boolean;
     begin
         LastLineNo := 0;
-
-        if PurchHeader."Document Type" in [PurchHeader."Document Type"::Invoice, PurchHeader."Document Type"::"Credit Memo"] then begin
-
-            PurchaseLine.reset();
-            PurchaseLine.SetRange("Document Type", PurchHeader."Document Type");
-            PurchaseLine.SetRange("Document No.", PurchHeader."No.");
-            PurchaseLine.SetFilter("NCT WHT %", '<>%1', 0);
-            "NCT OnFilterWHTAPPLY"(PurchHeader, PurchaseLine);
-            if PurchaseLine.FindSet() then
-                repeat
-                    LastLineNo := LastLineNo + 10000;
-                    WHTAppEntry.init();
-                    WHTAppEntry."Document No." := PurchaseLine."Document No.";
-                    WHTAppEntry."Document Line No." := PurchaseLine."Line No.";
-                    WHTAppEntry."Entry Type" := WHTAppEntry."Entry Type"::Initial;
-                    WHTAppEntry."Line No." := LastLineNo;
-                    WHTAppEntry."WHT Bus. Posting Group" := PurchaseLine."NCT WHT Business Posting Group";
-                    WHTAppEntry."WHT Prod. Posting Group" := PurchaseLine."NCT WHT Product Posting Group";
-                    WHTAppEntry.Description := PurchaseLine.Description;
-                    WHTAppEntry."WHT %" := PurchaseLine."NCT WHT %";
-                    WHTAppEntry."WHT Base" := PurchaseLine."NCT WHT Base";
-                    WHTAppEntry."WHT Amount" := PurchaseLine."NCT WHT Amount";
-                    WHTAppEntry."WHT Name" := PurchHeader."Buy-from Vendor Name";
-                    WHTAppEntry."WHT Name 2" := PurchHeader."Buy-from Vendor Name 2";
-                    WHTAppEntry."WHT Address" := PurchHeader."Buy-from Address";
-                    WHTAppEntry."WHT Address 2" := PurchHeader."Buy-from Address 2";
-                    WHTAppEntry."WHT City" := PurchHeader."Buy-from City";
-                    WHTAppEntry."VAT Registration No." := PurchHeader."VAT Registration No.";
-                    WHTAppEntry."WHT Option" := PurchaseLine."NCT WHT Option";
-                    WHTAppEntry."VAT Branch Code" := PurchHeader."NCT VAT Branch Code";
-                    WHTAppEntry."Head Office" := PurchHeader."NCT Head Office";
-                    WHTAppEntry."WHT Post Code" := PurchHeader."Buy-from Post Code";
-                    if PurchaseLine."Document Type" = PurchaseLine."Document Type"::Invoice then
-                        WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::Invoice;
-                    if PurchaseLine."Document Type" = PurchaseLine."Document Type"::"Credit Memo" then
-                        WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::"Credit Memo";
-                    "NCT OnBeforInsertWHTAPPLY"(WHTAppEntry, PurchHeader, PurchaseLine);
-                    WHTAppEntry.Insert(true);
-                until PurchaseLine.Next() = 0;
-        end;
+        IsHandle := false;
+        "NCT OnBeforInsertWHTEntryAfterPosting"(PurchHeader, IsHandle);
+        if not IsHandle then
+            if PurchHeader."Document Type" in [PurchHeader."Document Type"::Invoice, PurchHeader."Document Type"::"Credit Memo"] then begin
+                PurchaseLine.reset();
+                PurchaseLine.SetRange("Document Type", PurchHeader."Document Type");
+                PurchaseLine.SetRange("Document No.", PurchHeader."No.");
+                PurchaseLine.SetFilter("NCT WHT %", '<>%1', 0);
+                "NCT OnFilterWHTAPPLY"(PurchHeader, PurchaseLine);
+                if PurchaseLine.FindSet() then
+                    repeat
+                        LastLineNo := LastLineNo + 10000;
+                        WHTAppEntry.init();
+                        WHTAppEntry."Document No." := PurchaseLine."Document No.";
+                        WHTAppEntry."Document Line No." := PurchaseLine."Line No.";
+                        WHTAppEntry."Entry Type" := WHTAppEntry."Entry Type"::Initial;
+                        WHTAppEntry."Line No." := LastLineNo;
+                        WHTAppEntry."WHT Bus. Posting Group" := PurchaseLine."NCT WHT Business Posting Group";
+                        WHTAppEntry."WHT Prod. Posting Group" := PurchaseLine."NCT WHT Product Posting Group";
+                        WHTAppEntry.Description := PurchaseLine.Description;
+                        WHTAppEntry."WHT %" := PurchaseLine."NCT WHT %";
+                        WHTAppEntry."WHT Base" := PurchaseLine."NCT WHT Base";
+                        WHTAppEntry."WHT Amount" := PurchaseLine."NCT WHT Amount";
+                        WHTAppEntry."WHT Name" := PurchHeader."Buy-from Vendor Name";
+                        WHTAppEntry."WHT Name 2" := PurchHeader."Buy-from Vendor Name 2";
+                        WHTAppEntry."WHT Address" := PurchHeader."Buy-from Address";
+                        WHTAppEntry."WHT Address 2" := PurchHeader."Buy-from Address 2";
+                        WHTAppEntry."WHT City" := PurchHeader."Buy-from City";
+                        WHTAppEntry."VAT Registration No." := PurchHeader."VAT Registration No.";
+                        WHTAppEntry."WHT Option" := PurchaseLine."NCT WHT Option";
+                        WHTAppEntry."VAT Branch Code" := PurchHeader."NCT VAT Branch Code";
+                        WHTAppEntry."Head Office" := PurchHeader."NCT Head Office";
+                        WHTAppEntry."WHT Post Code" := PurchHeader."Buy-from Post Code";
+                        if PurchaseLine."Document Type" = PurchaseLine."Document Type"::Invoice then
+                            WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::Invoice;
+                        if PurchaseLine."Document Type" = PurchaseLine."Document Type"::"Credit Memo" then
+                            WHTAppEntry."WHT Document Type" := WHTAppEntry."WHT Document Type"::"Credit Memo";
+                        "NCT OnBeforInsertWHTAPPLY"(WHTAppEntry, PurchHeader, PurchaseLine);
+                        WHTAppEntry.Insert(true);
+                    until PurchaseLine.Next() = 0;
+            end;
     end;
 
 
@@ -213,6 +221,7 @@ codeunit 80001 "NCT Purchase Function"
             PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine."Quantity (Base)" - PurchaseLine."Qty. Received (Base)" - PurchaseLine."NCT Qty. to Cancel (Base)";
             if PurchaseLine."Document Type" = PurchaseLine."Document Type"::Quote then begin
                 POLine.reset();
+                POLine.ReadIsolation := IsolationLevel::ReadCommitted;
                 POLine.SetRange("Document Type", POLine."Document Type"::Order);
                 POLine.SetRange("NCT Ref. PQ No.", PurchaseLine."Document No.");
                 POLine.SetRange("NCT Ref. PQ Line No.", PurchaseLine."Line No.");
@@ -448,6 +457,16 @@ codeunit 80001 "NCT Purchase Function"
 
     [IntegrationEvent(false, false)]
     local procedure NCTOnAfterInsertPostedRequisitionLine(var PostedRequsitionLine: Record "NCT Requisition Line Posted"; puchaseOrderline: Record "Purchase Line")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure NCTOnBeforeDeletePurchQuote(var pIsHandle: Boolean)
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure "NCT OnBeforInsertWHTEntryAfterPosting"(PurchaseHeader: Record "Purchase Header"; var pIsHandle: Boolean)
     begin
     end;
 

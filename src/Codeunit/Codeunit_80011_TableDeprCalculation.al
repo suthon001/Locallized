@@ -170,16 +170,16 @@ codeunit 80011 "NCT Table Depr. Calculation"
         END;
     end;
 
-    local procedure "NCT InsertTableBuffer"(var DeprTableLine: Record "Depreciation Table Line"; var TotalNoOfDays: Integer; DaysInPeriod: Integer; PeriodNo: Integer)
+    local procedure "NCT InsertTableBuffer"(var pDeprTableLine: Record "Depreciation Table Line"; var TotalNoOfDays: Integer; DaysInPeriod: Integer; PeriodNo: Integer)
     begin
         TotalNoOfDays := TotalNoOfDays + DaysInPeriod;
         DeprTableBufferTmp."Entry No." := PeriodNo;
         DeprTableBufferTmp."No. of Days in Period" := DaysInPeriod;
         IF DeprTableHeader."Total No. of Units" > 0 THEN
             DeprTableBufferTmp."Period Depreciation %" :=
-              DeprTableLine."No. of Units in Period" * 100 / DeprTableHeader."Total No. of Units"
+              pDeprTableLine."No. of Units in Period" * 100 / DeprTableHeader."Total No. of Units"
         ELSE
-            DeprTableBufferTmp."Period Depreciation %" := DeprTableLine."Period Depreciation %";
+            DeprTableBufferTmp."Period Depreciation %" := pDeprTableLine."Period Depreciation %";
         DeprTableBufferTmp.INSERT();
     end;
 }

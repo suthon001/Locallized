@@ -380,7 +380,7 @@ codeunit 80012 "NCT Calculate Normal Dep"
         EXIT(DBAmount)
     end;
 
-    local procedure "NCT CalcUserDefinedAmount"(EndingDate: Date): Decimal
+    local procedure "NCT CalcUserDefinedAmount"(pEndingDate: Date): Decimal
     var
         TableDeprCalc: Codeunit "NCT Table Depr. Calculation";
     begin
@@ -389,7 +389,7 @@ codeunit 80012 "NCT Calculate Normal Dep"
 
         EXIT(
           -TableDeprCalc."NCT GetTablePercent"(DeprBook.Code, DeprTableCode,
-            FirstUserDefinedDeprDate, FirstDeprDate, EndingDate) *
+            FirstUserDefinedDeprDate, FirstDeprDate, pEndingDate) *
           DeprBasis * Factor);
     end;
 
