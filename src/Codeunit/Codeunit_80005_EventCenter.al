@@ -223,11 +223,11 @@ codeunit 80005 "NCT EventFunction"
         end;
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Get Shipment", 'OnRunAfterFilterSalesShpLine', '', false, false)]
-    local procedure OnRunAfterFilterSalesShpLine(var SalesShptLine: Record "Sales Shipment Line")
-    begin
-        SalesShptLine.SetRange("NCT Get to Invoice", false);
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Get Shipment", 'OnRunAfterFilterSalesShpLine', '', false, false)]
+    // local procedure OnRunAfterFilterSalesShpLine(var SalesShptLine: Record "Sales Shipment Line")
+    // begin
+    //     SalesShptLine.SetRange("NCT Get to Invoice", false);
+    // end;
 
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Shipment Line", 'OnAfterInsertInvLineFromShptLine', '', false, false)]
@@ -237,11 +237,11 @@ codeunit 80005 "NCT EventFunction"
         SalesShipmentLine.Modify();
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Get Receipt", 'OnAfterPurchRcptLineSetFilters', '', false, false)]
-    local procedure OnAfterPurchRcptLineSetFilters(var PurchRcptLine: Record "Purch. Rcpt. Line")
-    begin
-        PurchRcptLine.SetRange("NCT Get to Invoice", false);
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Get Receipt", 'OnAfterPurchRcptLineSetFilters', '', false, false)]
+    // local procedure OnAfterPurchRcptLineSetFilters(var PurchRcptLine: Record "Purch. Rcpt. Line")
+    // begin
+    //     PurchRcptLine.SetRange("NCT Get to Invoice", false);
+    // end;
 
     [EventSubscriber(ObjectType::Table, Database::"Purch. Rcpt. Line", 'OnAfterInsertInvLineFromRcptLine', '', false, false)]
     local procedure OnAfterInsertInvLineFromRcptLine(PurchRcptLine: Record "Purch. Rcpt. Line")
@@ -250,11 +250,11 @@ codeunit 80005 "NCT EventFunction"
         PurchRcptLine.Modify();
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Get Return Shipments", 'OnRunOnAfterSetReturnShptLineFilters', '', false, false)]
-    local procedure OnRunOnAfterSetReturnShptLineFilters(var ReturnShipmentLine: Record "Return Shipment Line")
-    begin
-        ReturnShipmentLine.SetRange("NCT Get to CN", false);
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Get Return Shipments", 'OnRunOnAfterSetReturnShptLineFilters', '', false, false)]
+    // local procedure OnRunOnAfterSetReturnShptLineFilters(var ReturnShipmentLine: Record "Return Shipment Line")
+    // begin
+    //     ReturnShipmentLine.SetRange("NCT Get to CN", false);
+    // end;
 
     [EventSubscriber(ObjectType::Table, Database::"Return Shipment Line", 'OnBeforeInsertInvLineFromRetShptLine', '', false, false)]
     local procedure OnBeforeInsertInvLineFromRetShptLine(var ReturnShipmentLine: Record "Return Shipment Line")
