@@ -20,6 +20,10 @@ report 80005 "NCT Receive Voucher"
                 DataItemTableView = sorting("Entry No.") where(Amount = filter(<> 0));
                 UseTemporary = true;
                 CalcFields = "G/L Account Name";
+                column(DimThaiCaption1; DimThaiCaption1) { }
+                column(DimThaiCaption2; DimThaiCaption2) { }
+                column(DimEngCaption1; DimEngCaption1) { }
+                column(DimEngCaption2; DimEngCaption2) { }
                 column(JournalDescriptionEng; JournalDescriptionEng) { }
                 column(Journal_Batch_Name; "Journal Batch Name") { }
                 column(JournalDescriptionThai; JournalDescriptionThai) { }
@@ -233,7 +237,6 @@ report 80005 "NCT Receive Voucher"
 
                 FunctionCenter."ConvExchRate"(CurrencyCode, CurrencyFactor, ExchangeRate);
                 AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';
-
                 gvGenLine.reset();
                 gvGenLine.SetRange("Journal Template Name", "Journal Template Name");
                 gvGenLine.SetRange("Journal Batch Name", "Journal Batch Name");
@@ -246,7 +249,6 @@ report 80005 "NCT Receive Voucher"
                     SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                     SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 end;
-
                 CheckLineData();
                 FindPostingDescription();
                 ltGenjournalTemplate.Get(GenJournalLine."Journal Template Name");
@@ -257,9 +259,13 @@ report 80005 "NCT Receive Voucher"
                 JournalDescriptionEng := ltGenjournalTemplate."NCT Description Eng";
 
 
+                CVBufferEntry.Reset();
+                CVBufferEntry.DeleteAll();
                 FunctionCenter.JnlFindApplyEntries(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name", GenJournalLine."Posting Date",
                 GenJournalLine."Document No.", CVBufferEntry);
                 HaveApply := CVBufferEntry.Count <> 0;
+
+                FunctionCenter.GetGlobalDimCaption(DimThaiCaption1, DimEngCaption1, DimThaiCaption2, DimEngCaption2);
             end;
         }
 
@@ -374,7 +380,7 @@ report 80005 "NCT Receive Voucher"
         CurrencyCode: Code[10];
         CurrencyFactor: Decimal;
         PostingDescription: Text[250];
-        CVBufferEntry: Record "CV Ledger Entry Buffer" temporary;
+        CVBufferEntry: Record "CV Ledger Entry Buffer";
         OK: Boolean;
         BankName: Text[250];
         BankBranchNo: Code[30];
@@ -393,4 +399,6 @@ report 80005 "NCT Receive Voucher"
         glAccount: Record "G/L Account";
         UserName: Code[50];
         gvGenLine: Record "Gen. Journal Line";
+        DimThaiCaption1, DimThaiCaption2, DimEngCaption1, DimEngCaption2 : text;
+
 }

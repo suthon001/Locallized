@@ -1,5 +1,5 @@
 /// <summary>
-/// Report NCT AR CN Voucher (ID 80002).
+/// Report NCT AR CN Voucher (ID 80079).
 /// </summary>
 report 80079 "NCT AR CN Voucher (Post)"
 {
@@ -15,6 +15,10 @@ report 80079 "NCT AR CN Voucher (Post)"
         {
             DataItemTableView = sorting("Entry No.") where(Amount = filter(<> 0));
             UseTemporary = true;
+            column(DimThaiCaption1; DimThaiCaption1) { }
+            column(DimThaiCaption2; DimThaiCaption2) { }
+            column(DimEngCaption1; DimEngCaption1) { }
+            column(DimEngCaption2; DimEngCaption2) { }
             column(G_L_Account_No_; "G/L Account No.") { }
             column(G_L_Account_Name; AccountName) { }
             column(Debit_Amount; "Debit Amount") { }
@@ -73,6 +77,7 @@ report 80079 "NCT AR CN Voucher (Post)"
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 "CheckLineData"();
+                FunctionCenter.GetGlobalDimCaption(DimThaiCaption1, DimEngCaption1, DimThaiCaption2, DimEngCaption2);
             end;
 
             trigger OnAfterGetRecord()
@@ -211,5 +216,6 @@ report 80079 "NCT AR CN Voucher (Post)"
         groupping: Boolean;
         AccountName: text[100];
         glAccount: Record "G/L Account";
+        DimThaiCaption1, DimThaiCaption2, DimEngCaption1, DimEngCaption2 : text;
 
 }

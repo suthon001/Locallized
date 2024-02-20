@@ -15,6 +15,10 @@ report 80000 "NCT AP CN Voucher"
         {
             DataItemTableView = sorting("Entry No.") where(Amount = filter(<> 0));
             UseTemporary = true;
+            column(DimThaiCaption1; DimThaiCaption1) { }
+            column(DimThaiCaption2; DimThaiCaption2) { }
+            column(DimEngCaption1; DimEngCaption1) { }
+            column(DimEngCaption2; DimEngCaption2) { }
             column(G_L_Account_No_; "G/L Account No.") { }
             column(G_L_Account_Name; AccountName) { }
             column(Debit_Amount; "Debit Amount") { }
@@ -62,7 +66,7 @@ report 80000 "NCT AP CN Voucher"
                     FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", false)
                 else
                     FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", true);
-                FunctionCenter."PurchaseInformation"(PurHeader."Document Type", PurHeader."No.", VendText, 0);
+                FunctionCenter."PurchaseInformation"(PurHeader."Document Type", PurHeader."No.", VendText, 1);
                 FunctionCenter."ConvExchRate"(PurHeader."Currency Code", PurHeader."Currency Factor", ExchangeRate);
 
                 if PurHeader."Currency Code" = '' then
@@ -75,6 +79,8 @@ report 80000 "NCT AP CN Voucher"
                 SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                 SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 "CheckLineData"();
+
+                FunctionCenter.GetGlobalDimCaption(DimThaiCaption1, DimEngCaption1, DimThaiCaption2, DimEngCaption2);
             end;
 
             trigger OnAfterGetRecord()
@@ -253,5 +259,6 @@ report 80000 "NCT AP CN Voucher"
         groupping: Boolean;
         AccountName: text[100];
         glAccount: Record "G/L Account";
+        DimThaiCaption1, DimThaiCaption2, DimEngCaption1, DimEngCaption2 : text;
 
 }

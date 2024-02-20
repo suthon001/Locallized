@@ -21,6 +21,10 @@ report 80006 "NCT Journal Voucher"
 
                 UseTemporary = true;
                 CalcFields = "G/L Account Name";
+                column(DimThaiCaption1; DimThaiCaption1) { }
+                column(DimThaiCaption2; DimThaiCaption2) { }
+                column(DimEngCaption1; DimEngCaption1) { }
+                column(DimEngCaption2; DimEngCaption2) { }
                 column(JournalDescriptionEng; JournalDescriptionEng) { }
                 column(Journal_Batch_Name; "Journal Batch Name") { }
                 column(JournalDescriptionThai; JournalDescriptionThai) { }
@@ -109,7 +113,6 @@ report 80006 "NCT Journal Voucher"
                 "GetExchange"();
                 FunctionCenter."ConvExchRate"(CurrencyCode, CurrencyFactor, ExchangeRate);
                 AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';
-
                 gvGenLine.reset();
                 gvGenLine.SetRange("Journal Template Name", "Journal Template Name");
                 gvGenLine.SetRange("Journal Batch Name", "Journal Batch Name");
@@ -122,7 +125,6 @@ report 80006 "NCT Journal Voucher"
                     SplitDate[2] := Format(NewDate, 0, '<Month,2>');
                     SplitDate[3] := Format(NewDate, 0, '<Year4>');
                 end;
-
                 "FindPostingDescription"();
                 "CheckLineData"();
                 ltGenjournalTemplate.Get(GenJournalLine."Journal Template Name");
@@ -131,7 +133,7 @@ report 80006 "NCT Journal Voucher"
 
                 JournalDescriptionThai := ltGenjournalTemplate."NCT Description Thai";
                 JournalDescriptionEng := ltGenjournalTemplate."NCT Description Eng";
-
+                FunctionCenter.GetGlobalDimCaption(DimThaiCaption1, DimEngCaption1, DimThaiCaption2, DimEngCaption2);
             end;
 
         }
@@ -184,8 +186,9 @@ report 80006 "NCT Journal Voucher"
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
         GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
         GenLine.SetRange("Document No.", GenJournalLine."Document No.");
+        GenLine.SetFilter("NCT Journal Description", '<>%1', '');
         if GenLine.FindFirst() then
-            PostingDescription := GenLine.Description;
+            PostingDescription := GenLine."NCT Journal Description";
     end;
 
 
@@ -227,5 +230,6 @@ report 80006 "NCT Journal Voucher"
         glAccount: Record "G/L Account";
         UserName: Code[50];
         gvGenLine: Record "Gen. Journal Line";
+        DimThaiCaption1, DimThaiCaption2, DimEngCaption1, DimEngCaption2 : text;
 
 }

@@ -5,7 +5,28 @@ codeunit 80004 "NCT Function Center"
 {
 
     Permissions = tabledata "G/L Entry" = rimd, tabledata "Purch. Rcpt. Line" = imd, tabledata "Return Shipment Line" = imd, tabledata "Sales Shipment Line" = imd;
+    /// <summary>
+    /// SetDefualtGetInvoiceSales.
+    /// </summary>
+    /// <param name="pShipNo">code[20].</param>
+    /// <param name="pShipLineNo">integer.</param>
+    procedure GetGlobalDimCaption(var DimCaptionThai1: text; var DimCaptionEng1: text; var DimCaptionThai2: text; var DimCaptionEng2: text)
+    var
+        GeneralSetup: Record "General Ledger Setup";
+        ltDimension: Record Dimension;
+    begin
 
+        GeneralSetup.GET();
+        if not ltDimension.GET(GeneralSetup."Global Dimension 1 Code") then
+            ltDimension.Init();
+        DimCaptionEng1 := ltDimension.Description;
+        DimCaptionThai1 := ltDimension."Thai Description";
+
+        if not ltDimension.GET(GeneralSetup."Global Dimension 2 Code") then
+            ltDimension.Init();
+        DimCaptionEng2 := ltDimension.Description;
+        DimCaptionThai2 := ltDimension."Thai Description";
+    end;
     /// <summary>
     /// SetDefualtGetInvoiceSales.
     /// </summary>
@@ -676,10 +697,14 @@ codeunit 80004 "NCT Function Center"
                     if (PurchHeader."NCT VAT Branch Code" <> '') AND (NOT PurchHeader."NCT Head Office") then begin
                         if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then
                             VandorBranch.Init();
-                        Text[1] := VandorBranch."Name";
-                        Text[2] := VandorBranch."Address";
-                        Text[3] := VandorBranch."Province" + ' ' + VandorBranch."Post Code";
-                        Text[4] := VandorBranch."Phone No." + ' ';
+                        if VandorBranch."Name" <> '' then
+                            Text[1] := VandorBranch."Name";
+                        if VandorBranch."Address" <> '' then begin
+                            Text[2] := VandorBranch."Address";
+                            Text[3] := VandorBranch."Province" + ' ' + VandorBranch."Post Code";
+                        end;
+                        if VandorBranch."Phone No." <> '' then
+                            Text[4] := VandorBranch."Phone No." + ' ';
                         if PurchHeader."Currency Code" = '' then begin
                             IF VandorBranch."Fax No." <> '' THEN
                                 Text[4] += 'แฟกซ์ : ' + VandorBranch."Fax No.";
@@ -711,10 +736,14 @@ codeunit 80004 "NCT Function Center"
                     if (PurchHeader."NCT VAT Branch Code" <> '') AND (NOT PurchHeader."NCT Head Office") then begin
                         if not VandorBranch.GET(VandorBranch."Source Type"::Vendor, PurchHeader."Buy-from Vendor No.", PurchHeader."NCT Head Office", PurchHeader."NCT VAT Branch Code") then
                             VandorBranch.Init();
-                        Text[1] := VandorBranch."Name";
-                        Text[2] := VandorBranch."Address";
-                        Text[3] := VandorBranch."Province" + ' ' + VandorBranch."Post Code";
-                        Text[4] := VandorBranch."Phone No." + ' ';
+                        if VandorBranch."Name" <> '' then
+                            Text[1] := VandorBranch."Name";
+                        if VandorBranch."Address" <> '' then begin
+                            Text[2] := VandorBranch."Address";
+                            Text[3] := VandorBranch."Province" + ' ' + VandorBranch."Post Code";
+                        end;
+                        if VandorBranch."Phone No." <> '' then
+                            Text[4] := VandorBranch."Phone No." + ' ';
                         if PurchHeader."Currency Code" = '' then begin
                             IF VandorBranch."Fax No." <> '' THEN
                                 Text[4] += 'แฟกซ์ : ' + VandorBranch."Fax No.";
@@ -1187,16 +1216,20 @@ codeunit 80004 "NCT Function Center"
                     if (SalesHeader."NCT VAT Branch Code" <> '') AND (NOT SalesHeader."NCT Head Office") then begin
                         if not CustBranch.GET(CustBranch."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then
                             CustBranch.Init();
-                        Text[1] := CustBranch."Name";
-                        Text[2] := CustBranch."Address";
-                        Text[3] := CustBranch."Province" + ' ' + CustBranch."Post Code";
-                        Text[4] := CustBranch."Phone No." + ' ';
+                        if CustBranch."Name" <> '' then
+                            Text[1] := CustBranch."Name";
+                        if CustBranch."Address" <> '' then begin
+                            Text[2] := CustBranch."Address";
+                            Text[3] := CustBranch."Province" + ' ' + CustBranch."Post Code";
+                        end;
+                        if CustBranch."Phone No." <> '' then
+                            Text[4] := CustBranch."Phone No." + ' ';
                         if SalesHeader."Currency Code" = '' then begin
                             IF CustBranch."Fax No." <> '' THEN
-                                Text[4] += 'แฟกซ์ : ' + Cust."Fax No.";
+                                Text[4] += 'แฟกซ์ : ' + CustBranch."Fax No.";
                         end else
                             IF CustBranch."Fax No." <> '' THEN
-                                Text[4] += 'Fax. : ' + Cust."Fax No.";
+                                Text[4] += 'Fax. : ' + CustBranch."Fax No.";
                     end;
                     Text[9] := SalesHeader."Sell-to Customer No.";
                 END;
@@ -1221,10 +1254,14 @@ codeunit 80004 "NCT Function Center"
                     if (SalesHeader."NCT VAT Branch Code" <> '') AND (NOT SalesHeader."NCT Head Office") then begin
                         if not CustBranch.GET(CustBranch."Source Type"::Customer, SalesHeader."Sell-to Customer No.", SalesHeader."NCT Head Office", SalesHeader."NCT VAT Branch Code") then
                             CustBranch.Init();
-                        Text[1] := CustBranch."Name";
-                        Text[2] := CustBranch."Address";
-                        Text[3] := CustBranch."Province" + ' ' + CustBranch."Post Code";
-                        Text[4] := CustBranch."Phone No." + ' ';
+                        if CustBranch."Name" <> '' then
+                            Text[1] := CustBranch."Name";
+                        if CustBranch."Address" <> '' then begin
+                            Text[2] := CustBranch."Address";
+                            Text[3] := CustBranch."Province" + ' ' + CustBranch."Post Code";
+                        end;
+                        if CustBranch."Phone No." <> '' then
+                            Text[4] := CustBranch."Phone No." + ' ';
                         if SalesHeader."Currency Code" = '' then begin
                             IF CustBranch."Fax No." <> '' THEN
                                 Text[4] += 'แฟกซ์ : ' + CustBranch."Fax No.";
