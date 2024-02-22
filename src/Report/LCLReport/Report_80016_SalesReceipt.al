@@ -45,6 +45,7 @@ report 80016 "NCT Sales Receipt"
             column(PaymentMethodMark_1; PaymentMethodMark[1]) { }
             column(PaymentMethodMark_2; PaymentMethodMark[2]) { }
             column(PaymentMethodMark_3; PaymentMethodMark[3]) { }
+            column(BankName; BankName) { }
             dataitem(myLoop; Integer)
             {
                 DataItemTableView = sorting(Number) where(Number = filter(1 ..));

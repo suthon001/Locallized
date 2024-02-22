@@ -2516,6 +2516,9 @@ End Function
         <Field Name="PaymentMethodMark_3">
           <DataField>PaymentMethodMark_3</DataField>
         </Field>
+        <Field Name="BankName">
+          <DataField>BankName</DataField>
+        </Field>
         <Field Name="Number">
           <DataField>Number</DataField>
         </Field>

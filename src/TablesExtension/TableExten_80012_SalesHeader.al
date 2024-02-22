@@ -123,7 +123,6 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
         {
             Caption = 'Sales Order No.';
             DataClassification = SystemMetadata;
-            Editable = false;
         }
 
         modify("Sell-to Customer No.")

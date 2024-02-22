@@ -35,6 +35,14 @@ pageextension 80068 "NCT Purchase Order Lists" extends "Purchase Order List"
             Visible = true;
         }
         moveafter("No."; Status)
+        addafter("No.")
+        {
+            field("Quote No."; rec."Quote No.")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Quote No. field.';
+            }
+        }
     }
     actions
     {
