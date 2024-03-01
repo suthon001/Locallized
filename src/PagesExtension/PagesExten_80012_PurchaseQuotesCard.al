@@ -73,6 +73,15 @@ pageextension 80012 "NCT Purchase Quote Card" extends "Purchase Quote"
                 Caption = 'Completely';
             }
         }
+
+        addbefore("Document Date")
+        {
+            field("Posting Date"; rec."Posting Date")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Posting Date field.';
+            }
+        }
     }
     actions
     {

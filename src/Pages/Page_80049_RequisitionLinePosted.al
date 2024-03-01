@@ -1,10 +1,10 @@
 /// <summary>
 /// Page NCT Requisition Line Posted (ID 80049).
 /// </summary>
-page 80049 "NCT Requisition Line Posted"
+page 80049 "NCT Posted Requisition Line"
 {
     ApplicationArea = All;
-    Caption = 'Requisition Line Posted';
+    Caption = 'Posted Requisition Line';
     PageType = List;
     SourceTable = "NCT Requisition Line Posted";
     UsageCategory = History;
@@ -160,7 +160,7 @@ page 80049 "NCT Requisition Line Posted"
                     PurchaseHeader.reset();
                     PurchaseHeader.SetRange("Document Type", PurchaseHeader."Document Type"::Order);
                     PurchaseHeader.SetRange("No.", rec."Ref. PO No.");
-                    PurchaseOrder.SetRecord(PurchaseHeader);
+                    PurchaseOrder.SetTableView(PurchaseHeader);
                     PurchaseOrder.RunModal();
                     CLEAR(PurchaseOrder);
 

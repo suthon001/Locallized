@@ -23,6 +23,13 @@ codeunit 80001 "NCT Purchase Function"
         RequisitionPosted.Insert();
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnBeforePurchOrderHeaderInsert', '', false, false)]
+    local procedure OnBeforePurchOrderHeaderInsert(PurchaseHeader: Record "Purchase Header"; RequisitionLine: Record "Requisition Line")
+
+    begin
+        PurchaseHeader."Quote No." := RequisitionLine."NCT Document No.";
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnAfterInitPurchOrderLine', '', false, false)]
     local procedure OnAfterInitPurchOrderLine(var PurchaseLine: Record "Purchase Line")
     begin

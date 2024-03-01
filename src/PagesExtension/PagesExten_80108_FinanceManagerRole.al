@@ -5,6 +5,16 @@ pageextension 80108 "NCT Finance Manager Role" extends "Finance Manager Role Cen
 {
     actions
     {
+        addlast(Group38)
+        {
+            action("Requisition Line Posted")
+            {
+                Caption = 'Posted Requisition Line';
+                ApplicationArea = all;
+                RunObject = page "NCT Posted Requisition Line";
+                ToolTip = 'Executes the Posted Requisition Line action.';
+            }
+        }
         addfirst(sections)
         {
             group("Localized")

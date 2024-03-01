@@ -56,7 +56,7 @@ permissionset 80000 "NCT LCL Permission"
         codeunit "NCT Journal Function" = X,
         codeunit "NCT FA Jnl.-Post Line" = X,
         page "NCT Cust. & Vendor BranchLists" = X,
-        page "NCT Requisition Line Posted" = X,
+        page "NCT Posted Requisition Line" = X,
         page "NCT WHT Business Posting Group" = X,
         page "NCT WHT Product Posting Group" = X,
         page "NCT WHT Posting Setup" = X,

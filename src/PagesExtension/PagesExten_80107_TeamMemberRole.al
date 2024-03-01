@@ -5,8 +5,19 @@ pageextension 80107 "NCT Team Member Role" extends "Team Member Role Center"
 {
     actions
     {
+        addlast(Purchasing)
+        {
+            action("Requisition Line Posted")
+            {
+                Caption = 'Posted Requisition Line';
+                ApplicationArea = all;
+                RunObject = page "NCT Posted Requisition Line";
+                ToolTip = 'Executes the Posted Requisition Line action.';
+            }
+        }
         addfirst(sections)
         {
+
             group("Localized")
             {
                 Caption = 'Localized';

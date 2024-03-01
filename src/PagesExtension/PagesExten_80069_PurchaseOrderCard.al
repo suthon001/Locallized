@@ -100,6 +100,7 @@ pageextension 80069 "NCT Purchase Order Card" extends "Purchase Order"
         moveafter("Currency Code"; "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code")
         movebefore(Status; "Expected Receipt Date", "Location Code")
         moveafter("Posting Date"; "Document Date", "Due Date")
+        modify("Vendor Cr. Memo No.") { Editable = true; }
 
     }
     actions
