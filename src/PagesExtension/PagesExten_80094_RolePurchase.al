@@ -7,6 +7,13 @@ pageextension 80094 "NCT Role Purchase" extends "Purchasing Agent Role Center"
     {
         addlast("Posted Documents")
         {
+            action("Req. Worksheet")
+            {
+                Caption = 'Requisition Line';
+                ApplicationArea = all;
+                RunObject = page "Req. Worksheet";
+                ToolTip = 'Executes the Req. Worksheet action.';
+            }
             action("Requisition Line Posted")
             {
                 Caption = 'Posted Requisition Line';

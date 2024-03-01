@@ -7,6 +7,7 @@ pageextension 80108 "NCT Finance Manager Role" extends "Finance Manager Role Cen
     {
         addlast(Group38)
         {
+
             action("Requisition Line Posted")
             {
                 Caption = 'Posted Requisition Line';

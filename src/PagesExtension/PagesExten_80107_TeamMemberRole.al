@@ -7,6 +7,13 @@ pageextension 80107 "NCT Team Member Role" extends "Team Member Role Center"
     {
         addlast(Purchasing)
         {
+            action("Req. Worksheet")
+            {
+                Caption = 'Requisition Line';
+                ApplicationArea = all;
+                RunObject = page "Req. Worksheet";
+                ToolTip = 'Executes the Req. Worksheet action.';
+            }
             action("Requisition Line Posted")
             {
                 Caption = 'Posted Requisition Line';

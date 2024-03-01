@@ -7,6 +7,13 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
     {
         addlast(Action63)
         {
+            action("Req. Worksheet")
+            {
+                Caption = 'Requisition Line';
+                ApplicationArea = all;
+                RunObject = page "Req. Worksheet";
+                ToolTip = 'Executes the Req. Worksheet action.';
+            }
             action("Requisition Line Posted")
             {
                 Caption = 'Posted Requisition Line';

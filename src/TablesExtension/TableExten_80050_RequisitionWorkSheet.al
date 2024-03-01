@@ -71,7 +71,6 @@ tableextension 80049 "NCT Requisition WorkSheet" extends "Requisition Line"
 
     trigger OnInsert()
     begin
-        TestField("No.");
         "NCT Document Date" := Today();
         "NCT Create By" := COPYSTR(UserId, 1, 50);
         "NCT Create DateTime" := CurrentDateTime();
