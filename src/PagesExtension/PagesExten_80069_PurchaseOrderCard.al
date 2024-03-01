@@ -76,10 +76,7 @@ pageextension 80069 "NCT Purchase Order Card" extends "Purchase Order"
         {
             Editable = Rec.Status = Rec.Status::Open;
         }
-        modify(Prepayment)
-        {
-            Editable = Rec.Status = Rec.Status::Open;
-        }
+
         modify("Expected Receipt Date")
         {
             Visible = true;
