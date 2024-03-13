@@ -63,7 +63,7 @@ tableextension 80049 "NCT Requisition WorkSheet" extends "Requisition Line"
         ReqWhs.TestField("NCT Document No. Series");
         IF NoSeriesMgt.SelectSeries(ReqWhs."NCT Document No. Series", OldReqLines."No. Series", RequsitionLine."No. Series") THEN BEGIN
             NoSeriesMgt.SetSeries(RequsitionLine."NCT Document No.");
-            rec := RequsitionLine;
+            rec."NCT Document No." := RequsitionLine."NCT Document No.";
             EXIT(TRUE);
         END;
         // end;

@@ -234,9 +234,9 @@ page 80017 "NCT WHT Card"
     /// <summary> 
     /// Description for GetDataFromReport.
     /// </summary>
-    /// <param name="SetWHTBus">Parameter of type Code[250].</param>
-    /// <param name="SetDate">Parameter of type Text[250].</param>
-    procedure GetDataFromReport(var SetWHTBus: Code[250]; var SetDate: Text[250])
+    /// <param name="SetWHTBus">Parameter of type Code[100].</param>
+    /// <param name="SetDate">Parameter of type Text[100].</param>
+    procedure GetDataFromReport(var SetWHTBus: Code[100]; var SetDate: Text[100])
     begin
         SetWHTBus := WHTBusFilter;
         SetDate := DateFilter;
@@ -254,8 +254,8 @@ page 80017 "NCT WHT Card"
 
         TotaBaseAmt: Decimal;
         TotalVatAmt: Decimal;
-        WHTBusFilter: Code[250];
-        DateFilter: Text[250];
+        WHTBusFilter: Code[100];
+        DateFilter: Text[100];
 
 
 }

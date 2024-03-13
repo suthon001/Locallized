@@ -33,6 +33,23 @@ page 80049 "NCT Posted Requisition Line"
                     ToolTip = 'Specifies the value of the Line No. field.';
                     ApplicationArea = all;
                 }
+                field("NCT Document Date"; rec."NCT Document Date")
+                {
+
+                    ToolTip = 'Specifies the value of the Document Date field.';
+                    ApplicationArea = all;
+                }
+                field("NCT Document No."; rec."NCT Document No.")
+                {
+                    ToolTip = 'Specifies the value of the Document No. field.';
+                    ApplicationArea = all;
+
+                }
+                field("Ref. PO No."; rec."Ref. PO No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Ref. PO No. field.';
+                }
                 field("Type"; Rec."Type")
                 {
                     ToolTip = 'Specifies the value of the Type field.';
@@ -128,11 +145,7 @@ page 80049 "NCT Posted Requisition Line"
                     ToolTip = 'Specifies the value of the Sell-to Customer No. field.';
                     ApplicationArea = all;
                 }
-                field("Ref. PO No."; rec."Ref. PO No.")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Ref. PO No. field.';
-                }
+
             }
         }
     }

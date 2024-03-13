@@ -163,6 +163,10 @@ table 80004 "NCT Tax & WHT Header"
         {
 
         }
+        key(key5; "End date of Month")
+        {
+
+        }
 
 
 
