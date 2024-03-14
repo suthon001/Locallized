@@ -18,6 +18,7 @@ pageextension 80101 "NCT Depreciation Book Card" extends "Depreciation Book Card
                 ApplicationArea = all;
                 Caption = 'No. of Days in Fiscal Year';
                 ToolTip = 'Specifies the value of the No. of Days in Fiscal Year field.';
+                Visible = false;
             }
         }
     }
