@@ -32,6 +32,19 @@ pageextension 80060 "NCT FixedAssetList" extends "Fixed Asset List"
                 ToolTip = 'Specifies the value of the Acq. Date field.';
             }
         }
+        addafter("FA Location Code")
+        {
+            field("Global Dimension 1 Code"; rec."Global Dimension 1 Code")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Global Dimension 1 Code field.';
+            }
+            field("Global Dimension 2 Code"; rec."Global Dimension 2 Code")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Global Dimension 2 Code field.';
+            }
+        }
     }
     actions
     {
