@@ -2577,7 +2577,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!Posting_Description.Value, "DataSet_Result")</Value>
+                      <Value>=First(Fields!ResonCode_Desc.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -4048,6 +4048,9 @@ CAkyApZgyGoBQMYl0wmGLIQn4dLBKAJGETCKImAUAaP8VsOWLcD0u+UNfjDUDlTfLOVWYEWA6Q7Ti/ys
         </Field>
         <Field Name="Shipment_Date">
           <DataField>Shipment_Date</DataField>
+        </Field>
+        <Field Name="ResonCode_Desc">
+          <DataField>ResonCode_Desc</DataField>
         </Field>
         <Field Name="SalesLine_No_">
           <DataField>SalesLine_No_</DataField>

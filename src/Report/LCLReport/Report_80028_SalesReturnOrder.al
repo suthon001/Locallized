@@ -56,6 +56,7 @@ report 80028 "NCT Sales Return Order"
             column(Posting_Description; "Posting Description") { }
             column(External_Document_No_; "External Document No.") { }
             column(Shipment_Date; format("Shipment Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
+            column(ResonCode_Desc; ResonCode.Description) { }
             dataitem(SalesLine; "Sales Line")
             {
                 DataItemTableView = sorting("Line No.");
@@ -107,6 +108,7 @@ report 80028 "NCT Sales Return Order"
             trigger OnAfterGetRecord()
             var
                 NewDate: Date;
+                ltSalesLine: Record "Sales Line";
             begin
                 if "Currency Code" = '' then
                     FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
@@ -128,6 +130,13 @@ report 80028 "NCT Sales Return Order"
                     AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')'
                 else
                     AmtText := '(' + FunctionCenter."NumberEngToText"(TotalAmt[5], "Currency Code") + ')';
+
+                ltSalesLine.reset();
+                ltSalesLine.SetRange("Document Type", "Document Type");
+                ltSalesLine.SetRange("Document No.", "No.");
+                ltSalesLine.SetFilter("Return Reason Code", '<>%1', '');
+                if ltSalesLine.FindFirst() then
+                    ResonCode.get(ltSalesLine."Return Reason Code");
             end;
         }
     }
@@ -140,6 +149,7 @@ report 80028 "NCT Sales Return Order"
     end;
 
     var
+        ResonCode: Record "Reason Code";
         LotSeriesCaption: Text[50];
         LineLotSeries: Integer;
         SplitDate: Array[3] of Text[20];

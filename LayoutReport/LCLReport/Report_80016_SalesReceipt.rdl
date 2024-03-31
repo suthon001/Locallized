@@ -2519,6 +2519,9 @@ End Function
         <Field Name="BankName">
           <DataField>BankName</DataField>
         </Field>
+        <Field Name="BankBranchNo">
+          <DataField>BankBranchNo</DataField>
+        </Field>
         <Field Name="Number">
           <DataField>Number</DataField>
         </Field>

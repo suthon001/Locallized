@@ -89,6 +89,7 @@ report 80090 "NCT Fixed Asset Journal - Test"
                     DataItemLinkReference = "FA Journal Batch";
                     DataItemTableView = SORTING("Journal Template Name", "Journal Batch Name", "Line No.");
                     RequestFilterFields = "FA Posting Date";
+                    column(External_Document_No_; "External Document No.") { }
                     column(FA_Journal_Line__Depreciation_Book_Code_; "Depreciation Book Code")
                     {
                     }

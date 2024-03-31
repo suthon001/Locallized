@@ -51,7 +51,7 @@ report 80015 "NCT Sales Billing"
                 column(Source_Posting_Date; format("Source Posting Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
                 column(Source_Due_Date; format("Source Due Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
                 column(Source_Description; "Source Description") { }
-                column(Source_Amount__LCY_; "Source Amount") { }
+                column(Source_Amount__LCY_; Amount) { }
                 column(Source_Document_No_; "Source Document No.") { }
 
             }

@@ -46,6 +46,7 @@ report 80016 "NCT Sales Receipt"
             column(PaymentMethodMark_2; PaymentMethodMark[2]) { }
             column(PaymentMethodMark_3; PaymentMethodMark[3]) { }
             column(BankName; BankName) { }
+            column(BankBranchNo; BankBranchNo) { }
             dataitem(myLoop; Integer)
             {
                 DataItemTableView = sorting(Number) where(Number = filter(1 ..));
@@ -62,7 +63,7 @@ report 80016 "NCT Sales Receipt"
                     column(Source_Posting_Date; format("Source Posting Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
                     column(Source_Due_Date; format("Source Due Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
                     column(Source_Description; "Source Description") { }
-                    column(Source_Amount__LCY_; "Source Amount") { }
+                    column(Source_Amount__LCY_; Amount) { }
                     column(Source_Document_No_; "Source Document No.") { }
 
                 }
@@ -88,7 +89,7 @@ report 80016 "NCT Sales Receipt"
             trigger OnAfterGetRecord()
             var
                 NewDate: Date;
-
+                ltPaymentMethod: Record "Payment Method";
             begin
                 if "Currency Code" = '' then
                     FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
@@ -110,10 +111,13 @@ report 80016 "NCT Sales Receipt"
 
                 CLEAR(PaymentMethodMark);
 
-                if "Payment Method Code" = 'CASH' then
+                if not ltPaymentMethod.GET("Payment Method Code") then
+                    ltPaymentMethod.Init();
+
+                if ltPaymentMethod."NCT Payment Method" = ltPaymentMethod."NCT Payment Method"::Cash then
                     PaymentMethodMark[1] := '/';
 
-                if "Payment Method Code" in ['BANK', 'TRANSFER'] then begin
+                if ltPaymentMethod."NCT Payment Method" = ltPaymentMethod."NCT Payment Method"::Bank then begin
                     PaymentMethodMark[2] := '/';
                     if not BankAcc.GET(BillingReceiptHeader."Account No.") then
                         BankAcc.Init();
@@ -121,7 +125,7 @@ report 80016 "NCT Sales Receipt"
                     BankBranchNo := BankAcc."Bank Branch No.";
                 end;
 
-                if "Payment Method Code" in ['CHECK', 'CHEQUE'] then begin
+                if ltPaymentMethod."NCT Payment Method" = ltPaymentMethod."NCT Payment Method"::Check then begin
                     PaymentMethodMark[3] := '/';
                     if not BankAcc.GET(BillingReceiptHeader."Account No.") then
                         BankAcc.Init();

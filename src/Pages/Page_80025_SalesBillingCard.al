@@ -85,6 +85,11 @@ page 80025 "NCT Sales Billing Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Vat Registration No. field.';
                 }
+                field("Your Reference"; rec."Your Reference")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Your Reference field.';
+                }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = All;

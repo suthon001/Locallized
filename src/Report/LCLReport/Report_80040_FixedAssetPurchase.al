@@ -67,14 +67,15 @@ report 80040 "NCT Fixed Asset Purchase"
                     FADeprBook.init();
 
                 if (vgStartDateFilter = 0D) and (vgEndDateFilter <> 0D) then
-                    if (FADeprBook."Depreciation Starting Date" <= vgEndDateFilter) then
+                    if (FADeprBook."Depreciation Starting Date" > vgEndDateFilter) then
                         CurrReport.SKIP();
 
                 if (vgStartDateFilter <> 0D) and (vgEndDateFilter = 0D) then
-                    if (FADeprBook."Depreciation Starting Date" >= vgStartDateFilter) then
+                    if (FADeprBook."Depreciation Starting Date" > vgStartDateFilter) then
                         CurrReport.SKIP();
+
                 if (vgStartDateFilter <> 0D) and (vgEndDateFilter <> 0D) then
-                    if (FADeprBook."Depreciation Starting Date" >= vgStartDateFilter) and (FADeprBook."Depreciation Starting Date" <= vgEndDateFilter) then
+                    if (FADeprBook."Depreciation Starting Date" > vgStartDateFilter) and (FADeprBook."Depreciation Starting Date" > vgEndDateFilter) then
                         CurrReport.SKIP();
 
 
@@ -110,6 +111,7 @@ report 80040 "NCT Fixed Asset Purchase"
 
     requestpage
     {
+        SaveValues = true;
 
         layout
         {

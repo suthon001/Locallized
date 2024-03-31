@@ -82,6 +82,11 @@ page 80024 "NCT Sales Billing List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Payment Method Code field.';
                 }
+                field("Your Reference"; rec."Your Reference")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Your Reference field.';
+                }
                 field("Posting Description"; Rec."Posting Description")
                 {
                     ApplicationArea = All;

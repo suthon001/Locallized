@@ -258,11 +258,12 @@ report 80005 "NCT Receive Voucher"
                 JournalDescriptionThai := ltGenjournalTemplate."NCT Description Thai";
                 JournalDescriptionEng := ltGenjournalTemplate."NCT Description Eng";
 
-
-                CVBufferEntry.Reset();
-                CVBufferEntry.DeleteAll();
-                FunctionCenter.JnlFindApplyEntries(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name", GenJournalLine."Posting Date",
-                GenJournalLine."Document No.", CVBufferEntry);
+                if ShowCustLdgr then begin
+                    CVBufferEntry.Reset();
+                    CVBufferEntry.DeleteAll();
+                    FunctionCenter.JnlFindApplyEntries(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name", GenJournalLine."Posting Date",
+                    GenJournalLine."Document No.", CVBufferEntry);
+                end;
                 HaveApply := CVBufferEntry.Count <> 0;
 
                 FunctionCenter.GetGlobalDimCaption(DimThaiCaption1, DimEngCaption1, DimThaiCaption2, DimEngCaption2);
@@ -282,11 +283,18 @@ report 80005 "NCT Receive Voucher"
                     ToolTip = 'Grouping data';
                     Caption = 'Grouping G/L Account';
                 }
+                field(gvShowCustLdgr; ShowCustLdgr)
+                {
+                    Caption = 'Show Customer Apply';
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Show Customer Apply field.';
+                }
             }
         }
         trigger OnInit()
         begin
             groupping := true;
+            ShowCustLdgr := true;
         end;
     }
     /// <summary> 
@@ -394,7 +402,7 @@ report 80005 "NCT Receive Voucher"
         HaveApply: Boolean;
         haveCheque: Boolean;
 
-        groupping: Boolean;
+        groupping, ShowCustLdgr : Boolean;
         AccountName: text[100];
         glAccount: Record "G/L Account";
         UserName: Code[50];

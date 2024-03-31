@@ -57,6 +57,23 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
                 ToolTip = 'Executes the Revaluation Journal action.';
             }
         }
+        addlast(Action76)
+        {
+            action("Sales Billing")
+            {
+                Caption = 'Sales Billing';
+                ApplicationArea = all;
+                RunObject = page "NCT Sales Billing List";
+                ToolTip = 'Executes the Sales Billing action.';
+            }
+            action("Sales Receipt")
+            {
+                Caption = 'Sales Receipt';
+                ApplicationArea = all;
+                RunObject = page "NCT Sales Receipt List";
+                ToolTip = 'Executes the Sales Receipt action.';
+            }
+        }
         addfirst(sections)
         {
             group("Localized")

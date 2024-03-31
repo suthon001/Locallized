@@ -62,7 +62,8 @@ pageextension 80063 "NCT Sales Order Card" extends "Sales Order"
 
 
         moveafter("Due Date"; "Shipment Date")
-        moveafter("External Document No."; "Salesperson Code", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code")
+        moveafter("External Document No."; "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", "Salesperson Code")
+        moveafter("Posting Date"; "Document Date")
 
 
     }

@@ -62,6 +62,7 @@ pageextension 80066 "NCT Sales Invoice Card" extends "Sales Invoice"
         {
             Importance = Standard;
         }
+        moveafter("External Document No."; "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", "Salesperson Code")
 
 
 

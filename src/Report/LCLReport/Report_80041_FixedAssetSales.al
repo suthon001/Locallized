@@ -165,6 +165,7 @@ report 80041 "NCT Fixed Asset Sales"
 
     requestpage
     {
+        SaveValues = true;
 
         layout
         {

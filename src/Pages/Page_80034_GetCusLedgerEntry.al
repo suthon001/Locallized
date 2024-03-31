@@ -135,8 +135,13 @@ page 80034 "NCT Get Cus. Ledger Entry"
                 BillRcptLine."Source Document Date" := CUstLedger."Document Date";
                 BillRcptLine."Source Document No." := CUstLedger."Document No.";
                 BillRcptLine."Source Due Date" := CUstLedger."Due Date";
-                BillRcptLine."Source Amount (LCY)" := ABS(CUstLedger."Original Amt. (LCY)");
-                BillRcptLine."Source Amount" := ABS(CUstLedger."Original Amount");
+                if CUstLedger."Document Type" = CUstLedger."Document Type"::Invoice then begin
+                    BillRcptLine."Source Amount (LCY)" := ABS(CUstLedger."Original Amt. (LCY)");
+                    BillRcptLine."Source Amount" := ABS(CUstLedger."Original Amount");
+                end else begin
+                    BillRcptLine."Source Amount (LCY)" := -ABS(CUstLedger."Original Amt. (LCY)");
+                    BillRcptLine."Source Amount" := -ABS(CUstLedger."Original Amount");
+                end;
                 BillRcptLine."Source Description" := CUstLedger.Description;
                 BillRcptLine."Source Currency Code" := CUstLedger."Currency Code";
                 BillRcptLine."Source Ext. Document No." := CUstLedger."External Document No.";
