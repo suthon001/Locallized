@@ -84,13 +84,16 @@ report 80040 "NCT Fixed Asset Purchase"
                 FALedgerEntry.SETFILTER("FA Posting Type", '%1', FALedgerEntry."FA Posting Type"::"Acquisition Cost");
                 FALedgerEntry.SETFILTER("Depreciation Book Code", '%1', FADeprBook."Depreciation Book Code");
                 FALedgerEntry.SETFILTER("FA Posting Category", '%1', FALedgerEntry."FA Posting Category"::" ");
+                if (vgStartDateFilter <> 0D) or (vgEndDateFilter <> 0D) then
+                    FALedgerEntry.SetRange("Posting Date", vgStartDateFilter, vgEndDateFilter);
                 IF FALedgerEntry.FINDFIRST() THEN BEGIN
                     FALedgerEntry.CalcSums(Amount);
                     vgAcqDate := FALedgerEntry."Posting Date";
                     vgDcoumentNo := FALedgerEntry."Document No.";
                     InvoiceNo := FALedgerEntry."External Document No.";
                     vgAcqCost := FALedgerEntry.Amount;
-                END;
+                END else
+                    CurrReport.SKIP();
 
                 IF NOT FAPostingGroup.GET(FADeprBook."FA Posting Group") THEN
                     FAPostingGroup.INIT();
