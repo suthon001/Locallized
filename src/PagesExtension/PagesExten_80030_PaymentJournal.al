@@ -263,7 +263,7 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
     var
         GeneralSetup: Record "General Ledger Setup";
         WHTHeader: Record "NCT WHT Header";
-        NosMgt: Codeunit NoSeriesManagement;
+        NosMgt: Codeunit "No. Series";
         GenJnlLine: Record "Gen. Journal Line";
         GEnTemplate: Record "Gen. Journal Template";
         Vendor: Record Vendor;
@@ -382,7 +382,7 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
     end;
 
     [IntegrationEvent(true, false)]
-    procedure OnbeforInsertWhtHeader(var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
+    local procedure OnbeforInsertWhtHeader(var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
     begin
 
     end;

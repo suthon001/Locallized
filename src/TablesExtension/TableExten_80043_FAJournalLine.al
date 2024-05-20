@@ -60,15 +60,15 @@ tableextension 80043 "NCT FAJournalLine" extends "FA Journal Line"
     var
         FAJournalLine: Record "FA Journal Line";
         FaJournalBatch: Record "FA Journal Batch";
-        NoSeriesMgt: Codeunit NoSeriesManagement;
+        NoSeriesMgt: Codeunit "No. Series";
     begin
         // WITH FAJournalLine DO BEGIN
         FAJournalLine.COPY(Rec);
         FaJournalBatch.GET(FAJournalLine."Journal Template Name", FAJournalLine."Journal Batch Name");
         FaJournalBatch.TESTFIELD("NCT Document No. Series");
-        IF NoSeriesMgt.SelectSeries(FaJournalBatch."NCT Document No. Series", OldFaJournalLine."NCT Document No. Series",
+        IF NoSeriesMgt.LookupRelatedNoSeries(FaJournalBatch."NCT Document No. Series", OldFaJournalLine."NCT Document No. Series",
             FAJournalLine."NCT Document No. Series") THEN BEGIN
-            NoSeriesMgt.SetSeries(FAJournalLine."Document No.");
+            FAJournalLine."Document No." := NoSeriesMgt.GetNextNo(FAJournalLine."NCT Document No. Series");
             Rec := FAJournalLine;
             EXIT(TRUE);
         END;

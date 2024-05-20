@@ -243,7 +243,7 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
     var
         GeneralSetup: Record "General Ledger Setup";
         WHTHeader: Record "NCT WHT Header";
-        NosMgt: Codeunit NoSeriesManagement;
+        NosMgt: Codeunit "No. Series";
         GenJnlLine: Record "Gen. Journal Line";
         Vendor: Record Vendor;
         Customer: Record Customer;
@@ -323,8 +323,9 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
             WHTEader.Delete(True);
     end;
 
+
     [IntegrationEvent(true, false)]
-    procedure OnBeforInsertWhtHeader(var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
+    local procedure OnBeforInsertWhtHeader(var WHTHeader: Record "NCT WHT Header"; GenLine: Record "Gen. Journal Line")
     begin
 
     end;

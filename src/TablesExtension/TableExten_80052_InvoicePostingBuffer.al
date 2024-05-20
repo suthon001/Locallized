@@ -99,6 +99,13 @@ tableextension 80052 "NCT Invoice Posting Buffer" extends "Invoice Posting Buffe
             DataClassification = CustomerContent;
 
         }
+        field(80017; "NCT Ref. Document No."; code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Document No.';
+            Editable = false;
+        }
+
 
     }
 }

@@ -101,14 +101,14 @@ tableextension 80010 "NCT ExtenPurchase Header" extends "Purchase Header"
             var
 
                 PayableSetup: Record "Purchases & Payables Setup";
-                NoseriesMgt: Codeunit NoSeriesManagement;
+                NoseriesMgt: Codeunit "No. Series";
                 newNoseries: code[20];
 
 
             begin
                 PayableSetup.GET();
                 PayableSetup.TestField("Order Nos.");
-                if NoseriesMgt.SelectSeries(PayableSetup."Order Nos.", "No. Series", newNoseries) then
+                if NoseriesMgt.LookupRelatedNoSeries(PayableSetup."Order Nos.", "No. Series", newNoseries) then
                     "NCT Make PO No. Series" := newNoseries;
             end;
         }

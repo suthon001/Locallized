@@ -1,3 +1,6 @@
+/// <summary>
+/// Unknown NCT Carry Out Action Msg (ID 80000) extends Record Carry Out Action Msg. - Req..
+/// </summary>
 reportextension 80000 "NCT Carry Out Action Msg" extends "Carry Out Action Msg. - Req."
 {
     requestpage
@@ -13,12 +16,12 @@ reportextension 80000 "NCT Carry Out Action Msg" extends "Carry Out Action Msg. 
                     ToolTip = 'Specifies the value of the PO No. Series field.';
                     trigger OnAssistEdit()
                     var
-                        NoSerieMgt: Codeunit NoSeriesManagement;
+                        NoSerieMgt: Codeunit "No. Series";
                         PurchaseSetUp: Record "Purchases & Payables Setup";
                     begin
                         PurchaseSetUp.GET();
                         PurchaseSetUp.TestField("Order Nos.");
-                        NoSerieMgt.SelectSeries(PurchaseSetUp."Order Nos.", PurchaseSetUp."Order Nos.", gvPONoSeries);
+                        NoSerieMgt.LookupRelatedNoSeries(PurchaseSetUp."Order Nos.", PurchaseSetUp."Order Nos.", gvPONoSeries);
                         SetPODocumentNo(gvPONoSeries);
                     end;
                 }

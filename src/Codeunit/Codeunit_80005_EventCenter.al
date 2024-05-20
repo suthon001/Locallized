@@ -448,17 +448,15 @@ codeunit 80005 "NCT EventFunction"
         GeneralSetup: Record "General Ledger Setup";
         ltGenJournalLine: Record "Gen. Journal Line";
         WHTHeader: Record "NCT WHT Header";
-        NosMgt: Codeunit NoSeriesManagement;
+        NosMgt: Codeunit "No. Series";
         Vendor: Record Vendor;
         WHTBusiness: Record "NCT WHT Business Posting Group";
-        NoSeriesMgt: Codeunit NoSeriesManagement;
+        NoSeriesMgt: Codeunit "No. Series";
         ltWHTAppliedEntry: Record "NCT WHT Applied Entry";
         ltWHTEntry: Record "NCT WHT Line";
         ltLineNo: Integer;
 
     begin
-
-
         ltWHTAppliedEntry.reset();
         ltWHTAppliedEntry.SetFilter("Document No.", pInvoiceNo);
         if ltWHTAppliedEntry.FindFirst() then begin

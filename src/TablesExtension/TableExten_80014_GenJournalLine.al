@@ -507,6 +507,12 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             Caption = 'Ref. Prepayment PO No.';
 
         }
+        field(80057; "NCT Ref. Document No."; code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Document No.';
+            Editable = false;
+        }
         modify("External Document No.")
         {
             trigger OnAfterValidate()
@@ -596,15 +602,15 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
     var
         GenJnlLine: Record "Gen. Journal Line";
         GenJnlBatch: Record "Gen. Journal Batch";
-        NoSeriesMgt: Codeunit NoSeriesManagement;
+        NoSeriesMgt: Codeunit "No. Series";
     begin
         // WITH GenJnlLine DO BEGIN
         GenJnlLine.COPY(Rec);
         GenJnlBatch.GET(GenJnlLine."Journal Template Name", GenJnlLine."Journal Batch Name");
         GenJnlBatch.TESTFIELD("NCT Document No. Series");
-        IF NoSeriesMgt.SelectSeries(GenJnlBatch."NCT Document No. Series", OldGenJnlLine."NCT Document No. Series",
+        IF NoSeriesMgt.LookupRelatedNoSeries(GenJnlBatch."NCT Document No. Series", OldGenJnlLine."NCT Document No. Series",
             GenJnlLine."NCT Document No. Series") THEN BEGIN
-            NoSeriesMgt.SetSeries(GenJnlLine."Document No.");
+            GenJnlLine."Document No." := NoSeriesMgt.GetNextNo(GenJnlLine."NCT Document No. Series");
             Rec := GenJnlLine;
             EXIT(TRUE);
         END;

@@ -74,13 +74,16 @@ pageextension 80040 "NCT PostedInvoiceCard" extends "Posted Purchase Invoice"
                 ToolTip = 'Executes the AP Voucher action.';
                 trigger OnAction()
                 var
-                    APVoucher: Report "NCT AP Voucher (Post)";
+                    APVoucher: Report "NCT AP Voucher";
                     PurchaseHeader: Record "Purch. Inv. Header";
                 begin
+                    clear(APVoucher);
                     PurchaseHeader.reset();
-                    PurchaseHeader.Copy(Rec);
-                    APVoucher."SetGLEntry"(PurchaseHeader);
+                    PurchaseHeader.SetRange("No.", rec."No.");
+                    if PurchaseHeader.FindFirst() then
+                        APVoucher."SetDataTable"(PurchaseHeader);
                     APVoucher.RunModal();
+                    clear(APVoucher);
                 end;
             }
         }

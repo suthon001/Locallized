@@ -19,7 +19,7 @@ Table 80001 "NCT Billing Receipt Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
-                NoSeriesMgt: Codeunit NoSeriesManagement;
+                NoSeriesMgt: Codeunit "No. Series";
             begin
                 if rec."No." <> xRec."No." then begin
                     NoSeriesMgt.TestManual(GetNoSeriesCode());
@@ -530,8 +530,8 @@ Table 80001 "NCT Billing Receipt Header"
     begin
         // WITH BillingReceiptHeader DO BEGIN
         BillingReceiptHeader.COPY(Rec);
-        IF NoSeriesMgt.SelectSeries(GetNoSeriesCode(), OldBillingHeader."No. Series", BillingReceiptHeader."No. Series") THEN BEGIN
-            NoSeriesMgt.SetSeries(BillingReceiptHeader."No.");
+        IF NoSeriesMgt.LookupRelatedNoSeries(GetNoSeriesCode(), OldBillingHeader."No. Series", BillingReceiptHeader."No. Series") THEN BEGIN
+            BillingReceiptHeader."No." := NoSeriesMgt.GetNextNo(BillingReceiptHeader."No. Series");
             IF BillingHeader2.GET(BillingReceiptHeader."Document Type", BillingReceiptHeader."No.") THEN
                 ERROR(text051Txt, LOWERCASE(FORMAT(BillingReceiptHeader."Document Type")), BillingReceiptHeader."No.");
             Rec := BillingReceiptHeader;
@@ -827,7 +827,7 @@ Table 80001 "NCT Billing Receipt Header"
     end;
 
     var
-        NoSeriesMgt: Codeunit NoSeriesManagement;
+        NoSeriesMgt: Codeunit "No. Series";
         text051Txt: Label 'The document %1 %2 already exists.', Locked = true;
         Text001Err: Label 'Cannot Change';
         Text003Txt: Label 'You cannot rename a %1.', Locked = true;

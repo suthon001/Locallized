@@ -962,7 +962,7 @@ page 80020 "NCT Goods Receipt Note Subform"
                     ApplicationArea = Basic, Suite;
                     Caption = 'Document &LineTracking';
                     ToolTip = 'View related open, posted, or archived documents or document lines.';
-
+                    Image = ItemTracing;
                     trigger OnAction()
                     begin
                         ShowDocumentLineTracking();

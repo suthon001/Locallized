@@ -6,10 +6,12 @@ codeunit 80004 "NCT Function Center"
 
     Permissions = tabledata "G/L Entry" = rimd, tabledata "Purch. Rcpt. Line" = imd, tabledata "Return Shipment Line" = imd, tabledata "Sales Shipment Line" = imd;
     /// <summary>
-    /// SetDefualtGetInvoiceSales.
+    /// GetGlobalDimCaption.
     /// </summary>
-    /// <param name="pShipNo">code[20].</param>
-    /// <param name="pShipLineNo">integer.</param>
+    /// <param name="DimCaptionThai1">VAR text.</param>
+    /// <param name="DimCaptionEng1">VAR text.</param>
+    /// <param name="DimCaptionThai2">VAR text.</param>
+    /// <param name="DimCaptionEng2">VAR text.</param>
     procedure GetGlobalDimCaption(var DimCaptionThai1: text; var DimCaptionEng1: text; var DimCaptionThai2: text; var DimCaptionEng2: text)
     var
         GeneralSetup: Record "General Ledger Setup";
@@ -200,6 +202,9 @@ codeunit 80004 "NCT Function Center"
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;
     end;
+
+
+
     /// <summary>
     /// SetReportGLEntryPurchase.
     /// </summary>
@@ -207,8 +212,10 @@ codeunit 80004 "NCT Function Center"
     /// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
     /// <param name="pTotalAmount">VAR Decimal.</param>
     /// <param name="pGroupping">Boolean.</param>
-    procedure SetReportGLEntryPurchase(PurchaseHeader: Record "Purchase Header"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
+    /// <param name="pFromPosted">Boolean.</param>
+    procedure SetReportGLEntryPurchase(PurchaseHeader: Record "Purchase Header"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean; pFromPosted: Boolean)
     var
+        GlEntry: Record "G/L Entry";
         TempGLEntry, TempltGLEntry : Record "G/L Entry" temporary;
         PreviewPost: Codeunit "NCT EventFunction";
         EntryNo: Integer;
@@ -217,14 +224,24 @@ codeunit 80004 "NCT Function Center"
     begin
         ltIshandle := false;
         pTotalAmount := 0;
-        PurHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.");
-        PreviewPost."PurchasePreviewVourcher"(PurHeader, TempGLEntry);
+        if not pFromPosted then begin
+            PurHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.");
+            PreviewPost."PurchasePreviewVourcher"(PurHeader, TempGLEntry);
+        end else begin
+            GlEntry.reset();
+            GlEntry.SetRange("Document No.", PurchaseHeader."No.");
+            if GlEntry.FindFirst() then
+                repeat
+                    TempGLEntry.Init();
+                    TempGLEntry.TransferFields(GlEntry);
+                    TempGLEntry.Insert();
+                until GlEntry.Next() = 0;
+        end;
         BeforSetPurchaseGLEntry(ltIshandle, PurHeader, pGroupping, pTotalAmount, TempGLEntry, pTempGLEntry);
         if not ltIshandle then begin
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-            if not IsNOTFilterCostGL then
-                TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            TempGLEntry.SetRange("NCT Ref. Document No.", PurHeader."No.");
             TempGLEntry.SetFilter(Amount, '>%1', 0);
             if TempGLEntry.FindFirst() then
                 repeat
@@ -263,8 +280,7 @@ codeunit 80004 "NCT Function Center"
                 until TempGLEntry.next() = 0;
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-            if not IsNOTFilterCostGL then
-                TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            TempGLEntry.SetRange("NCT Ref. Document No.", PurHeader."No.");
             TempGLEntry.SetFilter(Amount, '<%1', 0);
             if TempGLEntry.FindFirst() then
                 repeat
@@ -305,6 +321,8 @@ codeunit 80004 "NCT Function Center"
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;
     end;
+
+
     /// <summary>
     /// SetReportGLEntrySales.
     /// </summary>
@@ -328,8 +346,7 @@ codeunit 80004 "NCT Function Center"
         if not ltIshandle then begin
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-            if not IsNOTFilterCostGL then
-                TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
             TempGLEntry.SetFilter(Amount, '>%1', 0);
             if TempGLEntry.FindFirst() then
                 repeat
@@ -364,12 +381,11 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
                     end;
-                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+
                 until TempGLEntry.next() = 0;
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
-            if not IsNOTFilterCostGL then
-                TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
+            TempGLEntry.SetFilter("Document Type", '<>%1', TempGLEntry."Document Type"::" ");
             TempGLEntry.SetFilter(Amount, '<%1', 0);
             if TempGLEntry.FindFirst() then
                 repeat
@@ -404,8 +420,13 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
                     end;
-                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+
                 until TempGLEntry.next() = 0;
+            TempltGLEntry.reset();
+            if TempltGLEntry.FindFirst() then begin
+                TempltGLEntry.CalcSums("Debit Amount");
+                pTotalAmount := TempltGLEntry."Debit Amount";
+            end;
             TempltGLEntry.reset();
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;
@@ -465,7 +486,7 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
                     end;
-                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+
                 until ltGlEntry.next() = 0;
             ltGlEntry.reset();
             ltGlEntry.SetCurrentKey("G/L Account No.", Amount);
@@ -503,8 +524,13 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
                     end;
-                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+
                 until ltGlEntry.next() = 0;
+            TempltGLEntry.reset();
+            if TempltGLEntry.FindFirst() then begin
+                TempltGLEntry.CalcSums("Debit Amount");
+                pTotalAmount := TempltGLEntry."Debit Amount";
+            end;
             TempltGLEntry.reset();
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;
@@ -2960,14 +2986,7 @@ codeunit 80004 "NCT Function Center"
         BillingHeader.MODIFY();
         //   END;
     end;
-    /// <summary>
-    /// NCT IsNOTFilterCostGL.
-    /// </summary>
-    /// <param name="ISNOTCostGL">Boolean.</param>
-    procedure "NCT IsNOTFilterCostGL"(ISNOTCostGL: Boolean)
-    begin
-        IsNOTFilterCostGL := ISNOTCostGL;
-    end;
+
 
     [IntegrationEvent(false, false)]
     local procedure BeforSetPurchaseGLEntry(var Ishandle: Boolean; PurchaseHeader: Record "Purchase Header"; pGroupping: boolean; var pTotalAmt: Decimal; var FromTempGLEntry: Record "G/L Entry" temporary; var ToTempGLEntry: Record "G/L Entry" temporary)
@@ -3010,6 +3029,5 @@ codeunit 80004 "NCT Function Center"
         TensText: array[10] of Text[50];
         ExponentText: array[5] of text[50];
         TempCurrencyPointInterger: array[20] of Integer;
-        IsNOTFilterCostGL: Boolean;
 
 }

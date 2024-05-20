@@ -77,8 +77,10 @@ pageextension 80075 "NCT Purchase Credit Memo Card" extends "Purchase Credit Mem
                     PurchaseHeader: Record "Purchase Header";
                 begin
                     PurchaseHeader.reset();
-                    PurchaseHeader.Copy(Rec);
-                    APCNVoucher."SetGLEntry"(PurchaseHeader);
+                    PurchaseHeader.SetRange("Document Type", rec."Document Type");
+                    PurchaseHeader.SetRange("No.", rec."No.");
+                    if PurchaseHeader.FindFirst() then
+                        APCNVoucher.SetDataTable(PurchaseHeader);
                     APCNVoucher.RunModal();
                 end;
             }

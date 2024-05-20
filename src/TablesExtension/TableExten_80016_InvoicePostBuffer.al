@@ -99,6 +99,12 @@ tableextension 80016 "NCT Invoice Post. Buffer" extends "Invoice Post. Buffer"
             DataClassification = SystemMetadata;
 
         }
+        field(80017; "NCT Ref. Document No."; code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Document No.';
+            Editable = false;
+        }
 
     }
 }

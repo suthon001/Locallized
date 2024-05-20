@@ -110,12 +110,12 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
             trigger OnLookup()
             var
                 SalesSetup: Record "Sales & Receivables Setup";
-                NoseriesMgt: Codeunit NoSeriesManagement;
+                NoseriesMgt: Codeunit "No. Series";
                 newNoseries: code[20];
             begin
                 SalesSetup.GET();
                 SalesSetup.TestField("Order Nos.");
-                if NoseriesMgt.SelectSeries(SalesSetup."Order Nos.", "No. Series", newNoseries) then
+                if NoseriesMgt.LookupRelatedNoSeries(SalesSetup."Order Nos.", "No. Series", newNoseries) then
                     "NCT Make Order No. Series" := newNoseries;
             end;
         }

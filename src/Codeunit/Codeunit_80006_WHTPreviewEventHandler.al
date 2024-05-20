@@ -65,7 +65,7 @@ codeunit 80006 "WHT Preview Event Handler"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Req. Wksh.-Make Order", 'OnBeforePurchOrderHeaderInsert', '', false, false)]
     local procedure OnBeforePurchOrderHeaderInsert(var PurchaseHeader: Record "Purchase Header")
     var
-        NoSeriesMgt: Codeunit NoSeriesManagement;
+        NoSeriesMgt: Codeunit "No. Series";
     begin
         if gvPONoNories <> '' then begin
             PurchaseHeader."No." := NoSeriesMgt.GetNextNo(gvPONoNories, WorkDate(), true);

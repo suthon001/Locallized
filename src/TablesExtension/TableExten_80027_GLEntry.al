@@ -15,5 +15,11 @@ tableextension 80027 "NCT GLEntry" extends "G/L Entry"
             Caption = 'Document Line No.';
             DataClassification = SystemMetadata;
         }
+        field(80002; "NCT Ref. Document No."; code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Document No.';
+            Editable = false;
+        }
     }
 }

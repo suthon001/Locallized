@@ -59,14 +59,17 @@ report 80000 "NCT AP CN Voucher"
                 NewDate: Date;
             begin
 
-                FunctionCenter.SetReportGLEntryPurchase(PurHeader, GLEntry, TempAmt, groupping);
+                FunctionCenter.SetReportGLEntryPurchase(PurHeader, GLEntry, TempAmt, groupping, FromPosted);
                 companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 if PurHeader."Currency Code" = '' then
                     FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", false)
                 else
                     FunctionCenter."CompanyinformationByVat"(ComText, PurHeader."VAT Bus. Posting Group", true);
-                FunctionCenter."PurchaseInformation"(PurHeader."Document Type", PurHeader."No.", VendText, 1);
+                if not FromPosted then
+                    FunctionCenter."PurchaseInformation"(PurHeader."Document Type", PurHeader."No.", VendText, 1)
+                else
+                    FunctionCenter.PurchasePostedVendorInformation(3, PurHeader."No.", VendText, 0);
                 FunctionCenter."ConvExchRate"(PurHeader."Currency Code", PurHeader."Currency Factor", ExchangeRate);
 
                 if PurHeader."Currency Code" = '' then
@@ -93,7 +96,7 @@ report 80000 "NCT AP CN Voucher"
         dataitem("Purchase Line"; "Purchase Line")
         {
             DataItemTableView = sorting("DOcument Type", "Document No.", "Line No.") where(Type = const(Item));
-
+            UseTemporary = true;
 
             column(No_; "No.") { }
             column(Description; Description + ' ' + "Description 2") { }
@@ -115,7 +118,7 @@ report 80000 "NCT AP CN Voucher"
         {
             DataItemTableView = sorting("DOcument Type", "Document No.", "Line No.")
             where("NCT Tax Invoice No." = filter(<> ''));
-
+            UseTemporary = true;
 
             column(Tax_Invoice_No_; "NCT Tax Invoice No.") { }
             column(Tax_Invoice_Date; format("NCT Tax Invoice Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
@@ -143,11 +146,12 @@ report 80000 "NCT AP CN Voucher"
         {
             DataItemTableView = sorting("DOcument Type", "Document No.", "Line No.")
             where(Type = const("Charge (Item)"));
-
+            UseTemporary = true;
             dataitem(ItemChargeAssignment; "Item Charge Assignment (Purch)")
             {
                 DataItemTableView = sorting("Document Type", "Document No.", "Document Line No.", "Line NO.");
                 DataItemLink = "Document Type" = FIELD("Document Type"), "Document No." = FIELD("Document No."), "Document Line No." = FIELD("Line No.");
+                UseTemporary = true;
                 column(Applies_to_Doc__No_; "Applies-to Doc. No.") { }
                 column(Item_No_; "Item No.") { }
                 column(ItemChangeDescription; Description) { }
@@ -206,21 +210,12 @@ report 80000 "NCT AP CN Voucher"
         end;
     }
 
-    /// <summary> 
-    /// Description for SetGLEntry.
-    /// </summary>
-    /// <param name="PurchaseHeader">Parameter of type Record "Purchase Header".</param>
-    procedure "SetGLEntry"(PurchaseHeader: Record "Purchase Header")
-    begin
-        PurHeader.GET(PurchaseHeader."Document Type", PurchaseHeader."No.");
-    end;
+
 
     /// <summary> 
     /// Description for CheckLineData.
     /// </summary>
     procedure "CheckLineData"()
-    var
-        PurchaseLine: Record "Purchase Line";
     begin
         PurchaseLine.reset();
         PurchaseLine.SetRange("Document Type", PurHeader."Document Type");
@@ -239,8 +234,101 @@ report 80000 "NCT AP CN Voucher"
 
     end;
 
+    /// <summary>
+    /// SetDataTable.
+    /// </summary>
+    /// <param name="pVariant">Variant.</param>
+    procedure SetDataTable(pVariant: Variant)
     var
-        PurHeader: Record "Purchase Header";
+        ltRecordRef: RecordRef;
+        ltPurchaseLine: Record "Purchase Line";
+        ltPurchCrLine: Record "Purch. Cr. Memo Line";
+        ltValueEntry: Record "Value Entry";
+        ltItemLedger: Record "Item Ledger Entry";
+        ItemchagePurch: Record "Item Charge Assignment (Purch)";
+    begin
+        ltRecordRef.GetTable(pVariant);
+        if ltRecordRef.FindFirst() then begin
+            if ltRecordRef.Number = Database::"Purchase Header" then begin
+                FromPosted := false;
+                ltRecordRef.SetTable(PurHeader);
+                PurHeader.Insert();
+                ltPurchaseLine.reset();
+                ltPurchaseLine.SetRange("Document Type", PurHeader."Document Type");
+                ltPurchaseLine.SetRange("Document No.", PurHeader."No.");
+                if ltPurchaseLine.FindSet() then
+                    repeat
+                        PurchaseLine.Init();
+                        PurchaseLine.TransferFields(ltPurchaseLine);
+                        PurchaseLine.Insert();
+                        if PurchaseLine.Type = PurchaseLine.Type::"Charge (Item)" then begin
+                            ItemchagePurch.reset();
+                            ItemchagePurch.SetRange("Document Type", PurHeader."Document Type");
+                            ItemchagePurch.SetRange("Document No.", PurHeader."No.");
+                            ItemchagePurch.SetRange("Document Line No.", ltPurchaseLine."Line No.");
+                            if ItemchagePurch.FindSet() then
+                                repeat
+                                    ItemChargeAssignment.Init();
+                                    ItemChargeAssignment.TransferFields(ItemchagePurch);
+                                    ItemChargeAssignment.Insert();
+                                until ItemchagePurch.Next() = 0;
+                        end;
+                    until ltPurchaseLine.Next() = 0;
+            end;
+            if ltRecordRef.Number = Database::"Purch. Cr. Memo Hdr." then begin
+                FromPosted := true;
+                ltRecordRef.SetTable(PurCrHeader);
+                PurHeader.TransferFields(PurCrHeader, false);
+                PurHeader."Document Type" := PurHeader."Document Type"::"Credit Memo";
+                PurHeader."No." := PurCrHeader."No.";
+                PurHeader.Insert();
+                ltPurchCrLine.reset();
+                ltPurchCrLine.SetRange("Document No.", PurHeader."No.");
+                if ltPurchCrLine.FindSet() then
+                    repeat
+                        PurchaseLine.Init();
+                        PurchaseLine.TransferFields(ltPurchCrLine, false);
+                        PurchaseLine."Document Type" := PurHeader."Document Type";
+                        PurchaseLine."Document No." := PurHeader."No.";
+                        PurchaseLine."Line No." := ltPurchCrLine."Line No.";
+                        PurchaseLine.Insert();
+                        if ltPurchCrLine.Type = ltPurchCrLine.Type::"Charge (Item)" then begin
+                            ltValueEntry.reset();
+                            ltValueEntry.SetRange("Document No.", ltPurchCrLine."Document No.");
+                            ltValueEntry.SetRange("Document Line No.", ltPurchCrLine."Line No.");
+                            ltValueEntry.SetFilter("Item Charge No.", '<>%1', '');
+                            if ltValueEntry.FindSet() then
+                                repeat
+                                    if not ltItemLedger.GET(ltValueEntry."Item Ledger Entry No.") then
+                                        ltItemLedger.Init();
+
+                                    ItemChargeAssignment.Init();
+                                    ItemChargeAssignment."Document Type" := PurHeader."Document Type";
+                                    ItemChargeAssignment."Document No." := PurHeader."No.";
+                                    ItemChargeAssignment."Document Line No." := ltValueEntry."Document Line No.";
+                                    ItemChargeAssignment."Line No." := ltValueEntry."Entry No.";
+                                    ItemChargeAssignment."Applies-to Doc. No." := ltItemLedger."Document No.";
+                                    ItemChargeAssignment."Item No." := ltItemLedger."Item No.";
+                                    ItemChargeAssignment.Description := ltItemLedger.Description;
+                                    ItemChargeAssignment."Amount to Assign" := ltValueEntry."Cost Amount (Actual)";
+                                    ItemChargeAssignment."Qty. to Assign" := ltValueEntry."Valued Quantity";
+                                    ItemChargeAssignment.Insert();
+
+                                until ltValueEntry.Next() = 0;
+                        end;
+                    until ltPurchCrLine.Next() = 0;
+            end;
+            PurchaseLine.Reset();
+            "Purchase Line".Copy(PurchaseLine, true);
+            PurchaseLineTaxInvoice.Copy(PurchaseLine, true);
+            PurchaseItemCharge.Copy(PurchaseLine, true);
+        end;
+    end;
+
+    var
+        PurHeader: Record "Purchase Header" temporary;
+        PurCrHeader: Record "Purch. Cr. Memo Hdr." temporary;
+        PurchaseLine: Record "Purchase Line" temporary;
         FunctionCenter: Codeunit "NCT Function Center";
         companyInfor: Record "Company Information";
         ExchangeRate: Text[30];
@@ -260,5 +348,6 @@ report 80000 "NCT AP CN Voucher"
         AccountName: text[100];
         glAccount: Record "G/L Account";
         DimThaiCaption1, DimThaiCaption2, DimEngCaption1, DimEngCaption2 : text;
+        FromPosted: Boolean;
 
 }

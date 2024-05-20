@@ -91,8 +91,10 @@ pageextension 80072 "NCT Purchase Invoice Lists" extends "Purchase Invoices"
                     PurchaseHeader: Record "Purchase Header";
                 begin
                     PurchaseHeader.reset();
-                    PurchaseHeader.Copy(Rec);
-                    APVoucher."SetGLEntry"(PurchaseHeader);
+                    PurchaseHeader.SetRange("Document Type", rec."Document Type");
+                    PurchaseHeader.SetRange("No.", rec."No.");
+                    if PurchaseHeader.FindFirst() then
+                        APVoucher."SetDataTable"(PurchaseHeader);
                     APVoucher.RunModal();
                 end;
             }

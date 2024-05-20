@@ -111,8 +111,10 @@ pageextension 80074 "NCT Purchase Credit MemosLists" extends "Purchase Credit Me
                     PurchaseHeader: Record "Purchase Header";
                 begin
                     PurchaseHeader.reset();
-                    PurchaseHeader.Copy(Rec);
-                    APCNVoucher."SetGLEntry"(PurchaseHeader);
+                    PurchaseHeader.SetRange("Document Type", rec."Document Type");
+                    PurchaseHeader.SetRange("No.", rec."No.");
+                    if PurchaseHeader.FindFirst() then
+                        APCNVoucher.SetDataTable(PurchaseHeader);
                     APCNVoucher.RunModal();
                 end;
             }

@@ -3,6 +3,30 @@
 /// </summary>
 codeunit 80000 "NCT Journal Function"
 {
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnBeforeSetValueEntrySourceFieldsFromItemJnlLine', '', false, false)]
+    local procedure OnBeforeSetValueEntrySourceFieldsFromItemJnlLine(var ItemJournalLine: Record "Item Journal Line"; var ValueEntry: Record "Value Entry")
+    begin
+        ValueEntry."NCT Ref. Document No." := ItemJournalLine."NCT Ref. Document No.";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Inventory Posting To G/L", 'OnPostInvtPostBufOnAfterInitGenJnlLine', '', false, false)]
+    local procedure OnPostInvtPostBufOnAfterInitGenJnlLine(var GenJournalLine: Record "Gen. Journal Line"; var ValueEntry: Record "Value Entry")
+    begin
+        GenJournalLine."NCT Ref. Document No." := ValueEntry."NCT Ref. Document No.";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyItemJnlLineFromPurchHeader', '', false, false)]
+    local procedure OnAfterCopyItemJnlLineFromPurchHeader(PurchHeader: Record "Purchase Header"; var ItemJnlLine: Record "Item Journal Line")
+    begin
+        ItemJnlLine."NCT Ref. Document No." := PurchHeader."No.";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyItemJnlLineFromPurchLine', '', false, false)]
+    local procedure OnAfterCopyItemJnlLineFromPurchLine(PurchLine: Record "Purchase Line"; var ItemJnlLine: Record "Item Journal Line")
+    begin
+        ItemJnlLine."NCT Ref. Document No." := PurchLine."Document No.";
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post", 'OnBeforeCode', '', false, false)]
     local procedure OnBeforeCode(var GenJournalLine: Record "Gen. Journal Line")
     var
@@ -187,8 +211,9 @@ codeunit 80000 "NCT Journal Function"
         PrepaymentInvLineBuffer."NCT Head Office" := PurchHeader."NCT Head Office";
         PrepaymentInvLineBuffer."NCT Tax Invoice Base" := PurchaseLine.Amount;
         PrepaymentInvLineBuffer."NCT Tax Invoice Amount" := PurchaseLine."Amount Including VAT" - PurchaseLine.Amount;
-        if PurchaseLine."NCT Tax Invoice No." <> '' then begin
+        if PurchaseLine."NCT Tax Invoice No." <> '' then
             PrepaymentInvLineBuffer."NCT Tax Invoice No." := PurchaseLine."NCT Tax Invoice No.";
+        if PurchaseLine."NCT Tax Invoice Name" <> '' then begin
             PrepaymentInvLineBuffer."NCT Tax Invoice Name" := PurchaseLine."NCT Tax Invoice Name";
             PrepaymentInvLineBuffer."NCT Tax Invoice Name 2" := PurchaseLine."NCT Tax Invoice Name 2";
         end;
@@ -217,13 +242,13 @@ codeunit 80000 "NCT Journal Function"
         "NCT OnAfterCopyFromSalesLinePrepayment"(PrepaymentInvLineBuffer, SalesLine, SalesHeader);
     end;
 
-
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnBeforeInsertPostUnrealVATEntry', '', true, true)]
     /// <summary> 
     /// Description for PostUnrealVatEntry.
     /// </summary>
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     /// <param name="VATEntry">Parameter of type Record "VAT Entry".</param>
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnBeforeInsertPostUnrealVATEntry', '', true, true)]
+
     local procedure "PostUnrealVatEntry"(GenJournalLine: Record "Gen. Journal Line"; var VATEntry: Record "VAT Entry")
     begin
         VATEntry."NCT Tax Invoice Base" := VATEntry.Base;
@@ -248,10 +273,11 @@ codeunit 80000 "NCT Journal Function"
         "NCT AfterInsertToUnrealVat"(VATEntry, GenJournalLine);
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
     /// <summary> 
     /// Description for CopyHeaderFromInvoiceBuff.
     /// </summary>
+    [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
+
     local procedure "CopyHeaderFromInvoiceBuff"(InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary; var GenJnlLine: Record "Gen. Journal Line")
     begin
 
@@ -272,17 +298,17 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine."NCT Tax Invoice City" := InvoicePostingBuffer."NCT City";
         GenJnlLine."NCT Tax Invoice Post Code" := InvoicePostingBuffer."NCT Post Code";
         GenJnlLine."NCT Document Line No." := InvoicePostingBuffer."NCT Document Line No.";
+        GenJnlLine."NCT Ref. Document No." := InvoicePostingBuffer."NCT Ref. Document No.";
         "NCT AfterCopyInvoicePostingBufferToGL"(GenJnlLine, InvoicePostingBuffer);
 
     end;
 
 
 
-
-    [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
     /// <summary> 
     /// Description for CopyHeaderFromInvoiceBuff.
     /// </summary>
+    [EventSubscriber(ObjectType::Table, Database::"Invoice Post. Buffer", 'OnAfterCopyToGenJnlLine', '', true, true)]
     local procedure OnAfterCopyToGenJnlLine(InvoicePostBuffer: Record "Invoice Post. Buffer" temporary; var GenJnlLine: Record "Gen. Journal Line")
     begin
         // with GenJournalLine do begin
@@ -303,6 +329,7 @@ codeunit 80000 "NCT Journal Function"
         GenJnlLine."NCT Tax Invoice City" := InvoicePostBuffer."NCT City";
         GenJnlLine."NCT Tax Invoice Post Code" := InvoicePostBuffer."NCT Post Code";
         GenJnlLine."NCT Document Line No." := InvoicePostBuffer."NCT Document Line No.";
+        GenJnlLine."NCT Ref. Document No." := InvoicePostBuffer."NCT Ref. Document No.";
         "NCT AfterCopyInvoicePostBufferToGL"(GenJnlLine, InvoicePostBuffer);
         // end;
     end;
@@ -420,6 +447,7 @@ codeunit 80000 "NCT Journal Function"
         GenJournalLine."NCT Tax Invoice Address 2" := PurchaseHeader."Pay-to Address 2";
         GenJournalLine."NCT Tax Invoice City" := PurchaseHeader."Pay-to City";
         GenJournalLine."NCT Tax Invoice Post Code" := PurchaseHeader."Pay-to Post Code";
+        GenJournalLine."NCT Ref. Document No." := PurchaseHeader."No.";
         if not PurchaseHeader."NCT Head Office" then
             if VendCust.Get(VendCust."Source Type"::Vendor, PurchaseHeader."Buy-from Vendor No.", PurchaseHeader."NCT Head Office", PurchaseHeader."NCT VAT Branch Code") then begin
                 if VendCust."Name" <> '' then
@@ -514,16 +542,18 @@ codeunit 80000 "NCT Journal Function"
 
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"G/L Entry", 'OnAfterCopyGLEntryFromGenJnlLine', '', false, false)]
     /// <summary> 
     /// Description for AfterCopyGLEntryFromGenJnlLine.
     /// </summary>
     /// <param name="GenJournalLine">Parameter of type Record "Gen. Journal Line".</param>
     /// <param name="GLEntry">Parameter of type Record "G/L Entry".</param>
+    [EventSubscriber(ObjectType::Table, Database::"G/L Entry", 'OnAfterCopyGLEntryFromGenJnlLine', '', false, false)]
+
     local procedure "AfterCopyGLEntryFromGenJnlLine"(var GenJournalLine: Record "Gen. Journal Line"; var GLEntry: Record "G/L Entry")
     begin
 
         GLEntry."NCT Journal Description" := GenJournalLine."NCT Journal Description";
+        GLEntry."NCT Ref. Document No." := GenJournalLine."NCT Ref. Document No.";
         if GenJournalLine."NCT Document Line No." <> 0 then
             GLEntry."NCT Document Line No." := GenJournalLine."NCT Document Line No."
         else

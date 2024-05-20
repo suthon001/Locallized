@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension NCT Posted Sales Credit Memos (ID 80096) extends Record Posted Sales Credit Memos.
+/// </summary>
 pageextension 80096 "NCT Posted Sales Credit Memos" extends "Posted Sales Credit Memos"
 {
     actions
@@ -23,6 +26,7 @@ pageextension 80096 "NCT Posted Sales Credit Memos" extends "Posted Sales Credit
                     ARCNVoucher."SetGLEntry"(SalesHeader);
                     ARCNVoucher.RunModal();
                 end;
+
             }
             action("Print_Sales_CreditMemo")
             {

@@ -66,6 +66,12 @@ tableextension 80015 "NCT ExtenItem Journal Line" extends "Item Journal Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(80010; "NCT Ref. Document No."; code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Document No.';
+            Editable = false;
+        }
         modify("Bin Code")
         {
             trigger OnAfterValidate()
@@ -99,15 +105,15 @@ tableextension 80015 "NCT ExtenItem Journal Line" extends "Item Journal Line"
     var
         ItemJournalLine: Record "Item Journal Line";
         ItemJournalBatch: Record "Item Journal Batch";
-        NoSeriesMgt: Codeunit NoSeriesManagement;
+        NoSeriesMgt: Codeunit "No. Series";
     begin
 
         ItemJournalLine.COPY(Rec);
         ItemJournalBatch.GET(ItemJournalLine."Journal Template Name", ItemJournalLine."Journal Batch Name");
         ItemJournalBatch.TESTFIELD("NCT Document No. Series");
-        IF NoSeriesMgt.SelectSeries(ItemJournalBatch."NCT Document No. Series", OldItemJournalLine."NCT Document No. Series",
+        IF NoSeriesMgt.LookupRelatedNoSeries(ItemJournalBatch."NCT Document No. Series", OldItemJournalLine."NCT Document No. Series",
             ItemJournalLine."NCT Document No. Series") THEN BEGIN
-            NoSeriesMgt.SetSeries(ItemJournalLine."Document No.");
+            ItemJournalLine."Document No." := NoSeriesMgt.GetNextNo(ItemJournalLine."NCT Document No. Series");
             Rec := ItemJournalLine;
             EXIT(TRUE);
         END;

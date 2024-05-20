@@ -35,11 +35,11 @@ pageextension 80017 "NCT Sales Quote Card" extends "Sales Quote"
                 trigger OnAssistEdit()
                 var
                     SalesSetup: Record "Sales & Receivables Setup";
-                    Noseriesmgt: Codeunit NoSeriesManagement;
+                    Noseriesmgt: Codeunit "No. Series";
                 begin
                     SalesSetup.get();
                     SalesSetup.TestField("Order Nos.");
-                    Noseriesmgt.SelectSeries(SalesSetup."Order Nos.", Rec."No. Series", Rec."NCT Make Order No. Series");
+                    Noseriesmgt.LookupRelatedNoSeries(SalesSetup."Order Nos.", Rec."No. Series", Rec."NCT Make Order No. Series");
                 end;
             }
         }

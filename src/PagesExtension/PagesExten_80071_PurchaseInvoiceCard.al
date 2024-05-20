@@ -105,10 +105,14 @@ pageextension 80071 "NCT Purchase Invoice Card" extends "Purchase Invoice"
                     APVoucher: Report "NCT AP Voucher";
                     PurchaseHeader: Record "Purchase Header";
                 begin
+                    clear(APVoucher);
                     PurchaseHeader.reset();
-                    PurchaseHeader.Copy(Rec);
-                    APVoucher."SetGLEntry"(PurchaseHeader);
+                    PurchaseHeader.SetRange("Document Type", rec."Document Type");
+                    PurchaseHeader.SetRange("No.", rec."No.");
+                    if PurchaseHeader.FindFirst() then
+                        APVoucher."SetDataTable"(PurchaseHeader);
                     APVoucher.RunModal();
+                    clear(APVoucher);
                 end;
             }
         }
