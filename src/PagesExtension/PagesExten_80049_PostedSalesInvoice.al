@@ -68,13 +68,16 @@ pageextension 80049 "NCT Posted Sales Invoice" extends "Posted Sales Invoice"
                 ToolTip = 'Executes the AR Voucher action.';
                 trigger OnAction()
                 var
-                    ARVoucher: Report "NCT AR Voucher (Post)";
+                    ARVoucher: Report "NCT AR Voucher";
                     SalesHeader: Record "Sales Invoice Header";
                 begin
+                    CLEAR(ARVoucher);
                     SalesHeader.reset();
-                    SalesHeader.Copy(Rec);
-                    ARVoucher."SetGLEntry"(SalesHeader);
+                    SalesHeader.SetRange("No.", rec."No.");
+                    if SalesHeader.FindFirst() then
+                        ARVoucher.SetDataTable(SalesHeader);
                     ARVoucher.RunModal();
+                    CLEAR(ARVoucher);
                 end;
             }
             action("Print_Sales_Invoice")

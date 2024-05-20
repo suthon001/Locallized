@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension NCT Posted Sales Invoices (ID 80019) extends Record Posted Sales Invoices.
+/// </summary>
 pageextension 80019 "NCT Posted Sales Invoices" extends "Posted Sales Invoices"
 {
     actions
@@ -15,13 +18,16 @@ pageextension 80019 "NCT Posted Sales Invoices" extends "Posted Sales Invoices"
                 ToolTip = 'Executes the AR Voucher action.';
                 trigger OnAction()
                 var
-                    ARVoucher: Report "NCT AR Voucher (Post)";
+                    ARVoucher: Report "NCT AR Voucher";
                     SalesHeader: Record "Sales Invoice Header";
                 begin
+                    CLEAR(ARVoucher);
                     SalesHeader.reset();
-                    SalesHeader.Copy(Rec);
-                    ARVoucher."SetGLEntry"(SalesHeader);
+                    SalesHeader.SetRange("No.", rec."No.");
+                    if SalesHeader.FindFirst() then
+                        ARVoucher.SetDataTable(SalesHeader);
                     ARVoucher.RunModal();
+                    CLEAR(ARVoucher);
                 end;
             }
             action("Print_Sales_Invoice")

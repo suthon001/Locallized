@@ -204,7 +204,7 @@ report 80003 "NCT AR Voucher"
     begin
         ltRecordRef.GetTable(pVariant);
         if ltRecordRef.FindFirst() then begin
-            if ltRecordRef.Number = Database::"Purchase Header" then begin
+            if ltRecordRef.Number = Database::"Sales Header" then begin
                 FromPosted := false;
                 ltRecordRef.SetTable(SalesHeader);
                 SalesHeader.Insert();
@@ -230,7 +230,7 @@ report 80003 "NCT AR Voucher"
                         end;
                     until ltSalesLine.Next() = 0;
             end;
-            if ltRecordRef.Number = Database::"Purch. Inv. Header" then begin
+            if ltRecordRef.Number = Database::"Sales Invoice Header" then begin
                 FromPosted := true;
                 ltRecordRef.SetTable(SalesInvoice);
                 SalesHeader.TransferFields(SalesInvoice, false);
