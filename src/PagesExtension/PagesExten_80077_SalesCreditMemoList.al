@@ -48,13 +48,17 @@ pageextension 80077 "NCT Sales Creidt Lists" extends "Sales Credit Memos"
                 ToolTip = 'Executes the AR CN Voucher action.';
                 trigger OnAction()
                 var
-                    ARCNVoucher: Report "NCT AR CN Voucher";
+                    ARVoucher: Report "NCT AR CN Voucher";
                     SalesHeader: Record "Sales Header";
                 begin
+                    CLEAR(ARVoucher);
                     SalesHeader.reset();
-                    SalesHeader.Copy(Rec);
-                    ARCNVoucher."SetGLEntry"(SalesHeader);
-                    ARCNVoucher.RunModal();
+                    SalesHeader.SetRange("Document Type", rec."Document Type");
+                    SalesHeader.SetRange("No.", rec."No.");
+                    if SalesHeader.FindFirst() then
+                        ARVoucher.SetDataTable(SalesHeader);
+                    ARVoucher.RunModal();
+                    CLEAR(ARVoucher);
                 end;
             }
             action("Print_Sales_CreditMemo")

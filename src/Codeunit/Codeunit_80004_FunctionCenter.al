@@ -330,8 +330,10 @@ codeunit 80004 "NCT Function Center"
     /// <param name="pTempGLEntry">Temporary VAR Record "G/L Entry".</param>
     /// <param name="pTotalAmount">VAR Decimal.</param>
     /// <param name="pGroupping">Boolean.</param>
-    procedure SetReportGLEntrySales(pSalseHeader: Record "Sales Header"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean)
+    /// <param name="pFromPosted">Boolean.</param>
+    procedure SetReportGLEntrySales(pSalseHeader: Record "Sales Header"; var pTempGLEntry: Record "G/L Entry" temporary; var pTotalAmount: Decimal; pGroupping: Boolean; pFromPosted: Boolean)
     var
+        GlEntry: Record "G/L Entry";
         TempGLEntry, TempltGLEntry : Record "G/L Entry" temporary;
         PreviewPost: Codeunit "NCT EventFunction";
         EntryNo: Integer;
@@ -340,8 +342,19 @@ codeunit 80004 "NCT Function Center"
     begin
         ltIshandle := false;
         pTotalAmount := 0;
-        SalesHeader.GET(pSalseHeader."Document Type", pSalseHeader."No.");
-        PreviewPost.SalesPreviewVourcher(SalesHeader, TempGLEntry);
+        if not pFromPosted then begin
+            SalesHeader.GET(pSalseHeader."Document Type", pSalseHeader."No.");
+            PreviewPost.SalesPreviewVourcher(SalesHeader, TempGLEntry);
+        end else begin
+            GlEntry.reset();
+            GlEntry.SetRange("Document No.", pSalseHeader."No.");
+            if GlEntry.FindFirst() then
+                repeat
+                    TempGLEntry.Init();
+                    TempGLEntry.TransferFields(GlEntry);
+                    TempGLEntry.Insert();
+                until GlEntry.Next() = 0;
+        end;
         BeforSetSalesGLEntry(ltIshandle, SalesHeader, pGroupping, pTotalAmount, TempGLEntry, pTempGLEntry);
         if not ltIshandle then begin
             TempGLEntry.reset();
@@ -1912,7 +1925,8 @@ codeunit 80004 "NCT Function Center"
     /// <param name="DocumentNo">Code[30].</param>
     /// <param name="LineNo">Integer.</param>
     /// <param name="SalesComment">VAR array[100] of text[250].</param>
-    procedure GetSalesComment(DocumentType: Enum "Sales Comment Document Type"; DocumentNo: Code[30]; LineNo: Integer; var SalesComment: array[100] of text[250])
+    procedure GetSalesComment(DocumentType: Enum "Sales Comment Document Type"; DocumentNo: Code[30];
+                                                LineNo: Integer; var SalesComment: array[100] of text[250])
     var
         SalesCommentLine: Record "Sales Comment Line";
         i: Integer;
@@ -1941,7 +1955,8 @@ codeunit 80004 "NCT Function Center"
     /// <param name="DocumentNo">Code[30].</param>
     /// <param name="LineNo">Integer.</param>
     /// <param name="PurchCommentLine">VAR array[100] of text[250].</param>
-    procedure GetPurchaseComment(DocumentType: Enum "Purchase Comment Document Type"; DocumentNo: Code[30]; LineNo: Integer; var PurchCommentLine: array[100] of text[250])
+    procedure GetPurchaseComment(DocumentType: Enum "Purchase Comment Document Type"; DocumentNo: Code[30];
+                                                   LineNo: Integer; var PurchCommentLine: array[100] of text[250])
     var
         PurchaseCommentLine: Record "Purch. Comment Line";
         i: Integer;

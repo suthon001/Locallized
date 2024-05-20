@@ -18,13 +18,16 @@ pageextension 80096 "NCT Posted Sales Credit Memos" extends "Posted Sales Credit
                 ToolTip = 'Executes the AR CN Voucher action.';
                 trigger OnAction()
                 var
-                    ARCNVoucher: Report "NCT AR CN Voucher (Post)";
+                    ARVoucher: Report "NCT AR CN Voucher";
                     SalesHeader: Record "Sales Cr.Memo Header";
                 begin
+                    CLEAR(ARVoucher);
                     SalesHeader.reset();
-                    SalesHeader.Copy(Rec);
-                    ARCNVoucher."SetGLEntry"(SalesHeader);
-                    ARCNVoucher.RunModal();
+                    SalesHeader.SetRange("No.", rec."No.");
+                    if SalesHeader.FindFirst() then
+                        ARVoucher.SetDataTable(SalesHeader);
+                    ARVoucher.RunModal();
+                    CLEAR(ARVoucher);
                 end;
 
             }

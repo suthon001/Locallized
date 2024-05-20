@@ -57,15 +57,17 @@ report 80002 "NCT AR CN Voucher"
                 NewDate: Date;
             begin
 
-                FunctionCenter.SetReportGLEntrySales(SalesHeader, GLEntry, TempAmt, groupping);
+                FunctionCenter.SetReportGLEntrySales(SalesHeader, GLEntry, TempAmt, groupping, FromPosted);
                 companyInfor.get();
                 companyInfor.CalcFields(Picture);
                 if SalesHeader."Currency Code" = '' then
                     FunctionCenter."CompanyinformationByVat"(ComText, SalesHeader."VAT Bus. Posting Group", false)
                 else
                     FunctionCenter."CompanyinformationByVat"(ComText, SalesHeader."VAT Bus. Posting Group", true);
-
-                FunctionCenter."SalesInformation"(SalesHeader."Document Type", SalesHeader."No.", CustText, 1);
+                if not FromPosted then
+                    FunctionCenter."SalesInformation"(SalesHeader."Document Type", SalesHeader."No.", CustText, 1)
+                else
+                    FunctionCenter.SalesPostedCustomerInformation(3, SalesHeader."No.", CustText, 0);
                 FunctionCenter."ConvExchRate"(SalesHeader."Currency Code", SalesHeader."Currency Factor", ExchangeRate);
                 if SalesHeader."Currency Code" = '' then
                     AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')'
@@ -91,7 +93,7 @@ report 80002 "NCT AR CN Voucher"
         dataitem("Sales Line"; "Sales Line")
         {
             DataItemTableView = sorting("DOcument Type", "Document No.", "Line No.") where(Type = const(Item));
-
+            UseTemporary = true;
 
             column(No_; "No.") { }
             column(Description; Description + ' ' + "Description 2") { }
@@ -114,11 +116,12 @@ report 80002 "NCT AR CN Voucher"
         {
             DataItemTableView = sorting("DOcument Type", "Document No.", "Line No.")
             where(Type = const("Charge (Item)"));
-
+            UseTemporary = true;
             dataitem(ItemChargeAssignment; "Item Charge Assignment (Sales)")
             {
                 DataItemTableView = sorting("Document Type", "Document No.", "Document Line No.", "Line NO.");
                 DataItemLink = "Document Type" = FIELD("Document Type"), "Document No." = FIELD("Document No."), "Document Line No." = FIELD("Line No.");
+                UseTemporary = true;
                 column(Applies_to_Doc__No_; "Applies-to Doc. No.") { }
                 column(Item_No_; "Item No.") { }
                 column(ItemChangeDescription; Description) { }
@@ -177,21 +180,100 @@ report 80002 "NCT AR CN Voucher"
         end;
     }
 
-    /// <summary> 
-    /// Description for SetGLEntry.
+    /// <summary>
+    /// SetDataTable.
     /// </summary>
-    /// <param name="SalesHrd">Parameter of type Record "Sales Header".</param>
-    procedure "SetGLEntry"(SalesHrd: Record "Sales Header")
+    /// <param name="pVariant">Variant.</param>
+    procedure SetDataTable(pVariant: Variant)
+    var
+        ltRecordRef: RecordRef;
+        ltSalesLine: Record "Sales Line";
+        ltSalesCrLine: Record "Sales Cr.Memo Line";
+        ltValueEntry: Record "Value Entry";
+        ltItemLedger: Record "Item Ledger Entry";
+        ItemchageSales: Record "Item Charge Assignment (Sales)";
     begin
-        SalesHeader.GET(SalesHrd."Document Type", SalesHrd."No.");
-    end;
+        ltRecordRef.GetTable(pVariant);
+        if ltRecordRef.FindFirst() then begin
+            if ltRecordRef.Number = Database::"Sales Header" then begin
+                FromPosted := false;
+                ltRecordRef.SetTable(SalesHeader);
+                SalesHeader.Insert();
+                ltSalesLine.reset();
+                ltSalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                ltSalesLine.SetRange("Document No.", SalesHeader."No.");
+                if ltSalesLine.FindSet() then
+                    repeat
+                        SalesLine.Init();
+                        SalesLine.TransferFields(ltSalesLine);
+                        SalesLine.Insert();
+                        if SalesLine.Type = SalesLine.Type::"Charge (Item)" then begin
+                            ItemchageSales.reset();
+                            ItemchageSales.SetRange("Document Type", SalesHeader."Document Type");
+                            ItemchageSales.SetRange("Document No.", SalesHeader."No.");
+                            ItemchageSales.SetRange("Document Line No.", ltSalesLine."Line No.");
+                            if ItemchageSales.FindSet() then
+                                repeat
+                                    ItemChargeAssignment.Init();
+                                    ItemChargeAssignment.TransferFields(ItemchageSales);
+                                    ItemChargeAssignment.Insert();
+                                until ItemchageSales.Next() = 0;
+                        end;
+                    until ltSalesLine.Next() = 0;
+            end;
+            if ltRecordRef.Number = Database::"Sales Cr.Memo Header" then begin
+                FromPosted := true;
+                ltRecordRef.SetTable(SalesCN);
+                SalesHeader.TransferFields(SalesCN, false);
+                SalesHeader."Document Type" := SalesHeader."Document Type"::"Credit Memo";
+                SalesHeader."No." := SalesCN."No.";
+                SalesHeader.Insert();
+                ltSalesCrLine.reset();
+                ltSalesCrLine.SetRange("Document No.", SalesHeader."No.");
+                if ltSalesCrLine.FindSet() then
+                    repeat
+                        SalesLine.Init();
+                        SalesLine.TransferFields(ltSalesCrLine, false);
+                        SalesLine."Document Type" := SalesHeader."Document Type";
+                        SalesLine."Document No." := SalesHeader."No.";
+                        SalesLine."Line No." := ltSalesCrLine."Line No.";
+                        SalesLine.Insert();
+                        if ltSalesCrLine.Type = ltSalesCrLine.Type::"Charge (Item)" then begin
+                            ltValueEntry.reset();
+                            ltValueEntry.SetRange("Document No.", ltSalesCrLine."Document No.");
+                            ltValueEntry.SetRange("Document Line No.", ltSalesCrLine."Line No.");
+                            ltValueEntry.SetFilter("Item Charge No.", '<>%1', '');
+                            if ltValueEntry.FindSet() then
+                                repeat
+                                    if not ltItemLedger.GET(ltValueEntry."Item Ledger Entry No.") then
+                                        ltItemLedger.Init();
 
+                                    ItemChargeAssignment.Init();
+                                    ItemChargeAssignment."Document Type" := SalesHeader."Document Type";
+                                    ItemChargeAssignment."Document No." := SalesHeader."No.";
+                                    ItemChargeAssignment."Document Line No." := ltValueEntry."Document Line No.";
+                                    ItemChargeAssignment."Line No." := ltValueEntry."Entry No.";
+                                    ItemChargeAssignment."Applies-to Doc. No." := ltItemLedger."Document No.";
+                                    ItemChargeAssignment."Item No." := ltItemLedger."Item No.";
+                                    ItemChargeAssignment.Description := ltItemLedger.Description;
+                                    ItemChargeAssignment."Amount to Assign" := ltValueEntry."Sales Amount (Actual)";
+                                    ItemChargeAssignment."Qty. to Assign" := ltValueEntry."Valued Quantity";
+                                    ItemChargeAssignment.Insert();
+
+                                until ltValueEntry.Next() = 0;
+                        end;
+                    until ltSalesCrLine.Next() = 0;
+            end;
+            SalesLine.Reset();
+            "Sales Line".Copy(SalesLine, true);
+            SalesItemCharge.Copy(SalesLine, true);
+        end;
+    end;
     /// <summary> 
     /// Description for CheckLineData.
     /// </summary>
     procedure "CheckLineData"()
-    var
-        SalesLine: Record "Sales Line";
+
     begin
         SalesLine.reset();
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
@@ -203,7 +285,9 @@ report 80002 "NCT AR CN Voucher"
     end;
 
     var
-        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line" temporary;
+        SalesCN: Record "Sales Cr.Memo Header" temporary;
+        SalesHeader: Record "Sales Header" temporary;
         FunctionCenter: Codeunit "NCT Function Center";
         companyInfor: Record "Company Information";
         ExchangeRate: Text[30];
@@ -221,5 +305,6 @@ report 80002 "NCT AR CN Voucher"
         AccountName: text[100];
         glAccount: Record "G/L Account";
         DimThaiCaption1, DimThaiCaption2, DimEngCaption1, DimEngCaption2 : text;
+        FromPosted: Boolean;
 
 }

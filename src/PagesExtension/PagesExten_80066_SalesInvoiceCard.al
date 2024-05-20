@@ -86,10 +86,14 @@ pageextension 80066 "NCT Sales Invoice Card" extends "Sales Invoice"
                     ARVoucher: Report "NCT AR Voucher";
                     SalesHeader: Record "Sales Header";
                 begin
+                    CLEAR(ARVoucher);
                     SalesHeader.reset();
-                    SalesHeader.Copy(Rec);
-                    ARVoucher."SetGLEntry"(SalesHeader);
+                    SalesHeader.SetRange("Document Type", rec."Document Type");
+                    SalesHeader.SetRange("No.", rec."No.");
+                    if SalesHeader.FindFirst() then
+                        ARVoucher.SetDataTable(SalesHeader);
                     ARVoucher.RunModal();
+                    CLEAR(ARVoucher);
                 end;
             }
             action("Print_Sales_Invoice")
