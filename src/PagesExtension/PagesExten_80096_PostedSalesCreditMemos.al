@@ -42,12 +42,16 @@ pageextension 80096 "NCT Posted Sales Credit Memos" extends "Posted Sales Credit
                 ToolTip = 'Executes the Sales Credit Memo action.';
                 trigger OnAction()
                 var
-                    RecSalesHeader: Record "Sales Cr.Memo Header";
+                    SalesCreditMemoReport: Report "NCT Report Sales Credit Memo";
+                    SalesHeader: Record "Sales Cr.Memo Header";
                 begin
-                    RecSalesHeader.RESET();
-
-                    RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"NCT Sales Credit Memo (Post)", TRUE, TRUE, RecSalesHeader);
+                    CLEAR(SalesCreditMemoReport);
+                    SalesHeader.reset();
+                    SalesHeader.SetRange("No.", rec."No.");
+                    if SalesHeader.FindFirst() then
+                        SalesCreditMemoReport.SetDataTable(SalesHeader);
+                    SalesCreditMemoReport.RunModal();
+                    CLEAR(SalesCreditMemoReport);
                 end;
             }
         }

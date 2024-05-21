@@ -8,12 +8,14 @@ report 80025 "NCT Report Sales Invoice"
     RDLCLayout = './LayoutReport/LCLReport/Report_80025_SalesInvoice.rdl';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    Permissions = tabledata "Sales Invoice Header" = rm;
     dataset
     {
         dataitem(SalesHeader; "Sales Header")
         {
             DataItemTableView = sorting("Document Type", "No.");
-            RequestFilterFields = "Document Type", "No.";
+
+            UseTemporary = true;
             column(companyInfor_Picture; companyInfor.Picture) { }
             column(PostingDate; format("Posting Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
             column(DocumentDate; format("Document Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
@@ -65,11 +67,12 @@ report 80025 "NCT Report Sales Invoice"
                 DataItemTableView = sorting(Number) where(Number = filter(1 ..));
                 column(Number; Number) { }
                 column(OriginalCaption; OriginalCaption) { }
-                dataitem(SalesLine; "Sales Line")
+                dataitem("Sales Line"; "Sales Line")
                 {
                     DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
                     DataItemLink = "Document Type" = field("Document Type"), "Document No." = FIELD("No.");
                     DataItemLinkReference = SalesHeader;
+                    UseTemporary = true;
                     column(SalesLine_No_; "No.") { }
                     column(SalesLine_Description; Description) { }
                     column(SalesLine_Description_2; "Description 2") { }
@@ -105,16 +108,35 @@ report 80025 "NCT Report Sales Invoice"
             trigger OnAfterGetRecord()
             var
                 NewDate: Date;
+                ltSalesHeader: Record "Sales Header";
+                ltSalesInvoice: Record "Sales Invoice Header";
             begin
 
                 if "Currency Code" = '' then
                     FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
                 else
                     FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
-
-                FunctionCenter.SalesStatistic("Document Type", "No.", TotalAmt, VatText);
-                FunctionCenter.SalesInformation("Document Type", "No.", CustText, 1);
-                FunctionCenter.SalesInformation("Document Type", "No.", CustTextShipment, 2);
+                if not FromPosted then begin
+                    FunctionCenter.SalesStatistic("Document Type", "No.", TotalAmt, VatText);
+                    FunctionCenter.SalesInformation("Document Type", "No.", CustText, 1);
+                    FunctionCenter.SalesInformation("Document Type", "No.", CustTextShipment, 2);
+                    if ("Last Thai Report Cap." <> CaptionOptionThai) or ("Last Eng Report Cap." <> CaptionOptionEng) then begin
+                        ltSalesHeader.GET("Document Type", "No.");
+                        ltSalesHeader."Last Thai Report Cap." := CaptionOptionThai;
+                        ltSalesHeader."Last Eng Report Cap." := CaptionOptionEng;
+                        ltSalesHeader.Modify();
+                    end;
+                end else begin
+                    FunctionCenter.PostedSalesInvoiceStatistics("No.", TotalAmt, VatText);
+                    FunctionCenter.SalesPostedCustomerInformation(2, "No.", CustText, 1);
+                    FunctionCenter.SalesPostedCustomerInformation(2, "No.", CustTextShipment, 2);
+                    if ("Last Thai Report Cap." <> CaptionOptionThai) or ("Last Eng Report Cap." <> CaptionOptionEng) then begin
+                        ltSalesInvoice.GET("No.");
+                        ltSalesInvoice."Last Thai Report Cap." := CaptionOptionThai;
+                        ltSalesInvoice."Last Eng Report Cap." := CaptionOptionEng;
+                        ltSalesInvoice.Modify();
+                    end;
+                end;
                 if "Currency Code" = '' then
                     AmtText := '(' + FunctionCenter."NumberThaiToText"(TotalAmt[5]) + ')'
                 else
@@ -135,7 +157,7 @@ report 80025 "NCT Report Sales Invoice"
     }
     requestpage
     {
-        SaveValues = true;
+
         layout
         {
             area(content)
@@ -182,19 +204,78 @@ report 80025 "NCT Report Sales Invoice"
 
     end;
 
+    /// <summary>
+    /// SetDataTable.
+    /// </summary>
+    /// <param name="pVariant">Variant.</param>
+    procedure SetDataTable(pVariant: Variant)
     var
-        SplitDate: Array[3] of Text[20];
+        ltRecordRef: RecordRef;
+        ltSalesLine: Record "Sales Line";
+        ltSalesInvLine: Record "Sales Invoice Line";
+    begin
+        ltRecordRef.GetTable(pVariant);
+        if ltRecordRef.FindFirst() then begin
+            if ltRecordRef.Number = Database::"Sales Header" then begin
+                FromPosted := false;
+                ltRecordRef.SetTable(SalesHeader);
+                SalesHeader.Insert();
+                CaptionOptionThai := SalesHeader."Last Thai Report Cap.";
+                CaptionOptionEng := SalesHeader."Last Eng Report Cap.";
+                ltSalesLine.reset();
+                ltSalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                ltSalesLine.SetRange("Document No.", SalesHeader."No.");
+                if ltSalesLine.FindSet() then
+                    repeat
+                        SalesLine.Init();
+                        SalesLine.TransferFields(ltSalesLine);
+                        SalesLine.Insert();
+                    until ltSalesLine.Next() = 0;
+            end;
+            if ltRecordRef.Number = Database::"Sales Invoice Header" then begin
+                FromPosted := true;
+                ltRecordRef.SetTable(SalesInvoice);
+                SalesHeader.TransferFields(SalesInvoice, false);
+                SalesHeader."Document Type" := SalesHeader."Document Type"::Invoice;
+                SalesHeader."No." := SalesInvoice."No.";
+                SalesHeader.Insert();
+                CaptionOptionThai := SalesHeader."Last Thai Report Cap.";
+                CaptionOptionEng := SalesHeader."Last Eng Report Cap.";
+                ltSalesInvLine.reset();
+                ltSalesInvLine.SetRange("Document No.", SalesHeader."No.");
+                if ltSalesInvLine.FindSet() then
+                    repeat
+                        SalesLine.Init();
+                        SalesLine.TransferFields(ltSalesInvLine, false);
+                        SalesLine."Document Type" := SalesHeader."Document Type";
+                        SalesLine."Document No." := SalesHeader."No.";
+                        SalesLine."Line No." := ltSalesInvLine."Line No.";
+                        SalesLine.Insert();
+
+                    until ltSalesInvLine.Next() = 0;
+            end;
+            SalesLine.Reset();
+            "Sales Line".Copy(SalesLine, true);
+        end;
+
+    end;
+
+    var
+        SalesLine: Record "Sales Line" temporary;
+        SalesInvoice: Record "Sales Invoice Header" temporary;
 
         companyInfor: Record "Company Information";
 
         PaymentTerm: Record "Payment Terms";
 
         ShipMethod: Record "Shipment Method";
+        FunctionCenter: Codeunit "NCT Function Center";
         ExchangeRate: Text[30];
         LineNo: Integer;
         CommentText: Array[99] of Text[250];
+        SplitDate: Array[3] of Text[20];
 
-        FunctionCenter: Codeunit "NCT Function Center";
+
 
         TotalAmt: Array[100] of Decimal;
         VatText: Text[30];
@@ -203,5 +284,6 @@ report 80025 "NCT Report Sales Invoice"
         CustText, CustTextShipment : Array[10] of Text[250];
         NoOfCopies: Integer;
         CaptionOptionEng, CaptionOptionThai, OriginalCaption : Text[50];
+        FromPosted: Boolean;
 
 }

@@ -73,12 +73,18 @@ pageextension 80065 "NCT Sales Invoice Lists" extends "Sales Invoice List"
                 ToolTip = 'Executes the Sales Invoice action.';
                 trigger OnAction()
                 var
-                    RecSalesHeader: Record "Sales Header";
+                    SalesInvoiceReport: Report "NCT Report Sales Invoice";
+                    SalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET();
-                    RecSalesHeader.SetRange("Document Type", rec."Document Type");
-                    RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"NCT Report Sales Invoice", TRUE, TRUE, RecSalesHeader);
+                    CLEAR(SalesInvoiceReport);
+                    SalesHeader.reset();
+                    SalesHeader.SetRange("Document Type", rec."Document Type");
+                    SalesHeader.SetRange("No.", rec."No.");
+                    SalesInvoiceReport.SetTableView(SalesHeader);
+                    if SalesHeader.FindFirst() then
+                        SalesInvoiceReport.SetDataTable(SalesHeader);
+                    SalesInvoiceReport.RunModal();
+                    CLEAR(SalesInvoiceReport);
                 end;
             }
             action("Print_DebitNote")
@@ -92,12 +98,18 @@ pageextension 80065 "NCT Sales Invoice Lists" extends "Sales Invoice List"
                 ToolTip = 'Executes the Debit Note action.';
                 trigger OnAction()
                 var
-                    RecSalesHeader: Record "Sales Header";
+                    SalesInvoiceReport: Report "NCT Debit Note";
+                    SalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET();
-                    RecSalesHeader.SetRange("Document Type", rec."Document Type");
-                    RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"NCT Debit Note", TRUE, TRUE, RecSalesHeader);
+                    CLEAR(SalesInvoiceReport);
+                    SalesHeader.reset();
+                    SalesHeader.SetRange("Document Type", rec."Document Type");
+                    SalesHeader.SetRange("No.", rec."No.");
+                    SalesInvoiceReport.SetTableView(SalesHeader);
+                    if SalesHeader.FindFirst() then
+                        SalesInvoiceReport.SetDataTable(SalesHeader);
+                    SalesInvoiceReport.RunModal();
+                    CLEAR(SalesInvoiceReport);
                 end;
             }
         }

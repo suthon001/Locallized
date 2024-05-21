@@ -1338,11 +1338,13 @@ page 80020 "NCT Goods Receipt Note Subform"
     /// </summary>
     procedure ShowDocumentLineTracking()
     var
-        DocumentLineTracking: Page "Document Line Tracking";
+        ltDocumentLineTracking: Page "Document Line Tracking";
+        NewSourceDocType: Enum "Document Line Source Type";
     begin
-        Clear(DocumentLineTracking);
-        DocumentLineTracking.SetDoc(1, Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
-        DocumentLineTracking.RunModal();
+        Clear(ltDocumentLineTracking);
+        ltDocumentLineTracking.SetSourceDoc(NewSourceDocType::"Purchase Order", Rec."Document No.", Rec."Line No.", Rec."Blanket Order No.", Rec."Blanket Order Line No.", '', 0);
+        ltDocumentLineTracking.RunModal();
+        Clear(ltDocumentLineTracking);
     end;
 
     /// <summary> 

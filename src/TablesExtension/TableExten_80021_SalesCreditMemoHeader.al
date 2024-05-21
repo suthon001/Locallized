@@ -65,6 +65,18 @@ tableextension 80021 "NCT ExtenSalesCr.MemoHeader" extends "Sales Cr.Memo Header
             DataClassification = SystemMetadata;
             Editable = false;
         }
+        field(80010; "Last Thai Report Cap."; text[50])
+        {
+            Caption = 'Last Thai Report Cap.';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(80011; "Last Eng Report Cap."; text[50])
+        {
+            Caption = 'Last Eng Report Cap.';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
         field(89998; "NCT Applies-to ID"; Code[50])
         {
             Caption = 'Applies-to ID.';

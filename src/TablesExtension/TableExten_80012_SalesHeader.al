@@ -124,6 +124,18 @@ tableextension 80012 "NCT ExtenSales Header" extends "Sales Header"
             Caption = 'Sales Order No.';
             DataClassification = SystemMetadata;
         }
+        field(80010; "Last Thai Report Cap."; text[50])
+        {
+            Caption = 'Last Thai Report Cap.';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(80011; "Last Eng Report Cap."; text[50])
+        {
+            Caption = 'Last Eng Report Cap.';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
 
         modify("Sell-to Customer No.")
         {

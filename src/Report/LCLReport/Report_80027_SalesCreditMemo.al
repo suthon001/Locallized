@@ -8,12 +8,13 @@ report 80027 "NCT Report Sales Credit Memo"
     RDLCLayout = './LayoutReport/LCLReport/Report_80027_SalesCreditMemo.rdl';
     PreviewMode = PrintLayout;
     UsageCategory = None;
+    Permissions = tabledata "Sales Cr.Memo Header" = rm;
     dataset
     {
         dataitem(SalesHeader; "Sales Header")
         {
             DataItemTableView = sorting("Document Type", "No.");
-            RequestFilterFields = "Document Type", "No.";
+            UseTemporary = true;
             column(companyInfor_Picture; companyInfor.Picture) { }
             column(PostingDate; format("Posting Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
             column(DocumentDate; format("Document Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
@@ -66,11 +67,12 @@ report 80027 "NCT Report Sales Credit Memo"
                 DataItemTableView = sorting(Number) where(Number = filter(1 ..));
                 column(Number; Number) { }
                 column(OriginalCaption; OriginalCaption) { }
-                dataitem(SalesLine; "Sales Line")
+                dataitem("Sales Line"; "Sales Line")
                 {
                     DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
                     DataItemLink = "Document Type" = FIELD("Document Type"), "Document No." = FIELD("No.");
                     DataItemLinkReference = SalesHeader;
+                    UseTemporary = true;
                     column(SalesLine_No_; "No.") { }
                     column(SalesLine_Description; Description) { }
                     column(SalesLine_Description_2; "Description 2") { }
@@ -107,16 +109,35 @@ report 80027 "NCT Report Sales Credit Memo"
                 NewDate: Date;
                 RecCustLedgEntry: Record "Cust. Ledger Entry";
                 RecReturnReason: Record "Return Reason";
-                RecSaleLine: Record "Sales Line";
+                ltDocumentType: Enum "Sales Comment Document Type";
+                ltSalesHeader: Record "Sales Header";
+                ltSalesCrditMemo: Record "Sales Cr.Memo Header";
             begin
                 if "Currency Code" = '' then
                     FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", false)
                 else
                     FunctionCenter."CompanyinformationByVat"(ComText, "VAT Bus. Posting Group", true);
-
-                FunctionCenter.SalesStatistic("Document Type", "No.", TotalAmt, VatText);
-                FunctionCenter.GetSalesComment("Document Type", "No.", 0, CommentText);
-                FunctionCenter.SalesInformation("Document Type", "No.", CustText, 1);
+                if not FromPosted then begin
+                    FunctionCenter.SalesStatistic("Document Type", "No.", TotalAmt, VatText);
+                    FunctionCenter.GetSalesComment("Document Type", "No.", 0, CommentText);
+                    FunctionCenter.SalesInformation("Document Type", "No.", CustText, 1);
+                    if ("Last Thai Report Cap." <> CaptionOptionThai) or ("Last Eng Report Cap." <> CaptionOptionEng) then begin
+                        ltSalesHeader.GET("Document Type", "No.");
+                        ltSalesHeader."Last Thai Report Cap." := CaptionOptionThai;
+                        ltSalesHeader."Last Eng Report Cap." := CaptionOptionEng;
+                        ltSalesHeader.Modify();
+                    end;
+                end else begin
+                    FunctionCenter.PostedSalesCrMemoStatistics("No.", TotalAmt, VatText);
+                    FunctionCenter.GetSalesComment(ltDocumentType::"Posted Credit Memo", "No.", 0, CommentText);
+                    FunctionCenter.SalesPostedCustomerInformation(3, "No.", CustText, 1);
+                    if ("Last Thai Report Cap." <> CaptionOptionThai) or ("Last Eng Report Cap." <> CaptionOptionEng) then begin
+                        ltSalesCrditMemo.GET("No.");
+                        ltSalesCrditMemo."Last Thai Report Cap." := CaptionOptionThai;
+                        ltSalesCrditMemo."Last Eng Report Cap." := CaptionOptionEng;
+                        ltSalesCrditMemo.Modify();
+                    end;
+                end;
                 FunctionCenter."ConvExchRate"("Currency Code", "Currency Factor", ExchangeRate);
                 IF NOT PaymentTerm.GET(SalesHeader."Payment Terms Code") then
                     PaymentTerm.Init();
@@ -178,7 +199,7 @@ report 80027 "NCT Report Sales Credit Memo"
     }
     requestpage
     {
-        SaveValues = true;
+
         layout
         {
             area(content)
@@ -225,23 +246,79 @@ report 80027 "NCT Report Sales Credit Memo"
 
     end;
 
+    /// <summary>
+    /// SetDataTable.
+    /// </summary>
+    /// <param name="pVariant">Variant.</param>
+    procedure SetDataTable(pVariant: Variant)
     var
+        ltRecordRef: RecordRef;
+        ltSalesLine: Record "Sales Line";
+        ltSalesCrLine: Record "Sales Cr.Memo Line";
+    begin
+        ltRecordRef.GetTable(pVariant);
+        if ltRecordRef.FindFirst() then begin
+            if ltRecordRef.Number = Database::"Sales Header" then begin
+                FromPosted := false;
+                ltRecordRef.SetTable(SalesHeader);
+                SalesHeader.Insert();
+                CaptionOptionThai := SalesHeader."Last Thai Report Cap.";
+                CaptionOptionEng := SalesHeader."Last Eng Report Cap.";
+                ltSalesLine.reset();
+                ltSalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                ltSalesLine.SetRange("Document No.", SalesHeader."No.");
+                if ltSalesLine.FindSet() then
+                    repeat
+                        SalesLine.Init();
+                        SalesLine.TransferFields(ltSalesLine);
+                        SalesLine.Insert();
+                    until ltSalesLine.Next() = 0;
+            end;
+            if ltRecordRef.Number = Database::"Sales Cr.Memo Header" then begin
+                FromPosted := true;
+                ltRecordRef.SetTable(SalesCNHeader);
+                SalesHeader.TransferFields(SalesCNHeader, false);
+                SalesHeader."Document Type" := SalesHeader."Document Type"::Invoice;
+                SalesHeader."No." := SalesCNHeader."No.";
+                SalesHeader."Applies-to ID" := SalesCNHeader."NCT Applies-to ID";
+                SalesHeader.Insert();
+                CaptionOptionThai := SalesHeader."Last Thai Report Cap.";
+                CaptionOptionEng := SalesHeader."Last Eng Report Cap.";
+                ltSalesCrLine.reset();
+                ltSalesCrLine.SetRange("Document No.", SalesHeader."No.");
+                if ltSalesCrLine.FindSet() then
+                    repeat
+                        SalesLine.Init();
+                        SalesLine.TransferFields(ltSalesCrLine, false);
+                        SalesLine."Document Type" := SalesHeader."Document Type";
+                        SalesLine."Document No." := SalesHeader."No.";
+                        SalesLine."Line No." := ltSalesCrLine."Line No.";
+                        SalesLine.Insert();
 
-        SplitDate: Array[3] of Text[20];
+                    until ltSalesCrLine.Next() = 0;
+            end;
+            SalesLine.Reset();
+            "Sales Line".Copy(SalesLine, true);
+            RecSaleLine.copy(SalesLine, true)
+        end;
+    end;
 
+    var
+        SalesLine, RecSaleLine : Record "Sales Line" temporary;
+        SalesCNHeader: Record "Sales Cr.Memo Header" temporary;
         companyInfor: Record "Company Information";
 
         PaymentTerm: Record "Payment Terms";
 
         ShipMethod: Record "Shipment Method";
+        FunctionCenter: Codeunit "NCT Function Center";
         var_RefDocumentDate: Date;
         ExchangeRate: Text[30];
 
         LineNo: Integer;
         RefDocumentNo, var_RefDocumentNo : Code[50];
         CommentText: Array[99] of Text[250];
-
-        FunctionCenter: Codeunit "NCT Function Center";
+        SplitDate: Array[3] of Text[20];
 
         TotalAmt: Array[100] of Decimal;
         VatText: Text[30];
@@ -250,5 +327,6 @@ report 80027 "NCT Report Sales Credit Memo"
         CustText: Array[10] of Text[250];
         NoOfCopies: Integer;
         CaptionOptionEng, CaptionOptionThai, OriginalCaption : Text[50];
+        FromPosted: Boolean;
 
 }

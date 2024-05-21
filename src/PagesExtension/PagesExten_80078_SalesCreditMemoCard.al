@@ -89,12 +89,18 @@ pageextension 80078 "NCT Sales Credit Memo Card" extends "Sales Credit Memo"
                 ToolTip = 'Show Report';
                 trigger OnAction()
                 var
-                    RecSalesHeader: Record "Sales Header";
+                    SalesCreditMemoReport: Report "NCT Report Sales Credit Memo";
+                    SalesHeader: Record "Sales Header";
                 begin
-                    RecSalesHeader.RESET();
-                    RecSalesHeader.SetRange("Document Type", rec."Document Type");
-                    RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"NCT Report Sales Credit Memo", TRUE, TRUE, RecSalesHeader);
+                    CLEAR(SalesCreditMemoReport);
+                    SalesHeader.reset();
+                    SalesHeader.SetRange("Document Type", rec."Document Type");
+                    SalesHeader.SetRange("No.", rec."No.");
+                    SalesCreditMemoReport.SetTableView(SalesHeader);
+                    if SalesHeader.FindFirst() then
+                        SalesCreditMemoReport.SetDataTable(SalesHeader);
+                    SalesCreditMemoReport.RunModal();
+                    CLEAR(SalesCreditMemoReport);
                 end;
             }
         }

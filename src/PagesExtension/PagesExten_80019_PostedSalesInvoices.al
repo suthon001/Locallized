@@ -41,11 +41,16 @@ pageextension 80019 "NCT Posted Sales Invoices" extends "Posted Sales Invoices"
                 ToolTip = 'Executes the Sales Invoice action.';
                 trigger OnAction()
                 var
-                    RecSalesHeader: Record "Sales Invoice Header";
+                    SalesInvoiceReport: Report "NCT Report Sales Invoice";
+                    SalesHeader: Record "Sales Invoice Header";
                 begin
-                    RecSalesHeader.RESET();
-                    RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"NCT Sales Invoice (Post)", TRUE, TRUE, RecSalesHeader);
+                    CLEAR(SalesInvoiceReport);
+                    SalesHeader.reset();
+                    SalesHeader.SetRange("No.", rec."No.");
+                    if SalesHeader.FindFirst() then
+                        SalesInvoiceReport.SetDataTable(SalesHeader);
+                    SalesInvoiceReport.RunModal();
+                    CLEAR(SalesInvoiceReport);
                 end;
             }
             action("Print_DebitNote")
@@ -59,11 +64,16 @@ pageextension 80019 "NCT Posted Sales Invoices" extends "Posted Sales Invoices"
                 ToolTip = 'Executes the Debit Note action.';
                 trigger OnAction()
                 var
-                    RecSalesHeader: Record "Sales Invoice Header";
+                    SalesDebitNoteReport: Report "NCT Debit Note";
+                    SalesHeader: Record "Sales Invoice Header";
                 begin
-                    RecSalesHeader.RESET();
-                    RecSalesHeader.SetRange("No.", rec."No.");
-                    Report.Run(Report::"NCT Debit Note (Post)", TRUE, TRUE, RecSalesHeader);
+                    CLEAR(SalesDebitNoteReport);
+                    SalesHeader.reset();
+                    SalesHeader.SetRange("No.", rec."No.");
+                    if SalesHeader.FindFirst() then
+                        SalesDebitNoteReport.SetDataTable(SalesHeader);
+                    SalesDebitNoteReport.RunModal();
+                    CLEAR(SalesDebitNoteReport);
                 end;
             }
         }
