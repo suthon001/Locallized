@@ -118,6 +118,10 @@ report 80047 "NCT Receipt Tax Invoice"
             end;
         }
     }
+    /// <summary>
+    /// InsertDetailReceipt.
+    /// </summary>
+    /// <param name="DocNo">Code[30].</param>
     procedure InsertDetailReceipt(DocNo: Code[30])
     var
         salesInvoiceLine: Record "Sales Invoice Line";

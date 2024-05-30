@@ -26,7 +26,7 @@ codeunit 80006 "WHT Preview Event Handler"
     begin
         if TableNo = Database::"NCT WHT Applied Entry" then begin
             CLEAR(WHTAppliedEntry);
-            WHTAppliedEntry.Set(TempWHTApplied);
+            WHTAppliedEntry.SetWhtApply(TempWHTApplied);
             WHTAppliedEntry.Run();
             Clear(WHTAppliedEntry);
         end;

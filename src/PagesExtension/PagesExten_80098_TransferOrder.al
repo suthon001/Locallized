@@ -1,3 +1,6 @@
+/// <summary>
+/// PageExtension NCT Transfer Order (ID 80098) extends Record Transfer Order.
+/// </summary>
 pageextension 80098 "NCT Transfer Order" extends "Transfer Order"
 {
     actions

@@ -112,7 +112,11 @@ page 80042 "NCT WHT Applied Entry"
             }
         }
     }
-    procedure Set(var TempWhtAppliedEntry: Record "NCT WHT Applied Entry" temporary)
+    /// <summary>
+    /// SetWhtApply.
+    /// </summary>
+    /// <param name="TempWhtAppliedEntry">Temporary VAR Record "NCT WHT Applied Entry".</param>
+    procedure SetWhtApply(var TempWhtAppliedEntry: Record "NCT WHT Applied Entry" temporary)
     begin
         if TempWhtAppliedEntry.FindSet() then
             repeat
