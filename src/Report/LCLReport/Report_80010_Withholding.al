@@ -34,14 +34,18 @@ report 80010 "NCT Withholding"
             column(MonthName_TaxReportHeader; "Month Name")
             {
             }
+            column(TotalBase; TotalBase) { }
+            column(TotalAmt; TotalAmt) { }
             dataitem("Tax Report Line"; "NCT Tax & WHT Line")
             {
                 DataItemTableView = sorting("Tax Type", "Document No.", "Entry No.");
                 DataItemLink = "Tax Type" = FIELD("Tax Type"),
                                "Document No." = FIELD("Document No.");
+                UseTemporary = true;
                 column(LineNo; LineNo)
                 {
                 }
+                column(WHTProctCode; "WHT Product Posting Group") { }
                 column(TaxInvoiceNo_TaxReportLine; "Tax Invoice No.")
                 {
                 }
@@ -198,6 +202,27 @@ report 80010 "NCT Withholding"
                 YesrPS := "Year No." + 543;
                 IF NOT Rec_WHTBusinessPostingGroup.GET(WHTBus) THEN
                     Rec_WHTBusinessPostingGroup.Init();
+
+                TaxReportLineFind.RESET();
+                TaxReportLineFind.SetCurrentKey("Tax Type", "Document No.", "Entry No.");
+                TaxReportLineFind.SETFILTER("Tax Type", '%1', "Tax Type");
+                TaxReportLineFind.SETFILTER("Document No.", '%1', "Document No.");
+                if TaxReportLineFind.FindSet() then
+                    repeat
+                        "Tax Report Line".reset();
+                        "Tax Report Line".SetRange("Tax Type", TaxReportLineFind."Tax Type");
+                        "Tax Report Line".SetRange("Document No.", TaxReportLineFind."Document No.");
+                        "Tax Report Line".SetFilter("WHT Document No.", TaxReportLineFind."WHT Document No.");
+                        if not "Tax Report Line".FindFirst() then begin
+                            "Tax Report Line".Init();
+                            "Tax Report Line".TransferFields(TaxReportLineFind);
+                            "Tax Report Line".insert();
+                        end;
+                        TotalBase := TotalBase + TaxReportLineFind."Base Amount";
+                        TotalAmt := TotalAmt + TaxReportLineFind."VAT Amount";
+                    until TaxReportLineFind.Next() = 0;
+
+                "Tax Report Line".reset();
             end;
         }
     }
@@ -262,7 +287,7 @@ report 80010 "NCT Withholding"
         BaseAmount: array[2] of Decimal;
         VATAmount: array[2] of Decimal;
         TaxReportLineFind: Record "NCT Tax & WHT Line";
-
+        TotalBase, TotalAmt : Decimal;
         WHTBus: Code[100];
         WHTDate: Text;
 }

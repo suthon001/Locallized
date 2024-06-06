@@ -154,7 +154,7 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
                     end;
-                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+
                 until TempGLEntry.next() = 0;
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
@@ -196,8 +196,13 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
                     end;
-                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+
                 until TempGLEntry.next() = 0;
+            TempltGLEntry.reset();
+            if TempltGLEntry.FindFirst() then begin
+                TempltGLEntry.CalcSums("Debit Amount");
+                pTotalAmount := TempltGLEntry."Debit Amount";
+            end;
             TempltGLEntry.reset();
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;
@@ -276,7 +281,7 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
                     end;
-                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+
                 until TempGLEntry.next() = 0;
             TempGLEntry.reset();
             TempGLEntry.SetCurrentKey("G/L Account No.", Amount);
@@ -315,8 +320,13 @@ codeunit 80004 "NCT Function Center"
                         TempltGLEntry."Entry No." := EntryNo;
                         TempltGLEntry.Insert();
                     end;
-                    pTotalAmount := pTotalAmount + TempltGLEntry."Debit Amount";
+
                 until TempGLEntry.next() = 0;
+            TempltGLEntry.reset();
+            if TempltGLEntry.FindFirst() then begin
+                TempltGLEntry.CalcSums("Debit Amount");
+                pTotalAmount := TempltGLEntry."Debit Amount";
+            end;
             TempltGLEntry.reset();
             pTempGLEntry.Copy(TempltGLEntry, true);
         end;

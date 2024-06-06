@@ -11,6 +11,175 @@
       <rd:DataSourceID>dad2f228-c896-4f59-b611-b1a4d051baf7</rd:DataSourceID>
     </DataSource>
   </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+      <Fields>
+        <Field Name="ShowTitle">
+          <DataField>ShowTitle</DataField>
+        </Field>
+        <Field Name="MonthTxt">
+          <DataField>MonthTxt</DataField>
+        </Field>
+        <Field Name="YearTxt">
+          <DataField>YearTxt</DataField>
+        </Field>
+        <Field Name="VATBusName">
+          <DataField>VATBusName</DataField>
+        </Field>
+        <Field Name="VATBusTaxID">
+          <DataField>VATBusTaxID</DataField>
+        </Field>
+        <Field Name="VATBranch">
+          <DataField>VATBranch</DataField>
+        </Field>
+        <Field Name="VATBranchID">
+          <DataField>VATBranchID</DataField>
+        </Field>
+        <Field Name="VATHO">
+          <DataField>VATHO</DataField>
+        </Field>
+        <Field Name="Month_SubmitVATEntry">
+          <DataField>Month_SubmitVATEntry</DataField>
+        </Field>
+        <Field Name="Year_SubmitVATEntry">
+          <DataField>Year_SubmitVATEntry</DataField>
+        </Field>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
+        </Field>
+        <Field Name="RowsPerPage">
+          <DataField>RowsPerPage</DataField>
+        </Field>
+        <Field Name="WHTDate">
+          <DataField>WHTDate</DataField>
+        </Field>
+        <Field Name="WHTNo">
+          <DataField>WHTNo</DataField>
+        </Field>
+        <Field Name="WHTName">
+          <DataField>WHTName</DataField>
+        </Field>
+        <Field Name="WHTAddress">
+          <DataField>WHTAddress</DataField>
+        </Field>
+        <Field Name="WHTAddress2">
+          <DataField>WHTAddress2</DataField>
+        </Field>
+        <Field Name="WHTAddress3">
+          <DataField>WHTAddress3</DataField>
+        </Field>
+        <Field Name="WHTID">
+          <DataField>WHTID</DataField>
+        </Field>
+        <Field Name="WHTHO">
+          <DataField>WHTHO</DataField>
+        </Field>
+        <Field Name="WHTBranch">
+          <DataField>WHTBranch</DataField>
+        </Field>
+        <Field Name="WHTBase1">
+          <DataField>WHTBase1</DataField>
+        </Field>
+        <Field Name="WHTBase1Format">
+          <DataField>WHTBase1Format</DataField>
+        </Field>
+        <Field Name="WHTBase2">
+          <DataField>WHTBase2</DataField>
+        </Field>
+        <Field Name="WHTBase2Format">
+          <DataField>WHTBase2Format</DataField>
+        </Field>
+        <Field Name="WHTBase3">
+          <DataField>WHTBase3</DataField>
+        </Field>
+        <Field Name="WHTBase3Format">
+          <DataField>WHTBase3Format</DataField>
+        </Field>
+        <Field Name="WHTAmt1">
+          <DataField>WHTAmt1</DataField>
+        </Field>
+        <Field Name="WHTAmt1Format">
+          <DataField>WHTAmt1Format</DataField>
+        </Field>
+        <Field Name="WHTAmt2">
+          <DataField>WHTAmt2</DataField>
+        </Field>
+        <Field Name="WHTAmt2Format">
+          <DataField>WHTAmt2Format</DataField>
+        </Field>
+        <Field Name="WHTAmt3">
+          <DataField>WHTAmt3</DataField>
+        </Field>
+        <Field Name="WHTAmt3Format">
+          <DataField>WHTAmt3Format</DataField>
+        </Field>
+        <Field Name="WHTPer1">
+          <DataField>WHTPer1</DataField>
+        </Field>
+        <Field Name="WHTPer1Format">
+          <DataField>WHTPer1Format</DataField>
+        </Field>
+        <Field Name="WHTPer2">
+          <DataField>WHTPer2</DataField>
+        </Field>
+        <Field Name="WHTPer2Format">
+          <DataField>WHTPer2Format</DataField>
+        </Field>
+        <Field Name="WHTPer3">
+          <DataField>WHTPer3</DataField>
+        </Field>
+        <Field Name="WHTPer3Format">
+          <DataField>WHTPer3Format</DataField>
+        </Field>
+        <Field Name="WHTDesc1">
+          <DataField>WHTDesc1</DataField>
+        </Field>
+        <Field Name="WHTDesc2">
+          <DataField>WHTDesc2</DataField>
+        </Field>
+        <Field Name="WHTDesc3">
+          <DataField>WHTDesc3</DataField>
+        </Field>
+        <Field Name="WHTOption">
+          <DataField>WHTOption</DataField>
+        </Field>
+        <Field Name="ShowLineNo">
+          <DataField>ShowLineNo</DataField>
+        </Field>
+        <Field Name="BaseAmtPerPage">
+          <DataField>BaseAmtPerPage</DataField>
+        </Field>
+        <Field Name="BaseAmtPerPageFormat">
+          <DataField>BaseAmtPerPageFormat</DataField>
+        </Field>
+        <Field Name="TaxAmtPerPage">
+          <DataField>TaxAmtPerPage</DataField>
+        </Field>
+        <Field Name="TaxAmtPerPageFormat">
+          <DataField>TaxAmtPerPageFormat</DataField>
+        </Field>
+        <Field Name="PageNo">
+          <DataField>PageNo</DataField>
+        </Field>
+        <Field Name="TotalBaseAmt">
+          <DataField>TotalBaseAmt</DataField>
+        </Field>
+        <Field Name="TotalBaseAmtFormat">
+          <DataField>TotalBaseAmtFormat</DataField>
+        </Field>
+        <Field Name="TotalTaxAmt">
+          <DataField>TotalTaxAmt</DataField>
+        </Field>
+        <Field Name="TotalTaxAmtFormat">
+          <DataField>TotalTaxAmtFormat</DataField>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -2075,7 +2244,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0;(0);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2115,7 +2284,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2155,7 +2324,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2449,7 +2618,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0;(0);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2489,7 +2658,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2529,7 +2698,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2813,7 +2982,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0;(0);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2853,7 +3022,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2893,7 +3062,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3430,7 +3599,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3480,7 +3649,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3646,7 +3815,7 @@
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3697,7 +3866,7 @@
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Format>0.00;(0.00);''</Format>
+                                    <Format>#,0.00;-#,0.00;''</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -4224,7 +4393,7 @@
           </Style>
         </PageHeader>
         <PageFooter>
-          <Height>6.72042cm</Height>
+          <Height>5.76792cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -4340,7 +4509,7 @@
                   <rd:DefaultName>Textbox1</rd:DefaultName>
                   <Top>0.72717cm</Top>
                   <Left>1.51575cm</Left>
-                  <Height>5.96679cm</Height>
+                  <Height>4.37929cm</Height>
                   <Width>10.94918cm</Width>
                   <ZIndex>2</ZIndex>
                   <Style>
@@ -4356,7 +4525,7 @@
               </ReportItems>
               <KeepTogether>true</KeepTogether>
               <Top>0cm</Top>
-              <Height>6.72042cm</Height>
+              <Height>5.10646cm</Height>
               <Width>12.46493cm</Width>
               <Style>
                 <Border>
@@ -4771,7 +4940,7 @@
               <KeepTogether>true</KeepTogether>
               <Top>0cm</Top>
               <Left>12.46493cm</Left>
-              <Height>6.72042cm</Height>
+              <Height>5.10646cm</Height>
               <Width>7.42743cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
@@ -4819,6 +4988,12 @@
       </Page>
     </ReportSection>
   </ReportSections>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>4</NumberOfColumns>
+      <NumberOfRows>2</NumberOfRows>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -4877,173 +5052,4 @@ ziHrHJrJm/R/Ugwo0yZ7SOM+3A/0VbAMAgxWkgSbPU0voWQOJf1N0jGfeuvj/812NA4qRTO/MmeK/92Y
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Fields>
-        <Field Name="ShowTitle">
-          <DataField>ShowTitle</DataField>
-        </Field>
-        <Field Name="MonthTxt">
-          <DataField>MonthTxt</DataField>
-        </Field>
-        <Field Name="YearTxt">
-          <DataField>YearTxt</DataField>
-        </Field>
-        <Field Name="VATBusName">
-          <DataField>VATBusName</DataField>
-        </Field>
-        <Field Name="VATBusTaxID">
-          <DataField>VATBusTaxID</DataField>
-        </Field>
-        <Field Name="VATBranch">
-          <DataField>VATBranch</DataField>
-        </Field>
-        <Field Name="VATBranchID">
-          <DataField>VATBranchID</DataField>
-        </Field>
-        <Field Name="VATHO">
-          <DataField>VATHO</DataField>
-        </Field>
-        <Field Name="Month_SubmitVATEntry">
-          <DataField>Month_SubmitVATEntry</DataField>
-        </Field>
-        <Field Name="Year_SubmitVATEntry">
-          <DataField>Year_SubmitVATEntry</DataField>
-        </Field>
-        <Field Name="CompanyName">
-          <DataField>CompanyName</DataField>
-        </Field>
-        <Field Name="RowsPerPage">
-          <DataField>RowsPerPage</DataField>
-        </Field>
-        <Field Name="WHTDate">
-          <DataField>WHTDate</DataField>
-        </Field>
-        <Field Name="WHTNo">
-          <DataField>WHTNo</DataField>
-        </Field>
-        <Field Name="WHTName">
-          <DataField>WHTName</DataField>
-        </Field>
-        <Field Name="WHTAddress">
-          <DataField>WHTAddress</DataField>
-        </Field>
-        <Field Name="WHTAddress2">
-          <DataField>WHTAddress2</DataField>
-        </Field>
-        <Field Name="WHTAddress3">
-          <DataField>WHTAddress3</DataField>
-        </Field>
-        <Field Name="WHTID">
-          <DataField>WHTID</DataField>
-        </Field>
-        <Field Name="WHTHO">
-          <DataField>WHTHO</DataField>
-        </Field>
-        <Field Name="WHTBranch">
-          <DataField>WHTBranch</DataField>
-        </Field>
-        <Field Name="WHTBase1">
-          <DataField>WHTBase1</DataField>
-        </Field>
-        <Field Name="WHTBase1Format">
-          <DataField>WHTBase1Format</DataField>
-        </Field>
-        <Field Name="WHTBase2">
-          <DataField>WHTBase2</DataField>
-        </Field>
-        <Field Name="WHTBase2Format">
-          <DataField>WHTBase2Format</DataField>
-        </Field>
-        <Field Name="WHTBase3">
-          <DataField>WHTBase3</DataField>
-        </Field>
-        <Field Name="WHTBase3Format">
-          <DataField>WHTBase3Format</DataField>
-        </Field>
-        <Field Name="WHTAmt1">
-          <DataField>WHTAmt1</DataField>
-        </Field>
-        <Field Name="WHTAmt1Format">
-          <DataField>WHTAmt1Format</DataField>
-        </Field>
-        <Field Name="WHTAmt2">
-          <DataField>WHTAmt2</DataField>
-        </Field>
-        <Field Name="WHTAmt2Format">
-          <DataField>WHTAmt2Format</DataField>
-        </Field>
-        <Field Name="WHTAmt3">
-          <DataField>WHTAmt3</DataField>
-        </Field>
-        <Field Name="WHTAmt3Format">
-          <DataField>WHTAmt3Format</DataField>
-        </Field>
-        <Field Name="WHTPer1">
-          <DataField>WHTPer1</DataField>
-        </Field>
-        <Field Name="WHTPer1Format">
-          <DataField>WHTPer1Format</DataField>
-        </Field>
-        <Field Name="WHTPer2">
-          <DataField>WHTPer2</DataField>
-        </Field>
-        <Field Name="WHTPer2Format">
-          <DataField>WHTPer2Format</DataField>
-        </Field>
-        <Field Name="WHTPer3">
-          <DataField>WHTPer3</DataField>
-        </Field>
-        <Field Name="WHTPer3Format">
-          <DataField>WHTPer3Format</DataField>
-        </Field>
-        <Field Name="WHTDesc1">
-          <DataField>WHTDesc1</DataField>
-        </Field>
-        <Field Name="WHTDesc2">
-          <DataField>WHTDesc2</DataField>
-        </Field>
-        <Field Name="WHTDesc3">
-          <DataField>WHTDesc3</DataField>
-        </Field>
-        <Field Name="WHTOption">
-          <DataField>WHTOption</DataField>
-        </Field>
-        <Field Name="ShowLineNo">
-          <DataField>ShowLineNo</DataField>
-        </Field>
-        <Field Name="BaseAmtPerPage">
-          <DataField>BaseAmtPerPage</DataField>
-        </Field>
-        <Field Name="BaseAmtPerPageFormat">
-          <DataField>BaseAmtPerPageFormat</DataField>
-        </Field>
-        <Field Name="TaxAmtPerPage">
-          <DataField>TaxAmtPerPage</DataField>
-        </Field>
-        <Field Name="TaxAmtPerPageFormat">
-          <DataField>TaxAmtPerPageFormat</DataField>
-        </Field>
-        <Field Name="PageNo">
-          <DataField>PageNo</DataField>
-        </Field>
-        <Field Name="TotalBaseAmt">
-          <DataField>TotalBaseAmt</DataField>
-        </Field>
-        <Field Name="TotalBaseAmtFormat">
-          <DataField>TotalBaseAmtFormat</DataField>
-        </Field>
-        <Field Name="TotalTaxAmt">
-          <DataField>TotalTaxAmt</DataField>
-        </Field>
-        <Field Name="TotalTaxAmtFormat">
-          <DataField>TotalTaxAmtFormat</DataField>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-    </DataSet>
-  </DataSets>
 </Report>

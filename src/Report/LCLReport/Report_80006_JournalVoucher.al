@@ -15,6 +15,7 @@ report 80006 "NCT Journal Voucher"
         {
             RequestFilterFields = "Journal Template Name", "Journal Batch Name", "Document No.";
             MaxIteration = 1;
+            UseTemporary = true;
             dataitem(GLEntry; "G/L Entry")
             {
                 DataItemTableView = sorting("Entry No.") where(Amount = filter(<> 0));
@@ -70,7 +71,7 @@ report 80006 "NCT Journal Voucher"
             dataitem(GenJournalLineVAT; "Gen. Journal Line")
             {
                 DataItemTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.") where("NCT Require Screen Detail" = filter(VAT));
-
+                UseTemporary = true;
                 column(Tax_Invoice_Date; format("NCT Tax Invoice Date", 0, '<Day,2>/<Month,2>/<Year4>')) { }
                 column(Tax_Invoice_No_; "NCT Tax Invoice No.") { }
                 column(Tax_Invoice_Name; "NCT Tax Invoice Name") { }
@@ -157,6 +158,55 @@ report 80006 "NCT Journal Voucher"
             groupping := true;
         end;
     }
+    /// <summary>
+    /// SetDataTable.
+    /// </summary>
+    /// <param name="pVariant">Variant.</param>
+    procedure SetDataTable(pVariant: Variant)
+    var
+        ltGenLine, ltGenLine2 : Record "Gen. Journal Line";
+        ltGenLineTemp: Record "Gen. Journal Line" temporary;
+        ltPostedGenLine, ltPostedGenLine2 : Record "Posted Gen. Journal Line";
+        ltRecordRef: RecordRef;
+    begin
+        ltRecordRef.GetTable(pVariant);
+        if ltRecordRef.FindFirst() then begin
+            if ltRecordRef.Number = Database::"Gen. Journal Line" then begin
+                FromPosted := false;
+                ltRecordRef.SetTable(ltGenLine2);
+                ltGenLine.reset();
+                ltGenLine.SetRange("Journal Template Name", ltGenLine2."Journal Template Name");
+                ltGenLine.SetRange("Journal Batch Name", ltGenLine2."Journal Batch Name");
+                ltGenLine.SetRange("Document No.", ltGenLine2."Document No.");
+                if ltGenLine.FindSet() then
+                    repeat
+                        ltGenLineTemp.Init();
+                        ltGenLineTemp.TransferFields(ltGenLine);
+                        ltGenLineTemp.Insert();
+                    until ltGenLine.Next() = 0;
+            end;
+            if ltRecordRef.Number = Database::"Posted Gen. Journal Line" then begin
+                FromPosted := true;
+                ltRecordRef.SetTable(ltPostedGenLine2);
+                ltPostedGenLine.reset();
+                ltPostedGenLine.SetRange("Journal Template Name", ltPostedGenLine2."Journal Template Name");
+                ltPostedGenLine.SetRange("Journal Batch Name", ltPostedGenLine2."Journal Batch Name");
+                ltPostedGenLine.SetRange("Document No.", ltPostedGenLine2."Document No.");
+                if ltPostedGenLine.FindSet() then
+                    repeat
+                        ltGenLineTemp.Init();
+                        ltGenLineTemp.TransferFields(ltPostedGenLine, false);
+                        ltGenLineTemp."Journal Template Name" := ltPostedGenLine."Journal Template Name";
+                        ltGenLineTemp."Journal Batch Name" := ltPostedGenLine."Journal Batch Name";
+                        ltGenLineTemp."Line No." := ltPostedGenLine."Line No.";
+                        ltGenLineTemp.Insert();
+                    until ltPostedGenLine.Next() = 0;
+            end;
+        end;
+        ltGenLineTemp.reset();
+        GenJournalLine.copy(ltGenLineTemp, true);
+        GenJournalLineVAT.copy(ltGenLineTemp, true);
+    end;
     /// <summary> 
     /// Description for GetExchange.
     /// </summary>
@@ -231,5 +281,6 @@ report 80006 "NCT Journal Voucher"
         UserName: Code[50];
         gvGenLine: Record "Gen. Journal Line";
         DimThaiCaption1, DimThaiCaption2, DimEngCaption1, DimEngCaption2 : text;
+        FromPosted: Boolean;
 
 }
