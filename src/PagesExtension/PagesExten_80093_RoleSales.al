@@ -259,6 +259,7 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
                         action("Phys. Count Fixed Asset")
                         {
                             Caption = 'Fixed Asset - Count (Before)';
+                            Visible = false;
                             ApplicationArea = all;
                             RunObject = report "NCT Phys. Count Fixed Asset";
                             ToolTip = 'Executes the Fixed Asset - Count (Before) action.';
@@ -266,6 +267,7 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
                         action("After Phys.Count FA")
                         {
                             Caption = 'Fixed Asset - Count (After)';
+                            Visible = false;
                             ApplicationArea = all;
                             RunObject = report "NCT After Phys.Count FA";
                             ToolTip = 'Executes the Fixed Asset - Count (After) action.';
@@ -273,6 +275,7 @@ pageextension 80093 "NCT Role Sales" extends "Order Processor Role Center"
                         action("Compare Phys. Count FA")
                         {
                             Caption = 'Fixed Asset - Property Comparison';
+                            Visible = false;
                             ApplicationArea = all;
                             RunObject = report "NCT Compare Phys. Count FA";
                             ToolTip = 'Executes the Fixed Asset - Property Comparison action.';

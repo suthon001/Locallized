@@ -11,178 +11,6 @@
       <rd:DataSourceID>18efe117-3666-4f16-9df2-c9072458c8f8</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="WHTTypeFilter">
-          <DataField>WHTTypeFilter</DataField>
-        </Field>
-        <Field Name="Name_CompanyInformation">
-          <DataField>Name_CompanyInformation</DataField>
-        </Field>
-        <Field Name="Address_CompanyInformation">
-          <DataField>Address_CompanyInformation</DataField>
-        </Field>
-        <Field Name="Address2_CompanyInformation">
-          <DataField>Address2_CompanyInformation</DataField>
-        </Field>
-        <Field Name="VATRegistrationNo_CompanyInformation">
-          <DataField>VATRegistrationNo_CompanyInformation</DataField>
-        </Field>
-        <Field Name="YesrPS">
-          <DataField>YesrPS</DataField>
-        </Field>
-        <Field Name="MonthName_TaxReportHeader">
-          <DataField>MonthName_TaxReportHeader</DataField>
-        </Field>
-        <Field Name="TotalBase">
-          <DataField>TotalBase</DataField>
-        </Field>
-        <Field Name="TotalBaseFormat">
-          <DataField>TotalBaseFormat</DataField>
-        </Field>
-        <Field Name="TotalAmt">
-          <DataField>TotalAmt</DataField>
-        </Field>
-        <Field Name="TotalAmtFormat">
-          <DataField>TotalAmtFormat</DataField>
-        </Field>
-        <Field Name="LineNo">
-          <DataField>LineNo</DataField>
-        </Field>
-        <Field Name="WHTProctCode">
-          <DataField>WHTProctCode</DataField>
-        </Field>
-        <Field Name="TaxInvoiceNo_TaxReportLine">
-          <DataField>TaxInvoiceNo_TaxReportLine</DataField>
-        </Field>
-        <Field Name="TaxInvoiceDate_TaxReportLine">
-          <DataField>TaxInvoiceDate_TaxReportLine</DataField>
-        </Field>
-        <Field Name="TaxInvoiceName_TaxReportLine">
-          <DataField>TaxInvoiceName_TaxReportLine</DataField>
-        </Field>
-        <Field Name="Establishment_TaxReportLine">
-          <DataField>Establishment_TaxReportLine</DataField>
-        </Field>
-        <Field Name="BranchNo_TaxReportLine">
-          <DataField>BranchNo_TaxReportLine</DataField>
-        </Field>
-        <Field Name="VATRegistrationNo_TaxReportLine">
-          <DataField>VATRegistrationNo_TaxReportLine</DataField>
-        </Field>
-        <Field Name="Description_TaxReportLine">
-          <DataField>Description_TaxReportLine</DataField>
-        </Field>
-        <Field Name="BaseAmount_TaxReportLine">
-          <DataField>BaseAmount_TaxReportLine</DataField>
-        </Field>
-        <Field Name="BaseAmount_TaxReportLineFormat">
-          <DataField>BaseAmount_TaxReportLineFormat</DataField>
-        </Field>
-        <Field Name="VATAmount_TaxReportLine">
-          <DataField>VATAmount_TaxReportLine</DataField>
-        </Field>
-        <Field Name="VATAmount_TaxReportLineFormat">
-          <DataField>VATAmount_TaxReportLineFormat</DataField>
-        </Field>
-        <Field Name="TaxType_TaxReportLine">
-          <DataField>TaxType_TaxReportLine</DataField>
-        </Field>
-        <Field Name="WHTDocumentNo_TaxReportLine">
-          <DataField>WHTDocumentNo_TaxReportLine</DataField>
-        </Field>
-        <Field Name="WHTRegistrationID_TaxReportLine">
-          <DataField>WHTRegistrationID_TaxReportLine</DataField>
-        </Field>
-        <Field Name="WHTPercent_TaxReportLine">
-          <DataField>WHTPercent_TaxReportLine</DataField>
-        </Field>
-        <Field Name="WHTPercent_TaxReportLineFormat">
-          <DataField>WHTPercent_TaxReportLineFormat</DataField>
-        </Field>
-        <Field Name="Name_TaxReportLine">
-          <DataField>Name_TaxReportLine</DataField>
-        </Field>
-        <Field Name="Address_TaxReportLine">
-          <DataField>Address_TaxReportLine</DataField>
-        </Field>
-        <Field Name="Address2_TaxReportLine">
-          <DataField>Address2_TaxReportLine</DataField>
-        </Field>
-        <Field Name="City_TaxReportLine">
-          <DataField>City_TaxReportLine</DataField>
-        </Field>
-        <Field Name="PostCode_TaxReportLine">
-          <DataField>PostCode_TaxReportLine</DataField>
-        </Field>
-        <Field Name="County_TaxReportLine">
-          <DataField>County_TaxReportLine</DataField>
-        </Field>
-        <Field Name="DocumentNo_TaxReportLine">
-          <DataField>DocumentNo_TaxReportLine</DataField>
-        </Field>
-        <Field Name="PostingDate_TaxReportLine">
-          <DataField>PostingDate_TaxReportLine</DataField>
-        </Field>
-        <Field Name="WHTProduct">
-          <DataField>WHTProduct</DataField>
-        </Field>
-        <Field Name="DocumentNo">
-          <DataField>DocumentNo</DataField>
-        </Field>
-        <Field Name="WHTDocumentNo">
-          <DataField>WHTDocumentNo</DataField>
-        </Field>
-        <Field Name="WHTPercent_1">
-          <DataField>WHTPercent_1</DataField>
-        </Field>
-        <Field Name="WHTPercent_1Format">
-          <DataField>WHTPercent_1Format</DataField>
-        </Field>
-        <Field Name="TaxType_1">
-          <DataField>TaxType_1</DataField>
-        </Field>
-        <Field Name="BaseAmount_1">
-          <DataField>BaseAmount_1</DataField>
-        </Field>
-        <Field Name="BaseAmount_1Format">
-          <DataField>BaseAmount_1Format</DataField>
-        </Field>
-        <Field Name="VATAmount_1">
-          <DataField>VATAmount_1</DataField>
-        </Field>
-        <Field Name="VATAmount_1Format">
-          <DataField>VATAmount_1Format</DataField>
-        </Field>
-        <Field Name="WHTPercent_2">
-          <DataField>WHTPercent_2</DataField>
-        </Field>
-        <Field Name="WHTPercent_2Format">
-          <DataField>WHTPercent_2Format</DataField>
-        </Field>
-        <Field Name="TaxType_2">
-          <DataField>TaxType_2</DataField>
-        </Field>
-        <Field Name="BaseAmount_2">
-          <DataField>BaseAmount_2</DataField>
-        </Field>
-        <Field Name="BaseAmount_2Format">
-          <DataField>BaseAmount_2Format</DataField>
-        </Field>
-        <Field Name="VATAmount_2">
-          <DataField>VATAmount_2</DataField>
-        </Field>
-        <Field Name="VATAmount_2Format">
-          <DataField>VATAmount_2Format</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -3870,12 +3698,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -3925,4 +3747,176 @@ End Function</Code>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="WHTTypeFilter">
+          <DataField>WHTTypeFilter</DataField>
+        </Field>
+        <Field Name="Name_CompanyInformation">
+          <DataField>Name_CompanyInformation</DataField>
+        </Field>
+        <Field Name="Address_CompanyInformation">
+          <DataField>Address_CompanyInformation</DataField>
+        </Field>
+        <Field Name="Address2_CompanyInformation">
+          <DataField>Address2_CompanyInformation</DataField>
+        </Field>
+        <Field Name="VATRegistrationNo_CompanyInformation">
+          <DataField>VATRegistrationNo_CompanyInformation</DataField>
+        </Field>
+        <Field Name="YesrPS">
+          <DataField>YesrPS</DataField>
+        </Field>
+        <Field Name="MonthName_TaxReportHeader">
+          <DataField>MonthName_TaxReportHeader</DataField>
+        </Field>
+        <Field Name="TotalBase">
+          <DataField>TotalBase</DataField>
+        </Field>
+        <Field Name="TotalBaseFormat">
+          <DataField>TotalBaseFormat</DataField>
+        </Field>
+        <Field Name="TotalAmt">
+          <DataField>TotalAmt</DataField>
+        </Field>
+        <Field Name="TotalAmtFormat">
+          <DataField>TotalAmtFormat</DataField>
+        </Field>
+        <Field Name="LineNo">
+          <DataField>LineNo</DataField>
+        </Field>
+        <Field Name="WHTProctCode">
+          <DataField>WHTProctCode</DataField>
+        </Field>
+        <Field Name="TaxInvoiceNo_TaxReportLine">
+          <DataField>TaxInvoiceNo_TaxReportLine</DataField>
+        </Field>
+        <Field Name="TaxInvoiceDate_TaxReportLine">
+          <DataField>TaxInvoiceDate_TaxReportLine</DataField>
+        </Field>
+        <Field Name="TaxInvoiceName_TaxReportLine">
+          <DataField>TaxInvoiceName_TaxReportLine</DataField>
+        </Field>
+        <Field Name="Establishment_TaxReportLine">
+          <DataField>Establishment_TaxReportLine</DataField>
+        </Field>
+        <Field Name="BranchNo_TaxReportLine">
+          <DataField>BranchNo_TaxReportLine</DataField>
+        </Field>
+        <Field Name="VATRegistrationNo_TaxReportLine">
+          <DataField>VATRegistrationNo_TaxReportLine</DataField>
+        </Field>
+        <Field Name="Description_TaxReportLine">
+          <DataField>Description_TaxReportLine</DataField>
+        </Field>
+        <Field Name="BaseAmount_TaxReportLine">
+          <DataField>BaseAmount_TaxReportLine</DataField>
+        </Field>
+        <Field Name="BaseAmount_TaxReportLineFormat">
+          <DataField>BaseAmount_TaxReportLineFormat</DataField>
+        </Field>
+        <Field Name="VATAmount_TaxReportLine">
+          <DataField>VATAmount_TaxReportLine</DataField>
+        </Field>
+        <Field Name="VATAmount_TaxReportLineFormat">
+          <DataField>VATAmount_TaxReportLineFormat</DataField>
+        </Field>
+        <Field Name="TaxType_TaxReportLine">
+          <DataField>TaxType_TaxReportLine</DataField>
+        </Field>
+        <Field Name="WHTDocumentNo_TaxReportLine">
+          <DataField>WHTDocumentNo_TaxReportLine</DataField>
+        </Field>
+        <Field Name="WHTRegistrationID_TaxReportLine">
+          <DataField>WHTRegistrationID_TaxReportLine</DataField>
+        </Field>
+        <Field Name="WHTPercent_TaxReportLine">
+          <DataField>WHTPercent_TaxReportLine</DataField>
+        </Field>
+        <Field Name="WHTPercent_TaxReportLineFormat">
+          <DataField>WHTPercent_TaxReportLineFormat</DataField>
+        </Field>
+        <Field Name="Name_TaxReportLine">
+          <DataField>Name_TaxReportLine</DataField>
+        </Field>
+        <Field Name="Address_TaxReportLine">
+          <DataField>Address_TaxReportLine</DataField>
+        </Field>
+        <Field Name="Address2_TaxReportLine">
+          <DataField>Address2_TaxReportLine</DataField>
+        </Field>
+        <Field Name="City_TaxReportLine">
+          <DataField>City_TaxReportLine</DataField>
+        </Field>
+        <Field Name="PostCode_TaxReportLine">
+          <DataField>PostCode_TaxReportLine</DataField>
+        </Field>
+        <Field Name="County_TaxReportLine">
+          <DataField>County_TaxReportLine</DataField>
+        </Field>
+        <Field Name="DocumentNo_TaxReportLine">
+          <DataField>DocumentNo_TaxReportLine</DataField>
+        </Field>
+        <Field Name="PostingDate_TaxReportLine">
+          <DataField>PostingDate_TaxReportLine</DataField>
+        </Field>
+        <Field Name="WHTProduct">
+          <DataField>WHTProduct</DataField>
+        </Field>
+        <Field Name="DocumentNo">
+          <DataField>DocumentNo</DataField>
+        </Field>
+        <Field Name="WHTDocumentNo">
+          <DataField>WHTDocumentNo</DataField>
+        </Field>
+        <Field Name="WHTPercent_1">
+          <DataField>WHTPercent_1</DataField>
+        </Field>
+        <Field Name="WHTPercent_1Format">
+          <DataField>WHTPercent_1Format</DataField>
+        </Field>
+        <Field Name="TaxType_1">
+          <DataField>TaxType_1</DataField>
+        </Field>
+        <Field Name="BaseAmount_1">
+          <DataField>BaseAmount_1</DataField>
+        </Field>
+        <Field Name="BaseAmount_1Format">
+          <DataField>BaseAmount_1Format</DataField>
+        </Field>
+        <Field Name="VATAmount_1">
+          <DataField>VATAmount_1</DataField>
+        </Field>
+        <Field Name="VATAmount_1Format">
+          <DataField>VATAmount_1Format</DataField>
+        </Field>
+        <Field Name="WHTPercent_2">
+          <DataField>WHTPercent_2</DataField>
+        </Field>
+        <Field Name="WHTPercent_2Format">
+          <DataField>WHTPercent_2Format</DataField>
+        </Field>
+        <Field Name="TaxType_2">
+          <DataField>TaxType_2</DataField>
+        </Field>
+        <Field Name="BaseAmount_2">
+          <DataField>BaseAmount_2</DataField>
+        </Field>
+        <Field Name="BaseAmount_2Format">
+          <DataField>BaseAmount_2Format</DataField>
+        </Field>
+        <Field Name="VATAmount_2">
+          <DataField>VATAmount_2</DataField>
+        </Field>
+        <Field Name="VATAmount_2Format">
+          <DataField>VATAmount_2Format</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

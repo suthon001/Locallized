@@ -296,8 +296,7 @@ report 80001 "NCT AP Voucher"
                                 until ItemchagePurch.Next() = 0;
                         end;
                     until ltPurchaseLine.Next() = 0;
-            end;
-            if ltRecordRef.Number = Database::"Purch. Inv. Header" then begin
+            end else begin
                 FromPosted := true;
                 ltRecordRef.SetTable(PurInvoice);
                 PurHeader.TransferFields(PurInvoice, false);

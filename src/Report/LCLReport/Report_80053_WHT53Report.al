@@ -1,10 +1,10 @@
 /// <summary>
 /// Report NCT WHT53 Report (ID 80100).
 /// </summary>
-report 80100 "NCT WHT53 Report"
+report 80053 "NCT WHT53 Report"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './LayoutReport/LCLReport/Report_80100_WHT53.rdl';
+    RDLCLayout = './LayoutReport/LCLReport/Report_80053_WHT53.rdl';
     Caption = 'WHT 53';
     ApplicationArea = all;
     UsageCategory = ReportsAndAnalysis;

@@ -274,8 +274,7 @@ report 80000 "NCT AP CN Voucher"
                                 until ItemchagePurch.Next() = 0;
                         end;
                     until ltPurchaseLine.Next() = 0;
-            end;
-            if ltRecordRef.Number = Database::"Purch. Cr. Memo Hdr." then begin
+            end else begin
                 FromPosted := true;
                 ltRecordRef.SetTable(PurCrHeader);
                 PurHeader.TransferFields(PurCrHeader, false);

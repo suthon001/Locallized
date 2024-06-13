@@ -54,7 +54,7 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
     {
         addafter(Preview)
         {
-            action(YVSPreview)
+            action(NCTPreview)
             {
                 ApplicationArea = Basic, Suite;
                 Caption = 'Preview Posting';
@@ -76,6 +76,7 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
                     if ltGenLine.FindFirst() then
                         GenJnlPost.Preview(ltGenLine);
                 end;
+
             }
         }
         modify(Preview)
@@ -225,12 +226,17 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
                 trigger OnAction()
                 var
                     GenJournalLIne: Record "Gen. Journal Line";
+                    JournalVoucher: Report "NCT Journal Voucher";
                 begin
+                    CLEAR(JournalVoucher);
                     GenJournalLIne.reset();
                     GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLIne.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"NCT Journal Voucher", true, false, GenJournalLIne);
+                    if GenJournalLIne.FindFirst() then
+                        JournalVoucher.SetDataTable(GenJournalLIne);
+                    JournalVoucher.RunModal();
+                    CLEAR(JournalVoucher);
                 end;
             }
         }

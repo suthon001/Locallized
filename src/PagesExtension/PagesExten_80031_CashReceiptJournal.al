@@ -155,12 +155,17 @@ pageextension 80031 "NCT Receipt Journal" extends "Cash Receipt Journal"
                 trigger OnAction()
                 var
                     GenJournalLIne: Record "Gen. Journal Line";
+                    ReceiveVoucher: Report "NCT Receive Voucher";
                 begin
+                    CLEAR(ReceiveVoucher);
                     GenJournalLIne.reset();
                     GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLIne.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"NCT Receive Voucher", true, false, GenJournalLIne);
+                    if GenJournalLIne.FindFirst() then
+                        ReceiveVoucher.SetDataTable(GenJournalLIne);
+                    ReceiveVoucher.RunModal();
+                    CLEAR(ReceiveVoucher);
                 end;
             }
             action("Print_Receipt_Tax")

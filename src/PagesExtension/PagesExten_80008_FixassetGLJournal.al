@@ -116,12 +116,17 @@ pageextension 80008 "NCT Asset G/L Journal" extends "Fixed Asset G/L Journal"
                 trigger OnAction()
                 var
                     GenJournalLIne: Record "Gen. Journal Line";
+                    FAJournalVoucher: Report "NCT FA G/L Journal Voucher";
                 begin
+                    CLEAR(FAJournalVoucher);
                     GenJournalLIne.reset();
                     GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLIne.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"NCT FA G/L Journal Voucher", true, false, GenJournalLIne);
+                    if GenJournalLIne.FindFirst() then
+                        FAJournalVoucher.SetDataTable(GenJournalLIne);
+                    FAJournalVoucher.RunModal();
+                    CLEAR(FAJournalVoucher);
                 end;
             }
         }

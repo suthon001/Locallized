@@ -13,7 +13,6 @@ report 80006 "NCT Journal Voucher"
     {
         dataitem(GenJournalLine; "Gen. Journal Line")
         {
-            RequestFilterFields = "Journal Template Name", "Journal Batch Name", "Document No.";
             MaxIteration = 1;
             UseTemporary = true;
             dataitem(GLEntry; "G/L Entry")
@@ -107,33 +106,25 @@ report 80006 "NCT Journal Voucher"
             trigger OnAfterGetRecord()
             var
                 ltGenjournalTemplate: Record "Gen. Journal Template";
-                NewDate: Date;
-
+                PostedJournalBatch: Record "Posted Gen. Journal Batch";
             begin
-                FunctionCenter.SetReportGLEntry(GenJournalLine, GLEntry, VatEntryTemporary, TempAmt, groupping);
+                FunctionCenter.SetReportGLEntry(GenJournalLine, GLEntry, VatEntryTemporary, TempAmt, groupping, FromPosted);
                 "GetExchange"();
                 FunctionCenter."ConvExchRate"(CurrencyCode, CurrencyFactor, ExchangeRate);
                 AmtText := '(' + FunctionCenter."NumberThaiToText"(TempAmt) + ')';
-                gvGenLine.reset();
-                gvGenLine.SetRange("Journal Template Name", "Journal Template Name");
-                gvGenLine.SetRange("Journal Batch Name", "Journal Batch Name");
-                gvGenLine.SetRange("Document No.", "Document No.");
-                gvGenLine.SetFilter("NCT Create By", '<>%1', '');
-                if gvGenLine.FindFirst() then begin
-                    UserName := gvGenLine."NCT Create By";
-                    NewDate := DT2Date(gvGenLine."NCT Create DateTime");
-                    SplitDate[1] := Format(NewDate, 0, '<Day,2>');
-                    SplitDate[2] := Format(NewDate, 0, '<Month,2>');
-                    SplitDate[3] := Format(NewDate, 0, '<Year4>');
-                end;
+
                 "FindPostingDescription"();
                 "CheckLineData"();
                 ltGenjournalTemplate.Get(GenJournalLine."Journal Template Name");
-                GenJournalBatchName.GET(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name");
-
-
-                JournalDescriptionThai := ltGenjournalTemplate."NCT Description Thai";
-                JournalDescriptionEng := ltGenjournalTemplate."NCT Description Eng";
+                if not FromPosted then begin
+                    GenJournalBatchName.GET(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name");
+                    JournalDescriptionThai := ltGenjournalTemplate."NCT Description Thai";
+                    JournalDescriptionEng := ltGenjournalTemplate."NCT Description Eng";
+                end else begin
+                    PostedJournalBatch.GET(GenJournalLine."Journal Template Name", GenJournalLine."Journal Batch Name");
+                    JournalDescriptionThai := ltGenjournalTemplate."NCT Description Thai";
+                    JournalDescriptionEng := ltGenjournalTemplate."NCT Description Eng";
+                end;
                 FunctionCenter.GetGlobalDimCaption(DimThaiCaption1, DimEngCaption1, DimThaiCaption2, DimEngCaption2);
             end;
 
@@ -168,6 +159,7 @@ report 80006 "NCT Journal Voucher"
         ltGenLineTemp: Record "Gen. Journal Line" temporary;
         ltPostedGenLine, ltPostedGenLine2 : Record "Posted Gen. Journal Line";
         ltRecordRef: RecordRef;
+        NewDate: Date;
     begin
         ltRecordRef.GetTable(pVariant);
         if ltRecordRef.FindFirst() then begin
@@ -184,8 +176,13 @@ report 80006 "NCT Journal Voucher"
                         ltGenLineTemp.TransferFields(ltGenLine);
                         ltGenLineTemp.Insert();
                     until ltGenLine.Next() = 0;
-            end;
-            if ltRecordRef.Number = Database::"Posted Gen. Journal Line" then begin
+
+                UserName := FunctionCenter.GetUserNameFormSystemGUID(ltGenLine2.SystemCreatedBy);
+                NewDate := DT2Date(ltGenLine2.SystemCreatedAt);
+                SplitDate[1] := Format(NewDate, 0, '<Day,2>');
+                SplitDate[2] := Format(NewDate, 0, '<Month,2>');
+                SplitDate[3] := Format(NewDate, 0, '<Year4>');
+            end else begin
                 FromPosted := true;
                 ltRecordRef.SetTable(ltPostedGenLine2);
                 ltPostedGenLine.reset();
@@ -201,18 +198,24 @@ report 80006 "NCT Journal Voucher"
                         ltGenLineTemp."Line No." := ltPostedGenLine."Line No.";
                         ltGenLineTemp.Insert();
                     until ltPostedGenLine.Next() = 0;
+
+                UserName := FunctionCenter.GetUserNameFormSystemGUID(ltPostedGenLine2.SystemCreatedBy);
+                NewDate := DT2Date(ltPostedGenLine2.SystemCreatedAt);
+                SplitDate[1] := Format(NewDate, 0, '<Day,2>');
+                SplitDate[2] := Format(NewDate, 0, '<Month,2>');
+                SplitDate[3] := Format(NewDate, 0, '<Year4>');
             end;
+
+            ltGenLineTemp.reset();
+            GenJournalLine.copy(ltGenLineTemp, true);
+            GenJournalLineVAT.copy(ltGenLineTemp, true);
+            GenLine.copy(ltGenLineTemp, true);
         end;
-        ltGenLineTemp.reset();
-        GenJournalLine.copy(ltGenLineTemp, true);
-        GenJournalLineVAT.copy(ltGenLineTemp, true);
     end;
     /// <summary> 
     /// Description for GetExchange.
     /// </summary>
     procedure "GetExchange"()
-    var
-        GenLine: Record "Gen. Journal Line";
     begin
         GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
@@ -229,8 +232,6 @@ report 80006 "NCT Journal Voucher"
     /// Description for FindPostingDescription.
     /// </summary>
     procedure "FindPostingDescription"()
-    var
-        GenLine: Record "Gen. Journal Line";
     begin
         GenLine.reset();
         GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
@@ -247,19 +248,18 @@ report 80006 "NCT Journal Voucher"
     /// Description for CheckLineData.
     /// </summary>
     procedure "CheckLineData"()
-    var
-        GenLineCheck: Record "Gen. Journal Line";
     begin
-        GenLineCheck.reset();
-        GenLineCheck.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
-        GenLineCheck.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
-        GenLineCheck.SetRange("Document No.", GenJournalLine."Document No.");
-        GenLineCheck.SetRange("NCT Require Screen Detail", GenLineCheck."NCT Require Screen Detail"::VAT);
-        HaveItemVAT := GenLineCheck.Count <> 0;
+        GenLine.reset();
+        GenLine.SetRange("Journal Template Name", GenJournalLine."Journal Template Name");
+        GenLine.SetRange("Journal Batch Name", GenJournalLine."Journal Batch Name");
+        GenLine.SetRange("Document No.", GenJournalLine."Document No.");
+        GenLine.SetRange("NCT Require Screen Detail", GenLine."NCT Require Screen Detail"::VAT);
+        HaveItemVAT := GenLine.Count <> 0;
 
     end;
 
     var
+        GenLine: Record "Gen. Journal Line" temporary;
         VatEntryTemporary: Record "Vat Entry" temporary;
         FunctionCenter: Codeunit "NCT Function Center";
         companyInfor: Record "Company Information";
@@ -279,7 +279,6 @@ report 80006 "NCT Journal Voucher"
         AccountName: text[100];
         glAccount: Record "G/L Account";
         UserName: Code[50];
-        gvGenLine: Record "Gen. Journal Line";
         DimThaiCaption1, DimThaiCaption2, DimEngCaption1, DimEngCaption2 : text;
         FromPosted: Boolean;
 

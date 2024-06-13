@@ -1,4 +1,4 @@
-report 80088 "NCT Calculate Depreciation"
+report 80051 "NCT Calculate Depreciation"
 {
     ApplicationArea = all;
     Caption = 'Calculate Depreciation';

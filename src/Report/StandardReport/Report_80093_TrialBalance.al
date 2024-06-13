@@ -1,10 +1,10 @@
 /// <summary>
-/// Report NCT Trial Balance (ID 80051).
+/// Report NCT Trial Balance (ID 80093).
 /// </summary>
-report 80051 "NCT Trial Balance"
+report 80093 "NCT Trial Balance"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './LayoutReport/StandardReport/Report_80051_TrialBalance.rdl';
+    RDLCLayout = './LayoutReport/StandardReport/Report_80093_TrialBalance.rdl';
     AdditionalSearchTerms = 'year closing,close accounting period,close fiscal year';
     //ApplicationArea = Basic, Suite;
     Caption = 'Trial Balance';

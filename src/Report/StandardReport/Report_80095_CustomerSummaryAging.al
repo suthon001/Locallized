@@ -1,10 +1,10 @@
 /// <summary>
-/// Report NCT Customer - Summary Aging (ID 80053).
+/// Report NCT Customer - Summary Aging (ID 80095).
 /// </summary>
-report 80053 "NCT Customer - Summary Aging"
+report 80095 "NCT Customer - Summary Aging"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './LayoutReport/StandardReport/Report_80053_CustomerSummaryAging.rdl';
+    RDLCLayout = './LayoutReport/StandardReport/Report_80095_CustomerSummaryAging.rdl';
     AdditionalSearchTerms = 'customer balance,payment due';
     //ApplicationArea = Basic, Suite;
     Caption = 'Customer - Summary Aging';

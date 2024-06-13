@@ -193,6 +193,7 @@ pageextension 80106 "NCT Sales Manager Role" extends "Sales Manager Role Center"
                             ApplicationArea = all;
                             RunObject = report "NCT Phys. Count Fixed Asset";
                             ToolTip = 'Executes the Fixed Asset - Count (Before) action.';
+                            Visible = false;
                         }
                         action("After Phys.Count FA")
                         {
@@ -200,6 +201,7 @@ pageextension 80106 "NCT Sales Manager Role" extends "Sales Manager Role Center"
                             ApplicationArea = all;
                             RunObject = report "NCT After Phys.Count FA";
                             ToolTip = 'Executes the Fixed Asset - Count (After) action.';
+                            Visible = false;
                         }
                         action("Compare Phys. Count FA")
                         {
@@ -207,6 +209,7 @@ pageextension 80106 "NCT Sales Manager Role" extends "Sales Manager Role Center"
                             ApplicationArea = all;
                             RunObject = report "NCT Compare Phys. Count FA";
                             ToolTip = 'Executes the Fixed Asset - Property Comparison action.';
+                            Visible = false;
                         }
 
                     }

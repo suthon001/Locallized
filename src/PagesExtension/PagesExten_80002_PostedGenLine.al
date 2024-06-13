@@ -39,21 +39,42 @@ pageextension 80002 "NCT ExtenPostPostedGenLine" extends "Posted General Journal
                 var
                     PostedGenLine: Record "Posted Gen. Journal Line";
                     GenjournalTemp: Record "Gen. Journal Template";
+                    JournalVoucher: Report "NCT Journal Voucher";
+                    PaymentVoucher: Report "NCT Payment Voucher";
+                    ReceiveVoucher: Report "NCT Receive Voucher";
+                    FAJournalVoucher: Report "NCT FA G/L Journal Voucher";
                 begin
                     GenjournalTemp.GET(rec."Journal Template Name");
                     PostedGenLine.reset();
                     PostedGenLine.SetRange("Journal Template Name", rec."Journal Template Name");
                     PostedGenLine.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     PostedGenLine.SetRange("Document No.", rec."Document No.");
-                    if GenjournalTemp.Type = GenjournalTemp.Type::Payments then
-                        REPORT.RunModal(REPORT::"NCT Payment Voucher (Post)", true, false, PostedGenLine);
-                    if GenjournalTemp.Type = GenjournalTemp.Type::General then
-                        REPORT.RunModal(REPORT::"NCT Journal Voucher (Post)", true, false, PostedGenLine);
-                    if GenjournalTemp.Type = GenjournalTemp.Type::"Cash Receipts" then
-                        REPORT.RunModal(REPORT::"NCT Receive Voucher (Post)", true, false, PostedGenLine);
-                    if GenjournalTemp.Type = GenjournalTemp.Type::Assets then
-                        REPORT.RunModal(REPORT::"NCT FA G/L Journal Voucher (P)", true, false, PostedGenLine);
-
+                    if PostedGenLine.FindFirst() then begin
+                        if GenjournalTemp.Type = GenjournalTemp.Type::Payments then begin
+                            CLEAR(PaymentVoucher);
+                            PaymentVoucher.SetDataTable(PostedGenLine);
+                            PaymentVoucher.RunModal();
+                            CLEAR(PaymentVoucher);
+                        end;
+                        if GenjournalTemp.Type = GenjournalTemp.Type::General then begin
+                            CLEAR(JournalVoucher);
+                            JournalVoucher.SetDataTable(PostedGenLine);
+                            JournalVoucher.RunModal();
+                            CLEAR(JournalVoucher);
+                        end;
+                        if GenjournalTemp.Type = GenjournalTemp.Type::"Cash Receipts" then begin
+                            CLEAR(ReceiveVoucher);
+                            ReceiveVoucher.SetDataTable(PostedGenLine);
+                            ReceiveVoucher.RunModal();
+                            CLEAR(ReceiveVoucher);
+                        end;
+                        if GenjournalTemp.Type = GenjournalTemp.Type::Assets then begin
+                            CLEAR(FAJournalVoucher);
+                            FAJournalVoucher.SetDataTable(PostedGenLine);
+                            FAJournalVoucher.RunModal();
+                            CLEAR(FAJournalVoucher);
+                        end;
+                    end;
                 end;
             }
         }

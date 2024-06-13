@@ -8,7 +8,7 @@ report 80045 "NCT Phys. Count Fixed Asset"
     PreviewMode = PrintLayout;
     Caption = 'Fixed Asset - Count (Before)';
     ApplicationArea = All;
-    UsageCategory = ReportsAndAnalysis;
+    UsageCategory = None;
     dataset
     {
         dataitem("Fixed Asset"; "Fixed Asset")

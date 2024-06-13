@@ -229,8 +229,7 @@ report 80003 "NCT AR Voucher"
                                 until ItemchageSales.Next() = 0;
                         end;
                     until ltSalesLine.Next() = 0;
-            end;
-            if ltRecordRef.Number = Database::"Sales Invoice Header" then begin
+            end else begin
                 FromPosted := true;
                 ltRecordRef.SetTable(SalesInvoice);
                 SalesHeader.TransferFields(SalesInvoice, false);

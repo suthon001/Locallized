@@ -1,10 +1,10 @@
 /// <summary>
-/// Report NCT Detail Trial Balance(ID 80050).
+/// Report NCT Detail Trial Balance(ID 80092).
 /// </summary>
-report 80050 "NCT Detail Trial Balance"
+report 80092 "NCT Detail Trial Balance"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './LayoutReport/StandardReport/Report_80050_DetailTrialBalance.rdl';
+    RDLCLayout = './LayoutReport/StandardReport/Report_80092_DetailTrialBalance.rdl';
     AdditionalSearchTerms = 'payment due,order status';
     // ApplicationArea = Basic, Suite;
     Caption = 'Detail Trial Balance';

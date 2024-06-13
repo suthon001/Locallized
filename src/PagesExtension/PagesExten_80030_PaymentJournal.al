@@ -171,13 +171,17 @@ pageextension 80030 "NCT Payment Journal" extends "Payment Journal"
                 trigger OnAction()
                 var
                     GenJournalLIne: Record "Gen. Journal Line";
+                    PaymentVoucher: Report "NCT Payment Voucher";
                 begin
+                    CLEAR(PaymentVoucher);
                     GenJournalLIne.reset();
                     GenJournalLIne.SetRange("Journal Template Name", rec."Journal Template Name");
                     GenJournalLIne.SetRange("Journal Batch Name", rec."Journal Batch Name");
                     GenJournalLIne.SetRange("Document No.", rec."Document No.");
-                    REPORT.RunModal(REPORT::"NCT Payment Voucher", true, false, GenJournalLIne);
-
+                    if GenJournalLIne.FindFirst() then
+                        PaymentVoucher.SetDataTable(GenJournalLIne);
+                    PaymentVoucher.RunModal();
+                    CLEAR(PaymentVoucher);
                 end;
             }
             action("Cheque")

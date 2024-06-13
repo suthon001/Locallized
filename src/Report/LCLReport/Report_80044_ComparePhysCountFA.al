@@ -7,7 +7,7 @@ report 80044 "NCT Compare Phys. Count FA"
     RDLCLayout = './LayoutReport/LCLReport/Report_80044_ComparePhysCountFA.rdl';
     PreviewMode = PrintLayout;
     Caption = 'Fixed Asset - Property Comparison';
-    UsageCategory = ReportsAndAnalysis;
+    UsageCategory = None;
     ApplicationArea = All;
     dataset
     {

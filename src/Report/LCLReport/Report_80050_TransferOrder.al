@@ -1,7 +1,7 @@
-report 80087 "NCT Transfer Order"
+report 80050 "NCT Transfer Order"
 {
     Caption = 'Transfer Order';
-    RDLCLayout = './LayoutReport/LCLReport/Report_80087_TransferOrder.rdl';
+    RDLCLayout = './LayoutReport/LCLReport/Report_80050_TransferOrder.rdl';
     PreviewMode = PrintLayout;
     UsageCategory = None;
     DefaultLayout = RDLC;

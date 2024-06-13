@@ -1,10 +1,10 @@
 /// <summary>
-/// Report Customer Detail Trial Bal. (ID 80052).
+/// Report Customer Detail Trial Bal. (ID 80094).
 /// </summary>
-report 80052 "NCT Customer Detail Trial Bal."
+report 80094 "NCT Customer Detail Trial Bal."
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './LayoutReport/StandardReport/Report_80052_CustomerDetailTrialBal.rdl';
+    RDLCLayout = './LayoutReport/StandardReport/Report_80094_CustomerDetailTrialBal.rdl';
     //ApplicationArea = Basic, Suite;
     Caption = 'Customer - Detail Trial Bal.';
     UsageCategory = None;
