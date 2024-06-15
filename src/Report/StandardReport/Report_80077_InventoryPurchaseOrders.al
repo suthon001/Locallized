@@ -4,7 +4,7 @@
 report 80077 "NCT Inventory Purchase Orders"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './LayoutReport/StandardReport/InventoryPurchaseOrders.rdl';
+    RDLCLayout = './LayoutReport/StandardReport/Report_80077_InventoryPurchaseOrders.rdl';
     ApplicationArea = Suite;
     Caption = 'Inventory Purchase Orders';
     UsageCategory = ReportsAndAnalysis;

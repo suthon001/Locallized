@@ -6,7 +6,11 @@ codeunit 80004 "NCT Function Center"
 
     Permissions = tabledata "G/L Entry" = rimd, tabledata "Purch. Rcpt. Line" = imd, tabledata "Return Shipment Line" = imd, tabledata "Sales Shipment Line" = imd;
 
-
+    /// <summary>
+    /// GetUserNameFormSystemGUID.
+    /// </summary>
+    /// <param name="pGUID">Guid.</param>
+    /// <returns>Return value of type code[50].</returns>
     procedure GetUserNameFormSystemGUID(pGUID: Guid): code[50]
     var
         User: Record User;

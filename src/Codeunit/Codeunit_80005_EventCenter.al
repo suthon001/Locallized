@@ -680,6 +680,8 @@ codeunit 80005 "NCT EventFunction"
             NewReportId := report::"NCT Account Schedule";
         if ReportId = Report::"Fixed Asset - Acquisition List" then
             NewReportId := report::"NCT Fixed Asset - Acquisition";
+        if ReportId = Report::"Fixed Asset - Projected Value" then
+            NewReportId := report::"NCT Fixed Asset - Pro. Value";
 
 
     end;
