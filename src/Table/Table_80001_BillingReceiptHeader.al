@@ -823,7 +823,8 @@ Table 80001 "NCT Billing Receipt Header"
     begin
 
         TestStatusOpen();
-        rec."Diff Amount (LCY)" := rec."Receive & Payment Amount" - rec."Bank Fee Amount (LCY)" - rec."Prepaid WHT Amount (LCY)" - rec.Amount;
+        // rec."Diff Amount (LCY)" := rec."Receive & Payment Amount" - rec."Bank Fee Amount (LCY)" - rec."Prepaid WHT Amount (LCY)" - rec.Amount;
+        rec."Diff Amount (LCY)" := rec.Amount - (rec."Receive & Payment Amount" + rec."Prepaid WHT Amount (LCY)");
     end;
 
     var

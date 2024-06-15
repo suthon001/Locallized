@@ -513,6 +513,20 @@ tableextension 80014 "NCT GenJournal Lines" extends "Gen. Journal Line"
             Caption = 'Ref. Document No.';
             Editable = false;
         }
+        field(80058; "NCT Ref. Receipt WHT No."; code[20])
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Receipt WHT No.';
+
+        }
+        field(80059; "NCT Ref. Receipt WHT Date"; Date)
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Receipt WHT Date';
+
+        }
         modify("External Document No.")
         {
             trigger OnAfterValidate()

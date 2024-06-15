@@ -97,13 +97,13 @@ page 80023 "NCT WHT Subpage"
                 field("House No."; Rec."House No.")
                 {
                     ApplicationArea = All;
-                    Caption = 'เลขที่บ้าน';
+                    Caption = 'บ้านเลขที่';
                     ToolTip = 'Specifies the value of the เลขที่บ้าน field.';
                 }
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
-                    Caption = 'เลขที่';
+                    Caption = 'เลขที่ห้อง';
                     ToolTip = 'Specifies the value of the เลขที่ field.';
                 }
                 field("Floor"; Rec."Floor")

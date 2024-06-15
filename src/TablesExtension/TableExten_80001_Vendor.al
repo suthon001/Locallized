@@ -118,7 +118,7 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
         }
         field(80009; "NCT WHT House No."; Text[50])
         {
-            Caption = 'เลขที่ห้อง';
+            Caption = 'บ้านเลขที่';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
@@ -170,7 +170,7 @@ tableextension 80001 "NCT ExtenVendor" extends Vendor
         }
         field(80014; "NCT WHT No."; code[20])
         {
-            Caption = 'เลขที่';
+            Caption = 'เลขที่ห้อง';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin

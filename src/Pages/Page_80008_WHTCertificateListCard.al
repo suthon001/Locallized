@@ -156,6 +156,11 @@ page 80008 "NCT WHT Certificate"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the ชื่ออาคาร/หมู่บ้าน field.';
                 }
+                field("NCT WHT House No."; rec."WHT House No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the เลขที่ห้อง field.';
+                }
                 field("WHT of No."; rec."WHT of No.")
                 {
                     ApplicationArea = all;
@@ -172,11 +177,7 @@ page 80008 "NCT WHT Certificate"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the ชั้น field.';
                 }
-                field("NCT WHT House No."; rec."WHT House No.")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the เลขที่ห้อง field.';
-                }
+
 
                 field("NCT WHT Street"; rec."WHT Street")
                 {
@@ -361,11 +362,21 @@ page 80008 "NCT WHT Certificate"
         END;
 
     end;
+    /// <summary>
+    /// RunformJournal.
+    /// </summary>
+    /// <param name="pFromJournal">Boolean.</param>
+    procedure RunformJournal(pFromJournal: Boolean)
+    begin
+        if FromJournal then
+            FromJournal := pFromJournal;
+    end;
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
         CreateWHTCertificate();
     end;
 
-
+    var
+        FromJournal: Boolean;
 }

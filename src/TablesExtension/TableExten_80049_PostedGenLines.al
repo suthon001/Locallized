@@ -322,5 +322,19 @@ tableextension 80050 "NCT ExtenPostedGenLines" extends "Posted Gen. Journal Line
             Caption = 'Ref. Billing & Receipt No.';
 
         }
+        field(80058; "NCT Ref. Receipt WHT No."; code[20])
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Receipt WHT No.';
+
+        }
+        field(80059; "NCT Ref. Receipt WHT Date"; Date)
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+            Caption = 'Ref. Receipt WHT Date';
+
+        }
     }
 }

@@ -250,7 +250,7 @@ table 80005 "NCT Tax & WHT Line"
         }
         field(1032; "House No."; Text[50])
         {
-            Caption = 'เลขที่ห้อง';
+            Caption = 'บ้านเลขที่';
             DataClassification = CustomerContent;
         }
         field(1033; "Village No."; Text[15])
@@ -270,7 +270,7 @@ table 80005 "NCT Tax & WHT Line"
         }
         field(1036; "No."; Text[50])
         {
-            Caption = 'เลขที่';
+            Caption = 'เลขที่ห้อง';
             DataClassification = CustomerContent;
         }
 

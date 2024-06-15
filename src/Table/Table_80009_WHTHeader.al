@@ -349,7 +349,7 @@ table 80009 "NCT WHT Header"
         }
         field(34; "WHT House No."; Text[50])
         {
-            Caption = 'เลขที่ห้อง';
+            Caption = 'บ้านเลขที่';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
@@ -387,7 +387,7 @@ table 80009 "NCT WHT Header"
 
         field(38; "WHT of No."; code[20])
         {
-            Caption = 'เลขที่';
+            Caption = 'เลขที่ห้อง';
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin

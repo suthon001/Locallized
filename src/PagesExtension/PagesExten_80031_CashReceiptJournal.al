@@ -242,6 +242,11 @@ pageextension 80031 "NCT Receipt Journal" extends "Cash Receipt Journal"
                                         GenLine2.SetRange("Account Type", GenLine2."Account Type"::Customer);
                                         if GenLine2.FindFirst() then
                                             if Cust.get(GenLine2."Account No.") then begin
+                                                if rec."NCT Ref. Billing & Receipt No." <> '' then begin
+                                                    rec."NCT WHT Document No." := rec."NCT Ref. Receipt WHT No.";
+                                                    rec."NCT WHT Date" := rec."NCT Ref. Receipt WHT Date";
+                                                    rec."NCT WHT Amount" := abs(rec.Amount);
+                                                end;
                                                 Rec."NCT WHT Cust/Vend No." := Cust."No.";
                                                 Rec."NCT WHT Name" := Cust.Name;
                                                 Rec."NCT WHT Name 2" := Cust."Name 2";

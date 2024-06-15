@@ -312,6 +312,7 @@ pageextension 80029 "NCT General Journal" extends "General Journal"
         WHTHeader.reset();
         WHTHeader.SetRange("WHT No.", WHTDocNo);
         PageWHTCer.SetTableView(WHTHeader);
+        PageWHTCer.RunformJournal(true);
         if PageWHTCer.RunModal() IN [Action::OK] then
             CurrPage.Update();
         CLEAR(PageWHTCer);
