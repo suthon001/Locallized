@@ -187,6 +187,7 @@ permissionset 80000 "NCT LCL Permission"
         report "NCT Inventory Order Details" = X,
         report "NCT Account Schedule" = X,
         report "NCT Inventory - List" = X,
+        report "NCT Inventory Purchase Orders" = X,
         report "NCT Fixed Asset Journal - Test" = X,
         report "NCT Fixed Asset - Acquisition" = X,
         report "NCT Fixed Asset - Pro. Value" = X;
