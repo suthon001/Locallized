@@ -11,139 +11,6 @@
       <rd:DataSourceID>b0052bc6-b7b6-43c0-9a97-c418557163cf</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="CompanyName">
-          <DataField>CompanyName</DataField>
-        </Field>
-        <Field Name="ItemTableCaptItemFilter">
-          <DataField>ItemTableCaptItemFilter</DataField>
-        </Field>
-        <Field Name="ItemFilter">
-          <DataField>ItemFilter</DataField>
-        </Field>
-        <Field Name="PurchOrdLnPurchLnFilter">
-          <DataField>PurchOrdLnPurchLnFilter</DataField>
-        </Field>
-        <Field Name="PurchLineFilter">
-          <DataField>PurchLineFilter</DataField>
-        </Field>
-        <Field Name="ItemNo">
-          <DataField>ItemNo</DataField>
-        </Field>
-        <Field Name="Description_Item">
-          <DataField>Description_Item</DataField>
-        </Field>
-        <Field Name="OutstandingAmt_PurchLine">
-          <DataField>OutstandingAmt_PurchLine</DataField>
-        </Field>
-        <Field Name="OutstandingAmt_PurchLineFormat">
-          <DataField>OutstandingAmt_PurchLineFormat</DataField>
-        </Field>
-        <Field Name="VariantFilter_Item">
-          <DataField>VariantFilter_Item</DataField>
-        </Field>
-        <Field Name="LocationFilter_Item">
-          <DataField>LocationFilter_Item</DataField>
-        </Field>
-        <Field Name="GlobalDim1Filter_Item">
-          <DataField>GlobalDim1Filter_Item</DataField>
-        </Field>
-        <Field Name="GlobalDim2Filter_Item">
-          <DataField>GlobalDim2Filter_Item</DataField>
-        </Field>
-        <Field Name="ItemBinFilter">
-          <DataField>ItemBinFilter</DataField>
-        </Field>
-        <Field Name="InventoryPurchaseOrdersCaption">
-          <DataField>InventoryPurchaseOrdersCaption</DataField>
-        </Field>
-        <Field Name="CurrReportPageNoCaption">
-          <DataField>CurrReportPageNoCaption</DataField>
-        </Field>
-        <Field Name="PurchHeaderPaytoNameCaption">
-          <DataField>PurchHeaderPaytoNameCaption</DataField>
-        </Field>
-        <Field Name="PurchaseLineExpectedReceiptDateCaption">
-          <DataField>PurchaseLineExpectedReceiptDateCaption</DataField>
-        </Field>
-        <Field Name="BackOrderQtyCaption">
-          <DataField>BackOrderQtyCaption</DataField>
-        </Field>
-        <Field Name="PurchaseLineLineDiscountCaption">
-          <DataField>PurchaseLineLineDiscountCaption</DataField>
-        </Field>
-        <Field Name="PurchaseLineInvDiscountAmountCaption">
-          <DataField>PurchaseLineInvDiscountAmountCaption</DataField>
-        </Field>
-        <Field Name="PurchaseLineOutstandingAmountCaption">
-          <DataField>PurchaseLineOutstandingAmountCaption</DataField>
-        </Field>
-        <Field Name="TotalCaption">
-          <DataField>TotalCaption</DataField>
-        </Field>
-        <Field Name="DocumentNo_PurchaseLine">
-          <DataField>DocumentNo_PurchaseLine</DataField>
-        </Field>
-        <Field Name="PattoName_PurchaseLine">
-          <DataField>PattoName_PurchaseLine</DataField>
-        </Field>
-        <Field Name="ExpReceiptDt_PurchaseLine">
-          <DataField>ExpReceiptDt_PurchaseLine</DataField>
-        </Field>
-        <Field Name="Quantity_PurchaseLine">
-          <DataField>Quantity_PurchaseLine</DataField>
-        </Field>
-        <Field Name="Quantity_PurchaseLineFormat">
-          <DataField>Quantity_PurchaseLineFormat</DataField>
-        </Field>
-        <Field Name="OutStandingQty_PurchLine">
-          <DataField>OutStandingQty_PurchLine</DataField>
-        </Field>
-        <Field Name="OutStandingQty_PurchLineFormat">
-          <DataField>OutStandingQty_PurchLineFormat</DataField>
-        </Field>
-        <Field Name="BackOrderQty">
-          <DataField>BackOrderQty</DataField>
-        </Field>
-        <Field Name="BackOrderQtyFormat">
-          <DataField>BackOrderQtyFormat</DataField>
-        </Field>
-        <Field Name="DirectUnitCost_PurchLine">
-          <DataField>DirectUnitCost_PurchLine</DataField>
-        </Field>
-        <Field Name="DirectUnitCost_PurchLineFormat">
-          <DataField>DirectUnitCost_PurchLineFormat</DataField>
-        </Field>
-        <Field Name="LineDiscount_PurchaseLine">
-          <DataField>LineDiscount_PurchaseLine</DataField>
-        </Field>
-        <Field Name="LineDiscount_PurchaseLineFormat">
-          <DataField>LineDiscount_PurchaseLineFormat</DataField>
-        </Field>
-        <Field Name="InvDiscountAmt_PurchLine">
-          <DataField>InvDiscountAmt_PurchLine</DataField>
-        </Field>
-        <Field Name="InvDiscountAmt_PurchLineFormat">
-          <DataField>InvDiscountAmt_PurchLineFormat</DataField>
-        </Field>
-        <Field Name="OutstandingAmt1_PurchLine">
-          <DataField>OutstandingAmt1_PurchLine</DataField>
-        </Field>
-        <Field Name="OutstandingAmt1_PurchLineFormat">
-          <DataField>OutstandingAmt1_PurchLineFormat</DataField>
-        </Field>
-        <Field Name="Description1_Item">
-          <DataField>Description1_Item</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -3374,4 +3241,137 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>d09cbb7e-0d61-4194-8fb5-20e45024b398</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
+        </Field>
+        <Field Name="ItemTableCaptItemFilter">
+          <DataField>ItemTableCaptItemFilter</DataField>
+        </Field>
+        <Field Name="ItemFilter">
+          <DataField>ItemFilter</DataField>
+        </Field>
+        <Field Name="PurchOrdLnPurchLnFilter">
+          <DataField>PurchOrdLnPurchLnFilter</DataField>
+        </Field>
+        <Field Name="PurchLineFilter">
+          <DataField>PurchLineFilter</DataField>
+        </Field>
+        <Field Name="ItemNo">
+          <DataField>ItemNo</DataField>
+        </Field>
+        <Field Name="Description_Item">
+          <DataField>Description_Item</DataField>
+        </Field>
+        <Field Name="OutstandingAmt_PurchLine">
+          <DataField>OutstandingAmt_PurchLine</DataField>
+        </Field>
+        <Field Name="OutstandingAmt_PurchLineFormat">
+          <DataField>OutstandingAmt_PurchLineFormat</DataField>
+        </Field>
+        <Field Name="VariantFilter_Item">
+          <DataField>VariantFilter_Item</DataField>
+        </Field>
+        <Field Name="LocationFilter_Item">
+          <DataField>LocationFilter_Item</DataField>
+        </Field>
+        <Field Name="GlobalDim1Filter_Item">
+          <DataField>GlobalDim1Filter_Item</DataField>
+        </Field>
+        <Field Name="GlobalDim2Filter_Item">
+          <DataField>GlobalDim2Filter_Item</DataField>
+        </Field>
+        <Field Name="ItemBinFilter">
+          <DataField>ItemBinFilter</DataField>
+        </Field>
+        <Field Name="InventoryPurchaseOrdersCaption">
+          <DataField>InventoryPurchaseOrdersCaption</DataField>
+        </Field>
+        <Field Name="CurrReportPageNoCaption">
+          <DataField>CurrReportPageNoCaption</DataField>
+        </Field>
+        <Field Name="PurchHeaderPaytoNameCaption">
+          <DataField>PurchHeaderPaytoNameCaption</DataField>
+        </Field>
+        <Field Name="PurchaseLineExpectedReceiptDateCaption">
+          <DataField>PurchaseLineExpectedReceiptDateCaption</DataField>
+        </Field>
+        <Field Name="BackOrderQtyCaption">
+          <DataField>BackOrderQtyCaption</DataField>
+        </Field>
+        <Field Name="PurchaseLineLineDiscountCaption">
+          <DataField>PurchaseLineLineDiscountCaption</DataField>
+        </Field>
+        <Field Name="PurchaseLineInvDiscountAmountCaption">
+          <DataField>PurchaseLineInvDiscountAmountCaption</DataField>
+        </Field>
+        <Field Name="PurchaseLineOutstandingAmountCaption">
+          <DataField>PurchaseLineOutstandingAmountCaption</DataField>
+        </Field>
+        <Field Name="TotalCaption">
+          <DataField>TotalCaption</DataField>
+        </Field>
+        <Field Name="DocumentNo_PurchaseLine">
+          <DataField>DocumentNo_PurchaseLine</DataField>
+        </Field>
+        <Field Name="PattoName_PurchaseLine">
+          <DataField>PattoName_PurchaseLine</DataField>
+        </Field>
+        <Field Name="ExpReceiptDt_PurchaseLine">
+          <DataField>ExpReceiptDt_PurchaseLine</DataField>
+        </Field>
+        <Field Name="Quantity_PurchaseLine">
+          <DataField>Quantity_PurchaseLine</DataField>
+        </Field>
+        <Field Name="Quantity_PurchaseLineFormat">
+          <DataField>Quantity_PurchaseLineFormat</DataField>
+        </Field>
+        <Field Name="OutStandingQty_PurchLine">
+          <DataField>OutStandingQty_PurchLine</DataField>
+        </Field>
+        <Field Name="OutStandingQty_PurchLineFormat">
+          <DataField>OutStandingQty_PurchLineFormat</DataField>
+        </Field>
+        <Field Name="BackOrderQty">
+          <DataField>BackOrderQty</DataField>
+        </Field>
+        <Field Name="BackOrderQtyFormat">
+          <DataField>BackOrderQtyFormat</DataField>
+        </Field>
+        <Field Name="DirectUnitCost_PurchLine">
+          <DataField>DirectUnitCost_PurchLine</DataField>
+        </Field>
+        <Field Name="DirectUnitCost_PurchLineFormat">
+          <DataField>DirectUnitCost_PurchLineFormat</DataField>
+        </Field>
+        <Field Name="LineDiscount_PurchaseLine">
+          <DataField>LineDiscount_PurchaseLine</DataField>
+        </Field>
+        <Field Name="LineDiscount_PurchaseLineFormat">
+          <DataField>LineDiscount_PurchaseLineFormat</DataField>
+        </Field>
+        <Field Name="InvDiscountAmt_PurchLine">
+          <DataField>InvDiscountAmt_PurchLine</DataField>
+        </Field>
+        <Field Name="InvDiscountAmt_PurchLineFormat">
+          <DataField>InvDiscountAmt_PurchLineFormat</DataField>
+        </Field>
+        <Field Name="OutstandingAmt1_PurchLine">
+          <DataField>OutstandingAmt1_PurchLine</DataField>
+        </Field>
+        <Field Name="OutstandingAmt1_PurchLineFormat">
+          <DataField>OutstandingAmt1_PurchLineFormat</DataField>
+        </Field>
+        <Field Name="Description1_Item">
+          <DataField>Description1_Item</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

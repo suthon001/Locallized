@@ -11,358 +11,6 @@
       <rd:DataSourceID>b39824cd-4ad0-4bdc-a5e4-7fef3059cea3</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="CompanyName">
-          <DataField>CompanyName</DataField>
-        </Field>
-        <Field Name="DeprBookText">
-          <DataField>DeprBookText</DataField>
-        </Field>
-        <Field Name="FixedAssetTabcaptFAFilter">
-          <DataField>FixedAssetTabcaptFAFilter</DataField>
-        </Field>
-        <Field Name="FAFilter">
-          <DataField>FAFilter</DataField>
-        </Field>
-        <Field Name="PrintDetails">
-          <DataField>PrintDetails</DataField>
-        </Field>
-        <Field Name="ProjectedDisposal">
-          <DataField>ProjectedDisposal</DataField>
-        </Field>
-        <Field Name="DeprBookUseCustom1Depr">
-          <DataField>DeprBookUseCustom1Depr</DataField>
-        </Field>
-        <Field Name="DoProjectedDisposal">
-          <DataField>DoProjectedDisposal</DataField>
-        </Field>
-        <Field Name="GroupTotalsInt">
-          <DataField>GroupTotalsInt</DataField>
-        </Field>
-        <Field Name="IncludePostedFrom">
-          <DataField>IncludePostedFrom</DataField>
-        </Field>
-        <Field Name="GroupCodeName">
-          <DataField>GroupCodeName</DataField>
-        </Field>
-        <Field Name="FANo">
-          <DataField>FANo</DataField>
-        </Field>
-        <Field Name="FADescription">
-          <DataField>FADescription</DataField>
-        </Field>
-        <Field Name="GroupHeadLine">
-          <DataField>GroupHeadLine</DataField>
-        </Field>
-        <Field Name="FixedAssetNo">
-          <DataField>FixedAssetNo</DataField>
-        </Field>
-        <Field Name="Description_FixedAsset">
-          <DataField>Description_FixedAsset</DataField>
-        </Field>
-        <Field Name="DeprText2">
-          <DataField>DeprText2</DataField>
-        </Field>
-        <Field Name="Text002GroupHeadLine">
-          <DataField>Text002GroupHeadLine</DataField>
-        </Field>
-        <Field Name="Custom1Text">
-          <DataField>Custom1Text</DataField>
-        </Field>
-        <Field Name="DeprCustom1Text">
-          <DataField>DeprCustom1Text</DataField>
-        </Field>
-        <Field Name="SalesPriceFieldname">
-          <DataField>SalesPriceFieldname</DataField>
-        </Field>
-        <Field Name="GainLossFieldname">
-          <DataField>GainLossFieldname</DataField>
-        </Field>
-        <Field Name="GroupAmounts3">
-          <DataField>GroupAmounts3</DataField>
-        </Field>
-        <Field Name="GroupAmounts3Format">
-          <DataField>GroupAmounts3Format</DataField>
-        </Field>
-        <Field Name="GroupAmounts4">
-          <DataField>GroupAmounts4</DataField>
-        </Field>
-        <Field Name="GroupAmounts4Format">
-          <DataField>GroupAmounts4Format</DataField>
-        </Field>
-        <Field Name="FAClassCode_FixedAsset">
-          <DataField>FAClassCode_FixedAsset</DataField>
-        </Field>
-        <Field Name="FASubclassCode_FixedAsset">
-          <DataField>FASubclassCode_FixedAsset</DataField>
-        </Field>
-        <Field Name="GlobalDim1Code_FixedAsset">
-          <DataField>GlobalDim1Code_FixedAsset</DataField>
-        </Field>
-        <Field Name="GlobalDim2Code_FixedAsset">
-          <DataField>GlobalDim2Code_FixedAsset</DataField>
-        </Field>
-        <Field Name="FALocationCode_FixedAsset">
-          <DataField>FALocationCode_FixedAsset</DataField>
-        </Field>
-        <Field Name="CompofMainAss_FixedAsset">
-          <DataField>CompofMainAss_FixedAsset</DataField>
-        </Field>
-        <Field Name="FAPostingGroup_FixedAsset">
-          <DataField>FAPostingGroup_FixedAsset</DataField>
-        </Field>
-        <Field Name="CurrReportPAGENOCaption">
-          <DataField>CurrReportPAGENOCaption</DataField>
-        </Field>
-        <Field Name="FixedAssetProjectedValueCaption">
-          <DataField>FixedAssetProjectedValueCaption</DataField>
-        </Field>
-        <Field Name="FALedgerEntryFAPostingDateCaption">
-          <DataField>FALedgerEntryFAPostingDateCaption</DataField>
-        </Field>
-        <Field Name="BookValueCaption">
-          <DataField>BookValueCaption</DataField>
-        </Field>
-        <Field Name="FAPostingDt_FALedgerEntry">
-          <DataField>FAPostingDt_FALedgerEntry</DataField>
-        </Field>
-        <Field Name="PostingDt_FALedgerEntry">
-          <DataField>PostingDt_FALedgerEntry</DataField>
-        </Field>
-        <Field Name="Amount_FALedgerEntry">
-          <DataField>Amount_FALedgerEntry</DataField>
-        </Field>
-        <Field Name="Amount_FALedgerEntryFormat">
-          <DataField>Amount_FALedgerEntryFormat</DataField>
-        </Field>
-        <Field Name="FANo_FALedgerEntry">
-          <DataField>FANo_FALedgerEntry</DataField>
-        </Field>
-        <Field Name="BookValue">
-          <DataField>BookValue</DataField>
-        </Field>
-        <Field Name="BookValueFormat">
-          <DataField>BookValueFormat</DataField>
-        </Field>
-        <Field Name="NoofDeprDays_FALedgEntry">
-          <DataField>NoofDeprDays_FALedgEntry</DataField>
-        </Field>
-        <Field Name="FALedgerEntryEntryNo">
-          <DataField>FALedgerEntryEntryNo</DataField>
-        </Field>
-        <Field Name="PostedEntryCaption">
-          <DataField>PostedEntryCaption</DataField>
-        </Field>
-        <Field Name="DeprAmount">
-          <DataField>DeprAmount</DataField>
-        </Field>
-        <Field Name="DeprAmountFormat">
-          <DataField>DeprAmountFormat</DataField>
-        </Field>
-        <Field Name="EntryAmt1Custom1Amt">
-          <DataField>EntryAmt1Custom1Amt</DataField>
-        </Field>
-        <Field Name="EntryAmt1Custom1AmtFormat">
-          <DataField>EntryAmt1Custom1AmtFormat</DataField>
-        </Field>
-        <Field Name="FormatUntilDate">
-          <DataField>FormatUntilDate</DataField>
-        </Field>
-        <Field Name="DeprText">
-          <DataField>DeprText</DataField>
-        </Field>
-        <Field Name="NumberOfDays">
-          <DataField>NumberOfDays</DataField>
-        </Field>
-        <Field Name="No1_FixedAsset">
-          <DataField>No1_FixedAsset</DataField>
-        </Field>
-        <Field Name="Custom1Text_ProjectedDepr">
-          <DataField>Custom1Text_ProjectedDepr</DataField>
-        </Field>
-        <Field Name="Custom1NumberOfDays">
-          <DataField>Custom1NumberOfDays</DataField>
-        </Field>
-        <Field Name="Custom1Amount">
-          <DataField>Custom1Amount</DataField>
-        </Field>
-        <Field Name="Custom1AmountFormat">
-          <DataField>Custom1AmountFormat</DataField>
-        </Field>
-        <Field Name="EntryAmounts1">
-          <DataField>EntryAmounts1</DataField>
-        </Field>
-        <Field Name="EntryAmounts1Format">
-          <DataField>EntryAmounts1Format</DataField>
-        </Field>
-        <Field Name="AssetAmounts1">
-          <DataField>AssetAmounts1</DataField>
-        </Field>
-        <Field Name="AssetAmounts1Format">
-          <DataField>AssetAmounts1Format</DataField>
-        </Field>
-        <Field Name="Description1_FixedAsset">
-          <DataField>Description1_FixedAsset</DataField>
-        </Field>
-        <Field Name="AssetAmounts2">
-          <DataField>AssetAmounts2</DataField>
-        </Field>
-        <Field Name="AssetAmounts2Format">
-          <DataField>AssetAmounts2Format</DataField>
-        </Field>
-        <Field Name="AssetAmt1AssetAmt2">
-          <DataField>AssetAmt1AssetAmt2</DataField>
-        </Field>
-        <Field Name="AssetAmt1AssetAmt2Format">
-          <DataField>AssetAmt1AssetAmt2Format</DataField>
-        </Field>
-        <Field Name="DeprCustom1Text_ProjectedDepr">
-          <DataField>DeprCustom1Text_ProjectedDepr</DataField>
-        </Field>
-        <Field Name="AssetAmounts3">
-          <DataField>AssetAmounts3</DataField>
-        </Field>
-        <Field Name="AssetAmounts3Format">
-          <DataField>AssetAmounts3Format</DataField>
-        </Field>
-        <Field Name="AssetAmounts4">
-          <DataField>AssetAmounts4</DataField>
-        </Field>
-        <Field Name="AssetAmounts4Format">
-          <DataField>AssetAmounts4Format</DataField>
-        </Field>
-        <Field Name="SalesPriceFieldname_ProjectedDepr">
-          <DataField>SalesPriceFieldname_ProjectedDepr</DataField>
-        </Field>
-        <Field Name="GainLossFieldname_ProjectedDepr">
-          <DataField>GainLossFieldname_ProjectedDepr</DataField>
-        </Field>
-        <Field Name="GroupAmounts_1">
-          <DataField>GroupAmounts_1</DataField>
-        </Field>
-        <Field Name="GroupAmounts_1Format">
-          <DataField>GroupAmounts_1Format</DataField>
-        </Field>
-        <Field Name="GroupTotalBookValue">
-          <DataField>GroupTotalBookValue</DataField>
-        </Field>
-        <Field Name="GroupTotalBookValueFormat">
-          <DataField>GroupTotalBookValueFormat</DataField>
-        </Field>
-        <Field Name="TotalBookValue_1">
-          <DataField>TotalBookValue_1</DataField>
-        </Field>
-        <Field Name="TotalBookValue_1Format">
-          <DataField>TotalBookValue_1Format</DataField>
-        </Field>
-        <Field Name="TotalBookValue2">
-          <DataField>TotalBookValue2</DataField>
-        </Field>
-        <Field Name="TotalBookValue2Format">
-          <DataField>TotalBookValue2Format</DataField>
-        </Field>
-        <Field Name="TotalAmounts1">
-          <DataField>TotalAmounts1</DataField>
-        </Field>
-        <Field Name="TotalAmounts1Format">
-          <DataField>TotalAmounts1Format</DataField>
-        </Field>
-        <Field Name="DeprText2_ProjectionTotal">
-          <DataField>DeprText2_ProjectionTotal</DataField>
-        </Field>
-        <Field Name="ProjectedDisposal_ProjectionTotal">
-          <DataField>ProjectedDisposal_ProjectionTotal</DataField>
-        </Field>
-        <Field Name="DeprBookUseCustDepr_ProjectionTotal">
-          <DataField>DeprBookUseCustDepr_ProjectionTotal</DataField>
-        </Field>
-        <Field Name="Custom1Text_ProjectionTotal">
-          <DataField>Custom1Text_ProjectionTotal</DataField>
-        </Field>
-        <Field Name="TotalAmounts2">
-          <DataField>TotalAmounts2</DataField>
-        </Field>
-        <Field Name="TotalAmounts2Format">
-          <DataField>TotalAmounts2Format</DataField>
-        </Field>
-        <Field Name="DeprCustom1Text_ProjectionTotal">
-          <DataField>DeprCustom1Text_ProjectionTotal</DataField>
-        </Field>
-        <Field Name="TotalAmt1TotalAmt2">
-          <DataField>TotalAmt1TotalAmt2</DataField>
-        </Field>
-        <Field Name="TotalAmt1TotalAmt2Format">
-          <DataField>TotalAmt1TotalAmt2Format</DataField>
-        </Field>
-        <Field Name="SalesPriceFieldname_ProjectionTotal">
-          <DataField>SalesPriceFieldname_ProjectionTotal</DataField>
-        </Field>
-        <Field Name="GainLossFieldname_ProjectionTotal">
-          <DataField>GainLossFieldname_ProjectionTotal</DataField>
-        </Field>
-        <Field Name="TotalAmounts3">
-          <DataField>TotalAmounts3</DataField>
-        </Field>
-        <Field Name="TotalAmounts3Format">
-          <DataField>TotalAmounts3Format</DataField>
-        </Field>
-        <Field Name="TotalAmounts4">
-          <DataField>TotalAmounts4</DataField>
-        </Field>
-        <Field Name="TotalAmounts4Format">
-          <DataField>TotalAmounts4Format</DataField>
-        </Field>
-        <Field Name="TotalCaption">
-          <DataField>TotalCaption</DataField>
-        </Field>
-        <Field Name="DeprBookText_Buffer">
-          <DataField>DeprBookText_Buffer</DataField>
-        </Field>
-        <Field Name="Custom1TextText_Buffer">
-          <DataField>Custom1TextText_Buffer</DataField>
-        </Field>
-        <Field Name="GroupCodeName2">
-          <DataField>GroupCodeName2</DataField>
-        </Field>
-        <Field Name="FAPostingDate_FABufferProjection">
-          <DataField>FAPostingDate_FABufferProjection</DataField>
-        </Field>
-        <Field Name="Desc_FABufferProjection">
-          <DataField>Desc_FABufferProjection</DataField>
-        </Field>
-        <Field Name="Desc_FABufferProjectionFormat">
-          <DataField>Desc_FABufferProjectionFormat</DataField>
-        </Field>
-        <Field Name="Cust1_FABufferProjection">
-          <DataField>Cust1_FABufferProjection</DataField>
-        </Field>
-        <Field Name="Cust1_FABufferProjectionFormat">
-          <DataField>Cust1_FABufferProjectionFormat</DataField>
-        </Field>
-        <Field Name="CodeName_FABufferProj">
-          <DataField>CodeName_FABufferProj</DataField>
-        </Field>
-        <Field Name="ProjectedAmountsperDateCaption">
-          <DataField>ProjectedAmountsperDateCaption</DataField>
-        </Field>
-        <Field Name="FABufferProjectionFAPostingDateCaption">
-          <DataField>FABufferProjectionFAPostingDateCaption</DataField>
-        </Field>
-        <Field Name="FABufferProjectionDepreciationCaption">
-          <DataField>FABufferProjectionDepreciationCaption</DataField>
-        </Field>
-        <Field Name="FixedAssetProjectedValueCaption_Buffer">
-          <DataField>FixedAssetProjectedValueCaption_Buffer</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -5347,4 +4995,356 @@ End Function</Code>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>8af04a76-a498-4912-bb30-6a241ce2d3eb</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
+        </Field>
+        <Field Name="DeprBookText">
+          <DataField>DeprBookText</DataField>
+        </Field>
+        <Field Name="FixedAssetTabcaptFAFilter">
+          <DataField>FixedAssetTabcaptFAFilter</DataField>
+        </Field>
+        <Field Name="FAFilter">
+          <DataField>FAFilter</DataField>
+        </Field>
+        <Field Name="PrintDetails">
+          <DataField>PrintDetails</DataField>
+        </Field>
+        <Field Name="ProjectedDisposal">
+          <DataField>ProjectedDisposal</DataField>
+        </Field>
+        <Field Name="DeprBookUseCustom1Depr">
+          <DataField>DeprBookUseCustom1Depr</DataField>
+        </Field>
+        <Field Name="DoProjectedDisposal">
+          <DataField>DoProjectedDisposal</DataField>
+        </Field>
+        <Field Name="GroupTotalsInt">
+          <DataField>GroupTotalsInt</DataField>
+        </Field>
+        <Field Name="IncludePostedFrom">
+          <DataField>IncludePostedFrom</DataField>
+        </Field>
+        <Field Name="GroupCodeName">
+          <DataField>GroupCodeName</DataField>
+        </Field>
+        <Field Name="FANo">
+          <DataField>FANo</DataField>
+        </Field>
+        <Field Name="FADescription">
+          <DataField>FADescription</DataField>
+        </Field>
+        <Field Name="GroupHeadLine">
+          <DataField>GroupHeadLine</DataField>
+        </Field>
+        <Field Name="FixedAssetNo">
+          <DataField>FixedAssetNo</DataField>
+        </Field>
+        <Field Name="Description_FixedAsset">
+          <DataField>Description_FixedAsset</DataField>
+        </Field>
+        <Field Name="DeprText2">
+          <DataField>DeprText2</DataField>
+        </Field>
+        <Field Name="Text002GroupHeadLine">
+          <DataField>Text002GroupHeadLine</DataField>
+        </Field>
+        <Field Name="Custom1Text">
+          <DataField>Custom1Text</DataField>
+        </Field>
+        <Field Name="DeprCustom1Text">
+          <DataField>DeprCustom1Text</DataField>
+        </Field>
+        <Field Name="SalesPriceFieldname">
+          <DataField>SalesPriceFieldname</DataField>
+        </Field>
+        <Field Name="GainLossFieldname">
+          <DataField>GainLossFieldname</DataField>
+        </Field>
+        <Field Name="GroupAmounts3">
+          <DataField>GroupAmounts3</DataField>
+        </Field>
+        <Field Name="GroupAmounts3Format">
+          <DataField>GroupAmounts3Format</DataField>
+        </Field>
+        <Field Name="GroupAmounts4">
+          <DataField>GroupAmounts4</DataField>
+        </Field>
+        <Field Name="GroupAmounts4Format">
+          <DataField>GroupAmounts4Format</DataField>
+        </Field>
+        <Field Name="FAClassCode_FixedAsset">
+          <DataField>FAClassCode_FixedAsset</DataField>
+        </Field>
+        <Field Name="FASubclassCode_FixedAsset">
+          <DataField>FASubclassCode_FixedAsset</DataField>
+        </Field>
+        <Field Name="GlobalDim1Code_FixedAsset">
+          <DataField>GlobalDim1Code_FixedAsset</DataField>
+        </Field>
+        <Field Name="GlobalDim2Code_FixedAsset">
+          <DataField>GlobalDim2Code_FixedAsset</DataField>
+        </Field>
+        <Field Name="FALocationCode_FixedAsset">
+          <DataField>FALocationCode_FixedAsset</DataField>
+        </Field>
+        <Field Name="CompofMainAss_FixedAsset">
+          <DataField>CompofMainAss_FixedAsset</DataField>
+        </Field>
+        <Field Name="FAPostingGroup_FixedAsset">
+          <DataField>FAPostingGroup_FixedAsset</DataField>
+        </Field>
+        <Field Name="CurrReportPAGENOCaption">
+          <DataField>CurrReportPAGENOCaption</DataField>
+        </Field>
+        <Field Name="FixedAssetProjectedValueCaption">
+          <DataField>FixedAssetProjectedValueCaption</DataField>
+        </Field>
+        <Field Name="FALedgerEntryFAPostingDateCaption">
+          <DataField>FALedgerEntryFAPostingDateCaption</DataField>
+        </Field>
+        <Field Name="BookValueCaption">
+          <DataField>BookValueCaption</DataField>
+        </Field>
+        <Field Name="FAPostingDt_FALedgerEntry">
+          <DataField>FAPostingDt_FALedgerEntry</DataField>
+        </Field>
+        <Field Name="PostingDt_FALedgerEntry">
+          <DataField>PostingDt_FALedgerEntry</DataField>
+        </Field>
+        <Field Name="Amount_FALedgerEntry">
+          <DataField>Amount_FALedgerEntry</DataField>
+        </Field>
+        <Field Name="Amount_FALedgerEntryFormat">
+          <DataField>Amount_FALedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="FANo_FALedgerEntry">
+          <DataField>FANo_FALedgerEntry</DataField>
+        </Field>
+        <Field Name="BookValue">
+          <DataField>BookValue</DataField>
+        </Field>
+        <Field Name="BookValueFormat">
+          <DataField>BookValueFormat</DataField>
+        </Field>
+        <Field Name="NoofDeprDays_FALedgEntry">
+          <DataField>NoofDeprDays_FALedgEntry</DataField>
+        </Field>
+        <Field Name="FALedgerEntryEntryNo">
+          <DataField>FALedgerEntryEntryNo</DataField>
+        </Field>
+        <Field Name="PostedEntryCaption">
+          <DataField>PostedEntryCaption</DataField>
+        </Field>
+        <Field Name="DeprAmount">
+          <DataField>DeprAmount</DataField>
+        </Field>
+        <Field Name="DeprAmountFormat">
+          <DataField>DeprAmountFormat</DataField>
+        </Field>
+        <Field Name="EntryAmt1Custom1Amt">
+          <DataField>EntryAmt1Custom1Amt</DataField>
+        </Field>
+        <Field Name="EntryAmt1Custom1AmtFormat">
+          <DataField>EntryAmt1Custom1AmtFormat</DataField>
+        </Field>
+        <Field Name="FormatUntilDate">
+          <DataField>FormatUntilDate</DataField>
+        </Field>
+        <Field Name="DeprText">
+          <DataField>DeprText</DataField>
+        </Field>
+        <Field Name="NumberOfDays">
+          <DataField>NumberOfDays</DataField>
+        </Field>
+        <Field Name="No1_FixedAsset">
+          <DataField>No1_FixedAsset</DataField>
+        </Field>
+        <Field Name="Custom1Text_ProjectedDepr">
+          <DataField>Custom1Text_ProjectedDepr</DataField>
+        </Field>
+        <Field Name="Custom1NumberOfDays">
+          <DataField>Custom1NumberOfDays</DataField>
+        </Field>
+        <Field Name="Custom1Amount">
+          <DataField>Custom1Amount</DataField>
+        </Field>
+        <Field Name="Custom1AmountFormat">
+          <DataField>Custom1AmountFormat</DataField>
+        </Field>
+        <Field Name="EntryAmounts1">
+          <DataField>EntryAmounts1</DataField>
+        </Field>
+        <Field Name="EntryAmounts1Format">
+          <DataField>EntryAmounts1Format</DataField>
+        </Field>
+        <Field Name="AssetAmounts1">
+          <DataField>AssetAmounts1</DataField>
+        </Field>
+        <Field Name="AssetAmounts1Format">
+          <DataField>AssetAmounts1Format</DataField>
+        </Field>
+        <Field Name="Description1_FixedAsset">
+          <DataField>Description1_FixedAsset</DataField>
+        </Field>
+        <Field Name="AssetAmounts2">
+          <DataField>AssetAmounts2</DataField>
+        </Field>
+        <Field Name="AssetAmounts2Format">
+          <DataField>AssetAmounts2Format</DataField>
+        </Field>
+        <Field Name="AssetAmt1AssetAmt2">
+          <DataField>AssetAmt1AssetAmt2</DataField>
+        </Field>
+        <Field Name="AssetAmt1AssetAmt2Format">
+          <DataField>AssetAmt1AssetAmt2Format</DataField>
+        </Field>
+        <Field Name="DeprCustom1Text_ProjectedDepr">
+          <DataField>DeprCustom1Text_ProjectedDepr</DataField>
+        </Field>
+        <Field Name="AssetAmounts3">
+          <DataField>AssetAmounts3</DataField>
+        </Field>
+        <Field Name="AssetAmounts3Format">
+          <DataField>AssetAmounts3Format</DataField>
+        </Field>
+        <Field Name="AssetAmounts4">
+          <DataField>AssetAmounts4</DataField>
+        </Field>
+        <Field Name="AssetAmounts4Format">
+          <DataField>AssetAmounts4Format</DataField>
+        </Field>
+        <Field Name="SalesPriceFieldname_ProjectedDepr">
+          <DataField>SalesPriceFieldname_ProjectedDepr</DataField>
+        </Field>
+        <Field Name="GainLossFieldname_ProjectedDepr">
+          <DataField>GainLossFieldname_ProjectedDepr</DataField>
+        </Field>
+        <Field Name="GroupAmounts_1">
+          <DataField>GroupAmounts_1</DataField>
+        </Field>
+        <Field Name="GroupAmounts_1Format">
+          <DataField>GroupAmounts_1Format</DataField>
+        </Field>
+        <Field Name="GroupTotalBookValue">
+          <DataField>GroupTotalBookValue</DataField>
+        </Field>
+        <Field Name="GroupTotalBookValueFormat">
+          <DataField>GroupTotalBookValueFormat</DataField>
+        </Field>
+        <Field Name="TotalBookValue_1">
+          <DataField>TotalBookValue_1</DataField>
+        </Field>
+        <Field Name="TotalBookValue_1Format">
+          <DataField>TotalBookValue_1Format</DataField>
+        </Field>
+        <Field Name="TotalBookValue2">
+          <DataField>TotalBookValue2</DataField>
+        </Field>
+        <Field Name="TotalBookValue2Format">
+          <DataField>TotalBookValue2Format</DataField>
+        </Field>
+        <Field Name="TotalAmounts1">
+          <DataField>TotalAmounts1</DataField>
+        </Field>
+        <Field Name="TotalAmounts1Format">
+          <DataField>TotalAmounts1Format</DataField>
+        </Field>
+        <Field Name="DeprText2_ProjectionTotal">
+          <DataField>DeprText2_ProjectionTotal</DataField>
+        </Field>
+        <Field Name="ProjectedDisposal_ProjectionTotal">
+          <DataField>ProjectedDisposal_ProjectionTotal</DataField>
+        </Field>
+        <Field Name="DeprBookUseCustDepr_ProjectionTotal">
+          <DataField>DeprBookUseCustDepr_ProjectionTotal</DataField>
+        </Field>
+        <Field Name="Custom1Text_ProjectionTotal">
+          <DataField>Custom1Text_ProjectionTotal</DataField>
+        </Field>
+        <Field Name="TotalAmounts2">
+          <DataField>TotalAmounts2</DataField>
+        </Field>
+        <Field Name="TotalAmounts2Format">
+          <DataField>TotalAmounts2Format</DataField>
+        </Field>
+        <Field Name="DeprCustom1Text_ProjectionTotal">
+          <DataField>DeprCustom1Text_ProjectionTotal</DataField>
+        </Field>
+        <Field Name="TotalAmt1TotalAmt2">
+          <DataField>TotalAmt1TotalAmt2</DataField>
+        </Field>
+        <Field Name="TotalAmt1TotalAmt2Format">
+          <DataField>TotalAmt1TotalAmt2Format</DataField>
+        </Field>
+        <Field Name="SalesPriceFieldname_ProjectionTotal">
+          <DataField>SalesPriceFieldname_ProjectionTotal</DataField>
+        </Field>
+        <Field Name="GainLossFieldname_ProjectionTotal">
+          <DataField>GainLossFieldname_ProjectionTotal</DataField>
+        </Field>
+        <Field Name="TotalAmounts3">
+          <DataField>TotalAmounts3</DataField>
+        </Field>
+        <Field Name="TotalAmounts3Format">
+          <DataField>TotalAmounts3Format</DataField>
+        </Field>
+        <Field Name="TotalAmounts4">
+          <DataField>TotalAmounts4</DataField>
+        </Field>
+        <Field Name="TotalAmounts4Format">
+          <DataField>TotalAmounts4Format</DataField>
+        </Field>
+        <Field Name="TotalCaption">
+          <DataField>TotalCaption</DataField>
+        </Field>
+        <Field Name="DeprBookText_Buffer">
+          <DataField>DeprBookText_Buffer</DataField>
+        </Field>
+        <Field Name="Custom1TextText_Buffer">
+          <DataField>Custom1TextText_Buffer</DataField>
+        </Field>
+        <Field Name="GroupCodeName2">
+          <DataField>GroupCodeName2</DataField>
+        </Field>
+        <Field Name="FAPostingDate_FABufferProjection">
+          <DataField>FAPostingDate_FABufferProjection</DataField>
+        </Field>
+        <Field Name="Desc_FABufferProjection">
+          <DataField>Desc_FABufferProjection</DataField>
+        </Field>
+        <Field Name="Desc_FABufferProjectionFormat">
+          <DataField>Desc_FABufferProjectionFormat</DataField>
+        </Field>
+        <Field Name="Cust1_FABufferProjection">
+          <DataField>Cust1_FABufferProjection</DataField>
+        </Field>
+        <Field Name="Cust1_FABufferProjectionFormat">
+          <DataField>Cust1_FABufferProjectionFormat</DataField>
+        </Field>
+        <Field Name="CodeName_FABufferProj">
+          <DataField>CodeName_FABufferProj</DataField>
+        </Field>
+        <Field Name="ProjectedAmountsperDateCaption">
+          <DataField>ProjectedAmountsperDateCaption</DataField>
+        </Field>
+        <Field Name="FABufferProjectionFAPostingDateCaption">
+          <DataField>FABufferProjectionFAPostingDateCaption</DataField>
+        </Field>
+        <Field Name="FABufferProjectionDepreciationCaption">
+          <DataField>FABufferProjectionDepreciationCaption</DataField>
+        </Field>
+        <Field Name="FixedAssetProjectedValueCaption_Buffer">
+          <DataField>FixedAssetProjectedValueCaption_Buffer</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>
