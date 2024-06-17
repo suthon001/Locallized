@@ -1639,7 +1639,7 @@ codeunit 80004 "NCT Function Center"
                             REPEAT
                                 DetailCust.CalcSums(Amount);
                                 DetailCust.CalcFields("NCT Invoice Entry No.");
-                                CustLedgEntry.GET(DetailVendor."NCT Invoice Entry No.");
+                                CustLedgEntry.GET(DetailCust."NCT Invoice Entry No.");
                                 CustLedgEntry.CALCFIELDS(Amount, "Amount (LCY)", "Remaining Amount",
                                     "Remaining Amt. (LCY)", "Original Amount", "Original Amt. (LCY)");
                                 //TmpGenPostLine.TransferCustLedgEntry(CVLedgEntryBuf,CustLedgEntry,TRUE);
