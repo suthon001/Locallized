@@ -980,14 +980,25 @@ codeunit 80005 "NCT EventFunction"
                 begin
                     RecRef.SetTable(BillingReceipt);
                     BillingReceipt.CalcFields(Amount);
-                    if BillingReceipt."Document Type" = BillingReceipt."Document Type"::"Sales Billing" then
+                    if BillingReceipt."Document Type" = BillingReceipt."Document Type"::"Sales Billing" then begin
                         ApprovalEntryArgument."Document Type" := ApprovalEntryArgument."Document Type"::"NCT Sales Billing";
-                    if BillingReceipt."Document Type" = BillingReceipt."Document Type"::"Sales Receipt" then
+                        ApprovalEntryArgument.Amount := BillingReceipt.Amount;
+                        ApprovalEntryArgument."Amount (LCY)" := BillingReceipt.Amount;
+                    end;
+                    if BillingReceipt."Document Type" = BillingReceipt."Document Type"::"Sales Receipt" then begin
                         ApprovalEntryArgument."Document Type" := ApprovalEntryArgument."Document Type"::"NCT Sales Receipt";
-                    if BillingReceipt."Document Type" = BillingReceipt."Document Type"::"Purchase Billing" then
+                        ApprovalEntryArgument.Amount := BillingReceipt."Receive & Payment Amount";
+                        ApprovalEntryArgument."Amount (LCY)" := BillingReceipt."Receive & Payment Amount";
+                    end;
+                    if BillingReceipt."Document Type" = BillingReceipt."Document Type"::"Purchase Billing" then begin
                         ApprovalEntryArgument."Document Type" := ApprovalEntryArgument."Document Type"::"NCT Purchase Billing";
+                        ApprovalEntryArgument."Document No." := BillingReceipt."No.";
+                        ApprovalEntryArgument.Amount := BillingReceipt.Amount;
+                        ApprovalEntryArgument."Amount (LCY)" := BillingReceipt.Amount;
+                    end;
+
                     ApprovalEntryArgument."Document No." := BillingReceipt."No.";
-                    ApprovalEntryArgument.Amount := BillingReceipt.Amount;
+
                 end;
 
         end;
